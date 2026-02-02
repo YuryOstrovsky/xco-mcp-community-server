@@ -26,3 +26,22 @@ archive/
 # OS junk
 .DS_Store
 
+# Archives / legacy
+archive/
+xco-mcp-archive/
+
+# Generated artifacts
+generated/
+*.zip
+*.json
+
+# Python noise
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtualenv
+.venv/
+venv/
+
