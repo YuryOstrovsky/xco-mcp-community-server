@@ -10,8 +10,9 @@ class IntentNormalizationError(Exception):
 
 class IntentNormalizer:
     """
-    Phase 4.1:
+    Phase 4.x:
     Normalize free-text intent into canonical form.
+    Supports partial (ambiguous) intents for clarification.
     """
 
     def normalize(self, intent: str) -> Dict:
@@ -34,53 +35,57 @@ class IntentNormalizer:
         text = text.replace("list", "show")
         text = text.replace("display", "show")
 
-        # =========================================================
-        # Pattern 1: show switches in fabric <fabric>
-        # =========================================================
+        # =====================================================
+        # FULL patterns
+        # =====================================================
+
+        # show switches in fabric <fabric>
         m = re.match(r"show\s+switches\s+in\s+fabric\s+(.+)", text)
         if m:
             fabric = m.group(1).strip()
-
             return {
                 "action": "show",
                 "object": "switches",
-                "scope": {
-                    "fabric": fabric,
-                },
+                "scope": {"fabric": fabric},
                 "canonical": f"show switches in fabric {fabric}",
             }
 
-        # =========================================================
-        # Pattern 2: show device <device>
-        # =========================================================
+        # show device <device>
         m = re.match(r"show\s+device\s+(.+)", text)
         if m:
             device = m.group(1).strip()
-
             return {
                 "action": "show",
                 "object": "device",
-                "scope": {
-                    "device": device,
-                },
+                "scope": {"device": device},
                 "canonical": f"show device {device}",
             }
 
-        # =========================================================
-        # Pattern 3: show switch <device> (singular alias)
-        # =========================================================
-        m = re.match(r"show\s+switch\s+(.+)", text)
-        if m:
-            device = m.group(1).strip()
+        # =====================================================
+        # PARTIAL / AMBIGUOUS patterns (Phase 4.6)
+        # =====================================================
 
+        # show switches
+        if text == "show switches":
+            return {
+                "action": "show",
+                "object": "switches",
+                "scope": {},           # ← missing fabric
+                "canonical": "show switches",
+            }
+
+        # show device
+        if text == "show device":
             return {
                 "action": "show",
                 "object": "device",
-                "scope": {
-                    "device": device,
-                },
-                "canonical": f"show device {device}",
+                "scope": {},           # ← missing device
+                "canonical": "show device",
             }
 
-        # ---- Fallback ----
-        raise IntentNormalizationError(f"Unrecognized intent pattern: '{intent}'")
+        # =====================================================
+        # Unknown intent
+        # =====================================================
+        raise IntentNormalizationError(
+            f"Unrecognized intent pattern: '{intent}'"
+        )
