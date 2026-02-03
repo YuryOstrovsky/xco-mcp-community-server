@@ -49,6 +49,13 @@ class MCPPlanner:
                 )
             except ToolCapabilityError as e:
                 raise PlannerError(str(e))
+            
+            capability_explain = self.cap_resolver.explain_match(
+            action=normalized["action"],
+            object_=normalized["object"],
+            scope_keys=list(normalized["scope"].keys()),
+        )
+
 
 
             workflow = {
@@ -73,10 +80,25 @@ class MCPPlanner:
                 "workflow": workflow,
                 "explain": {
                     "intent": intent,
+                    "canonical_intent": canonical,
+                    "normalized": normalized,
                     "matched_pattern": "show switches in fabric <fabric>",
-                    "reasoning": f"Mapped intent to inventory_getswitches with fabric={fabric}",
+                    "capabilities_required": {
+                        "action": normalized["action"],
+                        "object": normalized["object"],
+                        "scope": list(normalized["scope"].keys()),
+                    },
+                    "tool_selected": tool_name,
+                    "capability_evaluation": capability_explain,
+                    "reasoning": (
+                        f"Selected tool '{tool_name}' because it matched "
+                        f"action={normalized['action']}, "
+                        f"object={normalized['object']}, "
+                        f"scope={list(normalized['scope'].keys())}"
+                    ),
                 },
             }
+
 
         # ---- Fallback ----
         raise PlannerError(f"Unable to plan intent: '{intent}'")

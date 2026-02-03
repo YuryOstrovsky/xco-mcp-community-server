@@ -48,3 +48,35 @@ class ToolCapabilityResolver:
             f"No tool found for action={action}, object={object_}, scope={scope_keys}"
         )
 
+    def explain_match(self, action, object_, scope_keys):
+        """
+        Phase 4.3:
+        Explain how each tool was evaluated against required capabilities
+        """
+
+        explanation = []
+
+        for tool in self.registry.tools.values():
+            caps = tool.get("capabilities")
+            if not caps:
+                continue
+
+            matched = (
+                caps.get("action") == action
+                and caps.get("object") == object_
+                and set(scope_keys).issubset(set(caps.get("scope", [])))
+            )
+
+            explanation.append({
+                "tool": tool["name"],
+                "capabilities": caps,
+                "matched": matched,
+                "reason": (
+                    "action/object/scope matched"
+                    if matched else
+                    "capability mismatch"
+                ),
+            })
+
+        return explanation
+    
