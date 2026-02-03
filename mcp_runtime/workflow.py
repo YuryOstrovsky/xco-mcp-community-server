@@ -84,8 +84,12 @@ class MCPWorkflowRunner:
                     session=session,
                 )
 
-                # ---- Carry context forward ----
+                # ---- Carry context forward (local) ----
                 current_context = r["context"]
+
+                # ✅ CRITICAL FIX: persist context into session
+                if session:
+                    session.update_context(current_context)
 
                 results.append({
                     "step": idx,
@@ -112,7 +116,7 @@ class MCPWorkflowRunner:
                         "type": type(e).__name__,
                         "message": str(e),
                     },
-                    "final_context": current_context,
+                    "final_context": session.get_context() if session else current_context,
                     "rollback_plan": rollback_plan,
                     "meta": {
                         "correlation_id": (
@@ -121,11 +125,13 @@ class MCPWorkflowRunner:
                     },
                 }
 
+        # ---- Authoritative final context ----
+        final_context = session.get_context() if session else current_context
+
         return {
             "workflow_id": workflow_id,
             "steps": results,
-            "final_context": current_context,
-            "rollback_plan": rollback_plan,
+            "final_context": final_context,
             "meta": {
                 "correlation_id": (
                     session.correlation_id if session else None
