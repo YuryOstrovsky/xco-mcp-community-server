@@ -1,11 +1,7 @@
 # mcp_runtime/planner.py
 
 from typing import Dict, List
-
-from mcp_runtime.workflow_schema import (
-    validate_workflow_schema,
-    WorkflowSchemaError,
-)
+from mcp_runtime.workflow_schema import validate_workflow_schema, WorkflowSchemaError
 from mcp_runtime.intent_normalizer import (
     IntentNormalizer,
     IntentNormalizationError,
@@ -20,21 +16,10 @@ class PlannerError(Exception):
     pass
 
 
-class PlannerClarification(Exception):
-    """
-    Raised when intent is valid but underspecified.
-    """
-
-    def __init__(self, message: str, questions: list):
-        super().__init__(message)
-        self.questions = questions
-
-
 class MCPPlanner:
     """
     Phase 4.x:
     Deterministic intent → workflow planner
-    With ambiguity detection & clarification (Phase 4.6)
     """
 
     def __init__(self, registry):
@@ -42,28 +27,10 @@ class MCPPlanner:
         self.normalizer = IntentNormalizer()
         self.cap_resolver = ToolCapabilityResolver(registry)
 
-    # -------------------------------------------------
-    # Helper: clarification question builder
-    # -------------------------------------------------
-    def _require_scope(self, clause: str, missing: list) -> Dict:
-        return {
-            "clause": clause,
-            "missing": missing,
-            "question": (
-                f"Please specify {', '.join(missing)} "
-                f"for: '{clause}'"
-            ),
-        }
-
-    # -------------------------------------------------
-    # Main planner entrypoint
-    # -------------------------------------------------
+    # ---------------------------------------------------------
+    # Phase 4.6 — initial planning (already working)
+    # ---------------------------------------------------------
     def plan(self, intent: str) -> Dict:
-        """
-        Translate intent string into workflow schema.
-        Supports multi-clause intent separated by 'then'.
-        """
-
         if not intent or not intent.strip():
             raise PlannerError("Empty intent")
 
@@ -75,123 +42,109 @@ class MCPPlanner:
 
         steps: List[Dict] = []
         explain_steps = []
+        questions = []
 
-        try:
-            for clause in clauses:
+        for clause in clauses:
+            try:
+                normalized = self.normalizer.normalize(clause)
+            except IntentNormalizationError:
+                # Ambiguous clause → clarification
+                if clause.startswith("show switches"):
+                    questions.append({
+                        "clause": clause,
+                        "missing": ["fabric"],
+                    })
+                    continue
+
+                if clause.startswith("show device"):
+                    questions.append({
+                        "clause": clause,
+                        "missing": ["device"],
+                    })
+                    continue
+
+                raise PlannerError(f"Unrecognized intent: '{clause}'")
+
+            action = normalized["action"]
+            obj = normalized["object"]
+            scope = normalized["scope"]
+
+            # ---- Rule: show switches in fabric <fabric> ----
+            if action == "show" and obj == "switches":
+                if "fabric" not in scope:
+                    questions.append({
+                        "clause": clause,
+                        "missing": ["fabric"],
+                    })
+                    continue
+
                 try:
-                    normalized = self.normalizer.normalize(clause)
-                except IntentNormalizationError as e:
+                    tool = self.cap_resolver.find_tool(
+                        action="show",
+                        object_="switches",
+                        scope_keys=["fabric"],
+                    )
+                except ToolCapabilityError as e:
                     raise PlannerError(str(e))
 
-                action = normalized["action"]
-                obj = normalized["object"]
-                scope = normalized["scope"]
+                steps.append({
+                    "tool": tool,
+                    "context": {"fabric": scope["fabric"]},
+                })
 
-                # =====================================================
-                # Rule 1: show switches in fabric <fabric>
-                # =====================================================
-                if action == "show" and obj == "switches":
+                explain_steps.append({
+                    "clause": clause,
+                    "tool": tool,
+                })
+                continue
 
-                    if "fabric" not in scope:
-                        raise PlannerClarification(
-                            "Missing required scope",
-                            [self._require_scope(clause, ["fabric"])],
-                        )
-
-                    try:
-                        tool_name = self.cap_resolver.find_tool(
-                            action=action,
-                            object_=obj,
-                            scope_keys=["fabric"],
-                        )
-                        capability_explain = self.cap_resolver.explain_match(
-                            action=action,
-                            object_=obj,
-                            scope_keys=["fabric"],
-                        )
-                    except ToolCapabilityError as e:
-                        raise PlannerError(str(e))
-
-                    steps.append({
-                        "tool": tool_name,
-                        "context": {
-                            "fabric": scope["fabric"],
-                        },
-                    })
-
-                    explain_steps.append({
+            # ---- Rule: show device <device> ----
+            if action == "show" and obj == "device":
+                if "device" not in scope:
+                    questions.append({
                         "clause": clause,
-                        "tool": tool_name,
-                        "capability_evaluation": capability_explain,
+                        "missing": ["device"],
                     })
                     continue
 
-                # =====================================================
-                # Rule 2: show device <device>
-                # =====================================================
-                if action == "show" and obj == "device":
+                try:
+                    tool = self.cap_resolver.find_tool(
+                        action="show",
+                        object_="switches",
+                        scope_keys=["device"],
+                    )
+                except ToolCapabilityError as e:
+                    raise PlannerError(str(e))
 
-                    if "device" not in scope:
-                        raise PlannerClarification(
-                            "Missing required scope",
-                            [self._require_scope(clause, ["device"])],
-                        )
+                steps.append({
+                    "tool": tool,
+                    "context": {"device": scope["device"]},
+                })
 
-                    try:
-                        tool_name = self.cap_resolver.find_tool(
-                            action=action,
-                            object_="switches",
-                            scope_keys=["device"],
-                        )
-                        capability_explain = self.cap_resolver.explain_match(
-                            action=action,
-                            object_="switches",
-                            scope_keys=["device"],
-                        )
-                    except ToolCapabilityError as e:
-                        raise PlannerError(str(e))
+                explain_steps.append({
+                    "clause": clause,
+                    "tool": tool,
+                })
+                continue
 
-                    steps.append({
-                        "tool": tool_name,
-                        "context": {
-                            "device": scope["device"],
-                        },
-                    })
+            raise PlannerError(f"Unable to plan clause: '{clause}'")
 
-                    explain_steps.append({
-                        "clause": clause,
-                        "tool": tool_name,
-                        "capability_evaluation": capability_explain,
-                    })
-                    continue
-
-                # =====================================================
-                # Fallback
-                # =====================================================
-                raise PlannerError(f"Unable to plan intent clause: '{clause}'")
-
-        except PlannerClarification as c:
+        if questions:
             return {
                 "clarification_required": True,
-                "questions": c.questions,
-                "explain": {
-                    "intent": intent,
-                    "reason": str(c),
+                "questions": questions,
+                "partial_workflow": {
+                    "version": "1.0",
+                    "steps": steps,
                 },
             }
 
-        # -------------------------------------------------
-        # Final workflow validation
-        # -------------------------------------------------
         workflow = {
             "version": "1.0",
             "steps": steps,
         }
 
-        try:
-            validate_workflow_schema(workflow)
-        except WorkflowSchemaError as e:
-            raise PlannerError(str(e))
+        validate_workflow_schema(workflow)
 
         return {
             "workflow": workflow,
@@ -199,4 +152,67 @@ class MCPPlanner:
                 "intent": intent,
                 "steps": explain_steps,
             },
+        }
+
+    # ---------------------------------------------------------
+    # Phase 4.7 — clarification resolution (NEW)
+    # ---------------------------------------------------------
+    def resolve_clarification(
+        self,
+        previous_plan: Dict,
+        answers: Dict,
+    ) -> Dict:
+        """
+        Apply user-provided answers and resume planning.
+        """
+
+        if not previous_plan.get("clarification_required"):
+            raise PlannerError("No clarification required")
+
+        questions = previous_plan["questions"]
+        steps = previous_plan.get("partial_workflow", {}).get("steps", [])
+
+        for q in questions:
+            clause = q["clause"]
+            missing = q["missing"]
+
+            for key in missing:
+                if key not in answers:
+                    raise PlannerError(f"Missing clarification answer for '{key}'")
+
+                value = answers[key].lower()
+
+                # Re-inject resolved step
+                if clause.startswith("show switches"):
+                    tool = self.cap_resolver.find_tool(
+                        action="show",
+                        object_="switches",
+                        scope_keys=["fabric"],
+                    )
+                    steps.append({
+                        "tool": tool,
+                        "context": {"fabric": value},
+                    })
+
+                elif clause.startswith("show device"):
+                    tool = self.cap_resolver.find_tool(
+                        action="show",
+                        object_="switches",
+                        scope_keys=["device"],
+                    )
+                    steps.append({
+                        "tool": tool,
+                        "context": {"device": value},
+                    })
+
+        workflow = {
+            "version": "1.0",
+            "steps": steps,
+        }
+
+        validate_workflow_schema(workflow)
+
+        return {
+            "workflow": workflow,
+            "clarification_resolved": True,
         }
