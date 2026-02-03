@@ -1,0 +1,4276 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Monitor Service",
+    "description": "This spec defines the API provided by the application to validate authorization for the passed role.",
+    "contact": {
+      "name": "Extreme Networks",
+      "url": "http://www.extremenetworks.com",
+      "email": "support@extremenetworks.com"
+    },
+    "license": {
+      "name": "Apache license",
+      "url": "http://www.extremenetworks.com"
+    },
+    "version": "3.8.0"
+  },
+  "servers": [
+    {
+      "url": "http://monitor-service:8078/v1"
+    }
+  ],
+  "paths": {
+    "/monitor/service/enable": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Service"
+        ],
+        "summary": "Enable and start service.",
+        "operationId": "EnableService",
+        "parameters": [
+          {
+            "name": "service",
+            "in": "query",
+            "description": "Name of the service to enable",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "Service"
+            },
+            "x-exportParamName": "Service"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {}
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A service with the specified name was not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "service"
+      }
+    },
+    "/monitor/service/disable": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Service"
+        ],
+        "summary": "Disable and stop service.",
+        "operationId": "DisableService",
+        "parameters": [
+          {
+            "name": "service",
+            "in": "query",
+            "description": "Name of the service to disable",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "Service"
+            },
+            "x-exportParamName": "Service"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {}
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A service with the specified name was not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "service"
+      }
+    },
+    "/monitor/k3s/pod": {
+      "get": {
+        "tags": [
+          "Monitor K3s"
+        ],
+        "summary": "Get K3S pod.",
+        "description": "Get K3s pod monitoring information.",
+        "operationId": "getK3sPod",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pods"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found in the system.",
+            "content": {}
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {}
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": {
+        "tags": [
+          "Monitor K3s"
+        ],
+        "summary": "Options K3S pod.",
+        "description": "Options K3s pod monitoring information.",
+        "operationId": "optK3sPod",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/monitor/k3s/nodes": {
+      "get": {
+        "tags": [
+          "Monitor K3s"
+        ],
+        "summary": "Get K3s node label.",
+        "description": "Get K3s node label.",
+        "operationId": "getK3sNodeLabel",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Nodes"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found in the system.",
+            "content": {}
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/monitor/k3s/resources": {
+      "get": {
+        "tags": [
+          "Monitor K3s"
+        ],
+        "summary": "Get K3s cluster resources.",
+        "description": "Get K3s cluster resources.",
+        "operationId": "GetK3sClusterResources",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "query",
+            "description": "Namespace of the pod.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "Namespace"
+            },
+            "x-exportParamName": "Namespace"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Resources"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No backup tar provided.",
+            "content": {}
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/monitor/status/k3s": {
+      "get": {
+        "tags": [
+          "Monitor Service"
+        ],
+        "summary": "Get K3s information.",
+        "description": "Get K3s monitoring information.",
+        "operationId": "GetK3sInfo",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceStatus"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No backup tar provided.",
+            "content": {}
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/monitor/status/mariadb": {
+      "get": {
+        "tags": [
+          "Monitor Service"
+        ],
+        "summary": "Get MariaDB information.",
+        "description": "Get MariaDB monitoring information.",
+        "operationId": "GetMariaDBInfo",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceStatus"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No backup tar provided.",
+            "content": {}
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/monitor/status/glusterfs": {
+      "get": {
+        "tags": [
+          "Monitor Service"
+        ],
+        "summary": "Get GlusterFS information.",
+        "description": "Get GlusterFS monitoring information.",
+        "operationId": "GetGlusterFSInfo",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceStatus"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No backup tar provided.",
+            "content": {}
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/monitor/status/keepalived": {
+      "get": {
+        "tags": [
+          "Monitor Service"
+        ],
+        "summary": "Get Keepalived information.",
+        "description": "Get Keepalived monitoring information.",
+        "operationId": "GetKeepAlivedInfo",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceStatus"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No backup tar provided.",
+            "content": {}
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/monitor/status/efa": {
+      "get": {
+        "tags": [
+          "Monitor Service"
+        ],
+        "summary": "Get EFA status.",
+        "description": "Status of EFA.",
+        "operationId": "GetEFAStatus",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NodesStatus"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": {
+        "tags": [
+          "Monitor efa"
+        ],
+        "summary": "Options efa pod.",
+        "description": "Options efa pod monitoring information.",
+        "operationId": "optEFAStatus",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/monitor/status": {
+      "get": {
+        "tags": [
+          "Monitor Service"
+        ],
+        "summary": "Get service information.",
+        "description": "Get all service monitoring information.",
+        "operationId": "GetServiceInfo",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServicesStatus"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No backup tar provided.",
+            "content": {}
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {}
+          }
+        }
+      },
+      "options": {
+        "tags": [
+          "Monitor Service"
+        ],
+        "summary": "Options Servoce.",
+        "description": "Options Service monitoring information.",
+        "operationId": "optServiceInfo",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/monitor/deployment": {
+      "get": {
+        "tags": [
+          "Config"
+        ],
+        "summary": "Get setup configuration.",
+        "description": "Get setup configuration.",
+        "operationId": "getSetupConfig",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeploymentConfig"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No found in the system.",
+            "content": {}
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {}
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": {
+        "tags": [
+          "Monitor Deployment"
+        ],
+        "summary": "Options monitor Deployment.",
+        "description": "Options monitoring deployment information.",
+        "operationId": "optSetupConfig",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/monitor/all": {
+      "get": {
+        "tags": [
+          "Config"
+        ],
+        "summary": "Get all status.",
+        "description": "Get all status.",
+        "operationId": "getAllStatus",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MonitoringInfo"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No found in the system.",
+            "content": {}
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {}
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/monitor/redeploy": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Redeploy"
+        ],
+        "summary": "Redeploy",
+        "description": "Redeploy EFA after TPVM upgrade.",
+        "operationId": "redeploy",
+        "parameters": [
+          {
+            "name": "cleanRedeploy",
+            "in": "query",
+            "description": "Removes all app data prior to redeploying EFA.",
+            "schema": {
+              "type": "boolean",
+              "x-exportParamName": "CleanRedeploy"
+            },
+            "x-exportParamName": "CleanRedeploy"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RedeployResponse"
+                }
+              }
+            },
+            "links": {
+              "GetRedeployStatus": {
+                "operationId": "getRedeployStatus",
+                "parameters": {
+                  "restoreId": "$response.body#/id"
+                },
+                "description": "The `id` value returned in the response can be used as the `redeployId` parameter in `GET /redeploy/{redeployId}`.\n"
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/monitor/redeploy/{redeployId}": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Redeploy"
+        ],
+        "summary": "Redeploy status.",
+        "description": "Get status of redeploy operation.",
+        "operationId": "getRedeployStatus",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "redeployId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Redeploy operation status.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RedeployStatus"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No restore operation with given ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/monitor/activetpvmreboot": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "ActiveTpvmReboot"
+        ],
+        "summary": "ActiveTpvmReboot",
+        "description": "Reboot Active TPVM",
+        "operationId": "ActiveTpvmReboot",
+        "responses": {
+          "200": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActiveTPVMRebootResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/monitor/certificate/expiry": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Certificate"
+        ],
+        "summary": "Get expiry date of EFA certificates",
+        "description": "Get expiry date of EFA certificates",
+        "operationId": "getCertificateExpiry",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArrayOfCertificateExpiry"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/monitor/certificate/renew": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Certificate"
+        ],
+        "summary": "Renew EFA certificates",
+        "description": "Renew EFA certificates",
+        "operationId": "renewCertificates",
+        "parameters": [
+          {
+            "name": "certType",
+            "in": "query",
+            "description": "Regenerate certificates",
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "certType"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CertificateRenewal"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/monitor/certificate/install": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Certificate"
+        ],
+        "summary": "Install 3rd Party Certificates",
+        "description": "Install 3rd Party Certificates",
+        "operationId": "Install3rdPartyCertificates",
+        "requestBody": {
+          "description": "Install 3rd Party Certificates",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InstallCertificateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CertificateInstallResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/monitor/alert/send": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Alert"
+        ],
+        "summary": "Send an alert to EFA (including health-related alerts)",
+        "description": "Send an alert to EFA (including health-related alerts). This API is available to authenticated clients only.",
+        "operationId": "sendAlert",
+        "parameters": [
+          {
+            "name": "alert",
+            "in": "query",
+            "description": "A base64-encoded JSON document representing the alert.",
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "alert"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SendAlertResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/monitor/alert/sendlocal": {
+      "post": {
+        "tags": [
+          "Alert"
+        ],
+        "summary": "Send an alert to EFA from local clients (including health-related alerts)",
+        "description": "Send an alert to EFA (including health-related alerts). This API is available to local (on-machine) clients only, via the Monitor service's restricted Unix-domain socket.",
+        "operationId": "sendAlertLocal",
+        "parameters": [
+          {
+            "name": "alert",
+            "in": "query",
+            "description": "A base64-encoded JSON document representing the alert.",
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "alert"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SendAlertResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/system/supportsave": {
+      "get": {
+        "tags": [
+          "SupportSave"
+        ],
+        "summary": "Get support.",
+        "description": "Capture the supportsave data and return the file name in the response.",
+        "operationId": "SupportSave",
+        "requestBody": {
+          "description": "Supportsave request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SupportSaveRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupportSaveResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {}
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {}
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/system/supportsavelist": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "SupportSaveList"
+        ],
+        "summary": "Get support.",
+        "description": "Capture the supportsavelist data and return the file name(s) and date in the response.",
+        "operationId": "SupportSaveList",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupportSaveListResponses"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {}
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {}
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/system/backup": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Backup"
+        ],
+        "summary": "Create backup.",
+        "description": "Backup all EFA configurations.",
+        "operationId": "CreateBackup",
+        "requestBody": {
+          "description": "Configuration backup request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfigBackupRequests"
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BackupResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "BackupList"
+        ],
+        "summary": "Get backup files list.",
+        "description": "Capture the backup list filename,version and its captured user response.",
+        "operationId": "BackupList",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BackupListResponses"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {}
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {}
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/system/restore": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Restore"
+        ],
+        "summary": "Restore",
+        "description": "Restore all EFA configurations.",
+        "operationId": "RunRestore",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RestoreRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestoreResponse"
+                }
+              }
+            },
+            "links": {
+              "GetRestoreStatus": {
+                "operationId": "getRestoreStatus",
+                "parameters": {
+                  "restoreId": "$response.body#/id"
+                },
+                "description": "The `id` value returned in the response can be used as the `restoreId` parameter in `GET /restore/{restoreId}`.\n"
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No backup tar provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/system/restore/{restoreId}": {
+      "get": {
+        "tags": [
+          "Restore"
+        ],
+        "summary": "Restore status.",
+        "description": "Get status of restore operation.",
+        "operationId": "getRestoreStatus",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "restoreId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Restore operation status.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobStatus"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No restore operation with given ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/system/restore-history": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Restore"
+        ],
+        "summary": "Restore history.",
+        "description": "Get list of all restore operations.",
+        "operationId": "getRestoreHistory",
+        "responses": {
+          "200": {
+            "description": "Restore history.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestoreHistory"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No restore operation is performed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mgmt/subinterface": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "SubInterface"
+        ],
+        "summary": "Get subinterface.",
+        "description": "Get specified subinterface or all subinterfaces.",
+        "operationId": "GetSubInterface",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Name of subinterface.",
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "SubInterface"
+            },
+            "x-exportParamName": "SubInterface"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubInterfaceResponses"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subinterface is not found in the system.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "SubInterface"
+        ],
+        "summary": "Create subinterface.",
+        "description": "Create subinterface.",
+        "operationId": "CreateSubInterface",
+        "requestBody": {
+          "description": "Create a subinterface.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubInterface"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubInterfaceResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A subinterface with the specified name already exists.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "name"
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "SubInterface"
+        ],
+        "summary": "Delete subinterface.",
+        "description": "Delete subinterface.",
+        "operationId": "DeleteSubInterface",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Name of the subinterface.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "name"
+            },
+            "x-exportParamName": "name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubInterfaceResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A subinterface with the specified name is not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mgmt/subinterface/staticips": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "StaticIPs"
+        ],
+        "summary": "Get static IPs.",
+        "description": "Get static IPs of subinterface.",
+        "operationId": "GetStaticIPs",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StaticIPsResponse"
+                  },
+                  "x-content-type": "application/json"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Static IPs are not found in the subinterface.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "StaticIPs"
+        ],
+        "summary": "Add static IPs.",
+        "description": "Adding static IPs to subinterface.",
+        "operationId": "AddStaticIPs",
+        "requestBody": {
+          "description": "Adding static IPs.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StaticIPs"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaticIPsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Specified static IPs already exists.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "StaticIPs"
+        ],
+        "summary": "Remove static IPs.",
+        "description": "Removing static IPs of subinterface.",
+        "operationId": "RemoveStaticIPs",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Name of the subinterface.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "name"
+            },
+            "x-exportParamName": "name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaticIPsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Specified static IPs doesn't exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mgmt/virtualroute": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "VirtualRoute"
+        ],
+        "summary": "Get virtual route.",
+        "description": "Get specified virtual route or all virtual routes.",
+        "operationId": "GetVirtualRoute",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VirtualRouteResponses"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Virtual route is not found in the system.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "VirtualRoute"
+        ],
+        "summary": "Create virtual route.",
+        "description": "Create VirtualRoute",
+        "operationId": "CreateVirtualRoute",
+        "requestBody": {
+          "description": "Create a virtual route.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VirtualRoute"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VirtualRouteResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A VirtualRoute with the specified name already exists.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "name"
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "VirtualRoute"
+        ],
+        "summary": "Delete virtual route.",
+        "description": "Delete virtual route.",
+        "operationId": "DeleteVirtualRoute",
+        "requestBody": {
+          "description": "Delete a virtual route.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VirtualRoute"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VirtualRouteResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A virtual route with the specified name is not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/healthmanager/health": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "getHealth",
+        "description": "Gets the HQI (Health Quality Indicator) of the EFA System",
+        "operationId": "GetHealth",
+        "parameters": [
+          {
+            "name": "resource",
+            "in": "query",
+            "description": "Health resource path associated to the alert being sent",
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "Resource"
+            },
+            "x-exportParamName": "Resource"
+          },
+          {
+            "name": "detail",
+            "in": "query",
+            "description": "Detail of health resource associated with the alert",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "x-exportParamName": "Detail"
+            },
+            "x-exportParamName": "Detail"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "get health request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponses"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request could not be processed because of conflict with the current state of target resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ErrorModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/healthmanager/health/detail": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "getHealthDetail",
+        "description": "Gets HQI values at Certificate and any metadata providing details for health deterioration",
+        "operationId": "GetHealthDetail",
+        "parameters": [
+          {
+            "name": "resource",
+            "in": "query",
+            "description": "Health resource path associated to the alert being sent",
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "Resource"
+            },
+            "x-exportParamName": "Resource"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "get health detail request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthDetailResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request could not be processed because of conflict with the current state of target resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ErrorModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": {
+        "tags": [
+          "Health Detail Options"
+        ],
+        "summary": "Options support for the Health Detail",
+        "description": "Options support for the Health Detail",
+        "operationId": "GetHealthDetailOptions",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/healthmanager/health/inventory": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "getHealthInventory",
+        "description": "A list of possible health resources",
+        "operationId": "GetHealthInventory",
+        "parameters": [
+          {
+            "name": "resource",
+            "in": "query",
+            "description": "Health resource path associated to the alert being sent",
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "Resource"
+            },
+            "x-exportParamName": "Resource"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "get health inventory request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthInventoryResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request could not be processed because of conflict with the current state of target resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ErrorModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/healthmanager/health/debug/clear": {
+      "delete": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "clearHealth",
+        "description": "clear health of subtree for given resource",
+        "operationId": "ClearHealth",
+        "parameters": [
+          {
+            "name": "resource",
+            "in": "query",
+            "description": "Resource path associated with cleared resource",
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "Resource"
+            },
+            "x-exportParamName": "Resource"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "health clear request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClearHealthResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request could not be processed because of conflict with the current state of target resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ErrorModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/monitor/users/host": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "users"
+        ],
+        "summary": "Get host users.",
+        "description": "Get host users on the system.",
+        "operationId": "GetHostUsers",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HostUser"
+                  },
+                  "x-content-type": "application/json"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/system/security-banner": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "SecurityBanner"
+        ],
+        "summary": "Shows Security Banner",
+        "description": "shows the security banner.",
+        "operationId": "GetSecurityBanner",
+        "responses": {
+          "200": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BannerResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No message is provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "SecurityBanner"
+        ],
+        "summary": "Sets Security Banner",
+        "description": "Updates the security banner.",
+        "operationId": "SetSecurityBanner",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BannerRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BannerResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No message is provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "SecurityBanner"
+        ],
+        "summary": "Delete the Security Banner",
+        "description": "Removes the security banner.",
+        "operationId": "DeleteSecurityBanner",
+        "responses": {
+          "200": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BannerResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No message is provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/system/security-banner/reset": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "SecurityBanner"
+        ],
+        "summary": "Reset Security Banner",
+        "description": "Updates the security to the default.",
+        "operationId": "ResetSecurityBanner",
+        "responses": {
+          "200": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BannerResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No message is provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "MonitoringInfo": {
+        "type": "object",
+        "properties": {
+          "deploymentConfig": {
+            "$ref": "#/components/schemas/DeploymentConfig"
+          },
+          "resources": {
+            "$ref": "#/components/schemas/Resources"
+          },
+          "servicesStatus": {
+            "$ref": "#/components/schemas/ServicesStatus"
+          },
+          "nodes": {
+            "$ref": "#/components/schemas/Nodes"
+          },
+          "pods": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Pods"
+            }
+          }
+        }
+      },
+      "DeploymentConfig": {
+        "type": "object",
+        "properties": {
+          "setupconfig": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SetupConfig"
+            }
+          },
+          "nodes": {
+            "$ref": "#/components/schemas/Nodes"
+          }
+        }
+      },
+      "SetupConfig": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "mode": {
+            "type": "string"
+          },
+          "platform": {
+            "type": "string"
+          },
+          "secure": {
+            "type": "string"
+          },
+          "virtualIP": {
+            "type": "string"
+          },
+          "nodeCount": {
+            "type": "string"
+          },
+          "hostIP": {
+            "type": "string"
+          },
+          "PeerIPs": {
+            "type": "string"
+          },
+          "NodeIPs": {
+            "type": "string"
+          },
+          "user": {
+            "type": "string"
+          },
+          "installDir": {
+            "type": "string"
+          },
+          "configFile": {
+            "type": "string"
+          },
+          "bashEvnFile": {
+            "type": "string"
+          },
+          "build": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string"
+          },
+          "workDir": {
+            "type": "string"
+          }
+        }
+      },
+      "Resources": {
+        "type": "object",
+        "properties": {
+          "statefulSetApps": {
+            "$ref": "#/components/schemas/StatefulSetApps"
+          },
+          "replicaSetApps": {
+            "$ref": "#/components/schemas/ReplicaSetApps"
+          },
+          "deploymentApps": {
+            "$ref": "#/components/schemas/DeploymentApps"
+          },
+          "servicePods": {
+            "$ref": "#/components/schemas/ServicePods"
+          },
+          "pods": {
+            "$ref": "#/components/schemas/Pods"
+          }
+        }
+      },
+      "StatefulSetApps": {
+        "type": "object",
+        "properties": {
+          "statefulSetApps": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StatefulSetApp"
+            }
+          }
+        }
+      },
+      "StatefulSetApp": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "ready": {
+            "type": "string"
+          },
+          "age": {
+            "type": "string"
+          }
+        }
+      },
+      "ReplicaSetApps": {
+        "type": "object",
+        "properties": {
+          "replicaSetApps": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReplicaSetApp"
+            }
+          }
+        }
+      },
+      "ReplicaSetApp": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "desired": {
+            "type": "string"
+          },
+          "current": {
+            "type": "string"
+          },
+          "ready": {
+            "type": "string"
+          },
+          "age": {
+            "type": "string"
+          }
+        }
+      },
+      "DeploymentApps": {
+        "type": "object",
+        "properties": {
+          "deploymentApps": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeploymentApp"
+            }
+          }
+        }
+      },
+      "DeploymentApp": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "ready": {
+            "type": "string"
+          },
+          "upToDate": {
+            "type": "string"
+          },
+          "available": {
+            "type": "string"
+          },
+          "age": {
+            "type": "string"
+          }
+        }
+      },
+      "ServicePods": {
+        "type": "object",
+        "properties": {
+          "pods": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServicePod"
+            }
+          }
+        }
+      },
+      "ServicePod": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "serviceType": {
+            "type": "string"
+          },
+          "clusterIP": {
+            "type": "string"
+          },
+          "externalIP": {
+            "type": "string"
+          },
+          "ports": {
+            "type": "string"
+          }
+        }
+      },
+      "ServicesStatus": {
+        "type": "object",
+        "properties": {
+          "services": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServiceStatus"
+            }
+          }
+        }
+      },
+      "ServiceStatus": {
+        "type": "object",
+        "properties": {
+          "serviceName": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "active": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "memory": {
+            "type": "string"
+          },
+          "cpu": {
+            "type": "string"
+          },
+          "nodeIP": {
+            "type": "string"
+          }
+        }
+      },
+      "Nodes": {
+        "type": "object",
+        "properties": {
+          "nodes": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Node"
+            }
+          }
+        }
+      },
+      "Node": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "roles": {
+            "type": "string"
+          },
+          "age": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "active": {
+            "type": "string"
+          },
+          "arch": {
+            "type": "string"
+          },
+          "hostname": {
+            "type": "string"
+          },
+          "os": {
+            "type": "string"
+          }
+        }
+      },
+      "Pods": {
+        "type": "object",
+        "properties": {
+          "namespace": {
+            "type": "string"
+          },
+          "pods": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Pod"
+            }
+          }
+        }
+      },
+      "Pod": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "ready": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "restarts": {
+            "type": "string"
+          },
+          "age": {
+            "type": "string"
+          },
+          "ip": {
+            "type": "string"
+          },
+          "node": {
+            "type": "string"
+          },
+          "nominatedMode": {
+            "type": "string"
+          },
+          "readinessGate": {
+            "type": "string"
+          }
+        }
+      },
+      "ErrorModel": {
+        "required": [
+          "code",
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Device is already registered in inventory"
+          },
+          "code": {
+            "maximum": 600,
+            "minimum": 100,
+            "type": "integer",
+            "example": 101
+          }
+        }
+      },
+      "NodesStatus": {
+        "type": "object",
+        "properties": {
+          "nodes": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NodeStatus"
+            }
+          }
+        }
+      },
+      "NodeStatus": {
+        "type": "object",
+        "required": [
+          "name",
+          "status",
+          "role",
+          "IP",
+          "reason",
+          "pod_count_running",
+          "pod_count_failed",
+          "pod_count_stopped"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the node."
+          },
+          "status": {
+            "type": "string",
+            "description": "Status of the EFA node."
+          },
+          "role": {
+            "type": "string",
+            "description": "Role of the node (active|standby)."
+          },
+          "IP": {
+            "type": "string",
+            "description": "IP of the node."
+          },
+          "galera_host": {
+            "type": "boolean",
+            "description": "True if host is a member of galera."
+          },
+          "galera_size": {
+            "type": "integer",
+            "description": "Size of nodes in galera."
+          },
+          "reason": {
+            "type": "string",
+            "description": "Reason on why a node is down."
+          },
+          "pod_count_running": {
+            "type": "integer",
+            "description": "Healthy pod count"
+          },
+          "pod_count_failed": {
+            "type": "integer",
+            "description": "Un-healthy pod count"
+          },
+          "pod_count_stopped": {
+            "type": "integer",
+            "description": "Stopped pod count"
+          }
+        }
+      },
+      "SubInterface": {
+        "required": [
+          "ip_subnet",
+          "name",
+          "vlan_id"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the subinterface.",
+            "example": "eth0.20"
+          },
+          "vlan_id": {
+            "type": "integer",
+            "description": "VLAN ID of the subinterface.",
+            "example": 20
+          },
+          "ip_subnet": {
+            "type": "string",
+            "description": "IP address including subnet mask of subinterface.",
+            "example": "192.168.2.1/24"
+          },
+          "ipv6_subnet": {
+            "type": "string",
+            "description": "IPv6 address including subnet mask of subinterface.",
+            "example": "2000::1/64"
+          }
+        }
+      },
+      "SubInterfaceResponses": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubInterfaceResponse"
+            }
+          }
+        }
+      },
+      "SubInterfaceResponse": {
+        "type": "object",
+        "properties": {
+          "vlan_id": {
+            "type": "integer",
+            "description": "VLAN ID of the subinterface.",
+            "example": 20
+          },
+          "ip_subnet": {
+            "type": "string",
+            "description": "IP address including subnet mask of the subinterface.",
+            "example": "192.168.2.1/24"
+          },
+          "ipv6_subnet": {
+            "type": "string",
+            "description": "IPv6 address including subnet mask of the subinterface.",
+            "example": "2000::1/64"
+          },
+          "interface": {
+            "type": "string",
+            "description": "Name of the parent interface.",
+            "example": "eth0"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the subinterface.",
+            "example": "eth0.20"
+          }
+        }
+      },
+      "StaticIPs": {
+        "required": [
+          "subinterface",
+          "ip1",
+          "ip2"
+        ],
+        "type": "object",
+        "properties": {
+          "subinterface": {
+            "type": "string",
+            "description": "Name of the subinterface where the static IPs will be assigned.",
+            "example": "efa-sub-200"
+          },
+          "ip1": {
+            "type": "string",
+            "description": "First static IPv4 address+mask in CIDR format.",
+            "example": "192.168.102.1/24"
+          },
+          "ip2": {
+            "type": "string",
+            "description": "Second static IPv4 address+mask in CIDR format.",
+            "example": "192.168.102.2/24"
+          },
+          "ip3": {
+            "type": "string",
+            "description": "First static IPv6 address+mask in CIDR format.",
+            "example": "2000::1/64"
+          },
+          "ip4": {
+            "type": "string",
+            "description": "Second static IPv6 address+mask in CIDR format.",
+            "example": "2000::2/64"
+          }
+        }
+      },
+      "StaticIPsResponse": {
+        "type": "object",
+        "properties": {
+          "subinterface": {
+            "type": "string",
+            "description": "Name of the subinterface where the static IP is assigned.",
+            "example": "efa-sub-200"
+          },
+          "node1": {
+            "type": "object",
+            "properties": {
+              "name1": {
+                "type": "string",
+                "description": "Name of the node.",
+                "example": "node1"
+              },
+              "ip1": {
+                "type": "string",
+                "description": "First static IPv4 address.",
+                "example": "192.168.102.1"
+              },
+              "ip3": {
+                "type": "string",
+                "description": "First static IPv6 address.",
+                "example": "2000::1"
+              }
+            }
+          },
+          "node2": {
+            "type": "object",
+            "properties": {
+              "name2": {
+                "type": "string",
+                "description": "Name of the node.",
+                "example": "node2"
+              },
+              "ip2": {
+                "type": "string",
+                "description": "Second static IPv4 address.",
+                "example": "192.168.102.2"
+              },
+              "ip4": {
+                "type": "string",
+                "description": "Second static IPv6 address.",
+                "example": "2000::1"
+              }
+            }
+          }
+        }
+      },
+      "StaticIPsResponses": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StaticIPsResponse"
+            }
+          }
+        }
+      },
+      "VirtualRoute": {
+        "required": [
+          "route_src",
+          "route_to",
+          "route_via"
+        ],
+        "type": "object",
+        "properties": {
+          "route_src": {
+            "type": "string",
+            "description": "IPv4/IPv6 address of virtual route source.",
+            "example": "192.168.34.40 or 2000::1"
+          },
+          "route_to": {
+            "type": "string",
+            "description": "IPv4/IPv6 CIDR spec of virtual route target network.",
+            "example": "10.20.0.0/16 or 3000::/64"
+          },
+          "route_via": {
+            "type": "string",
+            "description": "IPv4/IPv6 address of virtual route next-hop.",
+            "example": "192.168.34.45 or 2000::2"
+          }
+        }
+      },
+      "VirtualRouteResponses": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VirtualRouteResponse"
+            }
+          }
+        },
+        "example": {
+          "items": [
+            {
+              "route_src": "192.168.34.40",
+              "route_to": "10.20.0.0/16",
+              "route_via": "192.168.34.45"
+            },
+            {
+              "route_src": "192.168.100.21",
+              "route_to": "10.30.40.0/24",
+              "route_via": "192.168.100.1"
+            },
+            {
+              "route_src": "2000::1",
+              "route_to": "3000:1::2/24",
+              "route_via": "2000::2"
+            }
+          ]
+        }
+      },
+      "VirtualRouteResponse": {
+        "type": "object",
+        "properties": {
+          "route_src": {
+            "type": "string",
+            "description": "IP address of virtual route source.",
+            "example": "192.168.34.40 or 2000::1"
+          },
+          "route_to": {
+            "type": "string",
+            "description": "CIDR spec of virtual route target network.",
+            "example": "10.20.0.0/16 or 3000::/64"
+          },
+          "route_via": {
+            "type": "string",
+            "description": "IP address of virtual route next-hop.",
+            "example": "192.168.34.45 or 2000::2"
+          }
+        },
+        "example": {
+          "route_src": "192.168.34.40 or 2000::1",
+          "route_to": "10.20.0.0/16 or 3000::/64",
+          "route_via": "192.168.34.45 or 2000::2"
+        }
+      },
+      "SupportSaveResponse": {
+        "title": "supportsave response",
+        "type": "object",
+        "properties": {
+          "ss_file_name": {
+            "type": "string",
+            "description": "Path of the supportsave archive file."
+          },
+          "ss_file_name_remote": {
+            "type": "string",
+            "description": "Path of the supportsave archive file in the remote server."
+          },
+          "device_ss_error": {
+            "type": "string",
+            "description": "Any parameter errors for device supportsave capture.",
+            "example": "Either specify all-devices or device-ip or fabric name has to be specified for device supportsave"
+          },
+          "device_ss_location": {
+            "type": "string",
+            "description": "Location of device supportsave.",
+            "example": "<USER>@<Remote-Host>:/<Remote-Directory>"
+          },
+          "device_ss_responses": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeviceSupportSaveResponse"
+            }
+          }
+        },
+        "example": {
+          "ss_file_name": "/var/log/efa/efa_2020-11-16T23:33:03.logs.zip",
+          "ss_file_name_remote": "10.37.34.151:/home/user/defect_logs/efa_2023-02-28T08-24-37.821.logs.zip"
+        }
+      },
+      "DeviceSupportSaveResponse": {
+        "title": "Device supportsave response.",
+        "type": "object",
+        "properties": {
+          "ip_address": {
+            "type": "string",
+            "description": "IP address of the device.",
+            "example": "10.24.39.224"
+          },
+          "status": {
+            "$ref": "#/components/schemas/OperationStatusResponse"
+          }
+        }
+      },
+      "OperationStatusResponse": {
+        "title": "Generic operation status response.",
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "string",
+            "description": "Indicates operation status - \"Success\" or \"Failed\".",
+            "example": "Failed"
+          },
+          "reason": {
+            "type": "string",
+            "description": "Error reason for the operation failure.",
+            "example": "SupportSave is underway for the device"
+          }
+        },
+        "example": {
+          "result": "Failed",
+          "reason": "Supportsave is underway for the device."
+        }
+      },
+      "BackupResponse": {
+        "title": "backup response",
+        "type": "object",
+        "properties": {
+          "location": {
+            "type": "string",
+            "description": "Path of the backup archive file."
+          },
+          "remote_location": {
+            "type": "string",
+            "description": "Path of the backup archive file on remote server."
+          },
+          "error": {
+            "type": "string",
+            "description": "Error generating backup."
+          }
+        },
+        "example": {
+          "location": "/var/log/efa/backup/EFA-2020-11-16T23.33.03.tar"
+        }
+      },
+      "RestoreRequest": {
+        "type": "object",
+        "required": [
+          "tar_name"
+        ],
+        "properties": {
+          "tar_name": {
+            "type": "string",
+            "description": "Name of the backup archive file."
+          }
+        },
+        "example": {
+          "tar_name": "EFA-2020-11-16T23.33.03.tar"
+        }
+      },
+      "RestoreResponse": {
+        "title": "restore response",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID of the restore job."
+          }
+        },
+        "example": {
+          "id": "ade23a74-4ead-11eb-ae93-0242ac130002"
+        }
+      },
+      "JobStatus": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "initiated",
+              "processing",
+              "completed",
+              "failed"
+            ],
+            "description": "Status of restore operation."
+          },
+          "issuedAt": {
+            "type": "string",
+            "description": "Timestamp when the operation was triggered."
+          },
+          "message": {
+            "type": "string",
+            "description": "Message from restore operation."
+          },
+          "request": {
+            "$ref": "#/components/schemas/RestoreRequest"
+          }
+        }
+      },
+      "RestoreHistory": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RestoreEntryResponse"
+            }
+          }
+        }
+      },
+      "RestoreEntryResponse": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "description": "ID of the restore operation."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "initiated",
+              "processing",
+              "completed",
+              "failed"
+            ],
+            "description": "Status of restore operation."
+          },
+          "start_time": {
+            "type": "string",
+            "description": "Timestamp when the operation was triggered."
+          },
+          "last_modified_time": {
+            "type": "string",
+            "description": "Timestamp when the operation was updated."
+          },
+          "message": {
+            "type": "string",
+            "description": "Message from restore operation."
+          },
+          "request": {
+            "$ref": "#/components/schemas/RestoreRequest"
+          }
+        }
+      },
+      "ConfigBackupRequests": {
+        "type": "object",
+        "properties": {
+          "fabric": {
+            "type": "string"
+          },
+          "device-ips": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "10.10.10.10",
+              "10.10.10.11",
+              "10.10.10.12"
+            ]
+          },
+          "remote": {
+            "type": "boolean"
+          },
+          "fabric-all": {
+            "type": "boolean"
+          }
+        }
+      },
+      "RedeployResponse": {
+        "title": "redeploy response",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID of the redeploy operation."
+          }
+        },
+        "example": {
+          "id": "ade23a74-4ead-11eb-ae93-0242ac130002"
+        }
+      },
+      "RedeployStatus": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "initiated",
+              "processing",
+              "completed",
+              "failed"
+            ],
+            "description": "Status of redeploy operation."
+          },
+          "message": {
+            "type": "string",
+            "description": "Message from redeploy operation."
+          }
+        }
+      },
+      "SupportSaveRequest": {
+        "type": "object",
+        "properties": {
+          "fabric": {
+            "type": "string"
+          },
+          "device-ips": {
+            "type": "string",
+            "example": "10.24.131.3,162.101.21.2,192.24.32.204"
+          },
+          "fabric-all": {
+            "type": "boolean"
+          },
+          "disable-advance-cli-capture": {
+            "type": "boolean"
+          },
+          "file-name": {
+            "type": "string",
+            "description": "Optional file name. If provided, same name will be used"
+          }
+        }
+      },
+      "BackupListResponses": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/BackupListResponse"
+        }
+      },
+      "BackupListResponse": {
+        "title": "BackList Response Params details.",
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "description": "Filename of the backup.",
+            "example": "EFA-2.7.0-23-2022-05-05T00-00-30.927.Tar"
+          },
+          "version": {
+            "type": "string",
+            "description": "version of the EFA",
+            "example": "2.7.0-23"
+          },
+          "user": {
+            "type": "string",
+            "description": "Backup Generated by the User",
+            "example": "user"
+          }
+        }
+      },
+      "ArrayOfCertificateExpiry": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/CertificateExpiry"
+        }
+      },
+      "CertificateExpiry": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "expiry": {
+            "type": "string"
+          }
+        }
+      },
+      "SendAlertResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "CertificateRenewal": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "InstallCertificateRequest": {
+        "type": "object",
+        "properties": {
+          "certificate": {
+            "type": "string",
+            "description": "Custom Certificate in pem format to be installed for EFA"
+          },
+          "key": {
+            "type": "string",
+            "description": "Custom Key in pem format to be installed for EFA"
+          },
+          "cacert": {
+            "type": "string",
+            "description": "Custom CA Certificate in pem format to be installed for EFA"
+          }
+        }
+      },
+      "CertificateInstallResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "status": "Success"
+        }
+      },
+      "SupportSaveListResponses": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/SupportSaveListResponse"
+        }
+      },
+      "SupportSaveListResponse": {
+        "title": "SupportSaveList Response Params details.",
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "description": "Filename of the supportsave.",
+            "example": "efa_2022-06-20T12-12-48.419.logs.zip"
+          },
+          "date": {
+            "type": "string",
+            "description": "Date of the supportsave taken.",
+            "example": "2022-06-20"
+          }
+        }
+      },
+      "HealthResponse": {
+        "title": "Health manager response for Get Health",
+        "type": "object",
+        "properties": {
+          "Resource": {
+            "type": "string",
+            "description": "Health resource path associated to the alert being sent",
+            "example": "/App/System/Security/Certificate"
+          },
+          "HQI": {
+            "$ref": "#/components/schemas/HealthHQIResponse"
+          },
+          "StatusText": {
+            "type": "string",
+            "description": "Extra status information",
+            "example": "Provided resource is invalid"
+          }
+        }
+      },
+      "HealthResponses": {
+        "title": "Health responses",
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "description": "list of health responses",
+            "items": {
+              "$ref": "#/components/schemas/HealthResponse"
+            }
+          }
+        }
+      },
+      "HealthDetailResponse": {
+        "title": "Health manager response for Get Health",
+        "type": "object",
+        "properties": {
+          "Resource": {
+            "type": "string",
+            "description": "Health resource path associated to the alert being sent",
+            "example": "/App/System/Security/Certificate"
+          },
+          "HQI": {
+            "$ref": "#/components/schemas/HealthHQIResponse"
+          },
+          "Contributors": {
+            "$ref": "#/components/schemas/HealthContributingResources"
+          },
+          "StatusText": {
+            "type": "string",
+            "description": "Extra status information",
+            "example": "Provided resource is invalid"
+          }
+        }
+      },
+      "HealthInventoryResponse": {
+        "title": "Health manager response for Health Inventory",
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/HealthContributingResource"
+        }
+      },
+      "HealthContributingResources": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/HealthContributingResource"
+        }
+      },
+      "HealthContributingResource": {
+        "title": "A resource contributing to an unhealthy score",
+        "type": "string",
+        "description": "A resource contributing to an unhealthy score",
+        "example": "/App/System"
+      },
+      "HealthHQIResponse": {
+        "title": "Health Quality Indicator response",
+        "type": "object",
+        "required": [
+          "Value"
+        ],
+        "properties": {
+          "Color": {
+            "type": "string",
+            "description": "Color for the resource",
+            "example": "yellow"
+          },
+          "Value": {
+            "type": "integer",
+            "description": "Score for the resource",
+            "example": 1
+          }
+        }
+      },
+      "HealthContributingResponse": {
+        "title": "Health contributing response",
+        "type": "object",
+        "properties": {
+          "Resource": {
+            "type": "string",
+            "example": "/App/System/System/HA"
+          }
+        }
+      },
+      "ActiveTPVMRebootResponse": {
+        "title": "active tpvm reboot response",
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "boolean",
+            "description": "status of the reboot operation."
+          }
+        },
+        "example": {
+          "result": true
+        }
+      },
+      "ClearHealthResponse": {
+        "title": "clear health response",
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "integer",
+            "description": "status for health clear",
+            "example": 0
+          },
+          "error": {
+            "type": "string",
+            "description": "Failure Reason",
+            "example": "Unknown error"
+          }
+        }
+      },
+      "HostUser": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the user",
+            "example": "testuser"
+          }
+        }
+      },
+      "BannerRequest": {
+        "type": "object",
+        "required": [
+          "banner_message"
+        ],
+        "properties": {
+          "banner_message": {
+            "type": "string",
+            "description": "Security Banner Message."
+          }
+        },
+        "example": {
+          "banner_message": "Please be an authorized user for logging in."
+        }
+      },
+      "BannerResponse": {
+        "title": "banner update response",
+        "type": "object",
+        "required": [
+          "message"
+        ],
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Status of the update job."
+          }
+        },
+        "example": {
+          "message": "Please be an authorized user for login"
+        }
+      }
+    }
+  }
+}

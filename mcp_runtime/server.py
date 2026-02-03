@@ -14,6 +14,10 @@ from mcp_runtime.auth import AuthManager
 from mcp_runtime.context_injection import ContextInjector
 from mcp_runtime.context_validator import ContextValidator
 
+from mcp_runtime.session import MCPSession
+from mcp_runtime.context_merge import merge_context
+
+
 
 class MCPServer:
     def __init__(self, auto_mode=False):
@@ -43,30 +47,44 @@ class MCPServer:
     def list_tools(self):
         return self.registry.list_tools()
 
-    def invoke(self, tool_name: str, inputs: dict, context: dict | None = None):
+    def invoke(
+        self,
+        tool_name: str,
+        inputs: dict,
+        context: dict | None = None,
+        session=None,
+    ):
         """
-        Phase 2.6:
-        - Accept context either as strings (needs resolve) OR dicts (already resolved)
-        - Merge deterministically
-        - Validate AFTER resolution/merge, BEFORE transport
+        Phase 2.7:
+        - User context overrides session context
+        - Session context overrides inferred context
+        - Validation BEFORE persistence
+        - Persistence only on successful calls
         """
 
         tool = self.registry.get(tool_name)
         if not tool:
             raise ToolNotFound(tool_name)
 
-        # ---- Policy enforcement ----
+        # ---- Policy enforcement (unchanged) ----
         enforce_policy(tool, auto_mode=self.auto_mode)
 
-        # ---- Start with empty resolved_context ----
+        # ---- Load session context (if any) ----
+        session_ctx = session.get_context() if session else {}
+
+        # ---- Merge order: inferred {} <- session <- user ----
+        merged_incoming = self.context_validator.merge(
+            {},
+            session_ctx,
+        )
+        merged_incoming = self.context_validator.merge(
+            merged_incoming,
+            context or {},
+        )
+
         resolved_context: dict = {}
 
-        # ---- Phase 2.6 merge: bring in incoming context first ----
-        # This ensures dict contexts from previous calls are preserved.
-        merged_incoming = self.context_validator.merge({}, context or {})
-
-        # ---- Resolve strings into canonical dict objects ----
-        # NOTE: if caller passed a dict with id, we keep it as-is.
+        # ---- Resolve merged context (Phase 2.6 logic preserved) ----
         if merged_incoming:
             # ---- Fabric ----
             if "fabric" in merged_incoming:
@@ -96,7 +114,7 @@ class MCPServer:
                         tenant_ctx=resolved_context.get("tenant"),
                     )
 
-            # ---- If device exists and fabric was NOT explicitly provided, auto-derive fabric ----
+            # ---- Auto-derive fabric from device (unchanged) ----
             if "device" in resolved_context and "fabric" not in resolved_context:
                 dev = resolved_context["device"]
                 if dev.get("fabric_id") is not None and dev.get("fabric_name") is not None:
@@ -105,7 +123,7 @@ class MCPServer:
                         "name": dev["fabric_name"],
                     }
 
-        # ---- Phase 2.6 validation: validate AFTER resolution ----
+        # ---- Validation BEFORE persistence ----
         self.context_validator.validate(resolved_context)
 
         endpoint = tool["endpoint"]
@@ -117,6 +135,10 @@ class MCPServer:
             params=inputs,
             context=resolved_context,
         )
+
+        # ---- Persist context ONLY on success ----
+        if session:
+            session.update_context(resolved_context)
 
         return {
             "tool": tool_name,

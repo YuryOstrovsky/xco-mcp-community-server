@@ -11,9 +11,6 @@ __pycache__/
 .venv/
 venv/
 
-# Generated artifacts
-generated/
-*.json
 
 # Archives / scratch
 archive/
@@ -31,9 +28,7 @@ archive/
 xco-mcp-archive/
 
 # Generated artifacts
-generated/
 *.zip
-*.json
 
 # Python noise
 __pycache__/

@@ -1,0 +1,606 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Notification Service",
+    "description": "This spec defines the API provided by the Notification Service.",
+    "contact": {
+      "name": "Extreme Networks",
+      "url": "http://www.extremenetworks.com",
+      "email": "support@extremenetworks.com"
+    },
+    "license": {
+      "name": "Apache license",
+      "url": "http://www.extremenetworks.com"
+    },
+    "version": "3.8.0"
+  },
+  "servers": [
+    {
+      "url": "http://gonotification-service:80/v1/notification"
+    }
+  ],
+  "paths": {
+    "/subscribers": {
+      "get": {
+        "tags": [
+          "Subscriber"
+        ],
+        "summary": "getSubscribers",
+        "description": "Get all the subscribers from the notification service.",
+        "operationId": "GetSubscribers",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Subscriber"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Register"
+        ],
+        "summary": "registerSubscriber",
+        "description": "Register subscriber with the notification service.",
+        "operationId": "RegisterSubscriber",
+        "requestBody": {
+          "description": "Register a new subscriber for notification messages.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubscriptionRequest"
+              },
+              "examples": {
+                "webhook": {
+                  "value": {
+                    "handler": "http",
+                    "endpoint": "https://10.1.1.1:5000",
+                    "configs": {
+                      "username": "admin",
+                      "password": "pass",
+                      "insecure": true,
+                      "filters": []
+                    }
+                  }
+                },
+                "syslog": {
+                  "value": {
+                    "handler": "relp",
+                    "endpoint": "10.1.1.1:1601",
+                    "configs": {
+                      "ca-cert": "admin",
+                      "conn-timeout": 10,
+                      "insecure": true,
+                      "filters": [],
+                      "rfc5424": false
+                    }
+                  }
+                },
+                "webhook-filter": {
+                  "value": {
+                    "handler": "http",
+                    "endpoint": "https://10.1.1.1:5000",
+                    "configs": {
+                      "username": "admin",
+                      "password": "pass",
+                      "insecure": true,
+                      "conn-timeout": 10,
+                      "filters": [
+                        "DEVICE_EVENTS",
+                        "APP_EVENTS",
+                        "APP_ALERTS"
+                      ]
+                    }
+                  }
+                },
+                "syslog-filter": {
+                  "value": {
+                    "handler": "relp",
+                    "endpoint": "10.1.1.1:1601",
+                    "configs": {
+                      "ca-cert": "admin",
+                      "insecure": true,
+                      "filters": "DEVICE_EVENTS",
+                      "device-event": "audit-security",
+                      "minimum-severity": "critical"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Subscriber"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "subscriber"
+      }
+    },
+    "/subscribers/{id}": {
+      "get": {
+        "tags": [
+          "Subscriber"
+        ],
+        "summary": "getSubscriber",
+        "description": "Get the subscriber from the notification service given subscriber. ID.",
+        "operationId": "GetSubscriber",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the subscriber entry.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Subscriber"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A subscriber with the given subscriber ID was not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Subscriber"
+        ],
+        "summary": "deleteSubscriber",
+        "description": "Delete the specified subscriber from the notification service.",
+        "operationId": "DeleteSubscriber",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the subscriber entry to be deleted.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {}
+          },
+          "400": {
+            "description": "A subscriber with the given subscriber ID was not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A subscriber with the given subscriber ID was not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/executions": {
+      "get": {
+        "tags": [
+          "Trouble Shooting"
+        ],
+        "summary": "getExecutionList",
+        "description": "Get the list of all the requests previously executed.",
+        "operationId": "ExecutionList",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limit the number of executions that will be sent in the response. Default is 10",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "x-exportParamName": "Limit"
+            },
+            "x-exportParamName": "Limit"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter the executions based on the status (failed/succeeded/all).",
+            "schema": {
+              "type": "string",
+              "default": "all",
+              "x-exportParamName": "Status"
+            },
+            "x-exportParamName": "Status"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExecutionsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "SubscriptionRequest": {
+        "required": [
+          "config",
+          "endpoint",
+          "handler"
+        ],
+        "type": "object",
+        "properties": {
+          "handler": {
+            "type": "string",
+            "description": "Type of handlers. Valid values are \"http\" and \"relp\""
+          },
+          "endpoint": {
+            "type": "string",
+            "description": "for http it is https://\\<webhook-ipv4/ipv6/hostname\\>:\\<port\\> and for relp it is \\<syslog-ipv4/ipv6/hostname\\>:\\<port\\>"
+          },
+          "config": {
+            "type": "object",
+            "properties": {},
+            "description": "config parameters is a dictionary/ordered map.\nValid keys are\n**\"username\", \"password\", \"insecure\", \"cacert\", \"conn-timeout\" \"filters\" \"device-event\" and \"minimum-severity\"**.\n    |   Valid keys                 |  Description                                  | Handler types |\n    |------------------------------|-----------------------------------------------|---------------|\n    |   username                   | username of the webhook/http url              | http          |\n    |                              |                                               |               |\n    |   password                   | password of the webhook/http url              | http          |\n    |                              |                                               |               |\n    |   insecure                   | indicates if the connection is secure or not  | http & relp   |\n    |                              |                                               |               |\n    |   ca-cert                    | CA certificate for secure connection          | http & relp   |\n    |                              |                                               |               |\n    |   filters                    | list of filters based on which selected       | http & relp   |\n    |                              | notifications  will be filtered to subscribers|               |\n    |                              |                                               |               |\n    |   device-event               | list of allowed device event notifications    | http & relp   |\n    |                              |                                               |               |\n    |   minimum-severity           | minimum-severity-value                        | http & relp   |\n    |                              |                                               |               |\n    |   conn-timeout               | connection timeout for http/relp in seconds   | http & relp   |\n    |                              |                                               |               |\n    |   rfc5424                    | enable RFC5424 message format for syslog      | relp          |\n    |                              |                                               |               |\n    | host-event                   | Indicate list of host event category (auditd) | http & relp   |\n    |                              |                                               |               |\n    | host-auditd-key              | list of audit rule key group/category         | http & relp   |\n    |                              |                                               |               |\n    | host-auditd-record-type      | list of audit rule key group/category         | http & relp   |\n    |------------------------------|-----------------------------------------------|---------------|\n### Following are the list values for filters:\n  * \"DEVICE_EVENTS\" - Syslog/Raslog generated from devices\n  * \"HOST_EVENTS\" - Syslog/Raslog generated from devices\n  * \"APP_EVENTS\" - Task or user events generated from the application\n  * \"APP_ALERTS\" - Fault alerts generated from the application\n  * \"APP_ALARMS\" - Fault alarms generated from the application\n##### Empty list of \"filters\" indicate no filters and all events will be notified to subscribers.\n### Following are the list values for device-event:\n  * \"raslog\" - Raslog log messages\n  * \"audit-firmware\" - Audit log messages of class firmware\n  * \"audit-security\" - Audit log messages of class security\n  * \"audit-configuration\" - Audit log messages of class configuration\n##### Empty list or inclusion of all types of \"device-event\" indicates no sub-filter (no device events will be filtered out)\n### Following are the list values for device-event:\n  * \"auditd\" - auditd messages from the host\n##### Empty list (no host events will be filtered out)\n##### host-auditd-key is a list of auditd rule key group/category for auditd messages\n##### host-auditd-record-type is a list of auditd record type for auditd messages\n##### Empty list (by default login & logur auditd key will be filtered out)\n### Following are the possible minimum-severity values:\n  * \"critical\"\n  * \"error\"\n  * \"warning\"\n  * \"info\"\n##### No minimum-severity or a value of \"INFO\" indicate no sub-filtering by severity\n",
+            "example": {
+              "configs": {
+                "username": "admin",
+                "password": "pass",
+                "insecure": true,
+                "conn-timeout": 10,
+                "filters": [
+                  "DEVICE_EVENTS",
+                  "APP_EVENTS",
+                  "APP_ALERTS",
+                  "APP_ALARMS",
+                  "HOST_EVENTS"
+                ],
+                "device-event": [
+                  "audit-security",
+                  "audit-firmware"
+                ],
+                "host-event": [
+                  "auditd"
+                ],
+                "host-auditd-key": [
+                  "logins"
+                ],
+                "minimume-severity": "warning"
+              }
+            }
+          }
+        }
+      },
+      "Subscriber": {
+        "required": [
+          "config",
+          "endpoint",
+          "handler",
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "handler": {
+            "type": "string"
+          },
+          "endpoint": {
+            "type": "string"
+          },
+          "config": {
+            "type": "object",
+            "properties": {}
+          }
+        }
+      },
+      "ErrorModel": {
+        "required": [
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Subscriber is not found."
+          },
+          "code": {
+            "maximum": 600,
+            "minimum": 100,
+            "type": "integer",
+            "example": 101
+          }
+        }
+      },
+      "ExecutionsResponse": {
+        "title": "Fabrics Data",
+        "type": "object",
+        "properties": {
+          "items": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExecutionResponse"
+            }
+          }
+        },
+        "example": {
+          "items": [
+            {
+              "start_time": "2000-01-23T04:56:07.000+00:00",
+              "end_time": "2000-01-23T04:56:07.000+00:00",
+              "id": "id",
+              "command": "subscriber add",
+              "status": "Successful"
+            },
+            {
+              "start_time": "2000-01-23T04:56:07.000+00:00",
+              "end_time": "2000-01-23T04:56:07.000+00:00",
+              "id": "id",
+              "command": "subscriber add",
+              "status": "Successful"
+            }
+          ]
+        }
+      },
+      "ExecutionResponse": {
+        "title": "Single execution response",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID of the operation."
+          },
+          "command": {
+            "type": "string",
+            "description": "Command that was executed.",
+            "example": "subscriber add"
+          },
+          "parameters": {
+            "type": "string",
+            "description": "Parameters that were sent for the command.",
+            "example": "host:1.1.1.1"
+          },
+          "status": {
+            "type": "string",
+            "description": "Command that was executed.",
+            "example": "Successful"
+          },
+          "start_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "end_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "user_name": {
+            "type": "string",
+            "description": "Name of the user who executed the command."
+          }
+        },
+        "example": {
+          "start_time": "2000-01-23T04:56:07.000+00:00",
+          "end_time": "2000-01-23T04:56:07.000+00:00",
+          "id": "id",
+          "command": "subscriber add",
+          "status": "Completed",
+          "user_name": "admin"
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ]
+}

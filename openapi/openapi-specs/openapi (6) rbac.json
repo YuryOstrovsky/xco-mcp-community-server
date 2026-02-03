@@ -1,0 +1,923 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "RBAC Service",
+    "description": "This is the spec that defines the API provided by the application to validate authorization for the passed role",
+    "contact": {
+      "name": "Extreme Networks",
+      "url": "http://www.extremenetworks.com",
+      "email": "support@extremenetworks.com"
+    },
+    "license": {
+      "name": "Apache license",
+      "url": "http://www.extremenetworks.com"
+    },
+    "version": "3.8.0"
+  },
+  "servers": [
+    {
+      "url": "http://gorbac-service:80/v1"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/rbac/isauthorized": {
+      "get": {
+        "tags": [
+          "RBAC"
+        ],
+        "summary": "Validate authorization",
+        "description": "Validates authorization for the role",
+        "operationId": "CheckPermissions",
+        "parameters": [
+          {
+            "name": "roles",
+            "in": "query",
+            "description": "One or more role names passed from the northbound API",
+            "required": true,
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "minItems": 1,
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "x-exportParamName": "Roles"
+            },
+            "x-exportParamName": "Roles"
+          },
+          {
+            "name": "method",
+            "in": "query",
+            "description": "Method passed from the northbound API",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "Method"
+            },
+            "x-exportParamName": "Method"
+          },
+          {
+            "name": "path",
+            "in": "query",
+            "description": "Path passed from the northbound API",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "Path"
+            },
+            "x-exportParamName": "Path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {}
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No permission to access the resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rbac/tenant/isauthorized": {
+      "get": {
+        "tags": [
+          "RBAC-Tenant"
+        ],
+        "summary": "Validate authorization for tenant",
+        "description": "Validates tenant authorization for the role",
+        "operationId": "CheckTenantPermissions",
+        "parameters": [
+          {
+            "name": "roles",
+            "in": "query",
+            "description": "One or more role names passed from the northbound API",
+            "required": true,
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "minItems": 1,
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "x-exportParamName": "Roles"
+            },
+            "x-exportParamName": "Roles"
+          },
+          {
+            "name": "tenant-name",
+            "in": "query",
+            "description": "Tenant name passed from the northbound API",
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "TenantName"
+            },
+            "x-exportParamName": "TenantName"
+          },
+          {
+            "name": "method",
+            "in": "query",
+            "description": "Method passed from the northbound API",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "Method"
+            },
+            "x-exportParamName": "Method"
+          },
+          {
+            "name": "path",
+            "in": "query",
+            "description": "Path passed from the northbound API",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "Path"
+            },
+            "x-exportParamName": "Path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {}
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No permission to access the resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rbac/tenant/authorized-tenants": {
+      "get": {
+        "tags": [
+          "RBAC-Tenant"
+        ],
+        "summary": "Get tenants authorized for a dynamic role",
+        "description": "Get list of all tenants authorized for the given dynamic role. For static roles, the list will be empty.",
+        "operationId": "getAuthorizedTenants",
+        "parameters": [
+          {
+            "name": "roles",
+            "in": "query",
+            "description": "One or more role names passed from the northbound API",
+            "required": true,
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "minItems": 1,
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "x-exportParamName": "Roles"
+            },
+            "x-exportParamName": "Roles"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthorizedTenants"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rbac/role": {
+      "get": {
+        "tags": [
+          "RBAC"
+        ],
+        "summary": "Get Role",
+        "description": "Get specific role defined in EFA",
+        "operationId": "getRole",
+        "parameters": [
+          {
+            "name": "role_name",
+            "in": "query",
+            "description": "Name of the role to be queried",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "Name"
+            },
+            "x-exportParamName": "Name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Role"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rbac/roles": {
+      "get": {
+        "tags": [
+          "RBAC"
+        ],
+        "summary": "Get Roles",
+        "description": "Get all roles defined in EFA",
+        "operationId": "getRoles",
+        "parameters": [
+          {
+            "name": "include_internal",
+            "in": "query",
+            "description": "To include the internal roles in the response",
+            "schema": {
+              "type": "boolean",
+              "x-exportParamName": "IncludeInternal"
+            },
+            "x-exportParamName": "IncludeInternal"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoleList"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rbac/execution": {
+      "get": {
+        "tags": [
+          "Trouble Shooting"
+        ],
+        "summary": "getExecutionDetail",
+        "description": "Get the detailed output of the given execution ID",
+        "operationId": "ExecutionGet",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Detailed output of the given execution ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "Id"
+            },
+            "x-exportParamName": "Id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DetailedExecutionResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Trouble Shooting"
+        ],
+        "summary": "deleteExecutions",
+        "description": "This API will delete the execution entries older than specific number of days",
+        "operationId": "deleteExecutions",
+        "parameters": [
+          {
+            "name": "days_older_by",
+            "in": "query",
+            "description": "Deletes execution entries older than specified number of days",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "default": 30
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {}
+          },
+          "202": {
+            "description": "ACCEPTED",
+            "content": {}
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rbac/executions": {
+      "get": {
+        "tags": [
+          "Trouble Shooting"
+        ],
+        "summary": "getExecutionList",
+        "description": "Get the list of all the previous executions",
+        "operationId": "ExecutionList",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limit the number of executions that will be sent in the response. Default is 10",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "x-exportParamName": "Limit"
+            },
+            "x-exportParamName": "Limit"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter the executions based on the status(failed/succeeded/all)",
+            "schema": {
+              "type": "string",
+              "default": "all",
+              "x-exportParamName": "Status"
+            },
+            "x-exportParamName": "Status"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExecutionsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rbac/permissions": {
+      "get": {
+        "tags": [
+          "RBAC"
+        ],
+        "summary": "Get Permissions",
+        "description": "Get the user view permissions of a user",
+        "operationId": "getPermissions",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserPermissionList"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "ExecutionsResponse": {
+        "title": "RBAC Data",
+        "type": "object",
+        "properties": {
+          "items": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExecutionResponse"
+            }
+          }
+        },
+        "example": {
+          "items": [
+            {
+              "start_time": "2000-01-23T04:56:07.000+00:00",
+              "end_time": "2000-01-23T04:56:07.000+00:00",
+              "id": "id",
+              "command": "configure add",
+              "status": "configure add"
+            },
+            {
+              "start_time": "2000-01-23T04:56:07.000+00:00",
+              "end_time": "2000-01-23T04:56:07.000+00:00",
+              "id": "id",
+              "command": "configure add",
+              "status": "configure add"
+            }
+          ]
+        }
+      },
+      "ExecutionResponse": {
+        "title": "Single execution response",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID of the operation"
+          },
+          "command": {
+            "type": "string",
+            "description": "Command that was executed",
+            "example": "configure add"
+          },
+          "status": {
+            "type": "string",
+            "description": "Command that was executed",
+            "example": "configure add"
+          },
+          "start_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "end_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "username": {
+            "type": "string",
+            "description": "Name of the user who executed the command"
+          }
+        },
+        "example": {
+          "start_time": "2000-01-23T04:56:07.000+00:00",
+          "end_time": "2000-01-23T04:56:07.000+00:00",
+          "id": "id",
+          "command": "configure add",
+          "status": "configure add"
+        }
+      },
+      "DetailedExecutionResponse": {
+        "title": "Detailed output of single execution",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID of the operation"
+          },
+          "command": {
+            "type": "string",
+            "description": "Command that was executed",
+            "example": "configure add"
+          },
+          "parameters": {
+            "type": "string",
+            "description": "Parameters used in the command",
+            "example": "configure add"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status of the command",
+            "example": "Failed, Succeeded"
+          },
+          "start_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "end_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "username": {
+            "type": "string",
+            "description": "Name of the user who executed the command"
+          },
+          "logs": {
+            "type": "string",
+            "description": "Full logs of the command"
+          }
+        },
+        "example": {
+          "start_time": "2000-01-23T04:56:07.000+00:00",
+          "end_time": "2000-01-23T04:56:07.000+00:00",
+          "id": "id",
+          "parameters": "configure add",
+          "logs": "logs",
+          "command": "configure add",
+          "status": "Failed, Succeeded"
+        }
+      },
+      "Role": {
+        "type": "object",
+        "properties": {
+          "role-name": {
+            "type": "string",
+            "description": "Name of the role",
+            "example": "SecurityAdmin"
+          },
+          "description": {
+            "type": "string",
+            "description": "Short Description of the role",
+            "example": "Performs user management, PKI and key management operations in the system"
+          }
+        }
+      },
+      "RoleList": {
+        "type": "object",
+        "properties": {
+          "role-list": {
+            "title": "Full list of roles",
+            "type": "array",
+            "description": "List of roles or specific role details",
+            "example": "{role-list:[{role-name:FabricAdmin,description:Registers devices to fabric...},{role-name:SecurityAdmin,description:Performs user management, PKI and key management operations in the system.}...}]}",
+            "items": {
+              "$ref": "#/components/schemas/Role"
+            }
+          }
+        }
+      },
+      "AuthorizedTenants": {
+        "type": "object",
+        "properties": {
+          "accessible": {
+            "type": "string",
+            "description": "Holds 'all' for static roles and 'specific' for dynamic roles."
+          },
+          "tenants": {
+            "title": "list of tenants",
+            "type": "array",
+            "description": "List of tenants when accessible property has the value 'specific'. The list is empty when the accessible property has the value 'all'.",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "example": "{accessible: specific, tenants:[{tenant-one, tenant-two}]}"
+      },
+      "ErrorModel": {
+        "required": [
+          "code",
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "1000 - No Error.\n1001 - Validation Error.\n30001 - Casbin enforcer Error.\n30002 - Policy definition loading Error.\n30003 - Role does not exists Error.\n30004 - No permissions for role Error.\n30005 - No role found Error.\n30006 - No method found Error.\n30007 - No path found Error\n"
+          },
+          "message": {
+            "type": "string",
+            "description": "Describing the reason of failure"
+          }
+        },
+        "example": {
+          "code": 0,
+          "message": "message"
+        }
+      },
+      "UserPermissionList": {
+        "type": "object",
+        "properties": {
+          "roles": {
+            "type": "array",
+            "description": "User roles",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "SecurityAdmin"
+            ]
+          },
+          "deployment-type": {
+            "type": "string",
+            "description": "Type of the deployment",
+            "enum": [
+              "fabric",
+              "packet",
+              "all"
+            ],
+            "example": "fabric"
+          },
+          "skip-check": {
+            "type": "string",
+            "description": "Skip the permission check for special cases"
+          },
+          "permission-list": {
+            "title": "List of permissions",
+            "type": "string",
+            "description": "permission string"
+          }
+        }
+      }
+    }
+  }
+}

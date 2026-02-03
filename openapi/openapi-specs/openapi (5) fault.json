@@ -1,0 +1,1666 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "FaultManager Service",
+    "description": "This is the spec that defines the APIs provided by the  Fault Manager service to raise alerts and alarms",
+    "contact": {
+      "name": "Extreme Networks",
+      "url": "https://www.extremenetworks.com",
+      "email": "support@extremenetworks.com"
+    },
+    "license": {
+      "name": "Apache license",
+      "url": "https://www.extremenetworks.com"
+    },
+    "version": "3.8.0"
+  },
+  "servers": [
+    {
+      "url": "http://gofaultmanager-service:80/v1"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/faultmanager/health": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "getHealth",
+        "description": "Get the health of the faultmanager service",
+        "operationId": "GetHealth",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthStatus"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request has invalid input parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request could not be processed because of conflict with the current state of target resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/faultmanager/alert/inventory": {
+      "get": {
+        "tags": [
+          "Alerts"
+        ],
+        "summary": "getAlertInventory",
+        "description": "Pre-generated lists of all possible alerts that EFA could raise",
+        "operationId": "GetAlertInventory",
+        "parameters": [
+          {
+            "name": "alert_id",
+            "in": "query",
+            "description": "ID identifying EFA alert",
+            "schema": {
+              "type": "integer",
+              "x-exportParamName": "AlertIDs"
+            },
+            "x-exportParamName": "AlertIDs"
+          },
+          {
+            "name": "resource",
+            "in": "query",
+            "description": "Health resource path associated to the alert being sent",
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "Resource"
+            },
+            "x-exportParamName": "Resource"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlertInventoryList"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request has invalid input parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request could not be processed because of conflict with the current state of target resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/faultmanager/alert/history": {
+      "get": {
+        "tags": [
+          "Alerts"
+        ],
+        "summary": "getAlertHistory",
+        "description": "Actual history of alerts generated by EFA",
+        "operationId": "GetAlertHistory",
+        "parameters": [
+          {
+            "name": "alert_id",
+            "in": "query",
+            "description": "ID identifying EFA alert",
+            "schema": {
+              "type": "integer",
+              "x-exportParamName": "AlertID"
+            },
+            "x-exportParamName": "AlertID"
+          },
+          {
+            "name": "severity",
+            "in": "query",
+            "description": "Severity of EFA alert",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Critical",
+                "Major",
+                "Minor",
+                "Warning",
+                "Info"
+              ],
+              "x-exportParamName": "Severity"
+            },
+            "x-exportParamName": "Severity"
+          },
+          {
+            "name": "sequence_id",
+            "in": "query",
+            "description": "Tracks the sequence in which messages are submitted",
+            "schema": {
+              "type": "integer",
+              "x-exportParamName": "SequenceID"
+            },
+            "x-exportParamName": "SequenceID"
+          },
+          {
+            "name": "resource",
+            "in": "query",
+            "description": "Health resource path associated to the alert being sent",
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "Resource"
+            },
+            "x-exportParamName": "Resource"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limit the number of alerts to be displayed",
+            "schema": {
+              "type": "integer",
+              "x-exportParamName": "Limit"
+            },
+            "x-exportParamName": "Limit"
+          },
+          {
+            "name": "before_timestamp",
+            "in": "query",
+            "description": "Alerts being sent before a particular time stamp",
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "BeforeTimeStamp"
+            },
+            "x-exportParamName": "BeforeTimeStamp"
+          },
+          {
+            "name": "after_timestamp",
+            "in": "query",
+            "description": "Alerts being sent after a particular time stamp",
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "AfterTimeStamp"
+            },
+            "x-exportParamName": "AfterTimeStamp"
+          },
+          {
+            "name": "pagination",
+            "required": false,
+            "in": "query",
+            "description": "{\"sort_by\":\"asc|desc\"}\nResponses with sequence id in ascending or descending order\n{\"offset\" : \"lt:30\"}\nResponses searched with sequence id less than 30\n{\"page_size\":20}\nResponses searched with limit of 20 entries\n",
+            "schema": {
+              "$ref": "#/components/schemas/PaginationQuery"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlertHistoryList"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request could not be processed because of conflict with the current state of target resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ErrorModel"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ErrorModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/faultmanager/alert/clear": {
+      "delete": {
+        "tags": [
+          "Alerts"
+        ],
+        "summary": "clearAlertHistory",
+        "description": "clear all alerts in history",
+        "operationId": "ClearAlertHistory",
+        "responses": {
+          "200": {
+            "description": "alerts clear request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClearAlertHistoryResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request could not be processed because of conflict with the current state of target resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ErrorModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/faultmanager/alarm/inventory": {
+      "get": {
+        "tags": [
+          "Alarms"
+        ],
+        "summary": "getAlarmInventory",
+        "description": "Pre-generated lists of all possible alarms that EFA could raise",
+        "operationId": "GetAlarmInventory",
+        "parameters": [
+          {
+            "name": "alarm_id",
+            "in": "query",
+            "description": "Global ID identifying EFA alarm",
+            "schema": {
+              "type": "integer",
+              "x-exportParamName": "AlarmID"
+            },
+            "x-exportParamName": "AlarmID"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Name identifying EFA alarm",
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "Name"
+            },
+            "x-exportParamName": "Name"
+          },
+          {
+            "name": "resource",
+            "in": "query",
+            "description": "Resource identifying EFA alarm",
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "Resource"
+            },
+            "x-exportParamName": "Resource"
+          },
+          {
+            "name": "alarm_type",
+            "in": "query",
+            "description": "Type of alarm",
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "AlarmType"
+            },
+            "x-exportParamName": "AlarmType"
+          },
+          {
+            "name": "detail",
+            "in": "query",
+            "description": "Display detailed information",
+            "schema": {
+              "type": "booolean",
+              "x-exportParamName": "Detail"
+            },
+            "x-exportParamName": "Detail"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlarmInventoryList"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request has invalid input parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request could not be processed because of conflict with the current state of target resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/faultmanager/alarm/history": {
+      "get": {
+        "tags": [
+          "Alarms"
+        ],
+        "summary": "getAlarmHistory",
+        "description": "Actual history of alarms generated by EFA",
+        "operationId": "GetAlarmHistory",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Name of EFA alarm",
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "Name"
+            },
+            "x-exportParamName": "Name"
+          },
+          {
+            "name": "alarm_id",
+            "in": "query",
+            "description": "Global ID identifying EFA alarm",
+            "schema": {
+              "type": "integer",
+              "x-exportParamName": "AlarmID"
+            },
+            "x-exportParamName": "AlarmID"
+          },
+          {
+            "name": "alarm_type",
+            "in": "query",
+            "description": "Category of EFA alarm",
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "AlarmType"
+            },
+            "x-exportParamName": "AlarmType"
+          },
+          {
+            "name": "instance_id",
+            "in": "query",
+            "description": "Instance IDs identifying EFA alarms.Values can be comma separated and range format.",
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "InstanceID"
+            },
+            "x-exportParamName": "InstanceID"
+          },
+          {
+            "name": "resource",
+            "in": "query",
+            "description": "Health resource path associated to the alarm being sent",
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "Resource"
+            },
+            "x-exportParamName": "Resource"
+          },
+          {
+            "name": "unacked",
+            "in": "query",
+            "description": "List of unacked alarms",
+            "schema": {
+              "type": "boolean",
+              "x-exportParamName": "Unacked"
+            },
+            "x-exportParamName": "Unacked"
+          },
+          {
+            "name": "acked",
+            "in": "query",
+            "description": "List of acked alarms",
+            "schema": {
+              "type": "boolean",
+              "x-exportParamName": "Acked"
+            },
+            "x-exportParamName": "Acked"
+          },
+          {
+            "name": "cleared",
+            "in": "query",
+            "description": "List of cleared alarms",
+            "schema": {
+              "type": "boolean",
+              "x-exportParamName": "Cleared"
+            },
+            "x-exportParamName": "Cleared"
+          },
+          {
+            "name": "closed",
+            "in": "query",
+            "description": "List of closed alarms",
+            "schema": {
+              "type": "boolean",
+              "x-exportParamName": "Closed"
+            },
+            "x-exportParamName": "Closed"
+          },
+          {
+            "name": "detail",
+            "in": "query",
+            "description": "Display detailed information",
+            "schema": {
+              "type": "booolean",
+              "x-exportParamName": "Detail"
+            },
+            "x-exportParamName": "Detail"
+          },
+          {
+            "name": "pagination",
+            "required": false,
+            "in": "query",
+            "description": "{\"sort_by\":\"asc|desc\"}\nResponses with sequence id in ascending or descending order\n{\"offset\" : \"lt:30\"}\nResponses searched with sequence id less than 30\n{\"page_size\":20}\nResponses searched with limit of 20 entries\n",
+            "schema": {
+              "$ref": "#/components/schemas/PaginationQuery"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlarmHistoryList"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request could not be processed because of conflict with the current state of target resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ErrorModel"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ErrorModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/faultmanager/alarm/acknowledge": {
+      "put": {
+        "tags": [
+          "Alarms"
+        ],
+        "summary": "acknowledgeAlarm",
+        "description": "acknowledge raised alarms",
+        "operationId": "AcknowledgeAlarm",
+        "parameters": [
+          {
+            "name": "instance_id",
+            "in": "query",
+            "description": "Instance IDs identifying EFA alarms.Values can be comma separated and range format.",
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "InstanceID"
+            },
+            "x-exportParamName": "InstanceID"
+          },
+          {
+            "name": "resource",
+            "in": "query",
+            "description": "Resource associated with EFA alarm",
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "Resource"
+            },
+            "x-exportParamName": "Resource"
+          },
+          {
+            "name": "comment",
+            "in": "query",
+            "description": "Comment that needs to updated on Alarms",
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "Comment"
+            },
+            "x-exportParamName": "Comment"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlarmHistoryResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request could not be processed because of conflict with the current state of target resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ErrorModel"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ErrorModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/faultmanager/alarm/close": {
+      "put": {
+        "tags": [
+          "Alarms"
+        ],
+        "summary": "closeAlarm",
+        "description": "close raised or cleared alarms",
+        "operationId": "CloseAlarm",
+        "parameters": [
+          {
+            "name": "instance_id",
+            "in": "query",
+            "description": "Instance IDs identifying EFA alarms.Values can be comma separated and range format.",
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "InstanceID"
+            },
+            "x-exportParamName": "InstanceID"
+          },
+          {
+            "name": "resource",
+            "in": "query",
+            "description": "Resource associated with EFA alarm",
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "Resource"
+            },
+            "x-exportParamName": "Resource"
+          },
+          {
+            "name": "comment",
+            "in": "query",
+            "description": "Comment that needs to updated on Alarms",
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "Comment"
+            },
+            "x-exportParamName": "Comment"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlarmHistoryResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request could not be processed because of conflict with the current state of target resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ErrorModel"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ErrorModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/faultmanager/alarm/summary": {
+      "get": {
+        "tags": [
+          "Alarms"
+        ],
+        "summary": "alarmSummary",
+        "description": "Alarm Summary",
+        "operationId": "AlarmSummary",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlarmSummaryList"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request could not be processed because of conflict with the current state of target resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ErrorModel"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ErrorModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/faultmanager/alarm/purge": {
+      "delete": {
+        "tags": [
+          "Alarms"
+        ],
+        "summary": "alarmPurge",
+        "description": "Purges all closed alarms in XCO",
+        "operationId": "AlarmPurge",
+        "responses": {
+          "200": {
+            "description": "alarm clear request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlarmPurgeResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request could not be processed because of conflict with the current state of target resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ErrorModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "ErrorModel": {
+        "required": [
+          "code",
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Reason for failure",
+            "example": "Fault-manager service failure"
+          },
+          "code": {
+            "maximum": 600,
+            "minimum": 100,
+            "type": "integer",
+            "example": 1001
+          }
+        }
+      },
+      "HealthStatus": {
+        "required": [
+          "MessageBus",
+          "Service"
+        ],
+        "type": "object",
+        "properties": {
+          "Service": {
+            "type": "string"
+          },
+          "MessageBus": {
+            "type": "string"
+          }
+        }
+      },
+      "AlertInventoryList": {
+        "type": "object",
+        "properties": {
+          "Alerts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AlertInventoryResponse"
+            }
+          }
+        },
+        "example": {
+          "Alerts": [
+            {
+              "AlertID": 31000,
+              "Severity": "Warning",
+              "Resource": "/App/System/Security/Certificate"
+            },
+            {
+              "AlertID": 41000,
+              "Severity": "Warning",
+              "Resource": "/App/System/Security/Certificate"
+            }
+          ]
+        }
+      },
+      "AlertInventoryResponse": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "description": "Alert display name",
+            "example": "Certificate expiry notice alert"
+          },
+          "AlertID": {
+            "type": "integer",
+            "description": "ID identifying EFA alert",
+            "example": 31000
+          },
+          "Severity": {
+            "type": "string",
+            "description": "severity of EFA alert",
+            "enum": [
+              "Critical",
+              "Major",
+              "Minor",
+              "Warning",
+              "Info"
+            ],
+            "example": "Warning"
+          },
+          "Resource": {
+            "type": "string",
+            "description": "Health resource path associated to the alert being sent",
+            "example": "/App/System/Security/Certificate"
+          }
+        }
+      },
+      "AlertHistoryList": {
+        "type": "object",
+        "properties": {
+          "paginationResponse": {
+            "$ref": "#/components/schemas/PaginationResponse"
+          },
+          "Alerts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AlertHistoryResponse"
+            }
+          }
+        },
+        "example": {
+          "Alerts": [
+            {
+              "AlertID": 31000,
+              "SequenceID": 47,
+              "Cause": "key expired",
+              "Severity": "Warning",
+              "Resource": "/App/System/Security/Certificate",
+              "Timestamp": "2022-09-22T14:06:01",
+              "Limit": 5
+            },
+            {
+              "AlertID": 41000,
+              "SequenceID": 51,
+              "Cause": "token expired",
+              "Severity": "Warning",
+              "Resource": "/App/System/Security/Certificate",
+              "Timestamp": "2022-09-22T14:06:01",
+              "Limit": 2
+            }
+          ]
+        }
+      },
+      "AlertHistoryResponse": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "description": "Alert display name",
+            "example": "Certificate expiry notice alert"
+          },
+          "AlertID": {
+            "type": "integer",
+            "description": "ID identifying EFA alert",
+            "example": 31000
+          },
+          "SequenceID": {
+            "type": "integer",
+            "description": "Tracks the sequence in which messages are submitted",
+            "example": 47
+          },
+          "Cause": {
+            "type": "string",
+            "description": "Reason for the alert",
+            "example": "key expired"
+          },
+          "Severity": {
+            "type": "string",
+            "description": "severity of EFA alert",
+            "enum": [
+              "Critical",
+              "Major",
+              "Minor",
+              "Warning",
+              "Info"
+            ],
+            "example": "Warning"
+          },
+          "Resource": {
+            "type": "string",
+            "description": "Health resource path associated to the alert being sent",
+            "example": "/App/System/Security/Certificate"
+          },
+          "Timestamp": {
+            "type": "string",
+            "description": "Timestamp of the alert",
+            "example": "2022-09-22T14:06:01"
+          },
+          "Message": {
+            "type": "string",
+            "description": "Reason for alert",
+            "example": "The application server certificate on XCO will expire soon"
+          }
+        }
+      },
+      "ClearAlertHistoryResponse": {
+        "title": "clear alert history response",
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "integer",
+            "description": "status for alert clear",
+            "example": 0
+          },
+          "error": {
+            "type": "string",
+            "description": "Failure Reason",
+            "example": "Unknown error"
+          }
+        }
+      },
+      "AlarmInventoryList": {
+        "type": "object",
+        "properties": {
+          "Alarms": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AlarmInventoryResponse"
+            }
+          }
+        },
+        "example": {
+          "Alarms": [
+            {
+              "AlarmID": 32000,
+              "Name": "CertificateExpiration",
+              "Resource": "/App/System/Security/Certificate",
+              "AlarmType": "security"
+            },
+            {
+              "AlarmID": 32001,
+              "Name": "DeviceCertificateExpiration",
+              "Resource": "/App/System/Security/Device/Certificate",
+              "AlarmType": "security"
+            }
+          ]
+        }
+      },
+      "AlarmInventoryResponse": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "description": "Alarm display name",
+            "example": "Certificate expiry notice alarm"
+          },
+          "AlarmID": {
+            "type": "integer",
+            "description": "Global ID identifying EFA alarm",
+            "example": 32000
+          },
+          "AlarmType": {
+            "type": "string",
+            "description": "type of EFA alarm",
+            "enum": [
+              "Communications",
+              "QualityOfService",
+              "Processing",
+              "Equipment",
+              "Environmental",
+              "Integrity",
+              "Operational",
+              "Physical",
+              "Security",
+              "TimeDomain",
+              "Fabric",
+              "Tenant",
+              "Policy",
+              "Other"
+            ],
+            "example": "Security"
+          },
+          "Resource": {
+            "type": "string",
+            "description": "Health resource path associated to the alarm being sent",
+            "example": "/App/System/Security/Certificate"
+          },
+          "WillClear": {
+            "type": "boolean",
+            "description": "Alarms ability to be cleared by system",
+            "example": false
+          },
+          "Severity": {
+            "type": "string",
+            "description": "Alarms possible severities",
+            "example": "Warning"
+          },
+          "Description": {
+            "type": "string",
+            "description": "Alarm purpose",
+            "example": "Notify an application certificate is about to expire or has expired."
+          },
+          "RaiseConditions": {
+            "description": "Conditions when the alarm will be raised",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AlarmInventoryConditionResponse"
+            }
+          },
+          "ClearConditions": {
+            "description": "Conditions when the alarm will be cleared",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AlarmInventoryConditionResponse"
+            }
+          }
+        }
+      },
+      "AlarmInventoryConditionResponse": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "description": "Name of the raise or close condition",
+            "example": "DeviceCertificateExpiration_Raise"
+          },
+          "Desc": {
+            "type": "string",
+            "description": "raise or close condition description",
+            "example": "Raise the DeviceCertificateExpiration alarm when a device certificate is about to expire within 90 days."
+          },
+          "Salience": {
+            "type": "integer",
+            "description": "Raise or clear condition priority. Higher value is higher priority",
+            "example": 2
+          },
+          "WhenClause": {
+            "type": "string",
+            "description": "When to raise or clear the alarm",
+            "example": "Alert.AlertID == 31001"
+          },
+          "ThenClause": {
+            "type": "string",
+            "description": "Action to be taken when the condition is met",
+            "example": "RaiseAlarm()"
+          }
+        }
+      },
+      "AlarmHistoryList": {
+        "type": "object",
+        "properties": {
+          "paginationResponse": {
+            "$ref": "#/components/schemas/PaginationResponse"
+          },
+          "Alarms": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AlarmHistoryResponse"
+            }
+          }
+        },
+        "example": {
+          "Alarms": [
+            {
+              "AlarmID": 32000,
+              "InstanceID": "2,3,5-10",
+              "Name": "CertificateExpiration",
+              "Resource": "/App/System/Security/Certificate",
+              "AlarmType": "security",
+              "IsCleared": false
+            },
+            {
+              "AlarmID": 32001,
+              "InstanceID": "2,3,5-10",
+              "Name": "DeviceCertificateExpiration",
+              "Resource": "/App/System/Security/Device/Certificate",
+              "AlarmType": "security",
+              "IsCleared": true
+            }
+          ]
+        }
+      },
+      "AlarmHistoryResponse": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "description": "Alarm display name",
+            "example": "Certificate expiry notice alarm"
+          },
+          "AlarmID": {
+            "type": "integer",
+            "description": "Global ID identifying EFA alarm",
+            "example": 32000
+          },
+          "InstanceID": {
+            "type": "string",
+            "description": "Alarm runtime generated IDs",
+            "example": 2
+          },
+          "AlarmType": {
+            "type": "string",
+            "description": "type of EFA alarm",
+            "enum": [
+              "Communications",
+              "QualityOfService",
+              "Processing",
+              "Equipment",
+              "Environmental",
+              "Integrity",
+              "Operational",
+              "Physical",
+              "Security",
+              "TimeDomain",
+              "Fabric",
+              "Tenant",
+              "Policy",
+              "Other"
+            ],
+            "example": "Security"
+          },
+          "Resource": {
+            "type": "string",
+            "description": "Health resource path associated to the alarm being sent",
+            "example": "/App/System/Security/Certificate"
+          },
+          "Severity": {
+            "type": "string",
+            "description": "Alarm last perceived severity",
+            "example": "Warning"
+          },
+          "IsCleared": {
+            "type": "boolean",
+            "description": "Signifies that the alarms clearing condition has been met and the system has cleared the alarm",
+            "example": false
+          },
+          "Message": {
+            "type": "string",
+            "description": "Alarms latest message update derived from the alert which has caused the alarm to be raised",
+            "example": "Authentication failed for user extreme"
+          },
+          "TimeCreated": {
+            "type": "string",
+            "description": "Time when the alarm first appeared in the system",
+            "example": "2022-09-22T10:06:01"
+          },
+          "LastRaised": {
+            "type": "string",
+            "description": "Time when the alarm was raised last",
+            "example": "2022-09-22T14:06:01"
+          },
+          "LastChanged": {
+            "type": "string",
+            "description": "Time when the alarm was changed last due to a severity state change or by an operator acknowledging or closing the alarm",
+            "example": "2022-09-22T14:06:01"
+          },
+          "IsAcked": {
+            "type": "boolean",
+            "description": "Alarms that are acked by user",
+            "example": false
+          },
+          "IsClosed": {
+            "type": "boolean",
+            "description": "Alarms that are closed by user",
+            "example": false
+          },
+          "StatusChangeList": {
+            "type": "array",
+            "description": "A list of the status changes by the system including severity and clearing status changes",
+            "items": {
+              "$ref": "#/components/schemas/StatusChangeList"
+            }
+          },
+          "UserStateChangeList": {
+            "type": "array",
+            "description": "A list of state changes performed by the user such as acknowledging and closing an alarm",
+            "items": {
+              "$ref": "#/components/schemas/UserStateChangeList"
+            }
+          }
+        }
+      },
+      "StatusChangeList": {
+        "type": "object",
+        "properties": {
+          "Time": {
+            "type": "string",
+            "description": "Time when the status change occurred",
+            "example": "2022-09-22T14:06:01"
+          },
+          "Severity": {
+            "type": "string",
+            "description": "Alarms perceived severity including a cleared severity",
+            "example": "Warning"
+          },
+          "Message": {
+            "type": "string",
+            "description": "Alarms latest message update derived from the alert which has caused the alarm status change",
+            "example": "Authentication failed for user extreme"
+          }
+        }
+      },
+      "UserStateChangeList": {
+        "type": "object",
+        "properties": {
+          "Time": {
+            "type": "string",
+            "description": "Time when the state change occurred",
+            "example": "2022-09-22T14:06:01"
+          },
+          "User": {
+            "type": "string",
+            "description": "Username who performed the state change operation",
+            "example": "extreme"
+          },
+          "UserState": {
+            "type": "string",
+            "description": "User state change such as acknowledged or closed",
+            "example": "closed"
+          },
+          "Comment": {
+            "type": "string",
+            "description": "Optional user comment provided with the acknowledge or close operation",
+            "example": "closing this alarm as this is not critical"
+          }
+        }
+      },
+      "AlarmSummaryList": {
+        "type": "object",
+        "properties": {
+          "Alarms": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AlarmSummaryResponse"
+            }
+          }
+        },
+        "example": {
+          "Alarms": [
+            {
+              "Severity": "Warning",
+              "Total": 8,
+              "NotCleared": 2,
+              "Cleared": 2,
+              "ClearedNotClosed": 1,
+              "ClearedClosed": 1,
+              "NotClearedClosed": 1,
+              "NotClearedNotClosed": 1
+            },
+            {
+              "Severity": "Critical",
+              "Total": 8,
+              "NotCleared": 1,
+              "Cleared": 1,
+              "ClearedNotClosed": 2,
+              "ClearedClosed": 2,
+              "NotClearedClosed": 1,
+              "NotClearedNotClosed": 1
+            }
+          ]
+        }
+      },
+      "AlarmSummaryResponse": {
+        "type": "object",
+        "properties": {
+          "Severity": {
+            "type": "string",
+            "description": "Severities are from the Alarms last perceived severity",
+            "example": "warning"
+          },
+          "Total": {
+            "type": "integer",
+            "description": "Total number of alarms for the given severity",
+            "example": 10
+          },
+          "NotCleared": {
+            "type": "integer",
+            "description": "Total number of uncleared alarms for the given severity",
+            "example": 10
+          },
+          "Cleared": {
+            "type": "integer",
+            "description": "Total number of cleared alarms for the given severity",
+            "example": 10
+          },
+          "ClearedNotClosed": {
+            "type": "integer",
+            "description": "Total number of cleared but not closed alarms for the given severity",
+            "example": 10
+          },
+          "ClearedClosed": {
+            "type": "integer",
+            "description": "Total number of cleared and closed alarms for the given severity",
+            "example": 10
+          },
+          "NotClearedClosed": {
+            "type": "integer",
+            "description": "Total number of uncleared and closed alarms for the given severity",
+            "example": 10
+          },
+          "NotClearedNotClosed": {
+            "type": "integer",
+            "description": "Total number of uncleared and unclosed alarms for the given severity",
+            "example": 10
+          }
+        }
+      },
+      "AlarmPurgeResponse": {
+        "type": "object",
+        "properties": {
+          "Message": {
+            "type": "string",
+            "description": "An alarm purge will release all the resources related to the stateful alarm entity.",
+            "example": "All closed alarms are purged succesfully"
+          }
+        }
+      },
+      "PaginationQuery": {
+        "type": "object",
+        "properties": {
+          "offset": {
+            "type": "string"
+          },
+          "page_size": {
+            "type": "integer"
+          },
+          "sort_order": {
+            "type": "string"
+          }
+        }
+      },
+      "PaginationResponse": {
+        "type": "object",
+        "properties": {
+          "remaining_count": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "first_id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "last_id": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      }
+    }
+  }
+}

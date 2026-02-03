@@ -1,0 +1,4623 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Auth Service",
+    "description": "This is the spec that defines the API provided by the application to provide auth across the cluster",
+    "contact": {
+      "name": "Extreme Networks",
+      "url": "http://www.extremenetworks.com",
+      "email": "support@extremenetworks.com"
+    },
+    "license": {
+      "name": "Apache license",
+      "url": "http://www.extremenetworks.com"
+    },
+    "version": "3.8.0"
+  },
+  "servers": [
+    {
+      "url": "http://goauth-service:80/v1"
+    }
+  ],
+  "paths": {
+    "/auth/token/validate": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Validate Token",
+        "description": "Validate if the input token is valid",
+        "operationId": "ForwardAuthGateway",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {}
+          },
+          "401": {
+            "description": "Not Authorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access to resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/token/access-token": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Create access token",
+        "description": "Create an access token for EFA",
+        "operationId": "CreateAccessToken",
+        "requestBody": {
+          "description": "Credentials to fetch a token",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccessTokenRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessTokenResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "Credentials"
+      }
+    },
+    "/auth/token/system-access-token": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Create system access token",
+        "description": "Create a system access token for EFA",
+        "operationId": "CreateSystemAccessToken",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessTokenResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "Credentials"
+      }
+    },
+    "/auth/token/extended-system-access-token": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Create extended system access token",
+        "description": "Create an extended system access token for EFA",
+        "operationId": "CreateExtendedSystemAccessToken",
+        "requestBody": {
+          "description": "Credentials to fetch a token",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExtendedTokenRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessTokenResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "Credentials"
+      }
+    },
+    "/auth/token/client-access-token": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Create access token for clients",
+        "description": "Create an access token for XCO clients",
+        "operationId": "CreateClientAccessToken",
+        "requestBody": {
+          "description": "Client Credentials to fetch a token",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientAccessTokenRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientAccessTokenResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "ClientCredentials"
+      }
+    },
+    "/auth/token/refresh": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Get access token with refresh token",
+        "description": "Get access token with refresh token",
+        "operationId": "RefreshAccessToken",
+        "requestBody": {
+          "description": "Refresh token",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshTokenRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessTokenResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "RefreshAccessToken"
+      }
+    },
+    "/auth/token/apikey": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Get key for XCO client",
+        "description": "Get API key for XCO client",
+        "operationId": "GetAPIKey",
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "query",
+            "description": "Client ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "ClientID"
+            },
+            "x-exportParamName": "ClientID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiKeyResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Create a key for XCO clients",
+        "description": "Create a key for XCO clients",
+        "operationId": "CreateAPIKey",
+        "parameters": [
+          {
+            "name": "force",
+            "in": "query",
+            "description": "Force key regenerate",
+            "required": true,
+            "schema": {
+              "type": "boolean",
+              "x-exportParamName": "force"
+            },
+            "x-exportParamName": "force"
+          }
+        ],
+        "requestBody": {
+          "description": "Credentials to fetch a token",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiKeyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiKeyResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "ClientCredentials"
+      }
+    },
+    "/auth/token/expiry": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Get Token Expiry Time",
+        "description": "Return Token Expiry Time",
+        "operationId": "GetTokenExpiryTime",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "description": "Type of the token",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "Type"
+            },
+            "x-exportParamName": "Type"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenExpiryTimeResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Update Token Expiry Time",
+        "description": "Update Token Expiry Time For A Specific Token",
+        "operationId": "UpdateTokenExpiryTime",
+        "requestBody": {
+          "description": "Type of the XCO token",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TokenExpiryTimeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenExpiryTimeResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "Type"
+      }
+    },
+    "/auth/token/expiry/all": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Get All Tokens Expiry Time",
+        "description": "Return All Tokens Expiry Times",
+        "operationId": "GetAllTokenExpiryTimes",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TokenExpiryTimeResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/token/remove-token": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Remove the access token",
+        "description": "Remove the access token for EFA",
+        "operationId": "RemoveAccessToken",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {}
+          },
+          "401": {
+            "description": "Authorization invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "Credentials"
+      }
+    },
+    "/auth/clientlist": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Fetch all client details",
+        "description": "Fetch all client details configured in the application",
+        "operationId": "GetAllClients",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ClientResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/client": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Fetch client details by name",
+        "description": "Fetch client details by name",
+        "operationId": "GetClientByName",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Name of the client",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "Name"
+            },
+            "x-exportParamName": "Name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Register a new client",
+        "description": "Register a new client to access EFA",
+        "operationId": "CreateClient",
+        "requestBody": {
+          "description": "Details of the client",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "Client"
+      },
+      "delete": {
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Delete a registered client",
+        "description": "Delete a registered client by its name",
+        "operationId": "DeleteClient",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Name of the registered client",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "Name"
+            },
+            "x-exportParamName": "Name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {}
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/authenticator/ldap": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Fetch registered LDAP server details",
+        "description": "Fetch LDAP details by name",
+        "operationId": "GetLDAPDetails",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Name given for the ldap connection",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "Name"
+            },
+            "x-exportParamName": "Name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LDAPDetailsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Update LDAP configuration",
+        "description": "Update LDAP configuration for authentication",
+        "operationId": "UpdateLDAPDetails",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Name of the registered LDAP Server",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "Name"
+            },
+            "x-exportParamName": "Name"
+          }
+        ],
+        "requestBody": {
+          "description": "Details of the LDAP Server",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LDAPDetailsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LDAPDetailsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "LDAPConfig"
+      },
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Register a new LDAP Server",
+        "description": "Register a new LDAP Server for authentication",
+        "operationId": "CreateLDAPDetails",
+        "requestBody": {
+          "description": "Details of the LDAP Server",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LDAPDetailsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LDAPDetailsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "LDAPConfig"
+      },
+      "delete": {
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Delete a registered LDAP server",
+        "description": "Delete a registered LDAP server",
+        "operationId": "DeleteLDAPDetails",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Name of the registered LDAP Server",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "Name"
+            },
+            "x-exportParamName": "Name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {}
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/authenticator/ldap/reset": {
+      "put": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Reset LDAP configuration",
+        "description": "Reset LDAP configuration",
+        "operationId": "ResetLDAPConfig",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Name of the registered LDAP Server",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "Name"
+            },
+            "x-exportParamName": "Name"
+          }
+        ],
+        "requestBody": {
+          "description": "Reset LDAP Configs.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "example": [
+                  "Host",
+                  "Port",
+                  "CaCert",
+                  "BindUsername",
+                  "BindUserPassword",
+                  "UserSearchBase",
+                  "UserObjectClass",
+                  "UserLoginAttribute",
+                  "UserRoleAttribute",
+                  "UserRoleAttributeKey",
+                  "UserMemberAttribute",
+                  "GroupSearchBase",
+                  "GroupObjectClass",
+                  "GroupAttribute",
+                  "GroupMemberUserAttribute",
+                  "GroupMemberMappingAttribute"
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LDAPDetailsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Incorrect values specified for LDAP config reset",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A LDAP with the specified name was not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A LDAP settings already exist and cannot be updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "ldap-reset-settings"
+      }
+    },
+    "/auth/authenticator/ldaplist": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Get all LDAP connection details",
+        "description": "Get All LDAP details configured in the application",
+        "operationId": "GetLDAPList",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LDAPDetailsResponse"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No LDAP details are configured in the system",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/execution": {
+      "get": {
+        "tags": [
+          "Trouble Shooting"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Get execution details",
+        "description": "Get the detailed output of the given execution ID",
+        "operationId": "ExecutionGet",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Execution ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "Id"
+            },
+            "x-exportParamName": "Id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DetailedExecutionResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Trouble Shooting"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "deleteExecutions",
+        "description": "This API will delete the execution entries older than specific number of days",
+        "operationId": "deleteExecutions",
+        "parameters": [
+          {
+            "name": "days_older_by",
+            "in": "query",
+            "description": "Deletes execution entries older than specified number of days",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "default": 30
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {}
+          },
+          "202": {
+            "description": "ACCEPTED",
+            "content": {}
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/executions": {
+      "get": {
+        "tags": [
+          "Trouble Shooting"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Get Execution List",
+        "description": "Get the list of all the previous executions",
+        "operationId": "ExecutionList",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limit the number of executions that will be sent in the response. Default is 10",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "x-exportParamName": "Limit"
+            },
+            "x-exportParamName": "Limit"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter the executions based on the status(failed/succeeded/all)",
+            "schema": {
+              "type": "string",
+              "default": "all",
+              "x-exportParamName": "Status"
+            },
+            "x-exportParamName": "Status"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExecutionsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/execution-logs": {
+      "get": {
+        "tags": [
+          "getExecLogs"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Get Execution log list with pagination",
+        "description": "Get Execution log list with pagination",
+        "operationId": "GetExecLogs",
+        "parameters": [
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "description": "{\"group_by\":\"user_name\"}\nResponses grouped by user name\n{\"filter\":[{\"name\":\"user_name\",\"value\":\"admin\"}]\nResponses filtered by name=\"admin\"\n{\"fuzzy\":\"ConfigAddUpdate\"}\nResponses searched using fuzzy search \"ConfigAddUpdate\"\n",
+            "schema": {
+              "$ref": "#/components/schemas/SearchQuery"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditLogResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/rolemappings": {
+      "get": {
+        "tags": [
+          "Role"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Fetch role mapping details",
+        "description": "Fetch role mapping details",
+        "operationId": "GetRoleMappings",
+        "parameters": [
+          {
+            "name": "auth_type",
+            "in": "query",
+            "description": "Auth type(LOCAL, HOST, LDAP, or TACACS)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "AuthType"
+            },
+            "x-exportParamName": "AuthType"
+          },
+          {
+            "name": "auth_identifier",
+            "in": "query",
+            "description": "Auth identifier",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "AuthIdentifier"
+            },
+            "x-exportParamName": "AuthIdentifier"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RoleMappingResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Role"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Map roles",
+        "description": "To map user defined roles with XCO role",
+        "operationId": "RoleMappings",
+        "requestBody": {
+          "description": "Mapping the user defined roles and XCO roles",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/RoleMappingRequest"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RoleMappingResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "role name is invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/rolemapping": {
+      "post": {
+        "tags": [
+          "Role"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Add new role mapping",
+        "description": "Add new role mapping",
+        "operationId": "CreateRoleMapping",
+        "requestBody": {
+          "description": "Details of the mapping to be created",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RoleMappingRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoleMappingResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "RoleMapping"
+      },
+      "delete": {
+        "tags": [
+          "Role"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Delete a role mapping",
+        "description": "Delete the role mapping",
+        "operationId": "DeleteRoleMapping",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "ID of the role mapping that is created",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "ID"
+            },
+            "x-exportParamName": "ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {}
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/authenticator/tacacs": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Register a new TACACS server",
+        "description": "Register a new TACACS server",
+        "operationId": "AddTacacsServer",
+        "requestBody": {
+          "description": "TACACS server",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TacacsServer"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {}
+          },
+          "401": {
+            "description": "TACACS authentication information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "tacacs"
+      },
+      "put": {
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Update Tacacs server details",
+        "description": "Update Tacacs server details",
+        "operationId": "UpdateTacacsServer",
+        "requestBody": {
+          "description": "Details of the TACACS server",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TacacsServer"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TacacsServer"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "TACACS authentication information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "tacacs"
+      },
+      "delete": {
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Delete a registered  TACACS server",
+        "description": "Delete a registered  TACACS server by its host",
+        "operationId": "DeleteTacacsServer",
+        "parameters": [
+          {
+            "name": "host",
+            "in": "query",
+            "description": "Specify the hostname or IPv4/IPv6 address",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "host"
+            },
+            "x-exportParamName": "host"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {}
+          },
+          "401": {
+            "description": "The TACACS host information is invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Fetch TACACS  server details of a sepcific host or all hosts",
+        "description": "Fetch TACACS  server details of a specific host or all hosts",
+        "operationId": "GetTacacsByHost",
+        "parameters": [
+          {
+            "name": "host",
+            "in": "query",
+            "description": "The host of the TACACS server registered or all to get all servers",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "host"
+            },
+            "x-exportParamName": "host"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TacacsServer"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The TACACS host information is invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/authenticator/summary": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Get authentication summary details",
+        "description": "Get Authentication summary details configured in the application",
+        "operationId": "GetAuthenticationSummaryList",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AuthenticationSummaryResponse"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No Authentication details are configured in the system",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/authenticator/preference": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Add the authentication preference",
+        "description": "Add the authentication preference",
+        "operationId": "AddAuthPreference",
+        "requestBody": {
+          "description": "Add the authentication preference",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthPreference"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {}
+          },
+          "401": {
+            "description": "information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "aaa"
+      },
+      "put": {
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Update the authentication preference",
+        "description": "Update the authentication preference",
+        "operationId": "UpdateAuthPreference",
+        "requestBody": {
+          "description": "Update the authentication preference",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthPreference"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {}
+          },
+          "401": {
+            "description": "information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "aaa"
+      },
+      "delete": {
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Delete the authentication preference",
+        "description": "Delete the authentication preference",
+        "operationId": "DeleteAuthPreference",
+        "requestBody": {
+          "description": "Delete the authentication preference",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthPreference"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {}
+          },
+          "401": {
+            "description": "information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "aaa"
+      },
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Get authentication preferences",
+        "description": "Get authentication preferences",
+        "operationId": "GetAuthPreferences",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AuthPreference"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/authenticator/preferences": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Add and update the authentication preferences",
+        "description": "Add and update the authentication preferences",
+        "operationId": "AddUpdateAuthPreferences",
+        "requestBody": {
+          "description": "Add and update the authentication preferences",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/AuthPreference"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {}
+          },
+          "401": {
+            "description": "information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "aaa"
+      }
+    },
+    "/auth/user/active": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Get the active users details by authentication type",
+        "description": "Get the active users details by authentication type",
+        "operationId": "GetActiveUserByType",
+        "parameters": [
+          {
+            "name": "auth_type",
+            "in": "query",
+            "description": "Authentication type of the user",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "HOST",
+              "enum": [
+                "TACACS",
+                "LDAP",
+                "LOCAL",
+                "HOST"
+              ],
+              "x-exportParamName": "auth_type"
+            },
+            "x-exportParamName": "auth_type"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDetail"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/user": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Fetch all users details or specific user detail by name",
+        "description": "Fetch all users details or specific user detail by name",
+        "operationId": "GetUserByName",
+        "parameters": [
+          {
+            "name": "user_name",
+            "in": "query",
+            "description": "Name of the user",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "user_name"
+            },
+            "x-exportParamName": "user_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDetail"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Register a new user",
+        "description": "Register a new user",
+        "operationId": "CreateUser",
+        "requestBody": {
+          "description": "Details of the user",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "user"
+      },
+      "put": {
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Update roles of a registered user",
+        "description": "Update roles of a registered user",
+        "operationId": "UpdateUser",
+        "requestBody": {
+          "description": "Details of the user",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "user"
+      },
+      "delete": {
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Delete a registered user",
+        "description": "Delete a registered user by its name",
+        "operationId": "DeleteUser",
+        "parameters": [
+          {
+            "name": "user_name",
+            "in": "query",
+            "description": "Name of the registered user",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "user_name"
+            },
+            "x-exportParamName": "user_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {}
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/user/block": {
+      "put": {
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Update the user state blocked or unblocked",
+        "description": "Update the user state blocked or unblocked",
+        "operationId": "BlockUser",
+        "requestBody": {
+          "description": "Details of the user",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserBlock"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserBlock"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "user"
+      }
+    },
+    "/auth/password/change": {
+      "put": {
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Change password of a registered  user",
+        "description": "Change password of a registered user",
+        "operationId": "ChangePassword",
+        "requestBody": {
+          "description": "Details of the user",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasswordChangeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PasswordChangeRequest"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "user"
+      }
+    },
+    "/auth/password/reset": {
+      "put": {
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Reset password  registered  user",
+        "description": "Reset password of a registered user",
+        "operationId": "ResetPassword",
+        "requestBody": {
+          "description": "Details of the user",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResetPasswordResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "user"
+      }
+    },
+    "/auth/password/request-reset": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Requesting the user to reset password",
+        "description": "Reset user password",
+        "operationId": "ResetUserPassword",
+        "requestBody": {
+          "description": "Details of the user",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetUserPasswordRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "user"
+      }
+    },
+    "/auth/users/host": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Get host users.",
+        "description": "This is a proxy API over the monitor service for fetching the host users.",
+        "operationId": "GetHostUsers",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HostUserInfo"
+                  },
+                  "x-content-type": "application/json"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/users/host-active": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Get the host users and the active session details",
+        "description": "Get the host users and the active session details",
+        "operationId": "GetActiveHostUsers",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HostUserDetail"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "AccessTokenRequest": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "Name of the user for whom the token has to be generated"
+          },
+          "password": {
+            "type": "string",
+            "description": "Password for the above user"
+          }
+        },
+        "example": {
+          "username": "admin",
+          "password": "password"
+        }
+      },
+      "AccessTokenResponse": {
+        "type": "object",
+        "properties": {
+          "access-token": {
+            "type": "string",
+            "description": "Access token in JWT format with a short expiry"
+          },
+          "token-type": {
+            "type": "string",
+            "description": "Type of the token that is generated(Bearer)"
+          },
+          "refresh-token": {
+            "type": "string",
+            "description": "Refresh token in JWT format to fetch a new access token."
+          },
+          "message": {
+            "type": "string",
+            "description": "Message from EFA that needs any user action"
+          }
+        },
+        "example": {
+          "access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+          "token-type": "Bearer",
+          "refresh-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+          "message": "Certificates will expire soon, please renew"
+        }
+      },
+      "RefreshTokenRequest": {
+        "type": "object",
+        "properties": {
+          "refresh-token": {
+            "type": "string",
+            "description": "refresh token"
+          },
+          "grant-type": {
+            "type": "string",
+            "description": "grant type(refresh_token)"
+          }
+        },
+        "example": {
+          "grant-type": "refresh_token",
+          "refresh-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        }
+      },
+      "ClientAccessTokenRequest": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "Name of the user for whom the token has to be generated"
+          },
+          "password": {
+            "type": "string",
+            "description": "Password for the above user"
+          },
+          "clientId": {
+            "type": "string",
+            "description": "ID of the registered client"
+          }
+        },
+        "example": {
+          "username": "admin",
+          "password": "password"
+        }
+      },
+      "ClientAccessTokenResponse": {
+        "type": "object",
+        "properties": {
+          "access-token": {
+            "type": "string",
+            "description": "Access token in JWT format with a short expiry"
+          },
+          "token-type": {
+            "type": "string",
+            "description": "Type of the token that is generated(Bearer)"
+          },
+          "message": {
+            "type": "string",
+            "description": "Message from EFA that needs any user action"
+          }
+        },
+        "example": {
+          "access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+          "token-type": "Bearer",
+          "message": "Certificates will expire soon, please renew"
+        }
+      },
+      "ExtendedTokenRequest": {
+        "type": "object",
+        "properties": {
+          "clientId": {
+            "type": "string",
+            "description": "ID of the registered client"
+          },
+          "expiry": {
+            "type": "integer",
+            "description": "Number of seconds until extended token must expire"
+          }
+        },
+        "example": {
+          "clientId": "sdjfdjskjd",
+          "expiry": 300
+        }
+      },
+      "ApiKeyRequest": {
+        "type": "object",
+        "properties": {
+          "clientId": {
+            "type": "string",
+            "description": "ID of the registered client"
+          }
+        },
+        "example": {
+          "clientId": "sdjfdjskjd"
+        }
+      },
+      "ApiKeyResponse": {
+        "type": "object",
+        "properties": {
+          "apiKey": {
+            "type": "string",
+            "description": "Api Key for a client"
+          }
+        },
+        "example": {
+          "apiKey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        }
+      },
+      "ClientRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name for the client(tenant name for Openstack clients)"
+          },
+          "clientType": {
+            "type": "string",
+            "description": "Type of the client(openstack for Openstack clients)"
+          }
+        },
+        "example": {
+          "name": "tenantname",
+          "clientType": "openstack"
+        }
+      },
+      "ClientResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the client"
+          },
+          "clientID": {
+            "type": "string",
+            "description": "ID of the client"
+          },
+          "clientType": {
+            "type": "string",
+            "description": "Type of the client"
+          }
+        },
+        "example": {
+          "name": "tenantname",
+          "clientID": "askjf-djffi-dwokd-askls",
+          "clientType": "openstack"
+        }
+      },
+      "AuthenticationSummaryDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Role name"
+          },
+          "count": {
+            "type": "integer",
+            "description": "count based on the role"
+          }
+        }
+      },
+      "AuthenticationSummaryResponse": {
+        "type": "object",
+        "properties": {
+          "active_users": {
+            "type": "integer",
+            "description": "count of active users available"
+          },
+          "roles": {
+            "type": "array",
+            "description": "Count of users based on their roles(System Admin/Network Operator)",
+            "items": {
+              "$ref": "#/components/schemas/AuthenticationSummaryDetails"
+            }
+          },
+          "servers": {
+            "type": "array",
+            "description": "Count of servers available",
+            "items": {
+              "$ref": "#/components/schemas/AuthenticationSummaryDetails"
+            }
+          }
+        }
+      },
+      "LDAPDetailsRequest": {
+        "required": [
+          "insecure-tls",
+          "timeout",
+          "tls"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name for the LDAP connection"
+          },
+          "host": {
+            "type": "string",
+            "description": "Specify the hostname or IPv4/IPv6 address"
+          },
+          "port": {
+            "type": "string",
+            "description": "Specify the port at which the OpenLDAP server is listening for connections"
+          },
+          "tls": {
+            "type": "boolean",
+            "description": "Enable to use LDAP over SSL/TLS"
+          },
+          "insecure-tls": {
+            "type": "boolean",
+            "description": "Enable to use LDAP without cert verification"
+          },
+          "cacert": {
+            "type": "string",
+            "description": "CA certificate"
+          },
+          "timeout": {
+            "type": "integer",
+            "description": "Duration in number of seconds before considering the server unreachable(defaults to 5 sec)"
+          },
+          "bind-user-name": {
+            "type": "string",
+            "description": "Distinguished Name (DN) of the user that should be used to bind, search and retrieve LDAP entries"
+          },
+          "bind-user-password": {
+            "type": "string",
+            "description": "Password of the bind user"
+          },
+          "user-search-base": {
+            "type": "string",
+            "description": "Enter the Distinguished Name of the node in your directory tree from which to start searching for user objects."
+          },
+          "user-object-class": {
+            "type": "string",
+            "description": "Name of the object class used for user objects(defaults to inetOrgPerson)"
+          },
+          "user-login-attribute": {
+            "type": "string",
+            "description": "The attribute whose value matches the username part of credentials entered by your users when logging in(defualts to uid)"
+          },
+          "user-role-attribute": {
+            "type": "string",
+            "description": "The attribute to read the role of user from"
+          },
+          "user-role-attribute-key": {
+            "type": "string",
+            "description": "The attribute to read the role value from role attribute"
+          },
+          "user-member-attribute": {
+            "type": "string",
+            "description": "The attribute to read the member of the group the user is part of"
+          },
+          "group-search-base": {
+            "type": "string",
+            "description": "Enter the Distinguished Name of the node in your directory tree from which to start searching for group objects."
+          },
+          "group-object-class": {
+            "type": "string",
+            "description": "Name of the object class used for group objects(defaults to groupOfNames)"
+          },
+          "group-attribute": {
+            "type": "string",
+            "description": "Attribute to define search filter on group(defaults to cn)"
+          },
+          "group-member-user-attribute": {
+            "type": "string",
+            "description": "The name of the user attribute whose format matches the group members(defualts to entrydn)"
+          },
+          "group-member-mapping-attribute": {
+            "type": "string",
+            "description": "The name of the group attribute containing the members of a group(defaults to member)"
+          },
+          "cli": {
+            "type": "boolean",
+            "default": false,
+            "description": "Differentiate the client type"
+          }
+        }
+      },
+      "LDAPDetailsResponse": {
+        "required": [
+          "insecure-tls",
+          "timeout",
+          "tls"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "ID for the LDAP connection"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name for the LDAP connection"
+          },
+          "host": {
+            "type": "string",
+            "description": "Specify the hostname or IPv4/IPv6 address"
+          },
+          "port": {
+            "type": "string",
+            "description": "Specify the port at which the OpenLDAP server is listening for connections"
+          },
+          "tls": {
+            "type": "boolean",
+            "description": "Enable to use LDAP over SSL/TLS"
+          },
+          "insecure-tls": {
+            "type": "boolean",
+            "description": "Enable to use LDAP without cert verification"
+          },
+          "cacert": {
+            "type": "string",
+            "description": "CA certificate"
+          },
+          "timeout": {
+            "type": "integer",
+            "description": "Duration in number of seconds before considering the server unreachable(defaults to 5 sec)"
+          },
+          "bind-user-name": {
+            "type": "string",
+            "description": "Distinguished Name (DN) of the user that should be used to bind, search and retrieve LDAP entries"
+          },
+          "bind-user-password": {
+            "type": "string",
+            "description": "Password of the bind user"
+          },
+          "user-search-base": {
+            "type": "string",
+            "description": "Enter the Distinguished Name of the node in your directory tree from which to start searching for user objects."
+          },
+          "user-object-class": {
+            "type": "string",
+            "description": "Name of the object class used for user objects(defaults to inetOrgPerson)"
+          },
+          "user-login-attribute": {
+            "type": "string",
+            "description": "The attribute whose value matches the username part of credentials entered by your users when logging in(defualts to uid)"
+          },
+          "user-role-attribute": {
+            "type": "string",
+            "description": "The attribute to read the role of user from"
+          },
+          "user-role-attribute-key": {
+            "type": "string",
+            "description": "The attribute to read the role value from role attribute"
+          },
+          "user-member-attribute": {
+            "type": "string",
+            "description": "The attribute to read the member of the group the user is part of"
+          },
+          "group-search-base": {
+            "type": "string",
+            "description": "Enter the Distinguished Name of the node in your directory tree from which to start searching for group objects."
+          },
+          "group-object-class": {
+            "type": "string",
+            "description": "Name of the object class used for group objects(defaults to groupOfNames)"
+          },
+          "group-attribute": {
+            "type": "string",
+            "description": "Attribute to define search filter on group(defaults to cn)"
+          },
+          "group-member-user-attribute": {
+            "type": "string",
+            "description": "The name of the user attribute whose format matches the group members(defualts to entrydn)"
+          },
+          "group-member-mapping-attribute": {
+            "type": "string",
+            "description": "The name of the group attribute containing the members of a group(defaults to member)"
+          }
+        }
+      },
+      "RoleMappingRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name for the user or group for whom role is to assigned"
+          },
+          "role": {
+            "type": "string",
+            "description": "Name of the role to be assigned"
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of the assignment (user or group)"
+          },
+          "auth_type": {
+            "type": "string",
+            "description": "Authorization framework type (local, host, tacacs, or ldap)"
+          },
+          "auth_identifier": {
+            "type": "string",
+            "description": "Identifier for the auth configuration"
+          }
+        },
+        "example": {
+          "name": "tenantname",
+          "role": "TenantAdmin",
+          "type": "user",
+          "auth_type": "local",
+          "auth_identifier": "user1"
+        }
+      },
+      "RoleMappingResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "ID of the mapping"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name for the user or group for whom role is to assigned"
+          },
+          "role": {
+            "type": "string",
+            "description": "Name of the role to be assigned"
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of the assignment (user or group)"
+          },
+          "auth_type": {
+            "type": "string",
+            "description": "Authorization framework type (local, host, tacacs, or ldap)"
+          },
+          "auth_identifier": {
+            "type": "string",
+            "description": "Identifier for the auth configuration"
+          },
+          "is_active": {
+            "type": "boolean",
+            "description": "is user active",
+            "default": false
+          },
+          "active_since": {
+            "type": "string",
+            "format": "date-time",
+            "description": "user active time"
+          },
+          "is_default_user": {
+            "type": "boolean",
+            "description": "is a user default",
+            "default": false
+          }
+        },
+        "example": {
+          "id": 1,
+          "name": "tenantname",
+          "role": "TenantAdmin",
+          "type": "user",
+          "auth_type": "local",
+          "auth_identifier": "user1"
+        }
+      },
+      "ErrorModel": {
+        "required": [
+          "code",
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "1000 - Unknown Error.\n1001 - Validation Error.\n 25001 - Token generation Error.\n25002 - API Key generation Error.\n25003 - Token expired Error.\n25004 - No token Error.\n25005 - Invalid token Error.\n25006 - Certificate loading Error.\n25007 - Invalid client type Error.\n25008 - Client registration Error.\n25009 - Invalid client Error.\n"
+          },
+          "message": {
+            "type": "string",
+            "description": "Describing the reason of failure"
+          }
+        },
+        "example": {
+          "code": 0,
+          "message": "message"
+        }
+      },
+      "AuditLogResponse": {
+        "title": "Audit Log Data",
+        "type": "object",
+        "properties": {
+          "pagination_response": {
+            "$ref": "#/components/schemas/PaginationResponse"
+          },
+          "items": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExecutionResponse"
+            }
+          }
+        },
+        "example": {
+          "items": [
+            {
+              "start_time": "2000-01-23T04:56:07.000+00:00",
+              "end_time": "2000-01-23T04:56:07.000+00:00",
+              "id": "id",
+              "command": "client add",
+              "status": "client add"
+            },
+            {
+              "start_time": "2000-01-23T04:56:07.000+00:00",
+              "end_time": "2000-01-23T04:56:07.000+00:00",
+              "id": "id",
+              "command": "client add",
+              "status": "client add"
+            }
+          ]
+        }
+      },
+      "ExecutionsResponse": {
+        "title": "Authentication Data",
+        "type": "object",
+        "properties": {
+          "items": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExecutionResponse"
+            }
+          }
+        },
+        "example": {
+          "items": [
+            {
+              "start_time": "2000-01-23T04:56:07.000+00:00",
+              "end_time": "2000-01-23T04:56:07.000+00:00",
+              "id": "id",
+              "command": "client add",
+              "status": "client add"
+            },
+            {
+              "start_time": "2000-01-23T04:56:07.000+00:00",
+              "end_time": "2000-01-23T04:56:07.000+00:00",
+              "id": "id",
+              "command": "client add",
+              "status": "client add"
+            }
+          ]
+        }
+      },
+      "ExecutionResponse": {
+        "title": "Single execution response",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID of the operation"
+          },
+          "command": {
+            "type": "string",
+            "description": "Command that was executed",
+            "example": "client add"
+          },
+          "status": {
+            "type": "string",
+            "description": "Command that was executed",
+            "example": "client add"
+          },
+          "start_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "end_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "username": {
+            "type": "string",
+            "description": "Name of the user who executed the command"
+          },
+          "role": {
+            "type": "string",
+            "description": "Role of the user who executed the command"
+          }
+        },
+        "example": {
+          "start_time": "2000-01-23T04:56:07.000+00:00",
+          "end_time": "2000-01-23T04:56:07.000+00:00",
+          "id": "id",
+          "command": "client add",
+          "status": "client add"
+        }
+      },
+      "DetailedExecutionResponse": {
+        "title": "Detailed output of single execution",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID of the operation"
+          },
+          "command": {
+            "type": "string",
+            "description": "Command that was executed",
+            "example": "client add"
+          },
+          "parameters": {
+            "type": "string",
+            "description": "Parameters used in the command",
+            "example": "client add"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status of the command",
+            "example": "Failed, Succeeded"
+          },
+          "start_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "end_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "username": {
+            "type": "string",
+            "description": "Name of the user who executed the command"
+          },
+          "logs": {
+            "type": "string",
+            "description": "Full logs of the command"
+          }
+        },
+        "example": {
+          "start_time": "2000-01-23T04:56:07.000+00:00",
+          "end_time": "2000-01-23T04:56:07.000+00:00",
+          "id": "id",
+          "parameters": "client add",
+          "logs": "logs",
+          "command": "client add",
+          "status": "Failed, Succeeded"
+        }
+      },
+      "TokenExpiryTimeRequest": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Type of the token"
+          },
+          "hours": {
+            "type": "integer",
+            "description": "Hours for token expiry"
+          },
+          "minutes": {
+            "type": "integer",
+            "description": "Minutes for token expiry"
+          }
+        },
+        "example": {
+          "type": "ACCESS",
+          "hours": 0,
+          "minutes": 15
+        }
+      },
+      "TokenExpiryTimeResponse": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Type of the token"
+          },
+          "hours": {
+            "type": "integer",
+            "description": "Hours for token expiry"
+          },
+          "minutes": {
+            "type": "integer",
+            "description": "Minutes for token expiry"
+          }
+        },
+        "example": {
+          "type": "ACCESS",
+          "hours": 0,
+          "minutes": 15
+        }
+      },
+      "TacacsServer": {
+        "type": "object",
+        "properties": {
+          "host": {
+            "type": "string",
+            "description": "Specify the hostname or IPv4/IPv6 address"
+          },
+          "port": {
+            "type": "integer",
+            "description": "Port number"
+          },
+          "protocol": {
+            "type": "string",
+            "enum": [
+              "CHAP",
+              "PAP"
+            ],
+            "description": "Protocol like PAP or CHAP"
+          },
+          "secretKey": {
+            "type": "string",
+            "maxLength": 40,
+            "description": "Secret key maximum 40 characters"
+          }
+        },
+        "example": {
+          "host": "10.37.138.217",
+          "port": 49,
+          "protocol": "CHAP",
+          "secretKey": "sharedsecret"
+        }
+      },
+      "AuthPreference": {
+        "type": "object",
+        "properties": {
+          "authType": {
+            "type": "string",
+            "default": "HOST",
+            "enum": [
+              "TACACS",
+              "LDAP",
+              "LOCAL",
+              "HOST"
+            ],
+            "description": "TACAC, LDAP, LOCAL, or HOST"
+          },
+          "identifier": {
+            "type": "string",
+            "description": "auth identifier"
+          },
+          "preference": {
+            "type": "integer",
+            "description": "auth preference"
+          }
+        },
+        "example": {
+          "authType": "TACACS",
+          "identifier": "10.37.23.4",
+          "preference": 1
+        }
+      },
+      "UserDetail": {
+        "type": "object",
+        "properties": {
+          "pagination_response": {
+            "$ref": "#/components/schemas/PaginationResponse"
+          },
+          "user": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/User"
+            }
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32",
+            "description": "ID of the operation"
+          },
+          "user_name": {
+            "type": "string",
+            "description": "user name to be registered"
+          },
+          "email_id": {
+            "type": "string",
+            "description": "email id to be registered"
+          },
+          "password": {
+            "type": "string",
+            "description": "password"
+          },
+          "roles": {
+            "title": "Full list of roles",
+            "type": "array",
+            "description": "List of roles or specific role details",
+            "items": {
+              "type": "string",
+              "description": "Name of the role"
+            }
+          },
+          "is_blocked": {
+            "type": "boolean",
+            "description": "is user blocked",
+            "default": false
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "user created time"
+          },
+          "organization": {
+            "type": "string",
+            "description": "organization information"
+          },
+          "address": {
+            "type": "string",
+            "description": "user address"
+          },
+          "mobile_number": {
+            "type": "string",
+            "description": "user mobile number"
+          },
+          "location": {
+            "type": "string",
+            "description": "user location"
+          },
+          "auth_type": {
+            "type": "string",
+            "description": "authorization type"
+          },
+          "is_active": {
+            "type": "boolean",
+            "description": "is user active",
+            "default": false
+          },
+          "active_since": {
+            "type": "string",
+            "format": "date-time",
+            "description": "user active time"
+          }
+        },
+        "example": {
+          "id": 1,
+          "user_name": "willsmith",
+          "email_id": "abc@test.com",
+          "roles": [
+            "SystemAdmin",
+            "NetworkOperator"
+          ],
+          "is_blocked": false,
+          "organization": "Extreme Networks",
+          "location": "New York",
+          "is_active": false
+        }
+      },
+      "UserBlock": {
+        "type": "object",
+        "properties": {
+          "user_name": {
+            "type": "string",
+            "description": "user name to be updated"
+          },
+          "is_blocked": {
+            "type": "boolean",
+            "description": "is user blocked",
+            "default": false
+          }
+        },
+        "example": {
+          "user_name": "willsmith",
+          "is_blocked": false
+        }
+      },
+      "ResetPasswordRequest": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string",
+            "description": "password"
+          }
+        },
+        "example": {
+          "password": "test1"
+        }
+      },
+      "ResetUserPasswordRequest": {
+        "type": "object",
+        "properties": {
+          "user_name": {
+            "type": "string",
+            "description": "user name to be registered"
+          },
+          "email_id": {
+            "type": "string",
+            "description": "email id to be registered"
+          },
+          "password": {
+            "type": "string",
+            "description": "user password"
+          }
+        }
+      },
+      "UserResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32",
+            "description": "ID of the operation"
+          },
+          "link": {
+            "type": "string",
+            "description": "generate link for change of password"
+          },
+          "user_name": {
+            "type": "string",
+            "description": "registered user name"
+          },
+          "email_id": {
+            "type": "string",
+            "description": "email id of the registered user"
+          },
+          "roles": {
+            "title": "Full list of roles",
+            "type": "array",
+            "description": "List of roles or specific role details",
+            "items": {
+              "type": "string",
+              "description": "Name of the role"
+            }
+          },
+          "is_blocked": {
+            "type": "boolean",
+            "description": "is user blocked",
+            "default": false
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "user created time"
+          },
+          "organization": {
+            "type": "string",
+            "description": "organization information"
+          },
+          "address": {
+            "type": "string",
+            "description": "user address"
+          },
+          "mobile_number": {
+            "type": "string",
+            "description": "user mobile number"
+          },
+          "location": {
+            "type": "string",
+            "description": "user location"
+          },
+          "auth_type": {
+            "type": "string",
+            "description": "authorization type"
+          },
+          "is_active": {
+            "type": "boolean",
+            "description": "is user active",
+            "default": false
+          },
+          "active_since": {
+            "type": "string",
+            "format": "date-time",
+            "description": "user active time"
+          }
+        },
+        "example": {
+          "id": 1,
+          "link": "https://localhost:3000/v1/auth/resetpassword/eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJlbWFpbC1pZCI6InRlc3QxMjNAZ21haWwuY29tIn0.Ig-FS3daOh0gOyvVTnMLVdrRJ60_e811tyZ6pHrABd0",
+          "user_name": "willsmith",
+          "email_id": "abc@test.com",
+          "roles": [
+            "SystemAdmin",
+            "NetworkOperator"
+          ],
+          "is_blocked": false,
+          "organization": "Extreme Networks",
+          "location": "New York",
+          "is_active": false
+        }
+      },
+      "ResetPasswordResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Message to display"
+          }
+        },
+        "example": {
+          "message": "passowrd  changed successfully"
+        }
+      },
+      "PasswordChangeRequest": {
+        "type": "object",
+        "properties": {
+          "user_name": {
+            "type": "string",
+            "description": "user name"
+          },
+          "old_password": {
+            "type": "string",
+            "description": "old password"
+          },
+          "new_password": {
+            "type": "string",
+            "description": "new password"
+          }
+        },
+        "example": {
+          "user_name": "willsmith",
+          "old_password": "test",
+          "new-Password": "test1"
+        }
+      },
+      "HostUserInfo": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the user"
+          },
+          "is_default_user": {
+            "type": "boolean",
+            "description": "is a user default",
+            "default": false
+          }
+        },
+        "example": {
+          "name": "user",
+          "is_default_user": true
+        }
+      },
+      "HostUserDetail": {
+        "type": "object",
+        "properties": {
+          "pagination_response": {
+            "$ref": "#/components/schemas/PaginationResponse"
+          },
+          "user": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HostUser"
+            }
+          }
+        }
+      },
+      "HostUser": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32",
+            "description": "ID of the operation"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the user"
+          },
+          "role": {
+            "type": "string",
+            "description": "user role details"
+          },
+          "is_active": {
+            "type": "boolean",
+            "description": "is user active",
+            "default": false
+          },
+          "active_since": {
+            "type": "string",
+            "format": "date-time",
+            "description": "user active time"
+          },
+          "is_default_user": {
+            "type": "boolean",
+            "description": "is a user default",
+            "default": false
+          }
+        },
+        "example": {
+          "id": 1,
+          "name": "testuser",
+          "role": "SystemAdmin",
+          "is_active": false
+        }
+      },
+      "SearchQueryFilter": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "SearchQuery": {
+        "type": "object",
+        "properties": {
+          "group_by": {
+            "type": "string"
+          },
+          "filter": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SearchQueryFilter"
+            }
+          },
+          "fuzzy": {
+            "type": "string"
+          }
+        }
+      },
+      "PaginationResponse": {
+        "type": "object",
+        "properties": {
+          "remaining_count": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "first_id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "last_id": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      }
+    }
+  }
+}

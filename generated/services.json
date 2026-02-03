@@ -1,0 +1,72 @@
+{
+  "auth": {
+    "service": "goauth-service",
+    "port": 80,
+    "base_path": "/v1",
+    "openapi_file": "openapi (1) auth.json",
+    "title": "Auth Service"
+  },
+  "inventory": {
+    "service": "goinventory-service",
+    "port": 80,
+    "base_path": "/v1/inventory",
+    "openapi_file": "openapi inventory.json",
+    "title": "Inventory Service"
+  },
+  "system": {
+    "service": "gosystem-service",
+    "port": 80,
+    "base_path": "/v1",
+    "openapi_file": "openapi (9) system.json",
+    "title": "System Service"
+  },
+  "snmp": {
+    "service": "gosnmp-service",
+    "port": 80,
+    "base_path": "/v1/snmp",
+    "openapi_file": "openapi (7) snmp.json",
+    "title": "SNMP Service"
+  },
+  "fabric": {
+    "service": "gofabric-service",
+    "port": 80,
+    "base_path": "/v1/fabric",
+    "openapi_file": "openapi (2) fabric.json",
+    "title": "Fabric Service"
+  },
+  "rbac": {
+    "service": "gorbac-service",
+    "port": 80,
+    "base_path": "/v1",
+    "openapi_file": "openapi (6) rbac.json",
+    "title": "RBAC Service"
+  },
+  "tenant": {
+    "service": "gotenant-service",
+    "port": 8083,
+    "base_path": "/v1/tenant",
+    "openapi_file": "openapi (8) tenant.json",
+    "title": "Tenant Service"
+  },
+  "monitor": {
+    "service": "monitor-service",
+    "port": 8078,
+    "base_path": "/v1",
+    "openapi_file": "openapi (3) monitor.json",
+    "title": "Monitor Service"
+  },
+  "faultmanager": {
+    "service": "gofaultmanager-service",
+    "port": 80,
+    "base_path": "/v1",
+    "openapi_file": "openapi (5) fault.json",
+    "title": "FaultManager Service"
+  },
+  "notification": {
+    "service": "gonotification-service",
+    "port": 80,
+    "base_path": "/v1/notification",
+    "openapi_file": "openapi (4) notification.json",
+    "title": "Notification Service"
+  }
+}

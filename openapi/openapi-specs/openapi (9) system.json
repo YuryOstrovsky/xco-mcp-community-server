@@ -1,0 +1,2079 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "System Service",
+    "description": "This spec defines the API provided by the application to validate authorization for the system.",
+    "contact": {
+      "name": "Extreme Networks",
+      "url": "http://www.extremenetworks.com",
+      "email": "support@extremenetworks.com"
+    },
+    "license": {
+      "name": "Apache license",
+      "url": "http://www.extremenetworks.com"
+    },
+    "version": "3.7.0"
+  },
+  "servers": [
+    {
+      "url": "http://gosystem-service:80/v1"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/system/feature": {
+      "get": {
+        "tags": [
+          "Feature Setting"
+        ],
+        "summary": "Get feature setting list.",
+        "operationId": "GetFeatureSettingList",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeatureList"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Incorrect feature specified.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Feature Setting"
+        ],
+        "summary": "Update feature setting.",
+        "operationId": "UpdateFeatureSetting",
+        "requestBody": {
+          "description": "Update feature settings.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeatureList"
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {}
+          },
+          "400": {
+            "description": "Incorrect values specified for feature setting.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Feature settings already exist and cannot be updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "feature-settings"
+      }
+    },
+    "/system/settings": {
+      "get": {
+        "tags": [
+          "System Setting"
+        ],
+        "summary": "Get system setting.",
+        "operationId": "GetSystemSetting",
+        "parameters": [
+          {
+            "name": "decrypt",
+            "in": "query",
+            "description": "Decrypt password and display in plain text",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "x-exportParamName": "Decrypt",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SystemSettings"
+                },
+                "example": [
+                  {
+                    "value": "5",
+                    "key": "Max Backup File Limit"
+                  },
+                  {
+                    "value": "0 0 * *",
+                    "key": "Backup Schedule"
+                  },
+                  {
+                    "value": "5",
+                    "key": "Max Supportsave File Limit"
+                  },
+                  {
+                    "value": "10.10.10.10",
+                    "key": "Remote Server Ip"
+                  },
+                  {
+                    "value": "scp",
+                    "key": "Remote Transfer Protocol"
+                  },
+                  {
+                    "value": "username",
+                    "key": "Remote Server Username"
+                  },
+                  {
+                    "value": "password",
+                    "key": "Remote Server Password"
+                  },
+                  {
+                    "value": "/root/test",
+                    "key": "Remote Server Directory"
+                  },
+                  {
+                    "value": "/root/id_rsa",
+                    "key": "Private Key"
+                  },
+                  {
+                    "value": "pass@123",
+                    "key": "Passphrase"
+                  },
+                  {
+                    "value": "ssh-rsa-cert-v01@openssh.com AAAAHHNzaC1yc2EtY2VydC12MDFAb3Bl...",
+                    "key": "Certificate Key"
+                  },
+                  {
+                    "value": "ssh-rsa AAAAB3NzaC1yc2E ...",
+                    "key": "CA Public Key"
+                  },
+                  {
+                    "value": "Enabled",
+                    "key": "Periodic Device Config Backup"
+                  }
+                ]
+              }
+            }
+          },
+          "400": {
+            "description": "Incorrect values specified for system setting.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A system with the specified name was not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A system settings already exist and cannot be updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "System Setting"
+        ],
+        "summary": "Update system setting.",
+        "operationId": "UpdateSystemSetting",
+        "requestBody": {
+          "description": "Update system settings.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SystemSettings"
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {}
+          },
+          "400": {
+            "description": "Incorrect values specified for system setting.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A system with the specified name was not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A system setting already exists and cannot be updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "system-settings"
+      }
+    },
+    "/system/settings/reset": {
+      "put": {
+        "tags": [
+          "System Setting"
+        ],
+        "summary": "Reset system setting.",
+        "operationId": "ResetSystemSetting",
+        "requestBody": {
+          "description": "Reset system settings.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "example": [
+                  "BackupSchedule",
+                  "MaxBackupFiles",
+                  "MaxSsFiles",
+                  "RemoteServerSettings",
+                  "PeriodicDeviceConfigBackup"
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {}
+          },
+          "400": {
+            "description": "Incorrect values specified for system setting reset.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A system with the specified name was not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A system settings already exist and cannot be updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "system-reset-settings"
+      }
+    },
+    "/system/execution": {
+      "get": {
+        "tags": [
+          "Troubleshooting"
+        ],
+        "summary": "Get execution detail.",
+        "description": "Get the detailed output of a request previously executed, based on a given request ID.",
+        "operationId": "ExecutionGet",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Detailed output of the given execution ID.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "Id"
+            },
+            "x-exportParamName": "Id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DetailedExecutionResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/system/executions": {
+      "get": {
+        "tags": [
+          "Troubleshooting"
+        ],
+        "summary": "Get execution list.",
+        "description": "Get the list of all the requests previously executed.",
+        "operationId": "ExecutionList",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limit the number of executions that will be sent in the response. Default is 10",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "x-exportParamName": "Limit"
+            },
+            "x-exportParamName": "Limit"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter the executions based on the status (failed/succeeded/all).",
+            "schema": {
+              "type": "string",
+              "default": "all",
+              "x-exportParamName": "Status"
+            },
+            "x-exportParamName": "Status"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExecutionsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Troubleshooting"
+        ],
+        "summary": "Delete executions.",
+        "description": "Delete all requests that were executed earlier than the specific number of days.",
+        "operationId": "deleteExecutions",
+        "parameters": [
+          {
+            "name": "days_older_by",
+            "in": "query",
+            "description": "Delete all requests that were executed earlier than the specific number of days.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "default": 30
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {}
+          },
+          "202": {
+            "description": "Accepted",
+            "content": {}
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/system/clean": {
+      "delete": {
+        "tags": [
+          "Clean"
+        ],
+        "summary": "Clean up archives.",
+        "description": "Clean up backup and supportsave archives.",
+        "operationId": "CleanArchives",
+        "parameters": [
+          {
+            "name": "archive_type",
+            "in": "query",
+            "description": "Type of archive that has to be deleted.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "backup",
+                "supportsave"
+              ]
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Name of archive that has to be deleted.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CleanupResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not available.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/system/logging": {
+      "get": {
+        "tags": [
+          "Logging Customization"
+        ],
+        "summary": "Get Logging Customization configuration.",
+        "operationId": "GetLoggingCustomization",
+        "parameters": [
+          {
+            "name": "services",
+            "in": "query",
+            "description": "Comma separated list of services to get logging customization configuration.",
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "Services"
+            },
+            "x-exportParamName": "Services"
+          },
+          {
+            "name": "logging_types",
+            "in": "query",
+            "description": "Comma separated list of logging types to get logging customization configuration.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "FabricName"
+            },
+            "x-exportParamName": "FabricName"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoggingCustomizationResponses"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Incorrect Logging Customization specified.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Logging Customization"
+        ],
+        "summary": "Update Logging Customization.",
+        "operationId": "UpdateLoggingCustomization",
+        "requestBody": {
+          "description": "Update Logging Customization configuration.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoggingCustomization"
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LoggingCustomizationResponseWithStatus"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Incorrect values specified for Logging Customization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Feature settings already exist and cannot be updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Logging Customization"
+        ],
+        "summary": "Clear Logging Customization.",
+        "description": "Clear Logging Customizations to default configuration.",
+        "operationId": "ClearLoggingCustomization",
+        "parameters": [
+          {
+            "name": "services",
+            "in": "query",
+            "description": "Comma separated list of services to clear logging customization configuration.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "all",
+                "auth",
+                "fabric",
+                "faultmanager",
+                "hyperv",
+                "inventory",
+                "notification",
+                "policy",
+                "raslog",
+                "rbac",
+                "system",
+                "tenant",
+                "vcenter"
+              ]
+            }
+          },
+          {
+            "name": "logging_types",
+            "in": "query",
+            "description": "Comma separated list of logging types to clear logging customization configuration.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LoggingCustomizationResponseWithStatus"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not available.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/system/runningConfig": {
+      "get": {
+        "tags": [
+          "Troubleshooting"
+        ],
+        "summary": "GetRunningConfig",
+        "description": "Get the list of all CLIs in Running Config",
+        "operationId": "GetRunningConfig",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunningConfigResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/system/file/download": {
+      "get": {
+        "tags": [
+          "FileDownload"
+        ],
+        "summary": "Get any file from XCO system.",
+        "description": "Transfers any file provided with correct path transferred to XCO UI",
+        "operationId": "FileDownload",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "File name which is required to be downloaded of type given below",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "name"
+            },
+            "x-exportParamName": "name"
+          },
+          {
+            "name": "file_type",
+            "in": "query",
+            "description": "Type of file that has to be downloaded.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "backup",
+                "supportsave"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/zip": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/system/proxy/supportsave": {
+      "get": {
+        "tags": [
+          "SupportSave"
+        ],
+        "summary": "Fetch SupportSave files.",
+        "description": "Get the list of available SupportSave files.",
+        "operationId": "GetSupportSaveList",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupportSaveListArray"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Incorrect feature specified.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "SupportSave"
+        ],
+        "summary": "Trigger the support save",
+        "description": "This API will start the support save collection in async mode",
+        "operationId": "PostSupportSave",
+        "requestBody": {
+          "description": "Supportsave request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SupportSaveRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupportSaveResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {}
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {}
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/system/proxy/supportsavestatus": {
+      "get": {
+        "tags": [
+          "SupportSaveStatus"
+        ],
+        "summary": "Fetch SupportSave status.",
+        "description": "Get the current support save status",
+        "operationId": "GetSupportSaveStatus",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Request ID for which status to be returned",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "x-exportParamName": "id"
+            },
+            "x-exportParamName": "id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupportSaveResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Incorrect feature specified.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/system/proxy/status": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "Fetch health status.",
+        "description": "Get the health of XCO.",
+        "operationId": "GetSystemStatus",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Incorrect feature specified.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "ExecutionsResponse": {
+        "title": "Asset Data",
+        "type": "object",
+        "properties": {
+          "items": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExecutionResponse"
+            }
+          }
+        },
+        "example": {
+          "items": [
+            {
+              "start_time": "2000-01-23T04:56:07.000+00:00",
+              "end_time": "2000-01-23T04:56:07.000+00:00",
+              "id": "id",
+              "URL": "/v1/inventory/switches",
+              "status": "Completed"
+            },
+            {
+              "start_time": "2000-01-22T04:56:07.000+00:00",
+              "end_time": "2000-01-22T04:56:07.000+00:00",
+              "id": "id",
+              "URL": "/v1/inventory/switches",
+              "status": "Failed"
+            }
+          ]
+        }
+      },
+      "ExecutionResponse": {
+        "title": "Single execution response",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID of the operation."
+          },
+          "URL": {
+            "type": "string",
+            "description": "URL that was called.",
+            "example": "/v1/inventory/switches"
+          },
+          "method": {
+            "type": "string",
+            "description": "HTTP method."
+          },
+          "status": {
+            "type": "string",
+            "description": "Status of the operation.",
+            "example": "Completed(4.577816189s)"
+          },
+          "start_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "end_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "username": {
+            "type": "string",
+            "description": "Name of the user who executed the command."
+          }
+        },
+        "example": {
+          "start_time": "2000-01-23T04:56:07.000+00:00",
+          "end_time": "2000-01-23T04:56:07.000+00:00",
+          "id": "id",
+          "command": "/v1/inventory/switches",
+          "status": "Failed"
+        }
+      },
+      "DetailedExecutionResponse": {
+        "title": "Detailed output of single execution",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID of the operation."
+          },
+          "URL": {
+            "type": "string",
+            "description": "URL that was called.",
+            "example": "/v1/inventory/switches"
+          },
+          "method": {
+            "type": "string",
+            "description": "HTTP method."
+          },
+          "status": {
+            "type": "string",
+            "description": "Status of the operation.",
+            "example": "Completed(4.577816189s)"
+          },
+          "parameters": {
+            "type": "string",
+            "description": "Parameters used in the command.",
+            "example": "configure add"
+          },
+          "start_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "end_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "username": {
+            "type": "string",
+            "description": "Name of the user who executed the command."
+          },
+          "logs": {
+            "type": "string",
+            "description": "Full logs of the command."
+          }
+        },
+        "example": {
+          "start_time": "2000-01-23T04:56:07.000+00:00",
+          "end_time": "2000-01-23T04:56:07.000+00:00",
+          "id": "id",
+          "logs": "logs",
+          "URL": "/v1/inventory/switches",
+          "status": "Failed, Succeeded"
+        }
+      },
+      "FeatureParameter": {
+        "required": [
+          "key",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "example": ""
+          },
+          "value": {
+            "type": "string",
+            "example": ""
+          }
+        }
+      },
+      "FeatureList": {
+        "required": [
+          "keyval"
+        ],
+        "type": "object",
+        "properties": {
+          "keyval": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureParameter"
+            }
+          }
+        },
+        "example": {
+          "keyval": [
+            {
+              "key": "InflightTransactionAutoRecovery",
+              "value": "enable"
+            }
+          ]
+        }
+      },
+      "ErrorModel": {
+        "required": [
+          "code",
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Error"
+          },
+          "code": {
+            "maximum": 600,
+            "minimum": 100,
+            "type": "integer",
+            "example": 101
+          }
+        }
+      },
+      "SystemParameter": {
+        "required": [
+          "key",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "value": "value",
+          "key": "key"
+        }
+      },
+      "SystemSettings": {
+        "required": [
+          "keyval"
+        ],
+        "type": "object",
+        "properties": {
+          "keyval": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SystemParameter"
+            }
+          }
+        },
+        "example": {
+          "keyval": [
+            {
+              "value": "5",
+              "key": "MaxBackupFiles"
+            },
+            {
+              "value": "0 0 * *",
+              "key": "BackupSchedule"
+            },
+            {
+              "value": "5",
+              "key": "MaxSsFiles"
+            },
+            {
+              "value": "10.10.10.10 / 2000::1",
+              "key": "RemoteServerIP"
+            },
+            {
+              "value": "scp / ftp",
+              "key": "RemoteTransferProtocol"
+            },
+            {
+              "value": "username",
+              "key": "RemoteServerUsername"
+            },
+            {
+              "value": "password",
+              "key": "RemoteServerPassword"
+            },
+            {
+              "value": "/root/test",
+              "key": "RemoteServerDirectory"
+            },
+            {
+              "value": "/root/id_rsa",
+              "key": "Private Key"
+            },
+            {
+              "value": "pass@123",
+              "key": "Passphrase"
+            },
+            {
+              "value": "ssh-rsa-cert-v01@openssh.com AAAAHHNzaC1yc2EtY2VydC12MDFAb3Bl...",
+              "key": "Certificate Key"
+            },
+            {
+              "value": "ssh-rsa AAAAB3NzaC1yc2E ...",
+              "key": "CA Public Key"
+            },
+            {
+              "value": "Enabled",
+              "key": "PeriodicDeviceConfigBackup"
+            }
+          ]
+        }
+      },
+      "CleanupResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Status of the cleanup operation."
+          }
+        },
+        "example": {
+          "message": "successfully deleted the archive"
+        }
+      },
+      "LoggingCustomizationResponseWithStatus": {
+        "title": "Logging Customization response with operation status",
+        "type": "object",
+        "properties": {
+          "customization": {
+            "$ref": "#/components/schemas/LoggingCustomizationResponse"
+          },
+          "status": {
+            "$ref": "#/components/schemas/OperationResponse"
+          }
+        },
+        "example": {
+          "customization": {
+            "service": "inventory",
+            "logging_type": "all",
+            "file_size": 100,
+            "file_count": 10,
+            "detail_level": "debugging"
+          },
+          "status": {
+            "result": "Failed",
+            "reason": "Invalid parameter"
+          }
+        }
+      },
+      "LoggingCustomizationResponses": {
+        "title": "Logging Customization Responses",
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LoggingCustomizationResponse"
+            }
+          }
+        },
+        "example": {
+          "items": [
+            {
+              "service": "fabric",
+              "logging_type": "all",
+              "file_size": 100,
+              "file_count": 10,
+              "detail_level": "debugging"
+            },
+            {
+              "service": "inventory",
+              "logging_type": "all",
+              "file_size": 100,
+              "file_count": 10,
+              "detail_level": "debugging"
+            }
+          ]
+        }
+      },
+      "LoggingCustomizationResponse": {
+        "title": "Logging Customization for a given service's logging type",
+        "type": "object",
+        "properties": {
+          "service": {
+            "type": "string",
+            "description": "Name of the service"
+          },
+          "logging_type": {
+            "type": "string",
+            "description": "Name of the logging type"
+          },
+          "file_size": {
+            "type": "integer",
+            "description": "Maximum size of logging file"
+          },
+          "file_count": {
+            "type": "integer",
+            "description": "Number of log files"
+          },
+          "detail_level": {
+            "type": "string",
+            "description": "Level of logging detail to be logged."
+          }
+        },
+        "example": {
+          "service": "inventory",
+          "logging_type": "all",
+          "file_size": 100,
+          "file_count": 10,
+          "detail_level": "debugging"
+        }
+      },
+      "LoggingCustomization": {
+        "required": [
+          "service",
+          "logging_type"
+        ],
+        "type": "object",
+        "properties": {
+          "services": {
+            "type": "string",
+            "description": "Name of the services"
+          },
+          "logging_types": {
+            "type": "string",
+            "description": "Name of the logging types"
+          },
+          "file_size": {
+            "type": "string",
+            "description": "Maximum size of logging file"
+          },
+          "file_count": {
+            "type": "string",
+            "description": "Number of log files"
+          },
+          "detail_level": {
+            "type": "string",
+            "description": "Level of logging detail to be logged."
+          }
+        },
+        "example": {
+          "service": "all,auth,fabric,faultmanager,hyperv,inventory,notification,policy,raslog,rbac,system,tenant,vcenter",
+          "logging_type": "all",
+          "file_size": 100,
+          "file_count": 10,
+          "detail_level": "debugging"
+        }
+      },
+      "OperationResponse": {
+        "title": "Generic operation response",
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "string",
+            "description": "Indicates operation status \"Success\" or \"Failed\"",
+            "example": "Failed"
+          },
+          "reason": {
+            "type": "string",
+            "description": "Error reason for the operation failure",
+            "example": "Invalid parameter"
+          }
+        },
+        "example": {
+          "result": "Failed",
+          "reason": "Invalid parameter"
+        }
+      },
+      "RunningConfigResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "SupportSaveListArray": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/SupportSaveList"
+        }
+      },
+      "SupportSaveList": {
+        "title": "SupportSave List Response.",
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "description": "Filename of the supportsave.",
+            "example": "efa_2022-06-20T12-12-48.419.logs.zip"
+          },
+          "date": {
+            "type": "string",
+            "description": "Date on which the supportsave was taken.",
+            "example": "2022-06-20"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "in-progress",
+              "completed"
+            ],
+            "description": "status of support save file",
+            "example": "in-progress or completed"
+          }
+        }
+      },
+      "SupportSaveRequest": {
+        "type": "object",
+        "properties": {
+          "fabric": {
+            "type": "string"
+          },
+          "device-ips": {
+            "type": "string",
+            "example": "10.24.131.3,162.101.21.2,192.24.32.204"
+          },
+          "fabric-all": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SupportSaveResponse": {
+        "title": "supportsave response",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Uniq ID which can be used for getting the status"
+          },
+          "ss_file_name": {
+            "type": "string",
+            "description": "Path of the supportsave archive file."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "in-progress",
+              "completed"
+            ],
+            "description": "status of support save request"
+          },
+          "date": {
+            "type": "string",
+            "description": "Date on which the supportsave was taken.",
+            "example": "2022-06-20"
+          }
+        }
+      },
+      "Status": {
+        "title": "System Status.",
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string",
+            "description": "Version of the system.",
+            "example": "3.2.0"
+          },
+          "build": {
+            "type": "string",
+            "description": "Build of the system.",
+            "example": "GA"
+          },
+          "date": {
+            "type": "string",
+            "description": "Date on which the supportsave was taken.",
+            "example": "2022-06-20"
+          },
+          "nodes": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NodeStatus"
+            }
+          },
+          "health": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HealthDetailResponse"
+            }
+          }
+        }
+      },
+      "NodeStatus": {
+        "type": "object",
+        "required": [
+          "name",
+          "status",
+          "role",
+          "IP",
+          "reason",
+          "pod_count_running",
+          "pod_count_failed",
+          "pod_count_stopped"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the node."
+          },
+          "status": {
+            "type": "string",
+            "description": "Status of the EFA node."
+          },
+          "role": {
+            "type": "string",
+            "description": "Role of the node (active|standby)."
+          },
+          "IP": {
+            "type": "string",
+            "description": "IP of the node."
+          },
+          "pod_count_running": {
+            "type": "integer",
+            "description": "Healthy pod count"
+          },
+          "pod_count_failed": {
+            "type": "integer",
+            "description": "Un-healthy pod count"
+          },
+          "pod_count_stopped": {
+            "type": "integer",
+            "description": "Stopped pod count"
+          }
+        }
+      },
+      "HealthHQIResponse": {
+        "title": "Health Quality Indicator response",
+        "type": "object",
+        "required": [
+          "Value"
+        ],
+        "properties": {
+          "Color": {
+            "type": "string",
+            "description": "Color for the resource",
+            "example": "yellow"
+          },
+          "Value": {
+            "type": "integer",
+            "description": "Score for the resource",
+            "example": 1
+          }
+        }
+      },
+      "HealthDetailResponse": {
+        "title": "Health manager response for Get Health",
+        "type": "object",
+        "properties": {
+          "Resource": {
+            "type": "string",
+            "description": "Health resource path associated to the alert being sent",
+            "example": "/App/System/Security/Certificate"
+          },
+          "HQI": {
+            "$ref": "#/components/schemas/HealthHQIResponse"
+          },
+          "StatusText": {
+            "type": "string",
+            "description": "Extra status information",
+            "example": "Provided resource is invalid"
+          }
+        }
+      }
+    }
+  }
+}
