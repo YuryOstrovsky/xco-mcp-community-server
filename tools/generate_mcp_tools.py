@@ -97,6 +97,9 @@ def generate_tools(caps: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
             "tags": cap.get("tags", []),
         }
 
+        if "capabilities" in cap:
+            tool["capabilities"] = cap["capabilities"]
+
         tools.append(tool)
 
     return tools

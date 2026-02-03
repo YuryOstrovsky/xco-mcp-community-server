@@ -1,0 +1,32 @@
+[
+  {
+    "mcp_action": "inventory_getswitches",
+    "human_readable": "Get switches",
+    "category": "inventory",
+    "method": "GET",
+    "host": "{XCO_HOST}",
+    "port": 80,
+    "url": "/v1/inventory/switches",
+    "auth": "none",
+
+    "params": {
+      "query": ["fabric-id", "id"]
+    },
+
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false,
+
+    "tags": ["read"],
+
+    "capabilities": {
+      "actions": ["show"],
+      "objects": ["switches"],
+      "scopes": [
+        ["fabric"],
+        ["device"]
+      ]
+    }
+  }
+]
+

@@ -1,6 +1,6 @@
 # mcp_runtime/tool_capabilities.py
 
-from typing import Dict, Optional
+from typing import Dict, Optional, List
 
 
 class ToolCapabilityError(Exception):
@@ -15,6 +15,17 @@ class ToolCapabilityResolver:
 
     def __init__(self, registry):
         self.registry = registry
+
+    @staticmethod
+    def _scope_matches(required: List[str], supported: List[List[str]]) -> bool:
+        """
+        required: ['fabric']
+        supported: [['fabric'], ['device']]
+        """
+        for scope_set in supported:
+            if set(required) == set(scope_set):
+                return True
+        return False
 
     def find_tool(
         self,
@@ -31,15 +42,18 @@ class ToolCapabilityResolver:
             if not caps:
                 continue
 
-            if caps.get("action") != action:
+            # ---- Action match ----
+            if action not in caps.get("actions", []):
                 continue
 
-            if caps.get("object") != object_:
+            # ---- Object match ----
+            if object_ not in caps.get("objects", []):
                 continue
 
+            # ---- Scope match ----
             if scope_keys:
-                tool_scopes = caps.get("scope", [])
-                if not all(s in tool_scopes for s in scope_keys):
+                tool_scopes = caps.get("scopes", [])
+                if not self._scope_matches(scope_keys, tool_scopes):
                     continue
 
             return name
@@ -56,19 +70,26 @@ class ToolCapabilityResolver:
 
         explanation = []
 
-        for tool in self.registry.tools.values():
+        for name, tool in self.registry.tools.items():
             caps = tool.get("capabilities")
             if not caps:
                 continue
 
-            matched = (
-                caps.get("action") == action
-                and caps.get("object") == object_
-                and set(scope_keys).issubset(set(caps.get("scope", [])))
+            action_ok = action in caps.get("actions", [])
+            object_ok = object_ in caps.get("objects", [])
+            scope_ok = (
+                True
+                if not scope_keys
+                else self._scope_matches(
+                    scope_keys,
+                    caps.get("scopes", []),
+                )
             )
 
+            matched = action_ok and object_ok and scope_ok
+
             explanation.append({
-                "tool": tool["name"],
+                "tool": name,
                 "capabilities": caps,
                 "matched": matched,
                 "reason": (
@@ -79,4 +100,3 @@ class ToolCapabilityResolver:
             })
 
         return explanation
-    

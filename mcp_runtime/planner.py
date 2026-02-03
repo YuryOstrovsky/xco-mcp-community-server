@@ -1,11 +1,15 @@
 # mcp_runtime/planner.py
 
-from typing import Dict
+from typing import Dict, List
 from mcp_runtime.workflow_schema import validate_workflow_schema, WorkflowSchemaError
-from mcp_runtime.intent_normalizer import IntentNormalizer, IntentNormalizationError
-from mcp_runtime.tool_capabilities import ToolCapabilityResolver, ToolCapabilityError
-
-
+from mcp_runtime.intent_normalizer import (
+    IntentNormalizer,
+    IntentNormalizationError,
+)
+from mcp_runtime.tool_capabilities import (
+    ToolCapabilityResolver,
+    ToolCapabilityError,
+)
 
 
 class PlannerError(Exception):
@@ -14,7 +18,7 @@ class PlannerError(Exception):
 
 class MCPPlanner:
     """
-    Phase 4.0:
+    Phase 4.x:
     Deterministic intent → workflow planner
     """
 
@@ -26,80 +30,114 @@ class MCPPlanner:
     def plan(self, intent: str) -> Dict:
         """
         Translate intent string into workflow schema.
+        Supports multi-clause intent separated by 'then'.
         """
 
+        if not intent or not intent.strip():
+            raise PlannerError("Empty intent")
+
+        clauses = [
+            c.strip()
+            for c in intent.lower().split(" then ")
+            if c.strip()
+        ]
+
+        steps: List[Dict] = []
+        explain_steps = []
+
+        for clause in clauses:
+            try:
+                normalized = self.normalizer.normalize(clause)
+            except IntentNormalizationError as e:
+                raise PlannerError(str(e))
+
+            action = normalized["action"]
+            obj = normalized["object"]
+            scope = normalized["scope"]
+
+            # =====================================================
+            # Rule 1: show switches in fabric <fabric>
+            # =====================================================
+            if action == "show" and obj == "switches" and "fabric" in scope:
+                try:
+                    tool_name = self.cap_resolver.find_tool(
+                        action=action,
+                        object_=obj,
+                        scope_keys=["fabric"],
+                    )
+                    capability_explain = self.cap_resolver.explain_match(
+                        action=action,
+                        object_=obj,
+                        scope_keys=["fabric"],
+                    )
+                except ToolCapabilityError as e:
+                    raise PlannerError(str(e))
+
+                steps.append({
+                    "tool": tool_name,
+                    "context": {
+                        "fabric": scope["fabric"],
+                    },
+                })
+
+                explain_steps.append({
+                    "clause": clause,
+                    "tool": tool_name,
+                    "capability_evaluation": capability_explain,
+                })
+                continue
+
+            # =====================================================
+            # Rule 2: show device <device>
+            # =====================================================
+            if action == "show" and obj == "device" and "device" in scope:
+                try:
+                    tool_name = self.cap_resolver.find_tool(
+                        action=action,
+                        object_="switches",
+                        scope_keys=["device"],
+                    )
+                    capability_explain = self.cap_resolver.explain_match(
+                        action=action,
+                        object_="switches",
+                        scope_keys=["device"],
+                    )
+                except ToolCapabilityError as e:
+                    raise PlannerError(str(e))
+
+                steps.append({
+                    "tool": tool_name,
+                    "context": {
+                        "device": scope["device"],
+                    },
+                })
+
+                explain_steps.append({
+                    "clause": clause,
+                    "tool": tool_name,
+                    "capability_evaluation": capability_explain,
+                })
+                continue
+
+            # =====================================================
+            # Fallback
+            # =====================================================
+            raise PlannerError(f"Unable to plan intent clause: '{clause}'")
+
+        workflow = {
+            "version": "1.0",
+            "steps": steps,
+        }
+
         try:
-            normalized = self.normalizer.normalize(intent)
-        except IntentNormalizationError as e:
+            validate_workflow_schema(workflow)
+        except WorkflowSchemaError as e:
             raise PlannerError(str(e))
 
-        canonical = normalized["canonical"]
-
-
-        # ---- Simple deterministic rules (Phase 4.x) ----
-
-        if canonical.startswith("show switches in fabric"):
-            fabric = normalized["scope"]["fabric"]
-
-            try:
-                tool_name = self.cap_resolver.find_tool(
-                    action=normalized["action"],
-                    object_=normalized["object"],
-                    scope_keys=list(normalized["scope"].keys()),
-                )
-            except ToolCapabilityError as e:
-                raise PlannerError(str(e))
-            
-            capability_explain = self.cap_resolver.explain_match(
-            action=normalized["action"],
-            object_=normalized["object"],
-            scope_keys=list(normalized["scope"].keys()),
-        )
-
-
-
-            workflow = {
-                "version": "1.0",
-                "steps": [
-                    {
-                        "tool": tool_name,
-                        "context": {
-                            "fabric": fabric
-                        },
-                    }
-                ],
-            }
-
-
-            try:
-                validate_workflow_schema(workflow)
-            except WorkflowSchemaError as e:
-                raise PlannerError(str(e))
-
-            return {
-                "workflow": workflow,
-                "explain": {
-                    "intent": intent,
-                    "canonical_intent": canonical,
-                    "normalized": normalized,
-                    "matched_pattern": "show switches in fabric <fabric>",
-                    "capabilities_required": {
-                        "action": normalized["action"],
-                        "object": normalized["object"],
-                        "scope": list(normalized["scope"].keys()),
-                    },
-                    "tool_selected": tool_name,
-                    "capability_evaluation": capability_explain,
-                    "reasoning": (
-                        f"Selected tool '{tool_name}' because it matched "
-                        f"action={normalized['action']}, "
-                        f"object={normalized['object']}, "
-                        f"scope={list(normalized['scope'].keys())}"
-                    ),
-                },
-            }
-
-
-        # ---- Fallback ----
-        raise PlannerError(f"Unable to plan intent: '{intent}'")
-
+        return {
+            "workflow": workflow,
+            "explain": {
+                "intent": intent,
+                "steps": explain_steps,
+            },
+        }
