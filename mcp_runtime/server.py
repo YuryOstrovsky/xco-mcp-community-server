@@ -1,10 +1,9 @@
 # mcp_runtime/server.py
 
 import os
-import os
 from dotenv import load_dotenv
 
-load_dotenv()   
+load_dotenv()
 
 from mcp_runtime.registry import MCPRegistry
 from mcp_runtime.policy import enforce_policy
@@ -16,7 +15,7 @@ from mcp_runtime.context_validator import ContextValidator
 
 from mcp_runtime.session import MCPSession
 from mcp_runtime.context_merge import merge_context
-
+from mcp_runtime.tracing import new_request_id, new_correlation_id
 
 
 class MCPServer:
@@ -52,31 +51,38 @@ class MCPServer:
         tool_name: str,
         inputs: dict,
         context: dict | None = None,
-        session=None,
+        session: MCPSession | None = None,
     ):
         """
-        Phase 2.7:
+        Phase 2.8:
         - User context overrides session context
         - Session context overrides inferred context
         - Validation BEFORE persistence
         - Persistence only on successful calls
+        - request_id per invoke
+        - correlation_id per session (or per call if no session)
         """
+
+        # ---- Tracing (Phase 2.8) ----
+        request_id = new_request_id()
+        correlation_id = (
+            session.correlation_id
+            if session and hasattr(session, "correlation_id")
+            else new_correlation_id()
+        )
 
         tool = self.registry.get(tool_name)
         if not tool:
             raise ToolNotFound(tool_name)
 
-        # ---- Policy enforcement (unchanged) ----
+        # ---- Policy enforcement ----
         enforce_policy(tool, auto_mode=self.auto_mode)
 
         # ---- Load session context (if any) ----
         session_ctx = session.get_context() if session else {}
 
         # ---- Merge order: inferred {} <- session <- user ----
-        merged_incoming = self.context_validator.merge(
-            {},
-            session_ctx,
-        )
+        merged_incoming = self.context_validator.merge({}, session_ctx)
         merged_incoming = self.context_validator.merge(
             merged_incoming,
             context or {},
@@ -146,9 +152,26 @@ class MCPServer:
             "payload": response["payload"],
             "context": resolved_context,
             "meta": {
+                "request_id": request_id,
+                "correlation_id": correlation_id,
                 "risk": tool["policy"]["risk"],
                 "effective_port": response["effective_port"],
                 "url": response["url"],
                 "params": response.get("params", {}),
             },
+            "explain": {
+                "context": {
+                    "input_context": context or {},
+                    "session_context": session_ctx if session else {},
+                    "resolved_context": resolved_context,
+                },
+                "validation": {
+                    "status": "passed",
+                },
+                "policy": {
+                    "risk": tool["policy"]["risk"],
+                    "mode": "auto" if self.auto_mode else "manual",
+                },
+            },
         }
+

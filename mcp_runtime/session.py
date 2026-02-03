@@ -1,11 +1,18 @@
 # mcp_runtime/session.py
 
-from typing import Dict, Optional
+from typing import Dict
 from copy import deepcopy
+from mcp_runtime.tracing import new_correlation_id
+
 
 class MCPSession:
     def __init__(self, session_id: str):
         self.session_id = session_id
+
+        # ---- Phase 2.8 tracing ----
+        self.correlation_id = new_correlation_id()
+
+        # ---- Persisted resolved context ----
         self._context: Dict = {}
 
     def get_context(self) -> Dict:
@@ -19,4 +26,3 @@ class MCPSession:
 
     def clear(self):
         self._context = {}
-
