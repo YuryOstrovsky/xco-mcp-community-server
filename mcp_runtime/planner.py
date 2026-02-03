@@ -3,6 +3,8 @@
 from typing import Dict
 from mcp_runtime.workflow_schema import validate_workflow_schema, WorkflowSchemaError
 from mcp_runtime.intent_normalizer import IntentNormalizer, IntentNormalizationError
+from mcp_runtime.tool_capabilities import ToolCapabilityResolver, ToolCapabilityError
+
 
 
 
@@ -19,6 +21,7 @@ class MCPPlanner:
     def __init__(self, registry):
         self.registry = registry
         self.normalizer = IntentNormalizer()
+        self.cap_resolver = ToolCapabilityResolver(registry)
 
     def plan(self, intent: str) -> Dict:
         """
@@ -33,19 +36,33 @@ class MCPPlanner:
         canonical = normalized["canonical"]
 
 
-        # ---- Simple deterministic rules (Phase 4.0) ----
+        # ---- Simple deterministic rules (Phase 4.x) ----
 
         if canonical.startswith("show switches in fabric"):
             fabric = normalized["scope"]["fabric"]
+
+            try:
+                tool_name = self.cap_resolver.find_tool(
+                    action=normalized["action"],
+                    object_=normalized["object"],
+                    scope_keys=list(normalized["scope"].keys()),
+                )
+            except ToolCapabilityError as e:
+                raise PlannerError(str(e))
+
+
             workflow = {
                 "version": "1.0",
                 "steps": [
                     {
-                        "tool": "inventory_getswitches",
-                        "context": {"fabric": fabric},
+                        "tool": tool_name,
+                        "context": {
+                            "fabric": fabric
+                        },
                     }
                 ],
             }
+
 
             try:
                 validate_workflow_schema(workflow)

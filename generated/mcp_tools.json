@@ -2208,8 +2208,14 @@
     },
     "tags": [
       "read"
-    ]
+    ],
+    "capabilities": {
+      "action": "show",
+      "object": "switches",
+      "scope": ["fabric"]
+    }
   },
+  
   {
     "name": "inventory_updateswitches",
     "description": "updateSwitches",
@@ -13159,4 +13165,6 @@
       "read"
     ]
   }
+
+  
 ]
