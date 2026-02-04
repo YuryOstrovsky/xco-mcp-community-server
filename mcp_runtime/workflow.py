@@ -20,12 +20,12 @@ def _get_by_path(data: Dict, path: str):
 
 class MCPWorkflowRunner:
     """
-    Phase 3.4:
+    Phase 3.4 → 4.9:
     - Sequential execution of MCP tools
-    - Conditional (IF / THEN) step execution
-    - Fail-fast on errors
-    - Rollback scaffolding (read-only)
-    - Workflow schema validation (DSL v1.0)
+    - Conditional execution
+    - Fail-fast
+    - Rollback scaffolding
+    - Workflow schema validation
     """
 
     def __init__(self, mcp_server):
@@ -37,7 +37,6 @@ class MCPWorkflowRunner:
         session=None,
     ) -> Dict[str, Any]:
 
-        # ---- Phase 3.4: schema validation (BEFORE execution) ----
         validate_workflow_schema({
             "version": "1.0",
             "steps": steps,
@@ -76,7 +75,6 @@ class MCPWorkflowRunner:
                     continue
 
             try:
-                # ---- Invoke MCP ----
                 r = self.mcp.invoke(
                     tool_name=tool,
                     inputs=inputs,
@@ -84,12 +82,7 @@ class MCPWorkflowRunner:
                     session=session,
                 )
 
-                # ---- Carry context forward (local) ----
                 current_context = r["context"]
-
-                # ✅ CRITICAL FIX: persist context into session
-                if session:
-                    session.update_context(current_context)
 
                 results.append({
                     "step": idx,
@@ -100,7 +93,6 @@ class MCPWorkflowRunner:
                     "explain": r.get("explain"),
                 })
 
-                # ---- Record rollback intent (not executed) ----
                 if rollback:
                     rollback_plan.append({
                         "step": idx,
@@ -116,7 +108,7 @@ class MCPWorkflowRunner:
                         "type": type(e).__name__,
                         "message": str(e),
                     },
-                    "final_context": session.get_context() if session else current_context,
+                    "final_context": current_context,
                     "rollback_plan": rollback_plan,
                     "meta": {
                         "correlation_id": (
@@ -125,13 +117,11 @@ class MCPWorkflowRunner:
                     },
                 }
 
-        # ---- Authoritative final context ----
-        final_context = session.get_context() if session else current_context
-
+        # ✅ FIX: final context comes from execution, not session
         return {
             "workflow_id": workflow_id,
             "steps": results,
-            "final_context": final_context,
+            "final_context": current_context,
             "meta": {
                 "correlation_id": (
                     session.correlation_id if session else None

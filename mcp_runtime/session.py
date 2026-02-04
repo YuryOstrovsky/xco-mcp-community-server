@@ -26,3 +26,13 @@ class MCPSession:
 
     def clear(self):
         self._context = {}
+
+    def update_context(self, ctx: dict):
+        print(">>> SESSION.update_context CALLED")
+        print(">>> ctx =", ctx)
+        self._context = ctx
+
+    def get_context(self):
+        print(">>> SESSION.get_context CALLED")
+        print(">>> stored ctx =", getattr(self, "_context", None))
+        return getattr(self, "_context", {})

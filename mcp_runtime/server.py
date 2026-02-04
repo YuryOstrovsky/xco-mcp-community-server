@@ -1,5 +1,3 @@
-# mcp_runtime/server.py
-
 import os
 from dotenv import load_dotenv
 
@@ -29,10 +27,10 @@ class MCPServer:
         self.context_validator = ContextValidator()
         self.context_injector = ContextInjector()
 
-        # ---- Auth manager (token lifecycle owner) ----
+        # ---- Auth manager ----
         self.auth = AuthManager()
 
-        # ---- Transport (auth-aware) ----
+        # ---- Transport ----
         self.transport = XCOTransport(
             host=os.environ["XCO_HOST"],
             auth=self.auth,
@@ -40,7 +38,7 @@ class MCPServer:
             timeout=int(os.environ.get("XCO_TIMEOUT_SECONDS", "20")),
         )
 
-        # ---- Context resolver (Phase 2.1+) ----
+        # ---- Context resolver ----
         self.context_resolver = ContextResolver(self.transport)
 
     def list_tools(self):
@@ -53,17 +51,11 @@ class MCPServer:
         context: dict | None = None,
         session: MCPSession | None = None,
     ):
+        print(">>> INVOKE CALLED:", tool_name, "context =", context)
         """
-        Phase 2.8:
-        - User context overrides session context
-        - Session context overrides inferred context
-        - Validation BEFORE persistence
-        - Persistence only on successful calls
-        - request_id per invoke
-        - correlation_id per session (or per call if no session)
+        Phase 2.8 invoke logic — preserved
         """
 
-        # ---- Tracing (Phase 2.8) ----
         request_id = new_request_id()
         correlation_id = (
             session.correlation_id
@@ -75,13 +67,10 @@ class MCPServer:
         if not tool:
             raise ToolNotFound(tool_name)
 
-        # ---- Policy enforcement ----
         enforce_policy(tool, auto_mode=self.auto_mode)
 
-        # ---- Load session context (if any) ----
         session_ctx = session.get_context() if session else {}
 
-        # ---- Merge order: inferred {} <- session <- user ----
         merged_incoming = self.context_validator.merge({}, session_ctx)
         merged_incoming = self.context_validator.merge(
             merged_incoming,
@@ -90,17 +79,31 @@ class MCPServer:
 
         resolved_context: dict = {}
 
-        # ---- Resolve merged context (Phase 2.6 logic preserved) ----
         if merged_incoming:
-            # ---- Fabric ----
+            # -------------------------
+            # Fabric (SAFE FALLBACK)
+            # -------------------------
             if "fabric" in merged_incoming:
                 val = merged_incoming["fabric"]
                 if isinstance(val, dict) and "id" in val:
                     resolved_context["fabric"] = val
                 else:
-                    resolved_context["fabric"] = self.context_resolver.resolve_fabric(val)
+                    try:
+                        resolved = self.context_resolver.resolve_fabric(val)
+                        if resolved:
+                            resolved_context["fabric"] = resolved
+                        else:
+                            resolved_context["fabric"] = {
+                                "name": str(val).upper()
+                            }
+                    except Exception:
+                        resolved_context["fabric"] = {
+                            "name": str(val).upper()
+                        }
 
-            # ---- Tenant ----
+            # -------------------------
+            # Tenant (unchanged)
+            # -------------------------
             if "tenant" in merged_incoming:
                 val = merged_incoming["tenant"]
                 if isinstance(val, dict) and "id" in val:
@@ -108,28 +111,40 @@ class MCPServer:
                 else:
                     resolved_context["tenant"] = self.context_resolver.resolve_tenant(val)
 
-            # ---- Device ----
+            # -------------------------
+            # Device (SAFE FALLBACK)
+            # -------------------------
             if "device" in merged_incoming:
                 val = merged_incoming["device"]
                 if isinstance(val, dict) and "id" in val:
                     resolved_context["device"] = val
                 else:
-                    resolved_context["device"] = self.context_resolver.resolve_device(
-                        val,
-                        fabric_ctx=resolved_context.get("fabric"),
-                        tenant_ctx=resolved_context.get("tenant"),
-                    )
+                    try:
+                        resolved = self.context_resolver.resolve_device(
+                            val,
+                            fabric_ctx=resolved_context.get("fabric"),
+                            tenant_ctx=resolved_context.get("tenant"),
+                        )
+                        if resolved:
+                            resolved_context["device"] = resolved
+                        else:
+                            resolved_context["device"] = {
+                                "name": str(val)
+                            }
+                    except Exception:
+                        resolved_context["device"] = {
+                            "name": str(val)
+                        }
 
             # ---- Auto-derive fabric from device (unchanged) ----
             if "device" in resolved_context and "fabric" not in resolved_context:
                 dev = resolved_context["device"]
-                if dev.get("fabric_id") is not None and dev.get("fabric_name") is not None:
+                if dev.get("fabric_id") and dev.get("fabric_name"):
                     resolved_context["fabric"] = {
                         "id": dev["fabric_id"],
                         "name": dev["fabric_name"],
                     }
 
-        # ---- Validation BEFORE persistence ----
         self.context_validator.validate(resolved_context)
 
         endpoint = tool["endpoint"]
@@ -144,7 +159,11 @@ class MCPServer:
 
         # ---- Persist context ONLY on success ----
         if session:
+            print(">>> INVOKE: session object id =", id(session))
             session.update_context(resolved_context)
+        else:
+            print(">>> INVOKE: NO SESSION PROVIDED")
+
 
         return {
             "tool": tool_name,
@@ -174,4 +193,3 @@ class MCPServer:
                 },
             },
         }
-

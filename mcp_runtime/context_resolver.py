@@ -8,13 +8,22 @@ class ContextResolver:
     # Fabric resolution
     # -----------------------------
     def resolve_fabric(self, name: str):
+        if not isinstance(name, str):
+            raise ValueError("Fabric name must be a string")
+
+        name_norm = name.strip().lower()
+
         fabrics = self._get_fabrics()
 
         for f in fabrics:
-            if f.get("fabric-name") == name:
+            fabric_name = f.get("fabric-name")
+            if not fabric_name:
+                continue
+
+            if fabric_name.strip().lower() == name_norm:
                 return {
                     "id": f.get("fabric-id"),
-                    "name": f.get("fabric-name"),
+                    "name": fabric_name,   # preserve canonical casing
                 }
 
         raise ValueError(f"Fabric '{name}' not found")
@@ -31,13 +40,19 @@ class ContextResolver:
     # Tenant resolution
     # -----------------------------
     def resolve_tenant(self, name: str):
+        if not isinstance(name, str):
+            raise ValueError("Tenant name must be a string")
+
+        name_norm = name.strip().lower()
+
         tenants = self._get_tenants()
 
         for t in tenants:
-            if t.get("name") == name:
+            tenant_name = t.get("name")
+            if tenant_name and tenant_name.strip().lower() == name_norm:
                 return {
                     "id": t.get("id"),
-                    "name": t.get("name"),
+                    "name": tenant_name,
                 }
 
         raise ValueError(f"Tenant '{name}' not found")
@@ -54,6 +69,11 @@ class ContextResolver:
     # Device resolution
     # -----------------------------
     def resolve_device(self, identifier: str, fabric_ctx=None, tenant_ctx=None):
+        if not isinstance(identifier, str):
+            raise ValueError("Device identifier must be a string")
+
+        ident_norm = identifier.strip().lower()
+
         devices = self._get_devices()
 
         for d in devices:
@@ -67,10 +87,11 @@ class ContextResolver:
             fabric_id = fabric.get("fabric_id")
             fabric_name = fabric.get("fabric_name")
 
-            
-
-            # ---- Identifier match (name OR IP) ----
-            if identifier == name or identifier == ip:
+            # ---- Identifier match (name OR IP, case-insensitive) ----
+            if (
+                (name and name.strip().lower() == ident_norm)
+                or (ip and ip.strip().lower() == ident_norm)
+            ):
                 return {
                     "id": device_id,
                     "name": name,
@@ -81,9 +102,6 @@ class ContextResolver:
                 }
 
         raise ValueError(f"Device '{identifier}' not found")
-
-
-
 
     def _get_devices(self):
         resp = self.transport.request(
