@@ -6,10 +6,13 @@ from mcp_runtime.agents.observer import ObserverAgent
 from mcp_runtime.safety.envelope import SafetyEnvelope, SafetyEnvelopeError
 
 
+MUTATE_KEYWORDS = {"tag", "delete", "remove", "add", "set", "rename"}
+
+
 class MCPIntentExecutor:
     """
-    Phase 4.9 / 5.x:
-    End-to-end intent → safety → plan → execute
+    Phase 5.2:
+    Intent → Safety → Plan → Execute
     """
 
     def __init__(self, mcp_server):
@@ -18,50 +21,58 @@ class MCPIntentExecutor:
         self.runner = MCPWorkflowRunner(mcp_server)
 
     def execute(self, intent: str, session=None):
-        """
-        Execute an intent string.
 
-        Returns one of:
-        - clarification_required response
-        - executed workflow result
-        - SafetyEnvelopeError
-        """
+        intent_lc = intent.lower()
 
         # --------------------------------------------------
-        # Phase 5.0 — Agent identity & intent classification
+        # Agent + intent classification
         # --------------------------------------------------
         agent = ObserverAgent()
         intent_meta = agent.classify_intent(intent)
 
         # --------------------------------------------------
-        # Phase 5.1 — Safety envelope enforcement
+        # 🔴 SAFETY PRE-CLASSIFICATION FIX 🔴
+        # Catch mutation verbs even if planner doesn't know them
+        # --------------------------------------------------
+        if any(k in intent_lc for k in MUTATE_KEYWORDS):
+            if intent_meta["risk"] == "SAFE_READ":
+                # Upgrade risk BEFORE envelope
+                intent_meta["risk"] = (
+                    "RISKY_MUTATE" if "delete" in intent_lc else "SAFE_MUTATE"
+                )
+
+        # --------------------------------------------------
+        # Safety envelope (must short-circuit)
         # --------------------------------------------------
         envelope = SafetyEnvelope(agent)
-        envelope_result = envelope.enforce(intent_meta)
+        decision = envelope.enforce(intent_meta)
 
-        # NOTE:
-        # - None → allowed
-        # - "CONFIRM_REQUIRED" → handled in Phase 5.2+
-        # For now we allow execution to continue
+        if decision == "CONFIRM_REQUIRED":
+            return {
+                "confirmation_required": True,
+                "intent": intent,
+                "risk": intent_meta["risk"],
+                "agent": agent.name,
+                "message": "This action requires confirmation before execution",
+            }
 
         # --------------------------------------------------
-        # Phase 4.x — Planning
+        # Planning
         # --------------------------------------------------
         try:
             plan = self.planner.plan(intent)
-        except PlannerError as e:
-            raise e
+        except PlannerError:
+            # Planner errors are valid ONLY after safety
+            raise
 
-        # --------------------------------------------------
-        # Clarification passthrough (NO execution)
-        # --------------------------------------------------
+        # Clarification path
         if plan.get("clarification_required"):
             return plan
 
         workflow = plan["workflow"]
 
         # --------------------------------------------------
-        # Phase 3.x — Workflow execution
+        # Execution
         # --------------------------------------------------
         execution = self.runner.run(
             workflow["steps"],

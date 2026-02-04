@@ -1,19 +1,13 @@
 # mcp_runtime/safety/envelope.py
 
-
 class SafetyEnvelopeError(Exception):
     pass
 
 
 class SafetyEnvelope:
     """
-    Phase 5.x:
+    Phase 5.2:
     Enforces agent-level safety constraints BEFORE planning/execution.
-
-    Outcomes:
-    - allow execution
-    - require confirmation
-    - reject intent
     """
 
     def __init__(self, agent):
@@ -21,40 +15,39 @@ class SafetyEnvelope:
 
     def enforce(self, intent_meta: dict):
         """
-        Validate intent against agent permissions.
-
         Returns:
-          - None                → execution allowed
-          - "CONFIRM_REQUIRED"  → must confirm before execution
-
+        - "ALLOW"
+        - "CONFIRM_REQUIRED"
         Raises:
-          - SafetyEnvelopeError → intent is not allowed
+        - SafetyEnvelopeError for denied actions
         """
 
         risk = intent_meta.get("risk")
 
-        # -----------------------------
-        # SAFE READ-ONLY INTENTS
-        # -----------------------------
+        # ---------------------------
+        # SAFE READ → always allowed
+        # ---------------------------
         if risk == "SAFE_READ":
-            return None
+            return "ALLOW"
 
-        # -----------------------------
-        # CHANGE / MUTATION INTENTS
-        # -----------------------------
-        if risk == "CONFIRM_REQUIRED":
+        # ---------------------------
+        # SAFE MUTATE → confirmation
+        # ---------------------------
+        if risk == "SAFE_MUTATE":
             if not self.agent.allow_mutation:
-                raise SafetyEnvelopeError(
-                    f"Agent '{self.agent.name}' is not allowed to perform mutations"
-                )
+                return "CONFIRM_REQUIRED"
+            return "ALLOW"
 
-            # Operator is allowed to request, but must confirm
-            return "CONFIRM_REQUIRED"
+        # ---------------------------
+        # RISKY MUTATE → hard deny
+        # ---------------------------
+        if risk == "RISKY_MUTATE":
+            raise SafetyEnvelopeError(
+                f"Agent '{self.agent.name}' is not allowed to perform risky actions"
+            )
 
-        # -----------------------------
-        # UNKNOWN / FUTURE RISKS
-        # -----------------------------
-        raise SafetyEnvelopeError(
-            f"Unhandled intent risk '{risk}' for agent '{self.agent.name}'"
-        )
+        # ---------------------------
+        # Unknown risk → deny
+        # ---------------------------
+        raise SafetyEnvelopeError(f"Unknown risk level: {risk}")
 
