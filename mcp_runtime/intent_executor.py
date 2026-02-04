@@ -12,8 +12,8 @@ MUTATE_KEYWORDS = {"tag", "delete", "remove", "add", "set", "rename"}
 
 class MCPIntentExecutor:
     """
-    Phase 5.3:
-    Intent → Safety → (Confirm?) → Plan → Execute
+    Phase 5.6:
+    Intent → Agent → Safety → (Confirm?) → Plan → Execute
     """
 
     def __init__(self, mcp_server):
@@ -22,18 +22,27 @@ class MCPIntentExecutor:
         self.runner = MCPWorkflowRunner(mcp_server)
         self.commits = CommitRegistry()
 
+    # ==================================================
+    # Execute intent
+    # ==================================================
     def execute(self, intent: str, session=None):
 
         intent_lc = intent.lower()
 
         # --------------------------------------------------
-        # Agent + intent classification
+        # Phase 5.6.3 — Agent resolution
         # --------------------------------------------------
-        agent = ObserverAgent()
+        if session and getattr(session, "agent", None):
+            agent = session.agent
+        else:
+            agent = ObserverAgent()
+            if session:
+                session.agent = agent  # default agent injection
+
         intent_meta = agent.classify_intent(intent)
 
         # --------------------------------------------------
-        # Safety pre-upgrade for unknown mutation verbs
+        # Safety pre-upgrade for mutation verbs
         # --------------------------------------------------
         if any(k in intent_lc for k in MUTATE_KEYWORDS):
             if intent_meta["risk"] == "SAFE_READ":
@@ -42,20 +51,20 @@ class MCPIntentExecutor:
                 )
 
         # --------------------------------------------------
-        # Safety envelope (may DENY or REQUIRE confirmation)
+        # Safety envelope (DENY / CONFIRM / ALLOW)
         # --------------------------------------------------
         envelope = SafetyEnvelope(agent)
         decision = envelope.enforce(intent_meta)
 
         # --------------------------------------------------
-        # 🔴 CONFIRMATION SHORT-CIRCUIT (NO PLANNING HERE)
+        # 🔴 HARD STOP: confirmation required (NO PLANNING)
         # --------------------------------------------------
         if decision == "CONFIRM_REQUIRED":
             token = self.commits.create(
                 intent=intent,
-                agent=agent.name,
+                agent=agent,                 # store agent OBJECT
                 risk=intent_meta["risk"],
-                plan=None,
+                plan=None,                   # plan comes later
             )
 
             return {
@@ -75,43 +84,55 @@ class MCPIntentExecutor:
         except PlannerError:
             raise
 
-        # Clarification path
         if plan.get("clarification_required"):
             return plan
 
         # --------------------------------------------------
         # Execution
         # --------------------------------------------------
-        workflow = plan["workflow"]
-
         execution = self.runner.run(
-            workflow["steps"],
+            plan["workflow"]["steps"],
             session=session,
         )
 
         return {
             "intent": intent,
-            "workflow": workflow,
+            "workflow": plan["workflow"],
             "execution": execution,
             "explain": plan.get("explain"),
         }
 
+    # ==================================================
+    # Confirm intent
+    # ==================================================
     def confirm(self, commit_token: str, session=None):
         """
-        Phase 5.3:
-        Confirm intent execution.
-        NOTE: Mutation planning/execution is deferred to later phases.
+        Phase 5.6.5:
+        Confirm a previously approved intent.
+        NOTE: No re-planning occurs here.
         """
 
         record = self.commits.pop(commit_token)
         if not record:
             raise ValueError("Invalid or expired commit token")
 
+        agent = record["agent"]
+        risk = record["risk"]
+        intent = record["intent"]
+
+        # --------------------------------------------------
+        # Safety re-check with original agent
+        # --------------------------------------------------
+        envelope = SafetyEnvelope(agent)
+        envelope.enforce({"risk": risk})
+
+        # --------------------------------------------------
+        # No planner here — mutation execution comes later
+        # --------------------------------------------------
         return {
             "confirmed": True,
-            "intent": record["intent"],
-            "risk": record["risk"],
-            "agent": record["agent"],
-            "message": "Intent confirmed. Execution will be handled by mutation planner.",
+            "intent": intent,
+            "agent": agent.name,
+            "message": "Intent confirmed and approved for execution",
         }
 
