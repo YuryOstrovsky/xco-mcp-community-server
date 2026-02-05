@@ -20,12 +20,13 @@ def _get_by_path(data: Dict, path: str):
 
 class MCPWorkflowRunner:
     """
-    Phase 3.4 → 4.9:
+    Phase 3.4 → 6.0:
     - Sequential execution of MCP tools
-    - Conditional execution
-    - Fail-fast
-    - Rollback scaffolding
+    - Conditional execution (when)
+    - Fail-fast semantics
+    - Rollback scaffolding (NOT executed yet)
     - Workflow schema validation
+    - Explicit mutation blocking (Phase 6.0)
     """
 
     def __init__(self, mcp_server):
@@ -37,17 +38,32 @@ class MCPWorkflowRunner:
         session=None,
     ) -> Dict[str, Any]:
 
+        # --------------------------------------------------
+        # Phase 6.0 — Schema validation (single entry point)
+        # --------------------------------------------------
         validate_workflow_schema({
             "version": "1.0",
             "steps": steps,
         })
 
+        # --------------------------------------------------
+        # Phase 6.0 — Block mutation execution
+        # --------------------------------------------------
+        for idx, step in enumerate(steps):
+            if step.get("mode", "read") == "mutate":
+                raise RuntimeError(
+                    "Mutation execution is blocked in Phase 6.0"
+                )
+
         workflow_id = f"wf-{uuid4().hex[:8]}"
 
         results = []
-        current_context = {}
+        current_context: Dict[str, Any] = {}
         rollback_plan = []
 
+        # --------------------------------------------------
+        # Execute steps sequentially
+        # --------------------------------------------------
         for idx, step in enumerate(steps):
             tool = step.get("tool")
             inputs = step.get("inputs", {})
@@ -82,6 +98,7 @@ class MCPWorkflowRunner:
                     session=session,
                 )
 
+                # Update rolling context
                 current_context = r["context"]
 
                 results.append({
@@ -93,6 +110,7 @@ class MCPWorkflowRunner:
                     "explain": r.get("explain"),
                 })
 
+                # Rollback is recorded, not executed
                 if rollback:
                     rollback_plan.append({
                         "step": idx,
@@ -117,7 +135,9 @@ class MCPWorkflowRunner:
                     },
                 }
 
-        # ✅ FIX: final context comes from execution, not session
+        # --------------------------------------------------
+        # Successful completion
+        # --------------------------------------------------
         return {
             "workflow_id": workflow_id,
             "steps": results,

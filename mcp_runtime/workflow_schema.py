@@ -1,6 +1,6 @@
 # mcp_runtime/workflow_schema.py
 
-from typing import Dict, List
+from typing import Dict
 
 
 class WorkflowSchemaError(ValueError):
@@ -40,12 +40,33 @@ def validate_workflow_schema(workflow: Dict):
                     f"Step {idx} 'when' requires 'path' and 'equals'"
                 )
 
+        # --------------------------------------------------
+        # Phase 6.0 — step mode
+        # --------------------------------------------------
+        mode = step.get("mode", "read")
+        if mode not in ("read", "mutate"):
+            raise WorkflowSchemaError(
+                f"Step {idx} invalid mode '{mode}' (must be read|mutate)"
+            )
+
+        # --------------------------------------------------
+        # Phase 6.0 — rollback REQUIRED for mutate
+        # --------------------------------------------------
+        if mode == "mutate":
+            if "rollback" not in step:
+                raise WorkflowSchemaError(
+                    f"Step {idx} is mutate but missing rollback"
+                )
+
+        # --------------------------------------------------
+        # Rollback structure (strategy NOT required yet)
+        # --------------------------------------------------
         if "rollback" in step:
             rollback = step["rollback"]
             if not isinstance(rollback, dict):
-                raise WorkflowSchemaError(f"Step {idx} 'rollback' must be a dict")
-            if "strategy" not in rollback:
-                raise WorkflowSchemaError(
-                    f"Step {idx} 'rollback' missing 'strategy'"
-                )
+                raise WorkflowSchemaError(f"Step {idx} rollback must be a dict")
 
+            if "tool" not in rollback:
+                raise WorkflowSchemaError(
+                    f"Step {idx} rollback missing 'tool'"
+                )
