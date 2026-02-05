@@ -15,6 +15,7 @@ from mcp_runtime.session import MCPSession
 from mcp_runtime.context_merge import merge_context
 from mcp_runtime.tracing import new_request_id, new_correlation_id
 from mcp_runtime.mutation_registry import MutationRegistry
+from mcp_runtime.mutation_ledger import MutationLedger
 
 
 
@@ -25,6 +26,7 @@ class MCPServer:
         self.registry = MCPRegistry().load()
         self.auto_mode = auto_mode
         self.mutations = MutationRegistry()
+        self.mutation_ledger = MutationLedger()
 
         # ---- Phase 2.x context components ----
         self.context_validator = ContextValidator()
