@@ -1,6 +1,7 @@
 # mcp_runtime/explain.py
 
 from typing import Dict, Any, List
+from mcp_runtime.explain_contract import EXPLANATION_CONTRACT_VERSION
 
 
 class ExecutionExplainer:
@@ -208,15 +209,20 @@ class ExecutionExplainer:
         confidence = self.explain_with_confidence()
 
         return {
-            "version": "1.0",                 # ✅ REQUIRED (Phase 7.3)
+            "version": EXPLANATION_CONTRACT_VERSION,  # ✅ REQUIRED
             "status": base["status"],
-            "summary": base["summary"],
+            "summary": {
+                "steps_executed": base["summary"]["steps_executed"],
+                "mutations": base["summary"].get("mutations", 0),   # ✅ REQUIRED
+                "rollbacks": base["summary"].get("rollbacks", 0),   # ✅ REQUIRED
+                "final_status": base["summary"].get("final_status", "unknown"),  # Default value if missing
+
+            },
             "steps": base["steps"],
-            "mutations": base.get("mutations", []),
-            "rollbacks": base.get("rollbacks", []),
             "confidence": confidence["confidence"],
             "reasons": confidence["reasons"],
         }
+
 
 
 

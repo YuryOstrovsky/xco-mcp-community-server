@@ -1,5 +1,3 @@
-# mcp_runtime/workflow.py
-
 from typing import List, Dict, Any
 from uuid import uuid4
 from copy import deepcopy
@@ -8,7 +6,7 @@ from mcp_runtime.workflow_schema import validate_workflow_schema
 from mcp_runtime.safety.envelope import SafetyEnvelope, SafetyEnvelopeError
 from mcp_runtime.trace import ExecutionTrace
 from mcp_runtime.explain import ExecutionExplainer
-
+from mcp_runtime.explain_contract import validate_explanation_contract  # ✅ NEW
 
 def _get_by_path(data: Dict, path: str):
     cur = data
@@ -21,11 +19,11 @@ def _get_by_path(data: Dict, path: str):
 
 class MCPWorkflowRunner:
     """
-    Phase 7.3
+    Phase 7.4
     - Linear mutation lineage
     - Rollback causality
     - Execution tracing
-    - Structured explanation contract
+    - Frozen explanation contract (validated)
     """
 
     def __init__(self, mcp_server):
@@ -214,6 +212,8 @@ class MCPWorkflowRunner:
                 trace.finish(safe_context)
 
                 explainer = ExecutionExplainer(trace)
+                explanation = explainer.explain_contract()
+                validate_explanation_contract(explanation)  # ✅ ENFORCED
 
                 return {
                     "workflow_id": workflow_id,
@@ -225,7 +225,7 @@ class MCPWorkflowRunner:
                     "rollback_results": rollback_results,
                     "final_context": safe_context,
                     "trace": trace,
-                    "explanation": explainer.explain_contract(),
+                    "explanation": explanation,
                 }
 
         # --------------------------------------------------
@@ -234,6 +234,8 @@ class MCPWorkflowRunner:
         trace.finish(current_context)
 
         explainer = ExecutionExplainer(trace)
+        explanation = explainer.explain_contract()
+        validate_explanation_contract(explanation)  # ✅ ENFORCED
 
         return {
             "workflow_id": workflow_id,
@@ -241,5 +243,5 @@ class MCPWorkflowRunner:
             "mutations": mutations,
             "final_context": current_context,
             "trace": trace,
-            "explanation": explainer.explain_contract(),
+            "explanation": explanation,
         }
