@@ -2,14 +2,12 @@
 
 from typing import List, Dict, Any
 from uuid import uuid4
+from copy import deepcopy
 
 from mcp_runtime.workflow_schema import validate_workflow_schema
 
 
 def _get_by_path(data: Dict, path: str):
-    """
-    Safely resolve dot-paths like: context.fabric.name
-    """
     cur = data
     for part in path.split("."):
         if not isinstance(cur, dict) or part not in cur:
@@ -20,13 +18,10 @@ def _get_by_path(data: Dict, path: str):
 
 class MCPWorkflowRunner:
     """
-    Phase 3.4 → 6.0:
-    - Sequential execution of MCP tools
-    - Conditional execution (when)
-    - Fail-fast semantics
-    - Rollback scaffolding (NOT executed yet)
-    - Workflow schema validation
-    - Explicit mutation blocking (Phase 6.0)
+    Phase 6.3.4:
+    - Deterministic rollback
+    - LIFO rollback order
+    - Rollback context isolation
     """
 
     def __init__(self, mcp_server):
@@ -38,9 +33,6 @@ class MCPWorkflowRunner:
         session=None,
     ) -> Dict[str, Any]:
 
-        # --------------------------------------------------
-        # Phase 6.0 — Schema validation (single entry point)
-        # --------------------------------------------------
         validate_workflow_schema(
             {
                 "version": "1.0",
@@ -49,30 +41,37 @@ class MCPWorkflowRunner:
             mutation_registry=self.mcp.mutations,
         )
 
-
-        # --------------------------------------------------
-        # Phase 6.0 — Block mutation execution
-        # --------------------------------------------------
-        for idx, step in enumerate(steps):
-            if step.get("mode", "read") == "mutate":
-                raise RuntimeError(
-                    "Mutation execution is blocked in Phase 6.0"
-                )
-
         workflow_id = f"wf-{uuid4().hex[:8]}"
 
         results = []
         current_context: Dict[str, Any] = {}
-        rollback_plan = []
 
         # --------------------------------------------------
-        # Execute steps sequentially
+        # Phase 6.3.4 — capture safe context BEFORE mutation
+        # --------------------------------------------------
+        safe_context = None
+        for step in steps:
+            if step.get("mode") == "mutate":
+                safe_context = deepcopy(current_context)
+                break
+
+        # --------------------------------------------------
+        # Build rollback stack from definition
+        # --------------------------------------------------
+        rollback_stack = [
+            step["rollback"]
+            for step in steps
+            if step.get("mode") == "mutate" and "rollback" in step
+        ]
+
+        # --------------------------------------------------
+        # Execute workflow
         # --------------------------------------------------
         for idx, step in enumerate(steps):
-            tool = step.get("tool")
+            tool = step["tool"]
+            mode = step.get("mode", "read")
             inputs = step.get("inputs", {})
             step_context = step.get("context", {})
-            rollback = step.get("rollback")
             condition = step.get("when")
 
             # ---- Conditional execution ----
@@ -86,11 +85,7 @@ class MCPWorkflowRunner:
                         "step": idx,
                         "tool": tool,
                         "skipped": True,
-                        "reason": {
-                            "path": condition["path"],
-                            "expected": condition.get("equals"),
-                            "actual": value,
-                        },
+                        "reason": condition,
                     })
                     continue
 
@@ -102,26 +97,40 @@ class MCPWorkflowRunner:
                     session=session,
                 )
 
-                # Update rolling context
                 current_context = r["context"]
 
                 results.append({
                     "step": idx,
                     "tool": tool,
+                    "mode": mode,
                     "status": r["status"],
                     "context": r["context"],
-                    "meta": r["meta"],
-                    "explain": r.get("explain"),
                 })
 
-                # Rollback is recorded, not executed
-                if rollback:
-                    rollback_plan.append({
-                        "step": idx,
-                        "rollback": rollback,
-                    })
-
             except Exception as e:
+                rollback_results = []
+
+                # --------------------------------------------------
+                # 🔁 Rollback using SAFE CONTEXT
+                # --------------------------------------------------
+                for rb in reversed(rollback_stack):
+                    try:
+                        rb_result = self.mcp.invoke(
+                            tool_name=rb["tool"],
+                            inputs=rb.get("inputs", {}),
+                            context=safe_context or {},
+                            session=session,
+                        )
+                        rollback_results.append({
+                            "tool": rb["tool"],
+                            "status": rb_result["status"],
+                        })
+                    except Exception as re:
+                        rollback_results.append({
+                            "tool": rb["tool"],
+                            "error": str(re),
+                        })
+
                 return {
                     "workflow_id": workflow_id,
                     "steps": results,
@@ -130,25 +139,13 @@ class MCPWorkflowRunner:
                         "type": type(e).__name__,
                         "message": str(e),
                     },
+                    "rollback_executed": True,
+                    "rollback_results": rollback_results,
                     "final_context": current_context,
-                    "rollback_plan": rollback_plan,
-                    "meta": {
-                        "correlation_id": (
-                            session.correlation_id if session else None
-                        ),
-                    },
                 }
 
-        # --------------------------------------------------
-        # Successful completion
-        # --------------------------------------------------
         return {
             "workflow_id": workflow_id,
             "steps": results,
             "final_context": current_context,
-            "meta": {
-                "correlation_id": (
-                    session.correlation_id if session else None
-                ),
-            },
         }
