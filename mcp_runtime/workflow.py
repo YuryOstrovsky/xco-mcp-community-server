@@ -1,3 +1,5 @@
+# mcp_runtime/workflow.py
+
 from typing import List, Dict, Any
 from uuid import uuid4
 from copy import deepcopy
@@ -17,12 +19,10 @@ def _get_by_path(data: Dict, path: str):
 
 class MCPWorkflowRunner:
     """
-    Phase 6.5:
-    - Agent-aware mutation execution
-    - Runtime safety enforcement
-    - Auto-mode gating
-    - Rollback-safe execution
-    - Mutation ledger recording
+    Phase 6.6.3
+    - Linear mutation lineage
+    - Rollback causality (reverts_mutation_id)
+    - Rollbacks do NOT affect lineage
     """
 
     def __init__(self, mcp_server):
@@ -34,9 +34,6 @@ class MCPWorkflowRunner:
         session=None,
     ) -> Dict[str, Any]:
 
-        # ----------------------------
-        # Schema validation
-        # ----------------------------
         validate_workflow_schema(
             {"version": "1.0", "steps": steps},
             mutation_registry=self.mcp.mutations,
@@ -55,9 +52,9 @@ class MCPWorkflowRunner:
         agent = getattr(session, "agent", None)
         session_id = getattr(session, "session_id", None)
 
-        # ----------------------------
-        # Execute steps
-        # ----------------------------
+        # 🔗 Linear mutation lineage pointer
+        last_mutation_id = None
+
         for idx, step in enumerate(steps):
             tool = step["tool"]
             mode = step.get("mode", "read")
@@ -70,10 +67,7 @@ class MCPWorkflowRunner:
             # Conditional execution
             # ----------------------------
             if condition:
-                value = _get_by_path(
-                    {"context": current_context},
-                    condition["path"],
-                )
+                value = _get_by_path({"context": current_context}, condition["path"])
                 if value != condition["equals"]:
                     results.append({
                         "step": idx,
@@ -99,26 +93,31 @@ class MCPWorkflowRunner:
                         f"Agent '{agent.name}' is not allowed in auto mode"
                     )
 
-                envelope = SafetyEnvelope(agent)
-                envelope.enforce({"risk": "SAFE_MUTATE"})
+                SafetyEnvelope(agent).enforce({"risk": "SAFE_MUTATE"})
 
-                # Capture safe context ONCE (before first mutation)
+                # Capture safe context once
                 if not rollback_stack:
                     safe_context = deepcopy(current_context)
 
-                # 🔑 FIX: register rollback intent EARLY
-                if rollback:
-                    rollback_stack.append(rollback)
-
-                # Record mutation intent (attempted)
+                # Record mutation intent with lineage
                 entry = self.mcp.mutation_ledger.record(
                     tool=tool,
                     agent=agent.name,
                     session_id=session_id,
-                    rollback_tool=rollback.get("tool") if rollback else None,
                     status="attempted",
+                    rollback_tool=rollback.get("tool") if rollback else None,
+                    parent_mutation_id=last_mutation_id,
                 )
+
                 mutations.append(entry)
+
+                # Store rollback intent WITH causal link
+                if rollback:
+                    rollback_stack.append({
+                        "tool": rollback["tool"],
+                        "inputs": rollback.get("inputs", {}),
+                        "reverts_mutation_id": entry["mutation_id"],
+                    })
 
             # ----------------------------
             # Tool execution
@@ -140,13 +139,13 @@ class MCPWorkflowRunner:
                     "status": r["status"],
                 })
 
-                # Mark successful mutation
                 if mode == "mutate":
                     entry["status"] = "executed"
+                    last_mutation_id = entry["mutation_id"]
 
             except Exception as e:
                 # ----------------------------
-                # 🔁 Rollback (LIFO)
+                # 🔁 Rollback (LIFO, causal)
                 # ----------------------------
                 for rb in reversed(rollback_stack):
                     rb_tool = rb["tool"]
@@ -162,21 +161,22 @@ class MCPWorkflowRunner:
                             tool=rb_tool,
                             agent=agent.name if agent else "system",
                             session_id=session_id,
-                            rollback_tool=None,
                             status="rollback",
+                            reverts_mutation_id=rb["reverts_mutation_id"],
                         )
 
                         rollback_results.append({
                             "tool": rb_tool,
                             "status": "rollback",
+                            "reverts_mutation_id": rb["reverts_mutation_id"],
                         })
-
 
                     except Exception as re:
                         rollback_results.append({
                             "tool": rb_tool,
                             "status": "rollback_failed",
                             "error": str(re),
+                            "reverts_mutation_id": rb["reverts_mutation_id"],
                         })
 
                 return {
@@ -190,9 +190,6 @@ class MCPWorkflowRunner:
                     "final_context": safe_context,
                 }
 
-        # ----------------------------
-        # Successful completion
-        # ----------------------------
         return {
             "workflow_id": workflow_id,
             "steps": results,
