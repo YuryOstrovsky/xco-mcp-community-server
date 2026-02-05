@@ -41,10 +41,14 @@ class MCPWorkflowRunner:
         # --------------------------------------------------
         # Phase 6.0 — Schema validation (single entry point)
         # --------------------------------------------------
-        validate_workflow_schema({
-            "version": "1.0",
-            "steps": steps,
-        })
+        validate_workflow_schema(
+            {
+                "version": "1.0",
+                "steps": steps,
+            },
+            mutation_registry=self.mcp.mutations,
+        )
+
 
         # --------------------------------------------------
         # Phase 6.0 — Block mutation execution

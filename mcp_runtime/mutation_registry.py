@@ -1,46 +1,21 @@
 # mcp_runtime/mutation_registry.py
 
-from typing import Dict
-
-
-class MutationRegistryError(ValueError):
-    pass
-
-
 class MutationRegistry:
     """
-    Phase 6.1:
-    Registry of mutation-capable MCP tools.
+    Phase 6.2:
+    Registry of approved mutation tools and their rollback tools.
     """
 
     def __init__(self):
-        self._tools: Dict[str, Dict] = {}
+        # tool_name -> rollback_tool
+        self._registry = {}
 
-    def register(
-        self,
-        tool: str,
-        *,
-        rollback_tool: str,
-        description: str = "",
-    ):
-        if tool in self._tools:
-            raise MutationRegistryError(
-                f"Mutation tool already registered: {tool}"
-            )
+    def register(self, tool_name: str, *, rollback_tool: str):
+        self._registry[tool_name] = rollback_tool
 
-        self._tools[tool] = {
-            "tool": tool,
-            "rollback_tool": rollback_tool,
-            "description": description,
-        }
+    def is_registered(self, tool_name: str) -> bool:
+        return tool_name in self._registry
 
-    def is_mutating(self, tool: str) -> bool:
-        return tool in self._tools
-
-    def get(self, tool: str) -> Dict:
-        if tool not in self._tools:
-            raise MutationRegistryError(
-                f"Unknown mutation tool: {tool}"
-            )
-        return self._tools[tool]
+    def get_rollback(self, tool_name: str) -> str | None:
+        return self._registry.get(tool_name)
 

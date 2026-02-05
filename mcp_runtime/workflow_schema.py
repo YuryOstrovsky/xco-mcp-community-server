@@ -7,7 +7,12 @@ class WorkflowSchemaError(ValueError):
     pass
 
 
-def validate_workflow_schema(workflow: Dict):
+def validate_workflow_schema(workflow: Dict, mutation_registry=None):
+    """
+    Phase 6.2:
+    Validate workflow structure and enforce mutation safety rules.
+    """
+
     if not isinstance(workflow, dict):
         raise WorkflowSchemaError("Workflow must be a dict")
 
@@ -25,12 +30,21 @@ def validate_workflow_schema(workflow: Dict):
         if "tool" not in step:
             raise WorkflowSchemaError(f"Step {idx} missing 'tool'")
 
+        mode = step.get("mode", "read")
+        if mode not in ("read", "mutate"):
+            raise WorkflowSchemaError(
+                f"Step {idx} has invalid mode '{mode}'"
+            )
+
         if "inputs" in step and not isinstance(step["inputs"], dict):
             raise WorkflowSchemaError(f"Step {idx} 'inputs' must be a dict")
 
         if "context" in step and not isinstance(step["context"], dict):
             raise WorkflowSchemaError(f"Step {idx} 'context' must be a dict")
 
+        # --------------------------------------------------
+        # Conditional execution validation
+        # --------------------------------------------------
         if "when" in step:
             when = step["when"]
             if not isinstance(when, dict):
@@ -41,32 +55,37 @@ def validate_workflow_schema(workflow: Dict):
                 )
 
         # --------------------------------------------------
-        # Phase 6.0 — step mode
-        # --------------------------------------------------
-        mode = step.get("mode", "read")
-        if mode not in ("read", "mutate"):
-            raise WorkflowSchemaError(
-                f"Step {idx} invalid mode '{mode}' (must be read|mutate)"
-            )
-
-        # --------------------------------------------------
-        # Phase 6.0 — rollback REQUIRED for mutate
+        # Mutation-specific validation (Phase 6.2)
         # --------------------------------------------------
         if mode == "mutate":
-            if "rollback" not in step:
+            if mutation_registry is None:
                 raise WorkflowSchemaError(
-                    f"Step {idx} is mutate but missing rollback"
+                    f"Step {idx} mutation not allowed without mutation registry"
                 )
 
-        # --------------------------------------------------
-        # Rollback structure (strategy NOT required yet)
-        # --------------------------------------------------
-        if "rollback" in step:
-            rollback = step["rollback"]
+            tool = step["tool"]
+
+            if not mutation_registry.is_registered(tool):
+                raise WorkflowSchemaError(
+                    f"Step {idx} uses unregistered mutation tool '{tool}'"
+                )
+
+            rollback = step.get("rollback")
             if not isinstance(rollback, dict):
-                raise WorkflowSchemaError(f"Step {idx} rollback must be a dict")
+                raise WorkflowSchemaError(
+                    f"Step {idx} mutate step requires 'rollback'"
+                )
 
             if "tool" not in rollback:
                 raise WorkflowSchemaError(
                     f"Step {idx} rollback missing 'tool'"
+                )
+
+            expected_rb = mutation_registry.get_rollback(tool)
+            actual_rb = rollback.get("tool")
+
+            if expected_rb != actual_rb:
+                raise WorkflowSchemaError(
+                    f"Step {idx} rollback tool mismatch for '{tool}': "
+                    f"expected '{expected_rb}', got '{actual_rb}'"
                 )
