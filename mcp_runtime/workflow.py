@@ -1,11 +1,11 @@
-# mcp_runtime/workflow.py
-
 from typing import List, Dict, Any
 from uuid import uuid4
 from copy import deepcopy
 
 from mcp_runtime.workflow_schema import validate_workflow_schema
 from mcp_runtime.safety.envelope import SafetyEnvelope, SafetyEnvelopeError
+from mcp_runtime.trace import ExecutionTrace
+from mcp_runtime.explain import ExecutionExplainer   # ✅ NEW
 
 
 def _get_by_path(data: Dict, path: str):
@@ -19,10 +19,11 @@ def _get_by_path(data: Dict, path: str):
 
 class MCPWorkflowRunner:
     """
-    Phase 6.6.3
+    Phase 7.2
     - Linear mutation lineage
-    - Rollback causality (reverts_mutation_id)
-    - Rollbacks do NOT affect lineage
+    - Rollback causality
+    - Execution tracing
+    - Structured explainability contract
     """
 
     def __init__(self, mcp_server):
@@ -34,6 +35,14 @@ class MCPWorkflowRunner:
         session=None,
     ) -> Dict[str, Any]:
 
+        # ----------------------------
+        # Trace lifecycle (PER RUN)
+        # ----------------------------
+        trace = ExecutionTrace()
+
+        # ----------------------------
+        # Schema validation
+        # ----------------------------
         validate_workflow_schema(
             {"version": "1.0", "steps": steps},
             mutation_registry=self.mcp.mutations,
@@ -52,9 +61,11 @@ class MCPWorkflowRunner:
         agent = getattr(session, "agent", None)
         session_id = getattr(session, "session_id", None)
 
-        # 🔗 Linear mutation lineage pointer
         last_mutation_id = None
 
+        # ----------------------------
+        # Execute steps
+        # ----------------------------
         for idx, step in enumerate(steps):
             tool = step["tool"]
             mode = step.get("mode", "read")
@@ -67,13 +78,23 @@ class MCPWorkflowRunner:
             # Conditional execution
             # ----------------------------
             if condition:
-                value = _get_by_path({"context": current_context}, condition["path"])
+                value = _get_by_path(
+                    {"context": current_context},
+                    condition["path"],
+                )
                 if value != condition["equals"]:
-                    results.append({
+                    skipped = {
                         "step": idx,
                         "tool": tool,
                         "skipped": True,
-                    })
+                        "reason": {
+                            "path": condition["path"],
+                            "expected": condition["equals"],
+                            "actual": value,
+                        },
+                    }
+                    results.append(skipped)
+                    trace.add_step(skipped)
                     continue
 
             # ----------------------------
@@ -95,11 +116,9 @@ class MCPWorkflowRunner:
 
                 SafetyEnvelope(agent).enforce({"risk": "SAFE_MUTATE"})
 
-                # Capture safe context once
                 if not rollback_stack:
                     safe_context = deepcopy(current_context)
 
-                # Record mutation intent with lineage
                 entry = self.mcp.mutation_ledger.record(
                     tool=tool,
                     agent=agent.name,
@@ -110,8 +129,8 @@ class MCPWorkflowRunner:
                 )
 
                 mutations.append(entry)
+                trace.add_mutation(entry)
 
-                # Store rollback intent WITH causal link
                 if rollback:
                     rollback_stack.append({
                         "tool": rollback["tool"],
@@ -132,12 +151,14 @@ class MCPWorkflowRunner:
 
                 current_context = r["context"]
 
-                results.append({
+                step_result = {
                     "step": idx,
                     "tool": tool,
                     "mode": mode,
                     "status": r["status"],
-                })
+                }
+                results.append(step_result)
+                trace.add_step(step_result)
 
                 if mode == "mutate":
                     entry["status"] = "executed"
@@ -145,7 +166,7 @@ class MCPWorkflowRunner:
 
             except Exception as e:
                 # ----------------------------
-                # 🔁 Rollback (LIFO, causal)
+                # 🔁 Rollback
                 # ----------------------------
                 for rb in reversed(rollback_stack):
                     rb_tool = rb["tool"]
@@ -165,19 +186,32 @@ class MCPWorkflowRunner:
                             reverts_mutation_id=rb["reverts_mutation_id"],
                         )
 
-                        rollback_results.append({
+                        rollback_result = {
                             "tool": rb_tool,
                             "status": "rollback",
                             "reverts_mutation_id": rb["reverts_mutation_id"],
-                        })
+                        }
+                        rollback_results.append(rollback_result)
+                        trace.add_rollback(rollback_result)
 
                     except Exception as re:
-                        rollback_results.append({
+                        rollback_result = {
                             "tool": rb_tool,
                             "status": "rollback_failed",
                             "error": str(re),
                             "reverts_mutation_id": rb["reverts_mutation_id"],
-                        })
+                        }
+                        rollback_results.append(rollback_result)
+                        trace.add_rollback(rollback_result)
+
+                trace.fail({
+                    "step": idx,
+                    "tool": tool,
+                    "error": str(e),
+                })
+                trace.finish(safe_context)
+
+                explainer = ExecutionExplainer(trace)   # ✅ NEW
 
                 return {
                     "workflow_id": workflow_id,
@@ -188,11 +222,22 @@ class MCPWorkflowRunner:
                     "rollback_executed": True,
                     "rollback_results": rollback_results,
                     "final_context": safe_context,
+                    "trace": trace,
+                    "explanation": explainer.explain_contract(),  # ✅ NEW
                 }
+
+        # ----------------------------
+        # Successful completion
+        # ----------------------------
+        trace.finish(current_context)
+
+        explainer = ExecutionExplainer(trace)   # ✅ NEW
 
         return {
             "workflow_id": workflow_id,
             "steps": results,
             "mutations": mutations,
             "final_context": current_context,
+            "trace": trace,
+            "explanation": explainer.explain_contract(),  # ✅ NEW
         }
