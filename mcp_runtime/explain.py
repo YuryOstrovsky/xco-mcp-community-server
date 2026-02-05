@@ -208,12 +208,16 @@ class ExecutionExplainer:
         confidence = self.explain_with_confidence()
 
         return {
+            "version": "1.0",                 # ✅ REQUIRED (Phase 7.3)
             "status": base["status"],
             "summary": base["summary"],
             "steps": base["steps"],
+            "mutations": base.get("mutations", []),
+            "rollbacks": base.get("rollbacks", []),
             "confidence": confidence["confidence"],
             "reasons": confidence["reasons"],
         }
+
 
 
 

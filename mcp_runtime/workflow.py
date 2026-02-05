@@ -1,3 +1,5 @@
+# mcp_runtime/workflow.py
+
 from typing import List, Dict, Any
 from uuid import uuid4
 from copy import deepcopy
@@ -5,7 +7,7 @@ from copy import deepcopy
 from mcp_runtime.workflow_schema import validate_workflow_schema
 from mcp_runtime.safety.envelope import SafetyEnvelope, SafetyEnvelopeError
 from mcp_runtime.trace import ExecutionTrace
-from mcp_runtime.explain import ExecutionExplainer   # ✅ NEW
+from mcp_runtime.explain import ExecutionExplainer
 
 
 def _get_by_path(data: Dict, path: str):
@@ -19,11 +21,11 @@ def _get_by_path(data: Dict, path: str):
 
 class MCPWorkflowRunner:
     """
-    Phase 7.2
+    Phase 7.3
     - Linear mutation lineage
     - Rollback causality
     - Execution tracing
-    - Structured explainability contract
+    - Structured explanation contract
     """
 
     def __init__(self, mcp_server):
@@ -35,14 +37,14 @@ class MCPWorkflowRunner:
         session=None,
     ) -> Dict[str, Any]:
 
-        # ----------------------------
-        # Trace lifecycle (PER RUN)
-        # ----------------------------
+        # --------------------------------------------------
+        # Trace lifecycle (per run)
+        # --------------------------------------------------
         trace = ExecutionTrace()
 
-        # ----------------------------
+        # --------------------------------------------------
         # Schema validation
-        # ----------------------------
+        # --------------------------------------------------
         validate_workflow_schema(
             {"version": "1.0", "steps": steps},
             mutation_registry=self.mcp.mutations,
@@ -63,9 +65,9 @@ class MCPWorkflowRunner:
 
         last_mutation_id = None
 
-        # ----------------------------
+        # --------------------------------------------------
         # Execute steps
-        # ----------------------------
+        # --------------------------------------------------
         for idx, step in enumerate(steps):
             tool = step["tool"]
             mode = step.get("mode", "read")
@@ -98,7 +100,7 @@ class MCPWorkflowRunner:
                     continue
 
             # ----------------------------
-            # 🔒 Mutation policy gate
+            # Mutation policy gate
             # ----------------------------
             if mode == "mutate":
                 if not agent:
@@ -166,7 +168,7 @@ class MCPWorkflowRunner:
 
             except Exception as e:
                 # ----------------------------
-                # 🔁 Rollback
+                # Rollback (LIFO, causal)
                 # ----------------------------
                 for rb in reversed(rollback_stack):
                     rb_tool = rb["tool"]
@@ -211,7 +213,7 @@ class MCPWorkflowRunner:
                 })
                 trace.finish(safe_context)
 
-                explainer = ExecutionExplainer(trace)   # ✅ NEW
+                explainer = ExecutionExplainer(trace)
 
                 return {
                     "workflow_id": workflow_id,
@@ -223,15 +225,15 @@ class MCPWorkflowRunner:
                     "rollback_results": rollback_results,
                     "final_context": safe_context,
                     "trace": trace,
-                    "explanation": explainer.explain_contract(),  # ✅ NEW
+                    "explanation": explainer.explain_contract(),
                 }
 
-        # ----------------------------
+        # --------------------------------------------------
         # Successful completion
-        # ----------------------------
+        # --------------------------------------------------
         trace.finish(current_context)
 
-        explainer = ExecutionExplainer(trace)   # ✅ NEW
+        explainer = ExecutionExplainer(trace)
 
         return {
             "workflow_id": workflow_id,
@@ -239,5 +241,5 @@ class MCPWorkflowRunner:
             "mutations": mutations,
             "final_context": current_context,
             "trace": trace,
-            "explanation": explainer.explain_contract(),  # ✅ NEW
+            "explanation": explainer.explain_contract(),
         }
