@@ -159,10 +159,9 @@
       "scopes": [["system"]]
     }
   },
-
   {
     "name": "fabric_get_fabrics_errors",
-    "description": "Get all fabrics errors configured in the application",
+    "description": "Get all fabrics' errors configured in the application",
     "category": "fabric",
     "method": "GET",
     "endpoint": {
@@ -181,78 +180,9 @@
     },
     "tags": ["read", "fabric", "errors", "tier1"],
     "capabilities": {
-      "actions": ["show"],
+      "actions": ["list"],
       "objects": ["fabric", "error"],
       "scopes": [["system"]]
-    }
-  },
-
-  {
-    "name": "fabric_get_devices",
-    "description": "Get all devices in the specified fabric (by fabric name)",
-    "category": "fabric",
-    "method": "GET",
-    "endpoint": {
-      "path": "/v1/fabric/devices"
-    },
-    "auth": "none",
-    "input_schema": {
-      "type": "object",
-      "properties": {
-        "fabric-name": {
-          "type": "string",
-          "description": "Fabric name (not fabric-id)"
-        }
-      },
-      "required": ["fabric-name"]
-    },
-    "policy": {
-      "risk": "SAFE_READ",
-      "allowed_in_auto_mode": true,
-      "requires_confirmation": false
-    },
-    "tags": ["read", "fabric", "devices", "tier1"],
-    "capabilities": {
-      "actions": ["list"],
-      "objects": ["device"],
-      "scopes": [["fabric"]],
-      "fabric_param": "fabric-name"
-    }
-  },
-  
-  
-  
-
-  {
-    "name": "fabric_get_physical_topology",
-    "description": "Get fabric physical topology for a specified fabric",
-    "category": "fabric",
-    "method": "GET",
-    "endpoint": {
-      "path": "/v1/fabric/topology/physical"
-    },
-    "auth": "none",
-    "input_schema": {
-      "type": "object",
-      "properties": {
-        "fabric-name": {
-          "type": "string",
-          "description": "Fabric name (not fabric-id)"
-        }
-      },
-      "required": ["fabric-name"]
-    },
-    "policy": {
-      "risk": "SAFE_READ",
-      "allowed_in_auto_mode": true,
-      "requires_confirmation": false
-    },
-    "tags": ["read", "fabric", "topology", "tier1"],
-    "capabilities": {
-      "actions": ["list"],
-      "objects": ["link", "device"],
-      "scopes": [["fabric"]],
-      "fabric_param": "fabric-name"
     }
   },
 
@@ -267,41 +197,29 @@
     "auth": "none",
     "input_schema": {
       "type": "object",
-      "properties": {
-        "fabric-name": {
-          "type": "string",
-          "description": "Fabric name (not fabric-id)"
-        }
-      },
-      "required": ["fabric-name"]
+      "properties": {},
+      "required": []
     },
     "policy": {
       "risk": "SAFE_READ",
       "allowed_in_auto_mode": true,
       "requires_confirmation": false
     },
-    "tags": [
-      "read",
-      "fabric",
-      "topology",
-      "underlay",
-      "tier1"
-    ],
+    "tags": ["read", "fabric", "topology", "underlay", "tier1"],
     "capabilities": {
-      "actions": ["list"],
-      "objects": ["link", "device"],
-      "scopes": [["fabric"]],
-      "fabric_param": "fabric-name"
+      "actions": ["show"],
+      "objects": ["fabric", "topology", "underlay"],
+      "scopes": [["fabric"]]
     }
   },
 
   {
-    "name": "fabric_get_overlay_topology",
-    "description": "Get fabric overlay topology for a specified fabric",
+    "name": "fabric_get_devices_by_fabric_name",
+    "description": "Get all devices in a fabric by fabric name (explicit fabric-name required)",
     "category": "fabric",
     "method": "GET",
     "endpoint": {
-      "path": "/v1/fabric/topology/overlay"
+      "path": "/v1/fabric/devices"
     },
     "auth": "none",
     "input_schema": {
@@ -309,7 +227,7 @@
       "properties": {
         "fabric-name": {
           "type": "string",
-          "description": "Fabric name (not fabric-id)"
+          "description": "Fabric name (required, e.g. DC)"
         }
       },
       "required": ["fabric-name"]
@@ -319,39 +237,26 @@
       "allowed_in_auto_mode": true,
       "requires_confirmation": false
     },
-    "tags": [
-      "read",
-      "fabric",
-      "topology",
-      "overlay",
-      "tier1"
-    ],
+    "tags": ["read", "fabric", "devices", "tier1"],
     "capabilities": {
       "actions": ["list"],
-      "objects": ["link", "device"],
-      "scopes": [["fabric"]],
-      "fabric_param": "fabric-name"
+      "objects": ["device"],
+      "scopes": [["fabric"]]
     }
   },
-
   {
-    "name": "fabric_validate_physical_topology",
-    "description": "Validate fabric physical topology for a specified fabric",
+    "name": "fabric_get_physical_topology",
+    "description": "Get fabric physical topology (device-to-device links) for a specified fabric",
     "category": "fabric",
     "method": "GET",
     "endpoint": {
-      "path": "/v1/fabric/topology/validate/physical"
+      "path": "/v1/fabric/topology/physical"
     },
     "auth": "none",
     "input_schema": {
       "type": "object",
-      "properties": {
-        "fabric-name": {
-          "type": "string",
-          "description": "Fabric name (not fabric-id)"
-        }
-      },
-      "required": ["fabric-name"]
+      "properties": {},
+      "required": []
     },
     "policy": {
       "risk": "SAFE_READ",
@@ -362,81 +267,14 @@
       "read",
       "fabric",
       "topology",
-      "validate",
       "physical",
       "tier1"
     ],
     "capabilities": {
-      "actions": ["validate"],
+      "actions": ["list"],
       "objects": ["link", "device"],
       "scopes": [["fabric"]],
       "fabric_param": "fabric-name"
-    }
-  },
-
-  {
-    "name": "fabric_get_service_locks",
-    "description": "Get fabric service lock statuses",
-    "category": "fabric",
-    "method": "GET",
-    "endpoint": {
-      "path": "/v1/fabric/debug/service/lock"
-    },
-    "auth": "none",
-    "input_schema": {
-      "type": "object",
-      "properties": {},
-      "required": []
-    },
-    "policy": {
-      "risk": "SAFE_READ",
-      "allowed_in_auto_mode": true,
-      "requires_confirmation": false
-    },
-    "tags": [
-      "read",
-      "fabric",
-      "debug",
-      "lock",
-      "tier1"
-    ],
-    "capabilities": {
-      "actions": ["show"],
-      "objects": ["lock", "service"],
-      "scopes": [["system"]]
-    }
-  },
-
-  {
-    "name": "fabric_get_running_config",
-    "description": "Get the running configuration CLI commands for the fabric",
-    "category": "fabric",
-    "method": "GET",
-    "endpoint": {
-      "path": "/v1/fabric/runningConfig"
-    },
-    "auth": "none",
-    "input_schema": {
-      "type": "object",
-      "properties": {},
-      "required": []
-    },
-    "policy": {
-      "risk": "SAFE_READ",
-      "allowed_in_auto_mode": true,
-      "requires_confirmation": false
-    },
-    "tags": [
-      "read",
-      "fabric",
-      "running-config",
-      "troubleshooting",
-      "tier2"
-    ],
-    "capabilities": {
-      "actions": ["show"],
-      "objects": ["config", "cli"],
-      "scopes": [["system"]]
     }
   }
   
@@ -447,6 +285,23 @@
   
   
   
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
-
+  
+  
+  
+  
+  
+  
+  
 ]
