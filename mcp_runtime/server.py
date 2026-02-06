@@ -1,11 +1,21 @@
 import os
 import json
 from dotenv import load_dotenv
+from mcp_runtime.logging import setup_logging, get_logger
+from mcp_runtime.metrics import (
+    MCP_INVOKE_TOTAL,
+    MCP_INVOKE_SUCCESS,
+    MCP_INVOKE_FAILURE,
+    MCP_INVOKE_LATENCY,
+    MCP_INVOKE_STATUS,
+    
+)
+
 
 # --------------------------------------------------
 # Logging setup (MUST be first)
 # --------------------------------------------------
-from mcp_runtime.logging import setup_logging, get_logger
+
 
 setup_logging()
 logger = get_logger("mcp.server")
@@ -97,6 +107,11 @@ class MCPServer:
             correlation_id,
             context,
         )
+
+        import time
+        start_ts = time.time()
+        MCP_INVOKE_TOTAL.labels(tool=tool_name).inc()
+
 
 
         try:
@@ -218,6 +233,21 @@ class MCPServer:
                 context=resolved_context,
             )
 
+            # ---- Per-status-code metrics ----
+            MCP_INVOKE_STATUS.labels(
+                tool=tool_name,
+                status=str(response["status"]),
+            ).inc()
+
+            status_code = str(response["status"])
+
+            MCP_INVOKE_STATUS_TOTAL.labels(
+                tool=tool_name,
+                status=status_code,
+            ).inc()
+
+
+
             # ---- Persist context ONLY on success ----
             if session:
                 session.update_context(resolved_context)
@@ -229,6 +259,11 @@ class MCPServer:
                 response["url"],
                 correlation_id,
             )
+
+            duration = time.time() - start_ts
+            MCP_INVOKE_SUCCESS.labels(tool=tool_name).inc()
+            MCP_INVOKE_LATENCY.labels(tool=tool_name).observe(duration)
+
 
 
             return {
@@ -259,6 +294,7 @@ class MCPServer:
             }
 
         except Exception as e:
+            MCP_INVOKE_FAILURE.labels(tool=tool_name).inc()
             invoke_logger.exception(
                 "invoke failed tool=%s request_id=%s correlation_id=%s error=%s",
                 tool_name,
@@ -266,6 +302,15 @@ class MCPServer:
                 correlation_id,
                 str(e),
             )
+
+            MCP_INVOKE_STATUS.labels(
+                tool=tool_name,
+                status="exception",
+            ).inc()
+
+            
+
+
 
             raise
 
