@@ -1,0 +1,10 @@
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {'fabric': {'id': 3, 'name': 'DC'}}
+INFO:     127.0.0.1:44330 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:44338 - "POST /invoke HTTP/1.1" 200 OK
