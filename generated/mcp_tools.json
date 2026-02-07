@@ -822,7 +822,679 @@
       "objects": ["system", "execution"],
       "scopes": [["system"]]
     }
+  },
+
+
+
+
+
+
+  {
+    "name": "monitor_get_service_status",
+    "description": "Get monitoring status of all services",
+    "category": "monitor",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "port": 8078,
+      "path": "/v1/monitor/status"
+    },
+    "auth": "none",
+    "input_schema": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": ["read", "monitor", "tier1"],
+    "capabilities": {
+      "actions": ["show"],
+      "objects": ["service", "monitor"],
+      "scopes": [["system"]]
+    }
+  },
+  
+    {
+      "name": "monitor_get_k3s_status",
+      "description": "Get K3s monitoring status",
+      "category": "monitor",
+      "method": "GET",
+      "endpoint": {
+        "host": "{XCO_HOST}",
+        "port": 8078,
+        "path": "/v1/monitor/status/k3s"
+      },
+      "auth": "none",
+      "input_schema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "policy": {
+        "risk": "SAFE_READ",
+        "allowed_in_auto_mode": true,
+        "requires_confirmation": false
+      },
+      "tags": ["read", "monitor", "k3s", "tier1"],
+      "capabilities": {
+        "actions": ["show"],
+        "objects": ["k3s", "cluster"],
+        "scopes": [["cluster"]]
+      }
+    },
+  
+    {
+      "name": "monitor_get_k3s_nodes",
+      "description": "Get K3s node information",
+      "category": "monitor",
+      "method": "GET",
+      "endpoint": {
+        "host": "{XCO_HOST}",
+        "port": 8078,
+        "path": "/v1/monitor/k3s/nodes"
+      },
+      "auth": "none",
+      "input_schema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "policy": {
+        "risk": "SAFE_READ",
+        "allowed_in_auto_mode": true,
+        "requires_confirmation": false
+      },
+      "tags": ["read", "monitor", "k3s", "nodes", "tier1"],
+      "capabilities": {
+        "actions": ["show"],
+        "objects": ["node"],
+        "scopes": [["cluster"]]
+      }
+    },
+  
+    {
+      "name": "monitor_get_k3s_pods",
+      "description": "Get K3s pod monitoring information",
+      "category": "monitor",
+      "method": "GET",
+      "endpoint": {
+        "host": "{XCO_HOST}",
+        "port": 8078,
+        "path": "/v1/monitor/k3s/pod"
+      },
+      "auth": "none",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "namespace": { "type": "string" }
+        },
+        "required": ["namespace"]
+      },
+      "policy": {
+        "risk": "SAFE_READ",
+        "allowed_in_auto_mode": true,
+        "requires_confirmation": false
+      },
+      "tags": ["read", "monitor", "k3s", "pods", "tier1"],
+      "capabilities": {
+        "actions": ["show"],
+        "objects": ["pod"],
+        "scopes": [["namespace"]]
+      }
+    },
+  
+    {
+      "name": "monitor_get_k3s_resources",
+      "description": "Get K3s cluster resource usage",
+      "category": "monitor",
+      "method": "GET",
+      "endpoint": {
+        "host": "{XCO_HOST}",
+        "port": 8078,
+        "path": "/v1/monitor/k3s/resources"
+      },
+      "auth": "none",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "namespace": { "type": "string" }
+        },
+        "required": ["namespace"]
+      },
+      "policy": {
+        "risk": "SAFE_READ",
+        "allowed_in_auto_mode": true,
+        "requires_confirmation": false
+      },
+      "tags": ["read", "monitor", "k3s", "resources", "tier1"],
+      "capabilities": {
+        "actions": ["show"],
+        "objects": ["resource"],
+        "scopes": [["cluster"]]
+      }
+    },
+  
+    {
+      "name": "monitor_get_deployment_config",
+      "description": "Get EFA deployment configuration",
+      "category": "monitor",
+      "method": "GET",
+      "endpoint": {
+        "host": "{XCO_HOST}",
+        "port": 8078,
+        "path": "/v1/monitor/deployment"
+      },
+      "auth": "none",
+      "input_schema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "policy": {
+        "risk": "SAFE_READ",
+        "allowed_in_auto_mode": true,
+        "requires_confirmation": false
+      },
+      "tags": ["read", "monitor", "deployment", "tier1"],
+      "capabilities": {
+        "actions": ["show"],
+        "objects": ["deployment"],
+        "scopes": [["system"]]
+      }
+    },
+  
+    {
+      "name": "monitor_get_all_status",
+      "description": "Get complete monitoring status (services, nodes, pods, resources)",
+      "category": "monitor",
+      "method": "GET",
+      "endpoint": {
+        "host": "{XCO_HOST}",
+        "port": 8078,
+        "path": "/v1/monitor/all"
+      },
+      "auth": "none",
+      "input_schema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "policy": {
+        "risk": "SAFE_READ",
+        "allowed_in_auto_mode": true,
+        "requires_confirmation": false
+      },
+      "tags": ["read", "monitor", "aggregate", "tier1"],
+      "capabilities": {
+        "actions": ["show"],
+        "objects": ["system", "monitor"],
+        "scopes": [["system"]]
+      }
+    },
+
+    {
+      "name": "notification_get_subscribers",
+      "description": "Get all notification subscribers",
+      "category": "notification",
+      "method": "GET",
+      "endpoint": {
+        "host": "{XCO_HOST}",
+        "path": "/v1/notification/subscribers"
+      },
+      "auth": "bearer",
+      "input_schema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "policy": {
+        "risk": "SAFE_READ",
+        "allowed_in_auto_mode": true,
+        "requires_confirmation": false
+      },
+      "tags": ["read", "notification", "subscriber", "tier1"],
+      "capabilities": {
+        "actions": ["list"],
+        "objects": ["subscriber"],
+        "scopes": [["system"]]
+      }
+    },
+
+    {
+      "name": "notification_get_subscriber",
+      "description": "Get a notification subscriber by ID",
+      "category": "notification",
+      "method": "GET",
+      "endpoint": {
+        "host": "{XCO_HOST}",
+        "path": "/v1/notification/subscribers/{id}"
+      },
+      "auth": "bearer",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Subscriber ID"
+          }
+        },
+        "required": ["id"]
+      },
+      "policy": {
+        "risk": "SAFE_READ",
+        "allowed_in_auto_mode": true,
+        "requires_confirmation": false
+      },
+      "tags": ["read", "notification", "subscriber", "tier1"],
+      "capabilities": {
+        "actions": ["show"],
+        "objects": ["subscriber"],
+        "scopes": [["system"]]
+      }
+    },
+
+    {
+      "name": "notification_get_executions",
+      "description": "Get notification service execution list",
+      "category": "notification",
+      "method": "GET",
+      "endpoint": {
+        "host": "{XCO_HOST}",
+        "path": "/v1/notification/executions"
+      },
+      "auth": "bearer",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "default": 10,
+            "description": "Limit the number of executions returned"
+          },
+          "status": {
+            "type": "string",
+            "default": "all",
+            "description": "Filter executions by status (failed | succeeded | all)"
+          }
+        },
+        "required": ["limit"]
+      },
+      "policy": {
+        "risk": "SAFE_READ",
+        "allowed_in_auto_mode": true,
+        "requires_confirmation": false,
+        "disabled": true,
+        "disabled_reason": "Endpoint returns 404 in XCO 4.0.0 GA"
+
+      },
+      "tags": ["read", "notification", "execution", "disabled", "tier1"],
+      "capabilities": {
+        "actions": ["list"],
+        "objects": ["execution"],
+        "scopes": [["system"]]
+      }
+    },
+
+
+
+
+
+
+    
+      {
+        "name": "faultmanager_get_health",
+        "description": "Get health status of the Fault Manager service",
+        "category": "faultmanager",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/faultmanager/health"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": ["read", "tier1"],
+        "capabilities": {
+          "actions": ["show"],
+          "objects": ["health"],
+          "scopes": [["system"]]
+        }
+      },
+    
+      {
+        "name": "faultmanager_get_alert_inventory",
+        "description": "Get inventory of all possible alerts",
+        "category": "faultmanager",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/faultmanager/alert/inventory"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "alert_id": { "type": "integer" },
+            "resource": { "type": "string" }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": ["read", "tier1"],
+        "capabilities": {
+          "actions": ["show"],
+          "objects": ["alerts"],
+          "scopes": [["system"]]
+        }
+      },
+    
+      {
+        "name": "faultmanager_get_alert_history",
+        "description": "Get history of alerts generated by the system",
+        "category": "faultmanager",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/faultmanager/alert/history"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "alert_id": { "type": "integer" },
+            "severity": {
+              "type": "string",
+              "enum": ["Critical", "Major", "Minor", "Warning", "Info"]
+            },
+            "resource": { "type": "string" },
+            "limit": { "type": "integer" },
+            "before_timestamp": { "type": "string" },
+            "after_timestamp": { "type": "string" }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": ["read", "tier1"],
+        "capabilities": {
+          "actions": ["show"],
+          "objects": ["alerts"],
+          "scopes": [["system"]]
+        }
+      },
+    
+      {
+        "name": "faultmanager_get_alarm_inventory",
+        "description": "Get inventory of all possible alarms",
+        "category": "faultmanager",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/faultmanager/alarm/inventory"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "alarm_id": { "type": "integer" },
+            "name": { "type": "string" },
+            "resource": { "type": "string" },
+            "alarm_type": { "type": "string" },
+            "detail": { "type": "boolean" }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": ["read", "tier1"],
+        "capabilities": {
+          "actions": ["show"],
+          "objects": ["alarms"],
+          "scopes": [["system"]]
+        }
+      },
+    
+      {
+        "name": "faultmanager_get_alarm_history",
+        "description": "Get history of alarms generated by the system",
+        "category": "faultmanager",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/faultmanager/alarm/history"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "alarm_id": { "type": "integer" },
+            "alarm_type": { "type": "string" },
+            "resource": { "type": "string" },
+            "unacked": { "type": "boolean" },
+            "acked": { "type": "boolean" },
+            "cleared": { "type": "boolean" },
+            "closed": { "type": "boolean" }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": ["read", "tier1"],
+        "capabilities": {
+          "actions": ["show"],
+          "objects": ["alarms"],
+          "scopes": [["system"]]
+        }
+      },
+    
+      {
+        "name": "faultmanager_get_alarm_summary",
+        "description": "Get summary of alarms grouped by severity",
+        "category": "faultmanager",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/faultmanager/alarm/summary"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": ["read", "tier1"],
+        "capabilities": {
+          "actions": ["show"],
+          "objects": ["alarms"],
+          "scopes": [["system"]]
+        }
+      },
+
+
+
+
+      {
+        "name": "snmp_get_health",
+        "description": "Get health status of the SNMP service",
+        "category": "snmp",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/snmp/health"
+        },
+        "auth": "bearer",
+        "input_schema": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": ["read", "snmp", "health", "tier1"],
+        "capabilities": {
+          "actions": ["show"],
+          "objects": ["snmp", "health"],
+          "scopes": [["system"]]
+        }
+      },
+
+
+      {
+  "name": "snmp_get_trap_subscribers",
+  "description": "Get all SNMP trap subscribers",
+  "category": "snmp",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/snmp/subscribers"
+  },
+  "auth": "bearer",
+  "input_schema": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "snmp", "subscriber", "tier1"],
+  "capabilities": {
+    "actions": ["list"],
+    "objects": ["subscriber"],
+    "scopes": [["system"]]
   }
+},
+
+{
+  "name": "snmp_get_executions",
+  "description": "Get list of SNMP execution records",
+  "category": "snmp",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/snmp/executions"
+  },
+  "auth": "bearer",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "limit": {
+        "type": "integer",
+        "default": 10,
+        "description": "Limit the number of executions returned"
+      },
+      "status": {
+        "type": "string",
+        "default": "all",
+        "description": "Filter executions by status (failed | succeeded | all)"
+      }
+    },
+    "required": ["limit"]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false,
+    "disabled": true,
+    "disabled_reason": "Endpoint /v1/snmp/executions returns 404 in XCO 4.0.0 GA"
+  },
+  "tags": ["read", "snmp", "execution", "disabled", "tier1"],
+  "capabilities": {
+    "actions": ["list"],
+    "objects": ["execution"],
+    "scopes": [["system"]]
+  }
+},
+
+
+{
+  "name": "snmp_get_execution",
+  "description": "Get detailed SNMP execution output by execution ID",
+  "category": "snmp",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/snmp/execution"
+  },
+  "auth": "bearer",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "description": "Execution ID"
+      }
+    },
+    "required": ["id"]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false,
+    "disabled": true,
+    "disabled_reason": "Execution list endpoint is unavailable (404); individual execution lookup not supported in XCO 4.0.0 GA"
+  },
+  "tags": ["read", "snmp", "execution", "disabled", "tier1"],
+  "capabilities": {
+    "actions": ["show"],
+    "objects": ["execution", "log"],
+    "scopes": [["system"]]
+  }
+}
+
+
+
+
+
+
+    
+    
+    
+    
+    
+  
+  
+  
+  
+  
+  
+  
   
   
   

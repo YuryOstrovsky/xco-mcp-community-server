@@ -23,11 +23,19 @@ class MCPRegistry:
 
         for tool in data:
             name = tool.get("name")
+
+            # ---------------------------------------
+            # 🚫 Skip disabled tools (doc-only)
+            # ---------------------------------------
+            if tool.get("policy", {}).get("disabled") is True:
+                continue
+
             self.tools[name] = tool
 
             # Tier-1 tools use generic HTTP executor
             if name in TIER1_TOOL_NAMES:
                 self.handlers[name] = None  # handled by Tier-1 executor
+
 
         # ---- Tier-2 registrations (EXPLICIT) ----
         self.handlers["system_get_last_execution_diagnostic"] = (

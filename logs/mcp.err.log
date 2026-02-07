@@ -15664,3 +15664,653 @@ INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
 2026-02-07 07:18:04,442 | INFO  | mcp.invoke | tier2 handler invoked tool=system_get_last_execution_diagnostic request_id=req-bb9bbf72
 2026-02-07 07:18:04,586 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=143 url=https://10.13.85.20:443/v1/system/executions
 2026-02-07 07:18:04,673 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=85 url=https://10.13.85.20:443/v1/system/execution
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [86435]
+2026-02-07 16:02:46,544 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-07 16:02:46,544 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=37
+INFO:     Started server process [87406]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-02-07 16:03:06,812 | INFO  | mcp.invoke | invoke start tool=monitor_get_service_status request_id=req-8c6ff916 correlation_id=corr-996bdf47 context=None
+2026-02-07 16:03:06,813 | INFO  | mcp.invoke | policy decision tool=monitor_get_service_status risk=SAFE_READ mode=manual allowed=True
+2026-02-07 16:03:06,980 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=166 url=https://10.13.85.20:443/v1/monitor/status
+2026-02-07 16:03:06,980 | INFO  | mcp.invoke | invoke success tool=monitor_get_service_status status=200 url=https://10.13.85.20:443/v1/monitor/status correlation_id=corr-996bdf47
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [87406]
+2026-02-07 16:07:59,104 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-07 16:07:59,104 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=37
+INFO:     Started server process [87438]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-02-07 16:08:11,520 | INFO  | mcp.invoke | invoke start tool=monitor_get_service_status request_id=req-f17ef260 correlation_id=corr-88f87106 context=None
+2026-02-07 16:08:11,520 | INFO  | mcp.invoke | policy decision tool=monitor_get_service_status risk=SAFE_READ mode=manual allowed=True
+2026-02-07 16:08:13,403 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=1882 url=https://10.13.85.20:8078/v1/monitor/status
+2026-02-07 16:08:13,404 | INFO  | mcp.invoke | invoke success tool=monitor_get_service_status status=200 url=https://10.13.85.20:8078/v1/monitor/status correlation_id=corr-88f87106
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [87438]
+2026-02-07 16:11:08,355 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-07 16:11:08,355 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=37
+INFO:     Started server process [87461]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [87461]
+2026-02-07 16:11:11,889 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-07 16:11:11,889 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=37
+INFO:     Started server process [87467]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-02-07 16:11:33,263 | INFO  | mcp.invoke | invoke start tool=monitor_get_k3s_status request_id=req-143e0300 correlation_id=corr-7ecca53d context=None
+2026-02-07 16:11:33,263 | INFO  | mcp.invoke | policy decision tool=monitor_get_k3s_status risk=SAFE_READ mode=manual allowed=True
+2026-02-07 16:11:33,423 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=159 url=https://10.13.85.20:8078/v1/monitor/status/k3s
+2026-02-07 16:11:33,424 | INFO  | mcp.invoke | invoke success tool=monitor_get_k3s_status status=200 url=https://10.13.85.20:8078/v1/monitor/status/k3s correlation_id=corr-7ecca53d
+2026-02-07 16:12:13,256 | INFO  | mcp.invoke | invoke start tool=monitor_get_k3s_nodes request_id=req-0c5f7c23 correlation_id=corr-62af598e context=None
+2026-02-07 16:12:13,257 | INFO  | mcp.invoke | policy decision tool=monitor_get_k3s_nodes risk=SAFE_READ mode=manual allowed=True
+2026-02-07 16:12:13,495 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=237 url=https://10.13.85.20:8078/v1/monitor/k3s/nodes
+2026-02-07 16:12:13,495 | INFO  | mcp.invoke | invoke success tool=monitor_get_k3s_nodes status=200 url=https://10.13.85.20:8078/v1/monitor/k3s/nodes correlation_id=corr-62af598e
+2026-02-07 16:13:11,607 | INFO  | mcp.invoke | invoke start tool=monitor_get_k3s_pods request_id=req-9a4d75da correlation_id=corr-d01e88ba context=None
+2026-02-07 16:13:11,607 | INFO  | mcp.invoke | policy decision tool=monitor_get_k3s_pods risk=SAFE_READ mode=manual allowed=True
+2026-02-07 16:13:11,819 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=211 url=https://10.13.85.20:8078/v1/monitor/k3s/pod
+2026-02-07 16:13:11,820 | INFO  | mcp.invoke | invoke success tool=monitor_get_k3s_pods status=200 url=https://10.13.85.20:8078/v1/monitor/k3s/pod correlation_id=corr-d01e88ba
+2026-02-07 16:14:04,401 | INFO  | mcp.invoke | invoke start tool=monitor_get_k3s_resources request_id=req-cf540e88 correlation_id=corr-2fa55c42 context=None
+2026-02-07 16:14:04,402 | INFO  | mcp.invoke | policy decision tool=monitor_get_k3s_resources risk=SAFE_READ mode=manual allowed=True
+2026-02-07 16:14:04,691 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=288 url=https://10.13.85.20:8078/v1/monitor/k3s/resources
+2026-02-07 16:14:04,691 | INFO  | mcp.invoke | invoke success tool=monitor_get_k3s_resources status=200 url=https://10.13.85.20:8078/v1/monitor/k3s/resources correlation_id=corr-2fa55c42
+2026-02-07 16:14:53,128 | INFO  | mcp.invoke | invoke start tool=monitor_get_deployment_config request_id=req-2538c360 correlation_id=corr-d69564dc context=None
+2026-02-07 16:14:53,128 | INFO  | mcp.invoke | policy decision tool=monitor_get_deployment_config risk=SAFE_READ mode=manual allowed=True
+2026-02-07 16:14:53,347 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=218 url=https://10.13.85.20:8078/v1/monitor/deployment
+2026-02-07 16:14:53,348 | INFO  | mcp.invoke | invoke success tool=monitor_get_deployment_config status=200 url=https://10.13.85.20:8078/v1/monitor/deployment correlation_id=corr-d69564dc
+2026-02-07 16:15:44,993 | INFO  | mcp.invoke | invoke start tool=monitor_get_all_status request_id=req-6afdce87 correlation_id=corr-a9047a1f context=None
+2026-02-07 16:15:44,994 | INFO  | mcp.invoke | policy decision tool=monitor_get_all_status risk=SAFE_READ mode=manual allowed=True
+2026-02-07 16:15:46,239 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=1245 url=https://10.13.85.20:8078/v1/monitor/all
+2026-02-07 16:15:46,240 | INFO  | mcp.invoke | invoke success tool=monitor_get_all_status status=200 url=https://10.13.85.20:8078/v1/monitor/all correlation_id=corr-a9047a1f
+2026-02-07 16:24:44,794 | INFO  | mcp.invoke | invoke start tool=notification_get_subscribers request_id=req-3e68529e correlation_id=corr-e1db66fc context=None
+2026-02-07 16:24:44,794 | ERROR | mcp.invoke | invoke failed tool=notification_get_subscribers request_id=req-3e68529e correlation_id=corr-e1db66fc error=notification_get_subscribers
+Traceback (most recent call last):
+  File "/home/user01/xco-mcp-server/mcp_runtime/server.py", line 120, in invoke
+    raise ToolNotFound(tool_name)
+mcp_runtime.errors.ToolNotFound: notification_get_subscribers
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [87467]
+2026-02-07 16:27:41,044 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-07 16:27:41,044 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=40
+INFO:     Started server process [87554]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [87554]
+2026-02-07 16:27:43,263 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-07 16:27:43,263 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=40
+INFO:     Started server process [87560]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-02-07 16:27:44,318 | INFO  | mcp.invoke | invoke start tool=notification_get_subscribers request_id=req-b62e641c correlation_id=corr-5eba9e11 context=None
+2026-02-07 16:27:44,319 | INFO  | mcp.invoke | policy decision tool=notification_get_subscribers risk=SAFE_READ mode=manual allowed=True
+2026-02-07 16:27:44,492 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=172 url=https://10.13.85.20:443/v1/notification/subscribers
+2026-02-07 16:27:44,493 | INFO  | mcp.invoke | invoke success tool=notification_get_subscribers status=200 url=https://10.13.85.20:443/v1/notification/subscribers correlation_id=corr-5eba9e11
+2026-02-07 16:28:41,252 | INFO  | mcp.invoke | invoke start tool=notification_get_notifications request_id=req-ed885462 correlation_id=corr-baae75c1 context=None
+2026-02-07 16:28:41,252 | ERROR | mcp.invoke | invoke failed tool=notification_get_notifications request_id=req-ed885462 correlation_id=corr-baae75c1 error=notification_get_notifications
+Traceback (most recent call last):
+  File "/home/user01/xco-mcp-server/mcp_runtime/server.py", line 120, in invoke
+    raise ToolNotFound(tool_name)
+mcp_runtime.errors.ToolNotFound: notification_get_notifications
+2026-02-07 16:31:43,544 | INFO  | mcp.invoke | invoke start tool=notification_get_executions request_id=req-dfeda61d correlation_id=corr-deb18c5d context=None
+2026-02-07 16:31:43,544 | INFO  | mcp.invoke | policy decision tool=notification_get_executions risk=SAFE_READ mode=manual allowed=True
+2026-02-07 16:31:43,583 | INFO  | mcp.transport | XCO request done method=GET status=404 duration_ms=38 url=https://10.13.85.20:443/v1/notification/executions
+2026-02-07 16:31:43,584 | INFO  | mcp.invoke | invoke success tool=notification_get_executions status=404 url=https://10.13.85.20:443/v1/notification/executions correlation_id=corr-deb18c5d
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [87560]
+2026-02-07 16:48:49,172 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-07 16:48:49,172 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=39
+INFO:     Started server process [87627]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-02-07 16:51:45,672 | INFO  | mcp.invoke | invoke start tool=notification_get_executions request_id=req-49000a31 correlation_id=corr-728bec16 context=None
+2026-02-07 16:51:45,672 | ERROR | mcp.invoke | invoke failed tool=notification_get_executions request_id=req-49000a31 correlation_id=corr-728bec16 error=notification_get_executions
+Traceback (most recent call last):
+  File "/home/user01/xco-mcp-server/mcp_runtime/server.py", line 120, in invoke
+    raise ToolNotFound(tool_name)
+mcp_runtime.errors.ToolNotFound: notification_get_executions
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [87627]
+Traceback (most recent call last):
+  File "/home/user01/xco-mcp-server/.venv/bin/uvicorn", line 7, in <module>
+    sys.exit(main())
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 1485, in __call__
+    return self.main(*args, **kwargs)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 1406, in main
+    rv = self.invoke(ctx)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 1269, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 824, in invoke
+    return callback(*args, **kwargs)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/main.py", line 424, in main
+    run(
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/main.py", line 594, in run
+    server.run()
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 67, in run
+    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/_compat.py", line 60, in asyncio_run
+    return loop.run_until_complete(main)
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 71, in serve
+    await self._serve(sockets)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 78, in _serve
+    config.load()
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/config.py", line 439, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/user01/xco-mcp-server/api/app.py", line 24, in <module>
+    mcp = MCPServer(auto_mode=False)
+  File "/home/user01/xco-mcp-server/mcp_runtime/server.py", line 54, in __init__
+    self.registry = MCPRegistry().load()
+  File "/home/user01/xco-mcp-server/mcp_runtime/registry.py", line 25, in load
+    name = tool.get("name")
+AttributeError: 'list' object has no attribute 'get'
+Traceback (most recent call last):
+  File "/home/user01/xco-mcp-server/.venv/bin/uvicorn", line 7, in <module>
+    sys.exit(main())
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 1485, in __call__
+    return self.main(*args, **kwargs)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 1406, in main
+    rv = self.invoke(ctx)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 1269, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 824, in invoke
+    return callback(*args, **kwargs)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/main.py", line 424, in main
+    run(
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/main.py", line 594, in run
+    server.run()
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 67, in run
+    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/_compat.py", line 60, in asyncio_run
+    return loop.run_until_complete(main)
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 71, in serve
+    await self._serve(sockets)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 78, in _serve
+    config.load()
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/config.py", line 439, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/user01/xco-mcp-server/api/app.py", line 24, in <module>
+    mcp = MCPServer(auto_mode=False)
+  File "/home/user01/xco-mcp-server/mcp_runtime/server.py", line 54, in __init__
+    self.registry = MCPRegistry().load()
+  File "/home/user01/xco-mcp-server/mcp_runtime/registry.py", line 25, in load
+    name = tool.get("name")
+AttributeError: 'list' object has no attribute 'get'
+Traceback (most recent call last):
+  File "/home/user01/xco-mcp-server/.venv/bin/uvicorn", line 7, in <module>
+    sys.exit(main())
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 1485, in __call__
+    return self.main(*args, **kwargs)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 1406, in main
+    rv = self.invoke(ctx)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 1269, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 824, in invoke
+    return callback(*args, **kwargs)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/main.py", line 424, in main
+    run(
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/main.py", line 594, in run
+    server.run()
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 67, in run
+    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/_compat.py", line 60, in asyncio_run
+    return loop.run_until_complete(main)
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 71, in serve
+    await self._serve(sockets)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 78, in _serve
+    config.load()
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/config.py", line 439, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/user01/xco-mcp-server/api/app.py", line 24, in <module>
+    mcp = MCPServer(auto_mode=False)
+  File "/home/user01/xco-mcp-server/mcp_runtime/server.py", line 54, in __init__
+    self.registry = MCPRegistry().load()
+  File "/home/user01/xco-mcp-server/mcp_runtime/registry.py", line 25, in load
+    name = tool.get("name")
+AttributeError: 'list' object has no attribute 'get'
+Traceback (most recent call last):
+  File "/home/user01/xco-mcp-server/.venv/bin/uvicorn", line 7, in <module>
+    sys.exit(main())
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 1485, in __call__
+    return self.main(*args, **kwargs)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 1406, in main
+    rv = self.invoke(ctx)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 1269, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 824, in invoke
+    return callback(*args, **kwargs)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/main.py", line 424, in main
+    run(
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/main.py", line 594, in run
+    server.run()
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 67, in run
+    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/_compat.py", line 60, in asyncio_run
+    return loop.run_until_complete(main)
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 71, in serve
+    await self._serve(sockets)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 78, in _serve
+    config.load()
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/config.py", line 439, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/user01/xco-mcp-server/api/app.py", line 24, in <module>
+    mcp = MCPServer(auto_mode=False)
+  File "/home/user01/xco-mcp-server/mcp_runtime/server.py", line 54, in __init__
+    self.registry = MCPRegistry().load()
+  File "/home/user01/xco-mcp-server/mcp_runtime/registry.py", line 25, in load
+    name = tool.get("name")
+AttributeError: 'list' object has no attribute 'get'
+Traceback (most recent call last):
+  File "/home/user01/xco-mcp-server/.venv/bin/uvicorn", line 7, in <module>
+    sys.exit(main())
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 1485, in __call__
+    return self.main(*args, **kwargs)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 1406, in main
+    rv = self.invoke(ctx)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 1269, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 824, in invoke
+    return callback(*args, **kwargs)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/main.py", line 424, in main
+    run(
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/main.py", line 594, in run
+    server.run()
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 67, in run
+    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/_compat.py", line 60, in asyncio_run
+    return loop.run_until_complete(main)
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 71, in serve
+    await self._serve(sockets)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 78, in _serve
+    config.load()
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/config.py", line 439, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/user01/xco-mcp-server/api/app.py", line 24, in <module>
+    mcp = MCPServer(auto_mode=False)
+  File "/home/user01/xco-mcp-server/mcp_runtime/server.py", line 54, in __init__
+    self.registry = MCPRegistry().load()
+  File "/home/user01/xco-mcp-server/mcp_runtime/registry.py", line 25, in load
+    name = tool.get("name")
+AttributeError: 'list' object has no attribute 'get'
+Traceback (most recent call last):
+  File "/home/user01/xco-mcp-server/.venv/bin/uvicorn", line 7, in <module>
+    sys.exit(main())
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 1485, in __call__
+    return self.main(*args, **kwargs)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 1406, in main
+    rv = self.invoke(ctx)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 1269, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 824, in invoke
+    return callback(*args, **kwargs)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/main.py", line 424, in main
+    run(
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/main.py", line 594, in run
+    server.run()
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 67, in run
+    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/_compat.py", line 60, in asyncio_run
+    return loop.run_until_complete(main)
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 71, in serve
+    await self._serve(sockets)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 78, in _serve
+    config.load()
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/config.py", line 439, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/user01/xco-mcp-server/api/app.py", line 24, in <module>
+    mcp = MCPServer(auto_mode=False)
+  File "/home/user01/xco-mcp-server/mcp_runtime/server.py", line 54, in __init__
+    self.registry = MCPRegistry().load()
+  File "/home/user01/xco-mcp-server/mcp_runtime/registry.py", line 25, in load
+    name = tool.get("name")
+AttributeError: 'list' object has no attribute 'get'
+Traceback (most recent call last):
+  File "/home/user01/xco-mcp-server/.venv/bin/uvicorn", line 7, in <module>
+    sys.exit(main())
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 1485, in __call__
+    return self.main(*args, **kwargs)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 1406, in main
+    rv = self.invoke(ctx)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 1269, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 824, in invoke
+    return callback(*args, **kwargs)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/main.py", line 424, in main
+    run(
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/main.py", line 594, in run
+    server.run()
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 67, in run
+    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/_compat.py", line 60, in asyncio_run
+    return loop.run_until_complete(main)
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 71, in serve
+    await self._serve(sockets)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 78, in _serve
+    config.load()
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/config.py", line 439, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/user01/xco-mcp-server/api/app.py", line 24, in <module>
+    mcp = MCPServer(auto_mode=False)
+  File "/home/user01/xco-mcp-server/mcp_runtime/server.py", line 54, in __init__
+    self.registry = MCPRegistry().load()
+  File "/home/user01/xco-mcp-server/mcp_runtime/registry.py", line 25, in load
+    name = tool.get("name")
+AttributeError: 'list' object has no attribute 'get'
+Traceback (most recent call last):
+  File "/home/user01/xco-mcp-server/.venv/bin/uvicorn", line 7, in <module>
+    sys.exit(main())
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 1485, in __call__
+    return self.main(*args, **kwargs)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 1406, in main
+    rv = self.invoke(ctx)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 1269, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 824, in invoke
+    return callback(*args, **kwargs)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/main.py", line 424, in main
+    run(
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/main.py", line 594, in run
+    server.run()
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 67, in run
+    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/_compat.py", line 60, in asyncio_run
+    return loop.run_until_complete(main)
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 71, in serve
+    await self._serve(sockets)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 78, in _serve
+    config.load()
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/config.py", line 439, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/user01/xco-mcp-server/api/app.py", line 24, in <module>
+    mcp = MCPServer(auto_mode=False)
+  File "/home/user01/xco-mcp-server/mcp_runtime/server.py", line 54, in __init__
+    self.registry = MCPRegistry().load()
+  File "/home/user01/xco-mcp-server/mcp_runtime/registry.py", line 25, in load
+    name = tool.get("name")
+AttributeError: 'list' object has no attribute 'get'
+Traceback (most recent call last):
+  File "/home/user01/xco-mcp-server/.venv/bin/uvicorn", line 7, in <module>
+    sys.exit(main())
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 1485, in __call__
+    return self.main(*args, **kwargs)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 1406, in main
+    rv = self.invoke(ctx)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 1269, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 824, in invoke
+    return callback(*args, **kwargs)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/main.py", line 424, in main
+    run(
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/main.py", line 594, in run
+    server.run()
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 67, in run
+    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/_compat.py", line 60, in asyncio_run
+    return loop.run_until_complete(main)
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 71, in serve
+    await self._serve(sockets)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 78, in _serve
+    config.load()
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/config.py", line 439, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/user01/xco-mcp-server/api/app.py", line 24, in <module>
+    mcp = MCPServer(auto_mode=False)
+  File "/home/user01/xco-mcp-server/mcp_runtime/server.py", line 54, in __init__
+    self.registry = MCPRegistry().load()
+  File "/home/user01/xco-mcp-server/mcp_runtime/registry.py", line 25, in load
+    name = tool.get("name")
+AttributeError: 'list' object has no attribute 'get'
+Traceback (most recent call last):
+  File "/home/user01/xco-mcp-server/.venv/bin/uvicorn", line 7, in <module>
+    sys.exit(main())
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 1485, in __call__
+    return self.main(*args, **kwargs)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 1406, in main
+    rv = self.invoke(ctx)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 1269, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/click/core.py", line 824, in invoke
+    return callback(*args, **kwargs)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/main.py", line 424, in main
+    run(
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/main.py", line 594, in run
+    server.run()
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 67, in run
+    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/_compat.py", line 60, in asyncio_run
+    return loop.run_until_complete(main)
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 71, in serve
+    await self._serve(sockets)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 78, in _serve
+    config.load()
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/config.py", line 439, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/user01/xco-mcp-server/api/app.py", line 24, in <module>
+    mcp = MCPServer(auto_mode=False)
+  File "/home/user01/xco-mcp-server/mcp_runtime/server.py", line 54, in __init__
+    self.registry = MCPRegistry().load()
+  File "/home/user01/xco-mcp-server/mcp_runtime/registry.py", line 25, in load
+    name = tool.get("name")
+AttributeError: 'list' object has no attribute 'get'
+2026-02-07 17:03:20,584 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-07 17:03:20,584 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=45
+INFO:     Started server process [87823]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [87823]
+2026-02-07 17:03:25,723 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-07 17:03:25,723 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=45
+INFO:     Started server process [87828]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-02-07 17:03:29,129 | INFO  | mcp.invoke | invoke start tool=faultmanager_get_health request_id=req-c1f5ea3c correlation_id=corr-a96138fe context=None
+2026-02-07 17:03:29,129 | INFO  | mcp.invoke | policy decision tool=faultmanager_get_health risk=SAFE_READ mode=manual allowed=True
+2026-02-07 17:03:29,293 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=163 url=https://10.13.85.20:443/v1/faultmanager/health
+2026-02-07 17:03:29,294 | INFO  | mcp.invoke | invoke success tool=faultmanager_get_health status=200 url=https://10.13.85.20:443/v1/faultmanager/health correlation_id=corr-a96138fe
+2026-02-07 17:04:27,668 | INFO  | mcp.invoke | invoke start tool=faultmanager_get_faults request_id=req-ac62c973 correlation_id=corr-b7f5248b context=None
+2026-02-07 17:04:27,669 | ERROR | mcp.invoke | invoke failed tool=faultmanager_get_faults request_id=req-ac62c973 correlation_id=corr-b7f5248b error=faultmanager_get_faults
+Traceback (most recent call last):
+  File "/home/user01/xco-mcp-server/mcp_runtime/server.py", line 120, in invoke
+    raise ToolNotFound(tool_name)
+mcp_runtime.errors.ToolNotFound: faultmanager_get_faults
+2026-02-07 17:05:59,677 | INFO  | mcp.invoke | invoke start tool=faultmanager_get_alert_inventory request_id=req-8b9a9ebd correlation_id=corr-b093d9bb context=None
+2026-02-07 17:05:59,677 | INFO  | mcp.invoke | policy decision tool=faultmanager_get_alert_inventory risk=SAFE_READ mode=manual allowed=True
+2026-02-07 17:05:59,720 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=42 url=https://10.13.85.20:443/v1/faultmanager/alert/inventory
+2026-02-07 17:05:59,721 | INFO  | mcp.invoke | invoke success tool=faultmanager_get_alert_inventory status=200 url=https://10.13.85.20:443/v1/faultmanager/alert/inventory correlation_id=corr-b093d9bb
+2026-02-07 17:07:06,013 | INFO  | mcp.invoke | invoke start tool=faultmanager_get_alert_history request_id=req-8b6b8891 correlation_id=corr-7e452452 context=None
+2026-02-07 17:07:06,013 | INFO  | mcp.invoke | policy decision tool=faultmanager_get_alert_history risk=SAFE_READ mode=manual allowed=True
+2026-02-07 17:07:06,052 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=38 url=https://10.13.85.20:443/v1/faultmanager/alert/history
+2026-02-07 17:07:06,052 | INFO  | mcp.invoke | invoke success tool=faultmanager_get_alert_history status=200 url=https://10.13.85.20:443/v1/faultmanager/alert/history correlation_id=corr-7e452452
+2026-02-07 17:08:18,037 | INFO  | mcp.invoke | invoke start tool=faultmanager_get_alarm_inventory request_id=req-acee8caa correlation_id=corr-34625409 context=None
+2026-02-07 17:08:18,037 | INFO  | mcp.invoke | policy decision tool=faultmanager_get_alarm_inventory risk=SAFE_READ mode=manual allowed=True
+2026-02-07 17:08:18,108 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=69 url=https://10.13.85.20:443/v1/faultmanager/alarm/inventory
+2026-02-07 17:08:18,109 | INFO  | mcp.invoke | invoke success tool=faultmanager_get_alarm_inventory status=200 url=https://10.13.85.20:443/v1/faultmanager/alarm/inventory correlation_id=corr-34625409
+2026-02-07 17:09:07,110 | INFO  | mcp.invoke | invoke start tool=faultmanager_get_alarm_history request_id=req-577510ed correlation_id=corr-7a8512bc context=None
+2026-02-07 17:09:07,110 | INFO  | mcp.invoke | policy decision tool=faultmanager_get_alarm_history risk=SAFE_READ mode=manual allowed=True
+2026-02-07 17:09:07,257 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=146 url=https://10.13.85.20:443/v1/faultmanager/alarm/history
+2026-02-07 17:09:07,258 | INFO  | mcp.invoke | invoke success tool=faultmanager_get_alarm_history status=200 url=https://10.13.85.20:443/v1/faultmanager/alarm/history correlation_id=corr-7a8512bc
+2026-02-07 17:09:15,304 | INFO  | mcp.invoke | invoke start tool=faultmanager_get_alarm_history request_id=req-a020600b correlation_id=corr-258e59fe context=None
+2026-02-07 17:09:15,304 | INFO  | mcp.invoke | policy decision tool=faultmanager_get_alarm_history risk=SAFE_READ mode=manual allowed=True
+2026-02-07 17:09:15,439 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=134 url=https://10.13.85.20:443/v1/faultmanager/alarm/history
+2026-02-07 17:09:15,440 | INFO  | mcp.invoke | invoke success tool=faultmanager_get_alarm_history status=200 url=https://10.13.85.20:443/v1/faultmanager/alarm/history correlation_id=corr-258e59fe
+2026-02-07 17:10:01,488 | INFO  | mcp.invoke | invoke start tool=faultmanager_get_alarm_summary request_id=req-304e1e8b correlation_id=corr-4dad9138 context=None
+2026-02-07 17:10:01,489 | INFO  | mcp.invoke | policy decision tool=faultmanager_get_alarm_summary risk=SAFE_READ mode=manual allowed=True
+2026-02-07 17:10:01,617 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=128 url=https://10.13.85.20:443/v1/faultmanager/alarm/summary
+2026-02-07 17:10:01,618 | INFO  | mcp.invoke | invoke success tool=faultmanager_get_alarm_summary status=200 url=https://10.13.85.20:443/v1/faultmanager/alarm/summary correlation_id=corr-4dad9138
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [87828]
+2026-02-07 17:17:29,921 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-07 17:17:29,921 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=49
+INFO:     Started server process [87926]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-02-07 17:17:32,531 | INFO  | mcp.invoke | invoke start tool=snmp_get_health request_id=req-16e31cba correlation_id=corr-e8dfb8d4 context=None
+2026-02-07 17:17:32,532 | INFO  | mcp.invoke | policy decision tool=snmp_get_health risk=SAFE_READ mode=manual allowed=True
+2026-02-07 17:17:32,688 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=156 url=https://10.13.85.20:443/v1/snmp/health
+2026-02-07 17:17:32,689 | INFO  | mcp.invoke | invoke success tool=snmp_get_health status=200 url=https://10.13.85.20:443/v1/snmp/health correlation_id=corr-e8dfb8d4
+2026-02-07 17:18:33,549 | INFO  | mcp.invoke | invoke start tool=snmp_get_users request_id=req-d078cc92 correlation_id=corr-8160cf93 context=None
+2026-02-07 17:18:33,550 | ERROR | mcp.invoke | invoke failed tool=snmp_get_users request_id=req-d078cc92 correlation_id=corr-8160cf93 error=snmp_get_users
+Traceback (most recent call last):
+  File "/home/user01/xco-mcp-server/mcp_runtime/server.py", line 120, in invoke
+    raise ToolNotFound(tool_name)
+mcp_runtime.errors.ToolNotFound: snmp_get_users
+2026-02-07 17:20:28,126 | INFO  | mcp.invoke | invoke start tool=snmp_get_trap_subscribers request_id=req-f6e65c32 correlation_id=corr-c4eff895 context=None
+2026-02-07 17:20:28,127 | INFO  | mcp.invoke | policy decision tool=snmp_get_trap_subscribers risk=SAFE_READ mode=manual allowed=True
+2026-02-07 17:20:28,180 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=52 url=https://10.13.85.20:443/v1/snmp/subscribers
+2026-02-07 17:20:28,181 | INFO  | mcp.invoke | invoke success tool=snmp_get_trap_subscribers status=200 url=https://10.13.85.20:443/v1/snmp/subscribers correlation_id=corr-c4eff895
+2026-02-07 17:21:22,756 | INFO  | mcp.invoke | invoke start tool=snmp_get_executions request_id=req-7f0bc61a correlation_id=corr-9da9b2f3 context=None
+2026-02-07 17:21:22,757 | INFO  | mcp.invoke | policy decision tool=snmp_get_executions risk=SAFE_READ mode=manual allowed=True
+2026-02-07 17:21:22,793 | INFO  | mcp.transport | XCO request done method=GET status=404 duration_ms=36 url=https://10.13.85.20:443/v1/snmp/executions
+2026-02-07 17:21:22,794 | INFO  | mcp.invoke | invoke success tool=snmp_get_executions status=404 url=https://10.13.85.20:443/v1/snmp/executions correlation_id=corr-9da9b2f3
