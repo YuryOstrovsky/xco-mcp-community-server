@@ -223,6 +223,48 @@ class MCPServer:
                     elif fabric_param == "fabric-id" and "id" in fabric_ctx:
                         inputs["fabric-id"] = fabric_ctx["id"]
 
+            # ==================================================
+            # TIER-2 TOOL HANDLER (NO ENDPOINT)
+            # ==================================================
+            handler = self.registry.get_handler(tool_name)
+            if handler:
+                invoke_logger.info(
+                    "tier2 handler invoked tool=%s request_id=%s",
+                    tool_name,
+                    request_id,
+                )
+
+                result = handler(
+                    inputs=inputs,
+                    registry=self.registry,
+                    transport=self.transport,
+                    context=resolved_context,
+                )
+
+                MCP_INVOKE_SUCCESS.labels(tool=tool_name).inc()
+                duration = time.time() - start_ts
+                MCP_INVOKE_LATENCY.labels(tool=tool_name).observe(duration)
+
+                return {
+                    "tool": tool_name,
+                    "status": 200,
+                    "payload": result,
+                    "context": resolved_context,
+                    "meta": {
+                        "request_id": request_id,
+                        "correlation_id": correlation_id,
+                        "risk": tool["policy"]["risk"],
+                    },
+                    "explain": {
+                        "tier": 2,
+                        "policy": {
+                            "risk": tool["policy"]["risk"],
+                            "mode": "auto" if self.auto_mode else "manual",
+                        },
+                    },
+                }
+
+
             endpoint = tool["endpoint"]
 
             response = self.transport.request(
@@ -241,10 +283,7 @@ class MCPServer:
 
             status_code = str(response["status"])
 
-            MCP_INVOKE_STATUS_TOTAL.labels(
-                tool=tool_name,
-                status=status_code,
-            ).inc()
+            
 
 
 

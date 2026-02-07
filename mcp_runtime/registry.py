@@ -1,36 +1,49 @@
 import json
 from pathlib import Path
+
 from mcp_runtime.tier1_tools import TIER1_TOOL_NAMES
+from tools.system.diagnostics import system_get_last_execution_diagnostic
 
 TOOLS_FILE = Path("generated/mcp_tools.json")
 
 
 class MCPRegistry:
     def __init__(self):
+        # tool_name -> tool definition (JSON)
         self.tools = {}
+
+        # tool_name -> execution handler (Python callable)
+        self.handlers = {}
 
     def load(self):
         """
         Load MCP tools from generated/mcp_tools.json
-        and restrict registry to Tier-1 tools only.
         """
         data = json.loads(TOOLS_FILE.read_text())
 
         for tool in data:
             name = tool.get("name")
+            self.tools[name] = tool
+
+            # Tier-1 tools use generic HTTP executor
             if name in TIER1_TOOL_NAMES:
-                self.tools[name] = tool
+                self.handlers[name] = None  # handled by Tier-1 executor
+
+        # ---- Tier-2 registrations (EXPLICIT) ----
+        self.handlers["system_get_last_execution_diagnostic"] = (
+            system_get_last_execution_diagnostic
+        )
 
         return self
 
     def list_tools(self):
-        """
-        Return full tool definitions for all registered tools.
-        """
         return list(self.tools.values())
 
     def get(self, name: str):
-        """
-        Return a single tool definition by name.
-        """
         return self.tools.get(name)
+
+    def get_handler(self, name: str):
+        """
+        Return execution handler if this is a Tier-2 tool.
+        """
+        return self.handlers.get(name)

@@ -15194,3 +15194,473 @@ Traceback (most recent call last):
   File "/home/user01/xco-mcp-server/mcp_runtime/server.py", line 244, in invoke
     MCP_INVOKE_STATUS_TOTAL.labels(
 NameError: name 'MCP_INVOKE_STATUS_TOTAL' is not defined. Did you mean: 'MCP_INVOKE_STATUS'?
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [82814]
+2026-02-06 22:16:23,424 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-06 22:16:23,424 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=21
+INFO:     Started server process [82895]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-02-06 22:19:58,559 | INFO  | mcp.invoke | invoke start tool=inventory_get_rma_history request_id=req-a1c9a764 correlation_id=corr-d7d9c809 context=None
+2026-02-06 22:19:58,559 | ERROR | mcp.invoke | invoke failed tool=inventory_get_rma_history request_id=req-a1c9a764 correlation_id=corr-d7d9c809 error='policy'
+Traceback (most recent call last):
+  File "/home/user01/xco-mcp-server/mcp_runtime/server.py", line 122, in invoke
+    enforce_policy(tool, auto_mode=self.auto_mode)
+  File "/home/user01/xco-mcp-server/mcp_runtime/policy.py", line 6, in enforce_policy
+    policy = tool["policy"]
+KeyError: 'policy'
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [82895]
+2026-02-06 22:22:18,331 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-06 22:22:18,331 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=22
+INFO:     Started server process [82941]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-02-06 22:22:21,517 | INFO  | mcp.invoke | invoke start tool=inventory_getswitches request_id=req-48bc49e5 correlation_id=corr-5b8bd6af context=None
+2026-02-06 22:22:21,518 | INFO  | mcp.invoke | policy decision tool=inventory_getswitches risk=SAFE_READ mode=manual allowed=True
+2026-02-06 22:22:21,682 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=164 url=https://10.13.85.20:443/v1/inventory/switches
+2026-02-06 22:22:21,683 | ERROR | mcp.invoke | invoke failed tool=inventory_getswitches request_id=req-48bc49e5 correlation_id=corr-5b8bd6af error=name 'MCP_INVOKE_STATUS_TOTAL' is not defined
+Traceback (most recent call last):
+  File "/home/user01/xco-mcp-server/mcp_runtime/server.py", line 244, in invoke
+    MCP_INVOKE_STATUS_TOTAL.labels(
+NameError: name 'MCP_INVOKE_STATUS_TOTAL' is not defined. Did you mean: 'MCP_INVOKE_STATUS'?
+2026-02-06 22:25:59,581 | INFO  | mcp.invoke | invoke start tool=inventory_getswitches request_id=req-5a3076f4 correlation_id=corr-fa5d5c51 context=None
+2026-02-06 22:25:59,582 | INFO  | mcp.invoke | policy decision tool=inventory_getswitches risk=SAFE_READ mode=manual allowed=True
+2026-02-06 22:25:59,654 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=72 url=https://10.13.85.20:443/v1/inventory/switches
+2026-02-06 22:25:59,655 | ERROR | mcp.invoke | invoke failed tool=inventory_getswitches request_id=req-5a3076f4 correlation_id=corr-fa5d5c51 error=name 'MCP_INVOKE_STATUS_TOTAL' is not defined
+Traceback (most recent call last):
+  File "/home/user01/xco-mcp-server/mcp_runtime/server.py", line 244, in invoke
+NameError: name 'MCP_INVOKE_STATUS_TOTAL' is not defined. Did you mean: 'MCP_INVOKE_STATUS'?
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [82941]
+2026-02-06 22:26:06,157 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-06 22:26:06,157 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=22
+INFO:     Started server process [82968]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-02-06 22:26:09,654 | INFO  | mcp.invoke | invoke start tool=inventory_getswitches request_id=req-da14cce8 correlation_id=corr-3a0f2ba8 context=None
+2026-02-06 22:26:09,654 | INFO  | mcp.invoke | policy decision tool=inventory_getswitches risk=SAFE_READ mode=manual allowed=True
+2026-02-06 22:26:09,831 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=176 url=https://10.13.85.20:443/v1/inventory/switches
+2026-02-06 22:26:09,832 | INFO  | mcp.invoke | invoke success tool=inventory_getswitches status=200 url=https://10.13.85.20:443/v1/inventory/switches correlation_id=corr-3a0f2ba8
+2026-02-06 22:28:29,770 | INFO  | mcp.invoke | invoke start tool=inventory_getswitches request_id=req-9d93cb75 correlation_id=corr-65cac60d context=None
+2026-02-06 22:28:29,771 | INFO  | mcp.invoke | policy decision tool=inventory_getswitches risk=SAFE_READ mode=manual allowed=True
+2026-02-06 22:28:29,840 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=69 url=https://10.13.85.20:443/v1/inventory/switches
+2026-02-06 22:28:29,841 | INFO  | mcp.invoke | invoke success tool=inventory_getswitches status=200 url=https://10.13.85.20:443/v1/inventory/switches correlation_id=corr-65cac60d
+2026-02-06 22:28:44,511 | INFO  | mcp.invoke | invoke start tool=inventory_getswitches request_id=req-37856f94 correlation_id=corr-3e840adb context=None
+2026-02-06 22:28:44,511 | INFO  | mcp.invoke | policy decision tool=inventory_getswitches risk=SAFE_READ mode=manual allowed=True
+2026-02-06 22:28:44,567 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=56 url=https://10.13.85.20:443/v1/inventory/switches
+2026-02-06 22:28:44,568 | INFO  | mcp.invoke | invoke success tool=inventory_getswitches status=200 url=https://10.13.85.20:443/v1/inventory/switches correlation_id=corr-3e840adb
+2026-02-06 22:29:25,326 | INFO  | mcp.invoke | invoke start tool=inventory_getswitches request_id=req-6e11dfef correlation_id=corr-7eb11e22 context=None
+2026-02-06 22:29:25,326 | INFO  | mcp.invoke | policy decision tool=inventory_getswitches risk=SAFE_READ mode=manual allowed=True
+2026-02-06 22:29:25,409 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=82 url=https://10.13.85.20:443/v1/inventory/switches
+2026-02-06 22:29:25,410 | INFO  | mcp.invoke | invoke success tool=inventory_getswitches status=200 url=https://10.13.85.20:443/v1/inventory/switches correlation_id=corr-7eb11e22
+2026-02-06 22:31:42,100 | INFO  | mcp.invoke | invoke start tool=inventory_getswitches request_id=req-a540ccf9 correlation_id=corr-69a65dba context=None
+2026-02-06 22:31:42,100 | INFO  | mcp.invoke | policy decision tool=inventory_getswitches risk=SAFE_READ mode=manual allowed=True
+2026-02-06 22:31:42,161 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=60 url=https://10.13.85.20:443/v1/inventory/switches
+2026-02-06 22:31:42,161 | INFO  | mcp.invoke | invoke success tool=inventory_getswitches status=200 url=https://10.13.85.20:443/v1/inventory/switches correlation_id=corr-69a65dba
+2026-02-06 22:33:34,520 | INFO  | mcp.invoke | invoke start tool=inventory_get_device_inventory_ports request_id=req-9b817e83 correlation_id=corr-9c0ce88b context=None
+2026-02-06 22:33:34,521 | ERROR | mcp.invoke | invoke failed tool=inventory_get_device_inventory_ports request_id=req-9b817e83 correlation_id=corr-9c0ce88b error='policy'
+Traceback (most recent call last):
+  File "/home/user01/xco-mcp-server/mcp_runtime/server.py", line 122, in invoke
+    enforce_policy(tool, auto_mode=self.auto_mode)
+  File "/home/user01/xco-mcp-server/mcp_runtime/policy.py", line 6, in enforce_policy
+    policy = tool["policy"]
+KeyError: 'policy'
+2026-02-06 22:46:25,498 | INFO  | mcp.invoke | invoke start tool=inventory_get_device_inventory_ports request_id=req-1ce14e3f correlation_id=corr-f0a35738 context=None
+2026-02-06 22:46:25,499 | ERROR | mcp.invoke | invoke failed tool=inventory_get_device_inventory_ports request_id=req-1ce14e3f correlation_id=corr-f0a35738 error='policy'
+Traceback (most recent call last):
+  File "/home/user01/xco-mcp-server/mcp_runtime/server.py", line 122, in invoke
+    enforce_policy(tool, auto_mode=self.auto_mode)
+  File "/home/user01/xco-mcp-server/mcp_runtime/policy.py", line 6, in enforce_policy
+    policy = tool["policy"]
+KeyError: 'policy'
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [82968]
+2026-02-06 22:46:40,570 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-06 22:46:40,570 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=22
+INFO:     Started server process [83031]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-02-06 22:46:45,792 | INFO  | mcp.invoke | invoke start tool=inventory_get_rma_history request_id=req-b233f838 correlation_id=corr-30106aa7 context=None
+2026-02-06 22:46:45,793 | ERROR | mcp.invoke | invoke failed tool=inventory_get_rma_history request_id=req-b233f838 correlation_id=corr-30106aa7 error=inventory_get_rma_history
+Traceback (most recent call last):
+  File "/home/user01/xco-mcp-server/mcp_runtime/server.py", line 120, in invoke
+    raise ToolNotFound(tool_name)
+mcp_runtime.errors.ToolNotFound: inventory_get_rma_history
+2026-02-06 22:47:02,968 | INFO  | mcp.invoke | invoke start tool=inventory_get_rma_detail request_id=req-d1fb87a5 correlation_id=corr-7ba2da5b context=None
+2026-02-06 22:47:02,968 | INFO  | mcp.invoke | policy decision tool=inventory_get_rma_detail risk=SAFE_READ mode=manual allowed=True
+2026-02-06 22:47:03,137 | INFO  | mcp.transport | XCO request done method=GET status=409 duration_ms=168 url=https://10.13.85.20:443/v1/inventory/rma-detail
+2026-02-06 22:47:03,138 | INFO  | mcp.invoke | invoke success tool=inventory_get_rma_detail status=409 url=https://10.13.85.20:443/v1/inventory/rma-detail correlation_id=corr-7ba2da5b
+2026-02-06 22:47:25,867 | INFO  | mcp.invoke | invoke start tool=inventory_get_tpvm_upgrade_status request_id=req-dfb32f53 correlation_id=corr-fe28c062 context=None
+2026-02-06 22:47:25,867 | INFO  | mcp.invoke | policy decision tool=inventory_get_tpvm_upgrade_status risk=SAFE_READ mode=manual allowed=True
+2026-02-06 22:47:25,909 | INFO  | mcp.transport | XCO request done method=GET status=400 duration_ms=41 url=https://10.13.85.20:443/v1/inventory/switches/tpvm-upgrade
+2026-02-06 22:47:25,910 | INFO  | mcp.invoke | invoke success tool=inventory_get_tpvm_upgrade_status status=400 url=https://10.13.85.20:443/v1/inventory/switches/tpvm-upgrade correlation_id=corr-fe28c062
+2026-02-06 22:49:16,534 | INFO  | mcp.invoke | invoke start tool=inventory_get_tpvm_upgrade_status request_id=req-f8adbe65 correlation_id=corr-c7c843cb context=None
+2026-02-06 22:49:16,534 | INFO  | mcp.invoke | policy decision tool=inventory_get_tpvm_upgrade_status risk=SAFE_READ mode=manual allowed=True
+2026-02-06 22:49:16,595 | INFO  | mcp.transport | XCO request done method=GET status=400 duration_ms=60 url=https://10.13.85.20:443/v1/inventory/switches/tpvm-upgrade
+2026-02-06 22:49:16,596 | INFO  | mcp.invoke | invoke success tool=inventory_get_tpvm_upgrade_status status=400 url=https://10.13.85.20:443/v1/inventory/switches/tpvm-upgrade correlation_id=corr-c7c843cb
+2026-02-06 22:50:29,086 | INFO  | mcp.invoke | invoke start tool=inventory_get_firmware_download_status request_id=req-3b347f55 correlation_id=corr-c349e3d2 context=None
+2026-02-06 22:50:29,086 | INFO  | mcp.invoke | policy decision tool=inventory_get_firmware_download_status risk=SAFE_READ mode=manual allowed=True
+2026-02-06 22:50:29,123 | INFO  | mcp.transport | XCO request done method=GET status=400 duration_ms=37 url=https://10.13.85.20:443/v1/inventory/switches/firmware-download
+2026-02-06 22:50:29,124 | INFO  | mcp.invoke | invoke success tool=inventory_get_firmware_download_status status=400 url=https://10.13.85.20:443/v1/inventory/switches/firmware-download correlation_id=corr-c349e3d2
+2026-02-06 22:53:45,117 | INFO  | mcp.invoke | invoke start tool=inventory_get_firmware_download_status request_id=req-f0ef65e9 correlation_id=corr-6fa2094a context=None
+2026-02-06 22:53:45,117 | INFO  | mcp.invoke | policy decision tool=inventory_get_firmware_download_status risk=SAFE_READ mode=manual allowed=True
+2026-02-06 22:53:45,177 | INFO  | mcp.transport | XCO request done method=GET status=400 duration_ms=59 url=https://10.13.85.20:443/v1/inventory/switches/firmware-download
+2026-02-06 22:53:45,178 | INFO  | mcp.invoke | invoke success tool=inventory_get_firmware_download_status status=400 url=https://10.13.85.20:443/v1/inventory/switches/firmware-download correlation_id=corr-6fa2094a
+2026-02-06 23:06:39,143 | INFO  | mcp.invoke | invoke start tool=inventory_get_firmware_download_history request_id=req-80c59b57 correlation_id=corr-377b1b17 context=None
+2026-02-06 23:06:39,143 | INFO  | mcp.invoke | policy decision tool=inventory_get_firmware_download_history risk=SAFE_READ mode=manual allowed=True
+2026-02-06 23:06:39,194 | INFO  | mcp.transport | XCO request done method=GET status=400 duration_ms=50 url=https://10.13.85.20:443/v1/inventory/switches/firmware-download/history
+2026-02-06 23:06:39,195 | INFO  | mcp.invoke | invoke success tool=inventory_get_firmware_download_history status=400 url=https://10.13.85.20:443/v1/inventory/switches/firmware-download/history correlation_id=corr-377b1b17
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [83031]
+2026-02-06 23:07:54,804 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-06 23:07:54,804 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=22
+INFO:     Started server process [83077]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-02-06 23:07:58,734 | INFO  | mcp.invoke | invoke start tool=inventory_get_firmware_download_history request_id=req-cdc28fa2 correlation_id=corr-db14b7dc context=None
+2026-02-06 23:07:58,734 | INFO  | mcp.invoke | policy decision tool=inventory_get_firmware_download_history risk=SAFE_READ mode=manual allowed=True
+2026-02-06 23:07:58,892 | INFO  | mcp.transport | XCO request done method=GET status=400 duration_ms=157 url=https://10.13.85.20:443/v1/inventory/switches/firmware-download/history
+2026-02-06 23:07:58,893 | INFO  | mcp.invoke | invoke success tool=inventory_get_firmware_download_history status=400 url=https://10.13.85.20:443/v1/inventory/switches/firmware-download/history correlation_id=corr-db14b7dc
+2026-02-06 23:08:22,443 | INFO  | mcp.invoke | invoke start tool=inventory_get_firmware_download_operation_history request_id=req-fe55268c correlation_id=corr-5bc71977 context=None
+2026-02-06 23:08:22,444 | INFO  | mcp.invoke | policy decision tool=inventory_get_firmware_download_operation_history risk=SAFE_READ mode=manual allowed=True
+2026-02-06 23:08:22,488 | INFO  | mcp.transport | XCO request done method=GET status=400 duration_ms=44 url=https://10.13.85.20:443/v1/inventory/switches/firmware-download/operational/history
+2026-02-06 23:08:22,489 | INFO  | mcp.invoke | invoke success tool=inventory_get_firmware_download_operation_history status=400 url=https://10.13.85.20:443/v1/inventory/switches/firmware-download/operational/history correlation_id=corr-5bc71977
+2026-02-06 23:09:23,154 | INFO  | mcp.invoke | invoke start tool=inventory_get_device_inventory_structure request_id=req-f55a3f87 correlation_id=corr-21fefa66 context=None
+2026-02-06 23:09:23,154 | INFO  | mcp.invoke | policy decision tool=inventory_get_device_inventory_structure risk=SAFE_READ mode=manual allowed=True
+2026-02-06 23:09:23,196 | INFO  | mcp.transport | XCO request done method=GET status=500 duration_ms=41 url=https://10.13.85.20:443/v1/inventory/switches/inventory-structure
+2026-02-06 23:09:23,197 | INFO  | mcp.invoke | invoke success tool=inventory_get_device_inventory_structure status=500 url=https://10.13.85.20:443/v1/inventory/switches/inventory-structure correlation_id=corr-21fefa66
+2026-02-06 23:21:04,997 | INFO  | mcp.invoke | invoke start tool=inventory_get_device_inventory_summary request_id=req-cc197116 correlation_id=corr-a1e79784 context=None
+2026-02-06 23:21:04,997 | INFO  | mcp.invoke | policy decision tool=inventory_get_device_inventory_summary risk=SAFE_READ mode=manual allowed=True
+2026-02-06 23:21:05,044 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=46 url=https://10.13.85.20:443/v1/inventory/switches/inventory-summary-info
+2026-02-06 23:21:05,044 | INFO  | mcp.invoke | invoke success tool=inventory_get_device_inventory_summary status=200 url=https://10.13.85.20:443/v1/inventory/switches/inventory-summary-info correlation_id=corr-a1e79784
+2026-02-06 23:24:40,245 | INFO  | mcp.invoke | invoke start tool=inventory_get_device_inventory_info request_id=req-93e38419 correlation_id=corr-c68ed7ab context=None
+2026-02-06 23:24:40,245 | INFO  | mcp.invoke | policy decision tool=inventory_get_device_inventory_info risk=SAFE_READ mode=manual allowed=True
+2026-02-06 23:24:40,313 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=66 url=https://10.13.85.20:443/v1/inventory/switches/inventory-info
+2026-02-06 23:24:40,313 | INFO  | mcp.invoke | invoke success tool=inventory_get_device_inventory_info status=200 url=https://10.13.85.20:443/v1/inventory/switches/inventory-info correlation_id=corr-c68ed7ab
+2026-02-06 23:25:48,993 | INFO  | mcp.invoke | invoke start tool=inventory_get_device_inventory_ports request_id=req-56690ad6 correlation_id=corr-51d7b5c5 context=None
+2026-02-06 23:25:48,993 | INFO  | mcp.invoke | policy decision tool=inventory_get_device_inventory_ports risk=SAFE_READ mode=manual allowed=True
+2026-02-06 23:25:59,055 | INFO  | mcp.transport | XCO request done method=GET status=500 duration_ms=10061 url=https://10.13.85.20:443/v1/inventory/switches/inventory-info-ports
+2026-02-06 23:25:59,056 | INFO  | mcp.invoke | invoke success tool=inventory_get_device_inventory_ports status=500 url=https://10.13.85.20:443/v1/inventory/switches/inventory-info-ports correlation_id=corr-51d7b5c5
+2026-02-06 23:25:59,110 | INFO  | mcp.invoke | invoke start tool=inventory_get_device_inventory_ports request_id=req-b67ab49e correlation_id=corr-44c94b07 context=None
+2026-02-06 23:25:59,111 | INFO  | mcp.invoke | policy decision tool=inventory_get_device_inventory_ports risk=SAFE_READ mode=manual allowed=True
+2026-02-06 23:26:09,174 | INFO  | mcp.transport | XCO request done method=GET status=500 duration_ms=10063 url=https://10.13.85.20:443/v1/inventory/switches/inventory-info-ports
+2026-02-06 23:26:09,175 | INFO  | mcp.invoke | invoke success tool=inventory_get_device_inventory_ports status=500 url=https://10.13.85.20:443/v1/inventory/switches/inventory-info-ports correlation_id=corr-44c94b07
+2026-02-06 23:26:13,721 | INFO  | mcp.invoke | invoke start tool=inventory_get_device_inventory_ports request_id=req-2507a6f1 correlation_id=corr-b56838c9 context=None
+2026-02-06 23:26:13,721 | INFO  | mcp.invoke | policy decision tool=inventory_get_device_inventory_ports risk=SAFE_READ mode=manual allowed=True
+2026-02-06 23:26:23,792 | INFO  | mcp.transport | XCO request done method=GET status=500 duration_ms=10071 url=https://10.13.85.20:443/v1/inventory/switches/inventory-info-ports
+2026-02-06 23:26:23,793 | INFO  | mcp.invoke | invoke success tool=inventory_get_device_inventory_ports status=500 url=https://10.13.85.20:443/v1/inventory/switches/inventory-info-ports correlation_id=corr-b56838c9
+2026-02-07 04:32:33,316 | INFO  | mcp.invoke | invoke start tool=inventory_get_device_inventory_ports request_id=req-974fe3ef correlation_id=corr-d3e200c8 context=None
+2026-02-07 04:32:33,316 | INFO  | mcp.invoke | policy decision tool=inventory_get_device_inventory_ports risk=SAFE_READ mode=manual allowed=True
+2026-02-07 04:32:43,500 | INFO  | mcp.transport | XCO request done method=GET status=500 duration_ms=10183 url=https://10.13.85.20:443/v1/inventory/switches/inventory-info-ports
+2026-02-07 04:32:43,501 | INFO  | mcp.invoke | invoke success tool=inventory_get_device_inventory_ports status=500 url=https://10.13.85.20:443/v1/inventory/switches/inventory-info-ports correlation_id=corr-d3e200c8
+2026-02-07 04:36:47,264 | INFO  | mcp.invoke | invoke start tool=inventory_get_device_inventory_export request_id=req-420d9ca4 correlation_id=corr-69bb6660 context=None
+2026-02-07 04:36:47,265 | INFO  | mcp.invoke | policy decision tool=inventory_get_device_inventory_export risk=SAFE_READ mode=manual allowed=True
+2026-02-07 04:36:47,476 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=210 url=https://10.13.85.20:443/v1/inventory/switches/inventory-info-export
+2026-02-07 04:36:47,476 | INFO  | mcp.invoke | invoke success tool=inventory_get_device_inventory_export status=200 url=https://10.13.85.20:443/v1/inventory/switches/inventory-info-export correlation_id=corr-69bb6660
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [83077]
+2026-02-07 04:40:50,675 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-07 04:40:50,675 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=22
+INFO:     Started server process [83590]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-02-07 04:40:54,076 | INFO  | mcp.invoke | invoke start tool=inventory_get_device_inventory_export request_id=req-d0647715 correlation_id=corr-4cde317c context=None
+2026-02-07 04:40:54,076 | ERROR | mcp.invoke | invoke failed tool=inventory_get_device_inventory_export request_id=req-d0647715 correlation_id=corr-4cde317c error=Tool 'inventory_get_device_inventory_export' requires human confirmation
+Traceback (most recent call last):
+  File "/home/user01/xco-mcp-server/mcp_runtime/server.py", line 122, in invoke
+    enforce_policy(tool, auto_mode=self.auto_mode)
+  File "/home/user01/xco-mcp-server/mcp_runtime/policy.py", line 14, in enforce_policy
+    raise PolicyViolation(
+mcp_runtime.policy.PolicyViolation: Tool 'inventory_get_device_inventory_export' requires human confirmation
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [83590]
+2026-02-07 04:46:42,668 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-07 04:46:42,668 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=13
+INFO:     Started server process [83603]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-02-07 04:47:25,973 | INFO  | mcp.invoke | invoke start tool=inventory_getswitches request_id=req-611942c5 correlation_id=corr-127c3965 context=None
+2026-02-07 04:47:25,973 | INFO  | mcp.invoke | policy decision tool=inventory_getswitches risk=SAFE_READ mode=manual allowed=True
+2026-02-07 04:47:26,153 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=179 url=https://10.13.85.20:443/v1/inventory/switches
+2026-02-07 04:47:26,153 | INFO  | mcp.invoke | invoke success tool=inventory_getswitches status=200 url=https://10.13.85.20:443/v1/inventory/switches correlation_id=corr-127c3965
+2026-02-07 04:47:32,919 | INFO  | mcp.invoke | invoke start tool=inventory_getswitches request_id=req-5d7a620c correlation_id=corr-13044910 context=None
+2026-02-07 04:47:32,919 | INFO  | mcp.invoke | policy decision tool=inventory_getswitches risk=SAFE_READ mode=manual allowed=True
+2026-02-07 04:47:32,991 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=70 url=https://10.13.85.20:443/v1/inventory/switches
+2026-02-07 04:47:32,991 | INFO  | mcp.invoke | invoke success tool=inventory_getswitches status=200 url=https://10.13.85.20:443/v1/inventory/switches correlation_id=corr-13044910
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [83603]
+2026-02-07 05:07:42,470 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-07 05:07:42,470 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=20
+INFO:     Started server process [83656]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-02-07 05:07:44,926 | INFO  | mcp.invoke | invoke start tool=auth_validate_token request_id=req-665120c1 correlation_id=corr-d59ef588 context=None
+2026-02-07 05:07:44,926 | INFO  | mcp.invoke | policy decision tool=auth_validate_token risk=SAFE_READ mode=manual allowed=True
+2026-02-07 05:07:45,072 | INFO  | mcp.transport | XCO request done method=GET status=502 duration_ms=145 url=https://10.13.85.20:443/v1/auth/token/validate
+2026-02-07 05:07:45,073 | INFO  | mcp.invoke | invoke success tool=auth_validate_token status=502 url=https://10.13.85.20:443/v1/auth/token/validate correlation_id=corr-d59ef588
+2026-02-07 05:10:11,358 | INFO  | mcp.invoke | invoke start tool=auth_get_token_expiry request_id=req-5abb573e correlation_id=corr-3bac8d4a context=None
+2026-02-07 05:10:11,358 | INFO  | mcp.invoke | policy decision tool=auth_get_token_expiry risk=SAFE_READ mode=manual allowed=True
+2026-02-07 05:10:11,398 | INFO  | mcp.transport | XCO request done method=GET status=404 duration_ms=39 url=https://10.13.85.20:443/v1/auth/token/expiry
+2026-02-07 05:10:11,399 | INFO  | mcp.invoke | invoke success tool=auth_get_token_expiry status=404 url=https://10.13.85.20:443/v1/auth/token/expiry correlation_id=corr-3bac8d4a
+2026-02-07 05:13:40,752 | INFO  | mcp.invoke | invoke start tool=auth_get_token_expiry request_id=req-ee32aadf correlation_id=corr-608de5d3 context=None
+2026-02-07 05:13:40,753 | INFO  | mcp.invoke | policy decision tool=auth_get_token_expiry risk=SAFE_READ mode=manual allowed=True
+2026-02-07 05:13:40,811 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=58 url=https://10.13.85.20:443/v1/auth/token/expiry
+2026-02-07 05:13:40,812 | INFO  | mcp.invoke | invoke success tool=auth_get_token_expiry status=200 url=https://10.13.85.20:443/v1/auth/token/expiry correlation_id=corr-608de5d3
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [83656]
+2026-02-07 05:16:14,101 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-07 05:16:14,101 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=20
+INFO:     Started server process [83682]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-02-07 05:16:33,504 | INFO  | mcp.invoke | invoke start tool=auth_get_token_expiry request_id=req-f7f268b1 correlation_id=corr-bae54671 context=None
+2026-02-07 05:16:33,505 | INFO  | mcp.invoke | policy decision tool=auth_get_token_expiry risk=SAFE_READ mode=manual allowed=True
+2026-02-07 05:16:33,680 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=175 url=https://10.13.85.20:443/v1/auth/token/expiry
+2026-02-07 05:16:33,681 | INFO  | mcp.invoke | invoke success tool=auth_get_token_expiry status=200 url=https://10.13.85.20:443/v1/auth/token/expiry correlation_id=corr-bae54671
+2026-02-07 05:17:04,651 | INFO  | mcp.invoke | invoke start tool=auth_get_all_token_expiry request_id=req-2bb1e1e9 correlation_id=corr-a0007529 context=None
+2026-02-07 05:17:04,651 | INFO  | mcp.invoke | policy decision tool=auth_get_all_token_expiry risk=SAFE_READ mode=manual allowed=True
+2026-02-07 05:17:04,694 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=43 url=https://10.13.85.20:443/v1/auth/token/expiry/all
+2026-02-07 05:17:04,695 | INFO  | mcp.invoke | invoke success tool=auth_get_all_token_expiry status=200 url=https://10.13.85.20:443/v1/auth/token/expiry/all correlation_id=corr-a0007529
+2026-02-07 05:18:13,904 | INFO  | mcp.invoke | invoke start tool=auth_get_clients request_id=req-fa45e1eb correlation_id=corr-63c8e03f context=None
+2026-02-07 05:18:13,905 | INFO  | mcp.invoke | policy decision tool=auth_get_clients risk=SAFE_READ mode=manual allowed=True
+2026-02-07 05:18:13,949 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=43 url=https://10.13.85.20:443/v1/auth/clientlist
+2026-02-07 05:18:13,950 | INFO  | mcp.invoke | invoke success tool=auth_get_clients status=200 url=https://10.13.85.20:443/v1/auth/clientlist correlation_id=corr-63c8e03f
+2026-02-07 05:19:00,260 | INFO  | mcp.invoke | invoke start tool=auth_get_client_by_name request_id=req-bc148b03 correlation_id=corr-7d14d1ab context=None
+2026-02-07 05:19:00,261 | INFO  | mcp.invoke | policy decision tool=auth_get_client_by_name risk=SAFE_READ mode=manual allowed=True
+2026-02-07 05:19:00,310 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=49 url=https://10.13.85.20:443/v1/auth/client
+2026-02-07 05:19:00,311 | INFO  | mcp.invoke | invoke success tool=auth_get_client_by_name status=200 url=https://10.13.85.20:443/v1/auth/client correlation_id=corr-7d14d1ab
+2026-02-07 05:19:36,310 | INFO  | mcp.invoke | invoke start tool=auth_get_execution request_id=req-2cd5b3ad correlation_id=corr-faa833a7 context=None
+2026-02-07 05:19:36,311 | INFO  | mcp.invoke | policy decision tool=auth_get_execution risk=SAFE_READ mode=manual allowed=True
+2026-02-07 05:19:36,337 | INFO  | mcp.transport | XCO request done method=GET status=404 duration_ms=25 url=https://10.13.85.20:443/v1/auth/execution
+2026-02-07 05:19:36,338 | INFO  | mcp.invoke | invoke success tool=auth_get_execution status=404 url=https://10.13.85.20:443/v1/auth/execution correlation_id=corr-faa833a7
+2026-02-07 05:21:24,477 | INFO  | mcp.invoke | invoke start tool=auth_get_execution request_id=req-3a2ba126 correlation_id=corr-9d302fec context=None
+2026-02-07 05:21:24,477 | INFO  | mcp.invoke | policy decision tool=auth_get_execution risk=SAFE_READ mode=manual allowed=True
+2026-02-07 05:21:25,530 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=1052 url=https://10.13.85.20:443/v1/auth/execution
+2026-02-07 05:21:25,531 | INFO  | mcp.invoke | invoke success tool=auth_get_execution status=200 url=https://10.13.85.20:443/v1/auth/execution correlation_id=corr-9d302fec
+2026-02-07 05:22:24,595 | INFO  | mcp.invoke | invoke start tool=auth_get_executions request_id=req-431af722 correlation_id=corr-7fa26428 context=None
+2026-02-07 05:22:24,595 | INFO  | mcp.invoke | policy decision tool=auth_get_executions risk=SAFE_READ mode=manual allowed=True
+2026-02-07 05:22:24,630 | INFO  | mcp.transport | XCO request done method=GET status=404 duration_ms=34 url=https://10.13.85.20:443/v1/auth/executions
+2026-02-07 05:22:24,631 | INFO  | mcp.invoke | invoke success tool=auth_get_executions status=404 url=https://10.13.85.20:443/v1/auth/executions correlation_id=corr-7fa26428
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [83682]
+2026-02-07 05:24:12,283 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-07 05:24:12,283 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=20
+INFO:     Started server process [83780]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-02-07 05:24:14,028 | INFO  | mcp.invoke | invoke start tool=auth_get_executions request_id=req-11727da7 correlation_id=corr-1e1c8e2f context=None
+2026-02-07 05:24:14,029 | INFO  | mcp.invoke | policy decision tool=auth_get_executions risk=SAFE_READ mode=manual allowed=True
+2026-02-07 05:24:14,185 | INFO  | mcp.transport | XCO request done method=GET status=404 duration_ms=155 url=https://10.13.85.20:443/v1/auth/execution
+2026-02-07 05:24:14,186 | INFO  | mcp.invoke | invoke success tool=auth_get_executions status=404 url=https://10.13.85.20:443/v1/auth/execution correlation_id=corr-1e1c8e2f
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [83780]
+2026-02-07 05:29:30,186 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-07 05:29:30,186 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=20
+INFO:     Started server process [83792]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-02-07 05:29:31,451 | INFO  | mcp.invoke | invoke start tool=auth_get_executions request_id=req-a2d73583 correlation_id=corr-8913ba2c context=None
+2026-02-07 05:29:31,451 | INFO  | mcp.invoke | policy decision tool=auth_get_executions risk=SAFE_READ mode=manual allowed=True
+2026-02-07 05:29:31,604 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=152 url=https://10.13.85.20:443/v1/auth/executions
+2026-02-07 05:29:31,605 | INFO  | mcp.invoke | invoke success tool=auth_get_executions status=200 url=https://10.13.85.20:443/v1/auth/executions correlation_id=corr-8913ba2c
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [83792]
+2026-02-07 05:45:17,665 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-07 05:45:17,665 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=28
+INFO:     Started server process [83842]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-02-07 05:45:30,084 | INFO  | mcp.invoke | invoke start tool=system_get_feature_settings request_id=req-96ef1d8a correlation_id=corr-84e70014 context=None
+2026-02-07 05:45:30,084 | INFO  | mcp.invoke | policy decision tool=system_get_feature_settings risk=SAFE_READ mode=manual allowed=True
+2026-02-07 05:45:30,243 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=158 url=https://10.13.85.20:443/v1/system/feature
+2026-02-07 05:45:30,243 | INFO  | mcp.invoke | invoke success tool=system_get_feature_settings status=200 url=https://10.13.85.20:443/v1/system/feature correlation_id=corr-84e70014
+2026-02-07 05:46:20,484 | INFO  | mcp.invoke | invoke start tool=system_get_settings request_id=req-47a31166 correlation_id=corr-08f20b0b context=None
+2026-02-07 05:46:20,484 | INFO  | mcp.invoke | policy decision tool=system_get_settings risk=SAFE_READ mode=manual allowed=True
+2026-02-07 05:46:20,535 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=50 url=https://10.13.85.20:443/v1/system/settings
+2026-02-07 05:46:20,536 | INFO  | mcp.invoke | invoke success tool=system_get_settings status=200 url=https://10.13.85.20:443/v1/system/settings correlation_id=corr-08f20b0b
+2026-02-07 05:47:10,501 | INFO  | mcp.invoke | invoke start tool=system_get_version request_id=req-c0482c22 correlation_id=corr-2aaada10 context=None
+2026-02-07 05:47:10,502 | ERROR | mcp.invoke | invoke failed tool=system_get_version request_id=req-c0482c22 correlation_id=corr-2aaada10 error=system_get_version
+Traceback (most recent call last):
+  File "/home/user01/xco-mcp-server/mcp_runtime/server.py", line 120, in invoke
+    raise ToolNotFound(tool_name)
+mcp_runtime.errors.ToolNotFound: system_get_version
+2026-02-07 05:47:23,407 | INFO  | mcp.invoke | invoke start tool=system_get_version request_id=req-0379c313 correlation_id=corr-6d2950a4 context=None
+2026-02-07 05:47:23,407 | ERROR | mcp.invoke | invoke failed tool=system_get_version request_id=req-0379c313 correlation_id=corr-6d2950a4 error=system_get_version
+Traceback (most recent call last):
+  File "/home/user01/xco-mcp-server/mcp_runtime/server.py", line 120, in invoke
+    raise ToolNotFound(tool_name)
+mcp_runtime.errors.ToolNotFound: system_get_version
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [83842]
+2026-02-07 05:50:08,725 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-07 05:50:08,725 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=29
+INFO:     Started server process [83867]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-02-07 05:50:11,125 | INFO  | mcp.invoke | invoke start tool=system_get_version request_id=req-532eae98 correlation_id=corr-6743f791 context=None
+2026-02-07 05:50:11,126 | INFO  | mcp.invoke | policy decision tool=system_get_version risk=SAFE_READ mode=manual allowed=True
+2026-02-07 05:50:11,275 | INFO  | mcp.transport | XCO request done method=GET status=404 duration_ms=149 url=https://10.13.85.20:443/v1/system/version
+2026-02-07 05:50:11,276 | INFO  | mcp.invoke | invoke success tool=system_get_version status=404 url=https://10.13.85.20:443/v1/system/version correlation_id=corr-6743f791
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [83867]
+2026-02-07 05:56:46,548 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-07 05:56:46,548 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=28
+INFO:     Started server process [83895]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-02-07 05:56:55,865 | INFO  | mcp.invoke | invoke start tool=system_get_execution request_id=req-95934378 correlation_id=corr-0d371a25 context=None
+2026-02-07 05:56:55,866 | INFO  | mcp.invoke | policy decision tool=system_get_execution risk=SAFE_READ mode=manual allowed=True
+2026-02-07 05:56:56,017 | INFO  | mcp.transport | XCO request done method=GET status=404 duration_ms=150 url=https://10.13.85.20:443/v1/system/execution
+2026-02-07 05:56:56,017 | INFO  | mcp.invoke | invoke success tool=system_get_execution status=404 url=https://10.13.85.20:443/v1/system/execution correlation_id=corr-0d371a25
+2026-02-07 06:00:22,341 | INFO  | mcp.invoke | invoke start tool=system_get_health_status request_id=req-b5768804 correlation_id=corr-d85c5426 context=None
+2026-02-07 06:00:22,341 | INFO  | mcp.invoke | policy decision tool=system_get_health_status risk=SAFE_READ mode=manual allowed=True
+2026-02-07 06:00:25,721 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=3380 url=https://10.13.85.20:443/v1/system/proxy/status
+2026-02-07 06:00:25,722 | INFO  | mcp.invoke | invoke success tool=system_get_health_status status=200 url=https://10.13.85.20:443/v1/system/proxy/status correlation_id=corr-d85c5426
+2026-02-07 06:03:32,409 | INFO  | mcp.invoke | invoke start tool=system_get_supportsave_list request_id=req-131eafe5 correlation_id=corr-879337ed context=None
+2026-02-07 06:03:32,410 | INFO  | mcp.invoke | policy decision tool=system_get_supportsave_list risk=SAFE_READ mode=manual allowed=True
+2026-02-07 06:03:32,566 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=156 url=https://10.13.85.20:443/v1/system/proxy/supportsave
+2026-02-07 06:03:32,567 | INFO  | mcp.invoke | invoke success tool=system_get_supportsave_list status=200 url=https://10.13.85.20:443/v1/system/proxy/supportsave correlation_id=corr-879337ed
+2026-02-07 06:04:14,264 | INFO  | mcp.invoke | invoke start tool=system_get_supportsave_status request_id=req-eecbfda1 correlation_id=corr-ea39cc82 context=None
+2026-02-07 06:04:14,265 | INFO  | mcp.invoke | policy decision tool=system_get_supportsave_status risk=SAFE_READ mode=manual allowed=True
+2026-02-07 06:04:14,308 | INFO  | mcp.transport | XCO request done method=GET status=400 duration_ms=42 url=https://10.13.85.20:443/v1/system/proxy/supportsavestatus
+2026-02-07 06:04:14,309 | INFO  | mcp.invoke | invoke success tool=system_get_supportsave_status status=400 url=https://10.13.85.20:443/v1/system/proxy/supportsavestatus correlation_id=corr-ea39cc82
+2026-02-07 06:16:06,842 | INFO  | mcp.invoke | invoke start tool=system_get_running_config request_id=req-68132f8a correlation_id=corr-34965c20 context=None
+2026-02-07 06:16:06,842 | INFO  | mcp.invoke | policy decision tool=system_get_running_config risk=SAFE_READ mode=manual allowed=True
+2026-02-07 06:16:06,893 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=50 url=https://10.13.85.20:443/v1/system/runningConfig
+2026-02-07 06:16:06,894 | INFO  | mcp.invoke | invoke success tool=system_get_running_config status=200 url=https://10.13.85.20:443/v1/system/runningConfig correlation_id=corr-34965c20
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [83895]
+2026-02-07 06:29:17,012 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-07 06:29:17,012 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=28
+INFO:     Started server process [84369]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-02-07 06:29:19,187 | INFO  | mcp.invoke | invoke start tool=system_get_executions request_id=req-7509f492 correlation_id=corr-d377a7c8 context=None
+2026-02-07 06:29:19,188 | INFO  | mcp.invoke | policy decision tool=system_get_executions risk=SAFE_READ mode=manual allowed=True
+2026-02-07 06:29:19,342 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=153 url=https://10.13.85.20:443/v1/system/executions
+2026-02-07 06:29:19,342 | INFO  | mcp.invoke | invoke success tool=system_get_executions status=200 url=https://10.13.85.20:443/v1/system/executions correlation_id=corr-d377a7c8
+2026-02-07 06:29:54,139 | INFO  | mcp.invoke | invoke start tool=system_get_executions request_id=req-60b4c8b2 correlation_id=corr-997f78c6 context=None
+2026-02-07 06:29:54,140 | INFO  | mcp.invoke | policy decision tool=system_get_executions risk=SAFE_READ mode=manual allowed=True
+2026-02-07 06:29:54,183 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=42 url=https://10.13.85.20:443/v1/system/executions
+2026-02-07 06:29:54,183 | INFO  | mcp.invoke | invoke success tool=system_get_executions status=200 url=https://10.13.85.20:443/v1/system/executions correlation_id=corr-997f78c6
+2026-02-07 06:30:03,348 | INFO  | mcp.invoke | invoke start tool=system_get_execution request_id=req-474572d6 correlation_id=corr-493e86aa context=None
+2026-02-07 06:30:03,349 | INFO  | mcp.invoke | policy decision tool=system_get_execution risk=SAFE_READ mode=manual allowed=True
+2026-02-07 06:30:03,390 | INFO  | mcp.transport | XCO request done method=GET status=409 duration_ms=41 url=https://10.13.85.20:443/v1/system/execution
+2026-02-07 06:30:03,391 | INFO  | mcp.invoke | invoke success tool=system_get_execution status=409 url=https://10.13.85.20:443/v1/system/execution correlation_id=corr-493e86aa
+2026-02-07 06:31:01,822 | INFO  | mcp.invoke | invoke start tool=system_get_execution request_id=req-73ae511f correlation_id=corr-94a84fce context=None
+2026-02-07 06:31:01,823 | INFO  | mcp.invoke | policy decision tool=system_get_execution risk=SAFE_READ mode=manual allowed=True
+2026-02-07 06:31:01,926 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=102 url=https://10.13.85.20:443/v1/system/execution
+2026-02-07 06:31:01,927 | INFO  | mcp.invoke | invoke success tool=system_get_execution status=200 url=https://10.13.85.20:443/v1/system/execution correlation_id=corr-94a84fce
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [84369]
+2026-02-07 06:37:43,637 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-07 06:37:43,637 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=29
+INFO:     Started server process [85160]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-02-07 06:37:47,521 | INFO  | mcp.invoke | invoke start tool=system_get_last_execution_diagnostic request_id=req-71acfc07 correlation_id=corr-65444580 context=None
+2026-02-07 06:37:47,522 | INFO  | mcp.invoke | policy decision tool=system_get_last_execution_diagnostic risk=SAFE_READ mode=manual allowed=True
+2026-02-07 06:37:47,522 | ERROR | mcp.invoke | invoke failed tool=system_get_last_execution_diagnostic request_id=req-71acfc07 correlation_id=corr-65444580 error='endpoint'
+Traceback (most recent call last):
+  File "/home/user01/xco-mcp-server/mcp_runtime/server.py", line 226, in invoke
+    endpoint = tool["endpoint"]
+KeyError: 'endpoint'
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [85160]
+2026-02-07 07:01:07,242 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-07 07:01:07,242 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=30
+INFO:     Started server process [86074]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-02-07 07:01:20,302 | INFO  | mcp.invoke | invoke start tool=system_get_last_execution_diagnostic request_id=req-783f6f10 correlation_id=corr-8acf6164 context=None
+2026-02-07 07:01:20,303 | INFO  | mcp.invoke | policy decision tool=system_get_last_execution_diagnostic risk=SAFE_READ mode=manual allowed=True
+2026-02-07 07:01:20,303 | ERROR | mcp.invoke | invoke failed tool=system_get_last_execution_diagnostic request_id=req-783f6f10 correlation_id=corr-8acf6164 error='endpoint'
+Traceback (most recent call last):
+  File "/home/user01/xco-mcp-server/mcp_runtime/server.py", line 226, in invoke
+    endpoint = tool["endpoint"]
+KeyError: 'endpoint'
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [86074]
+2026-02-07 07:14:12,368 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-07 07:14:12,368 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=30
+INFO:     Started server process [86398]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-02-07 07:14:15,706 | INFO  | mcp.invoke | invoke start tool=system_get_last_execution_diagnostic request_id=req-318c64f0 correlation_id=corr-0284a7cb context=None
+2026-02-07 07:14:15,707 | INFO  | mcp.invoke | policy decision tool=system_get_last_execution_diagnostic risk=SAFE_READ mode=manual allowed=True
+2026-02-07 07:14:15,707 | INFO  | mcp.invoke | tier2 handler invoked tool=system_get_last_execution_diagnostic request_id=req-318c64f0
+2026-02-07 07:14:15,707 | ERROR | mcp.invoke | invoke failed tool=system_get_last_execution_diagnostic request_id=req-318c64f0 correlation_id=corr-0284a7cb error=system_get_last_execution_diagnostic() got an unexpected keyword argument 'registry'
+Traceback (most recent call last):
+  File "/home/user01/xco-mcp-server/mcp_runtime/server.py", line 237, in invoke
+    result = handler(
+TypeError: system_get_last_execution_diagnostic() got an unexpected keyword argument 'registry'
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [86398]
+2026-02-07 07:18:02,420 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-07 07:18:02,420 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=30
+INFO:     Started server process [86435]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-02-07 07:18:04,441 | INFO  | mcp.invoke | invoke start tool=system_get_last_execution_diagnostic request_id=req-bb9bbf72 correlation_id=corr-b1396a0e context=None
+2026-02-07 07:18:04,442 | INFO  | mcp.invoke | policy decision tool=system_get_last_execution_diagnostic risk=SAFE_READ mode=manual allowed=True
+2026-02-07 07:18:04,442 | INFO  | mcp.invoke | tier2 handler invoked tool=system_get_last_execution_diagnostic request_id=req-bb9bbf72
+2026-02-07 07:18:04,586 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=143 url=https://10.13.85.20:443/v1/system/executions
+2026-02-07 07:18:04,673 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=85 url=https://10.13.85.20:443/v1/system/execution

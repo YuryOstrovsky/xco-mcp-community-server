@@ -6,19 +6,14 @@
     "method": "GET",
     "endpoint": {
       "host": "{XCO_HOST}",
-      
       "path": "/v1/inventory/switches"
     },
     "auth": "none",
     "input_schema": {
       "type": "object",
       "properties": {
-        "fabric-id": {
-          "type": "string"
-        },
-        "id": {
-          "type": "string"
-        }
+        "fabric-id": { "type": "string" },
+        "id": { "type": "string" }
       },
       "required": []
     },
@@ -27,26 +22,14 @@
       "allowed_in_auto_mode": true,
       "requires_confirmation": false
     },
-    "tags": [
-      "read"
-    ],
+    "tags": ["read", "tier1"],
     "capabilities": {
-      "actions": [
-        "show"
-      ],
-      "objects": [
-        "switches"
-      ],
-      "scopes": [
-        [
-          "fabric"
-        ],
-        [
-          "device"
-        ]
-      ]
+      "actions": ["show"],
+      "objects": ["switches"],
+      "scopes": [["fabric"], ["device"]]
     }
   },
+
   {
     "name": "inventory_switch_inventory_summary",
     "description": "Returns summarized inventory information for switches (identity, role, model, serial, IP, health).",
@@ -67,13 +50,14 @@
       "allowed_in_auto_mode": true,
       "requires_confirmation": false
     },
-    "tags": ["read", "inventory", "switch"],
+    "tags": ["read", "inventory", "switch", "tier1"],
     "capabilities": {
       "actions": ["show"],
       "objects": ["switch"],
       "scopes": [["fabric"]]
     }
   },
+
   {
     "name": "inventory_switch_inventory_info",
     "description": "Get hardware inventory information for a single switch",
@@ -94,64 +78,40 @@
       "allowed_in_auto_mode": true,
       "requires_confirmation": false
     },
-    "tags": ["read"],
+    "tags": ["read", "tier1"],
     "capabilities": {
       "actions": ["show"],
       "objects": ["inventory"],
       "scopes": [["device"]]
     }
   },
-  
+
   {
     "name": "fabric_get_fabrics",
     "description": "Get all fabrics with configuration, status, and device summary",
     "category": "fabric",
     "method": "GET",
-    "endpoint": {
-      "path": "/v1/fabric/fabrics"
-    },
+    "endpoint": { "path": "/v1/fabric/fabrics" },
     "auth": "none",
-    "input_schema": {
-      "type": "object",
-      "properties": {},
-      "required": []
-    },
-    "policy": {
-      "risk": "SAFE_READ",
-      "allowed_in_auto_mode": true,
-      "requires_confirmation": false
-    },
-    "tags": [
-      "read",
-      "fabric",
-      "tier1"
-    ],
+    "input_schema": { "type": "object", "properties": {}, "required": [] },
+    "policy": { "risk": "SAFE_READ", "allowed_in_auto_mode": true, "requires_confirmation": false },
+    "tags": ["read", "fabric", "tier1"],
     "capabilities": {
       "actions": ["list"],
       "objects": ["fabric"],
       "scopes": [["system"]]
     }
   },
-  
+
   {
     "name": "fabric_get_fabrics_health",
     "description": "Get health status of all fabrics",
     "category": "fabric",
     "method": "GET",
-    "endpoint": {
-      "path": "/v1/fabric/fabrics-health"
-    },
+    "endpoint": { "path": "/v1/fabric/fabrics-health" },
     "auth": "none",
-    "input_schema": {
-      "type": "object",
-      "properties": {},
-      "required": []
-    },
-    "policy": {
-      "risk": "SAFE_READ",
-      "allowed_in_auto_mode": true,
-      "requires_confirmation": false
-    },
+    "input_schema": { "type": "object", "properties": {}, "required": [] },
+    "policy": { "risk": "SAFE_READ", "allowed_in_auto_mode": true, "requires_confirmation": false },
     "tags": ["read", "fabric", "health", "tier1"],
     "capabilities": {
       "actions": ["show"],
@@ -165,20 +125,10 @@
     "description": "Get all fabrics errors configured in the application",
     "category": "fabric",
     "method": "GET",
-    "endpoint": {
-      "path": "/v1/fabric/fabrics/errors"
-    },
+    "endpoint": { "path": "/v1/fabric/fabrics/errors" },
     "auth": "none",
-    "input_schema": {
-      "type": "object",
-      "properties": {},
-      "required": []
-    },
-    "policy": {
-      "risk": "SAFE_READ",
-      "allowed_in_auto_mode": true,
-      "requires_confirmation": false
-    },
+    "input_schema": { "type": "object", "properties": {}, "required": [] },
+    "policy": { "risk": "SAFE_READ", "allowed_in_auto_mode": true, "requires_confirmation": false },
     "tags": ["read", "fabric", "errors", "tier1"],
     "capabilities": {
       "actions": ["show"],
@@ -192,25 +142,14 @@
     "description": "Get all devices in the specified fabric (by fabric name)",
     "category": "fabric",
     "method": "GET",
-    "endpoint": {
-      "path": "/v1/fabric/devices"
-    },
+    "endpoint": { "path": "/v1/fabric/devices" },
     "auth": "none",
     "input_schema": {
       "type": "object",
-      "properties": {
-        "fabric-name": {
-          "type": "string",
-          "description": "Fabric name (not fabric-id)"
-        }
-      },
+      "properties": { "fabric-name": { "type": "string" } },
       "required": ["fabric-name"]
     },
-    "policy": {
-      "risk": "SAFE_READ",
-      "allowed_in_auto_mode": true,
-      "requires_confirmation": false
-    },
+    "policy": { "risk": "SAFE_READ", "allowed_in_auto_mode": true, "requires_confirmation": false },
     "tags": ["read", "fabric", "devices", "tier1"],
     "capabilities": {
       "actions": ["list"],
@@ -219,34 +158,20 @@
       "fabric_param": "fabric-name"
     }
   },
-  
-  
-  
 
   {
     "name": "fabric_get_physical_topology",
     "description": "Get fabric physical topology for a specified fabric",
     "category": "fabric",
     "method": "GET",
-    "endpoint": {
-      "path": "/v1/fabric/topology/physical"
-    },
+    "endpoint": { "path": "/v1/fabric/topology/physical" },
     "auth": "none",
     "input_schema": {
       "type": "object",
-      "properties": {
-        "fabric-name": {
-          "type": "string",
-          "description": "Fabric name (not fabric-id)"
-        }
-      },
+      "properties": { "fabric-name": { "type": "string" } },
       "required": ["fabric-name"]
     },
-    "policy": {
-      "risk": "SAFE_READ",
-      "allowed_in_auto_mode": true,
-      "requires_confirmation": false
-    },
+    "policy": { "risk": "SAFE_READ", "allowed_in_auto_mode": true, "requires_confirmation": false },
     "tags": ["read", "fabric", "topology", "tier1"],
     "capabilities": {
       "actions": ["list"],
@@ -261,32 +186,15 @@
     "description": "Get fabric underlay topology for a specified fabric",
     "category": "fabric",
     "method": "GET",
-    "endpoint": {
-      "path": "/v1/fabric/topology/underlay"
-    },
+    "endpoint": { "path": "/v1/fabric/topology/underlay" },
     "auth": "none",
     "input_schema": {
       "type": "object",
-      "properties": {
-        "fabric-name": {
-          "type": "string",
-          "description": "Fabric name (not fabric-id)"
-        }
-      },
+      "properties": { "fabric-name": { "type": "string" } },
       "required": ["fabric-name"]
     },
-    "policy": {
-      "risk": "SAFE_READ",
-      "allowed_in_auto_mode": true,
-      "requires_confirmation": false
-    },
-    "tags": [
-      "read",
-      "fabric",
-      "topology",
-      "underlay",
-      "tier1"
-    ],
+    "policy": { "risk": "SAFE_READ", "allowed_in_auto_mode": true, "requires_confirmation": false },
+    "tags": ["read", "fabric", "topology", "underlay", "tier1"],
     "capabilities": {
       "actions": ["list"],
       "objects": ["link", "device"],
@@ -300,32 +208,15 @@
     "description": "Get fabric overlay topology for a specified fabric",
     "category": "fabric",
     "method": "GET",
-    "endpoint": {
-      "path": "/v1/fabric/topology/overlay"
-    },
+    "endpoint": { "path": "/v1/fabric/topology/overlay" },
     "auth": "none",
     "input_schema": {
       "type": "object",
-      "properties": {
-        "fabric-name": {
-          "type": "string",
-          "description": "Fabric name (not fabric-id)"
-        }
-      },
+      "properties": { "fabric-name": { "type": "string" } },
       "required": ["fabric-name"]
     },
-    "policy": {
-      "risk": "SAFE_READ",
-      "allowed_in_auto_mode": true,
-      "requires_confirmation": false
-    },
-    "tags": [
-      "read",
-      "fabric",
-      "topology",
-      "overlay",
-      "tier1"
-    ],
+    "policy": { "risk": "SAFE_READ", "allowed_in_auto_mode": true, "requires_confirmation": false },
+    "tags": ["read", "fabric", "topology", "overlay", "tier1"],
     "capabilities": {
       "actions": ["list"],
       "objects": ["link", "device"],
@@ -339,33 +230,15 @@
     "description": "Validate fabric physical topology for a specified fabric",
     "category": "fabric",
     "method": "GET",
-    "endpoint": {
-      "path": "/v1/fabric/topology/validate/physical"
-    },
+    "endpoint": { "path": "/v1/fabric/topology/validate/physical" },
     "auth": "none",
     "input_schema": {
       "type": "object",
-      "properties": {
-        "fabric-name": {
-          "type": "string",
-          "description": "Fabric name (not fabric-id)"
-        }
-      },
+      "properties": { "fabric-name": { "type": "string" } },
       "required": ["fabric-name"]
     },
-    "policy": {
-      "risk": "SAFE_READ",
-      "allowed_in_auto_mode": true,
-      "requires_confirmation": false
-    },
-    "tags": [
-      "read",
-      "fabric",
-      "topology",
-      "validate",
-      "physical",
-      "tier1"
-    ],
+    "policy": { "risk": "SAFE_READ", "allowed_in_auto_mode": true, "requires_confirmation": false },
+    "tags": ["read", "fabric", "topology", "validate", "physical", "tier1"],
     "capabilities": {
       "actions": ["validate"],
       "objects": ["link", "device"],
@@ -379,27 +252,11 @@
     "description": "Get fabric service lock statuses",
     "category": "fabric",
     "method": "GET",
-    "endpoint": {
-      "path": "/v1/fabric/debug/service/lock"
-    },
+    "endpoint": { "path": "/v1/fabric/debug/service/lock" },
     "auth": "none",
-    "input_schema": {
-      "type": "object",
-      "properties": {},
-      "required": []
-    },
-    "policy": {
-      "risk": "SAFE_READ",
-      "allowed_in_auto_mode": true,
-      "requires_confirmation": false
-    },
-    "tags": [
-      "read",
-      "fabric",
-      "debug",
-      "lock",
-      "tier1"
-    ],
+    "input_schema": { "type": "object", "properties": {}, "required": [] },
+    "policy": { "risk": "SAFE_READ", "allowed_in_auto_mode": true, "requires_confirmation": false },
+    "tags": ["read", "fabric", "debug", "lock", "tier1"],
     "capabilities": {
       "actions": ["show"],
       "objects": ["lock", "service"],
@@ -412,10 +269,57 @@
     "description": "Get the running configuration CLI commands for the fabric",
     "category": "fabric",
     "method": "GET",
+    "endpoint": { "path": "/v1/fabric/runningConfig" },
+    "auth": "none",
+    "input_schema": { "type": "object", "properties": {}, "required": [] },
+    "policy": { "risk": "SAFE_READ", "allowed_in_auto_mode": true, "requires_confirmation": false },
+    "tags": ["read", "fabric", "running-config", "tier2"],
+    "capabilities": {
+      "actions": ["show"],
+      "objects": ["config", "cli"],
+      "scopes": [["system"]]
+    }
+  },
+
+  {
+    "name": "inventory_get_device_inventory_export",
+    "description": "This API will export the device inventory information as a binary Excel file",
+    "category": "inventory",
+    "method": "GET",
     "endpoint": {
-      "path": "/v1/fabric/runningConfig"
+      "host": "{XCO_HOST}",
+      "path": "/v1/inventory/switches/inventory-info-export"
     },
     "auth": "none",
+    "input_schema": {
+      "type": "object",
+      "properties": { "device_id": { "type": "integer" } },
+      "required": ["device_id"]
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": false,
+      "requires_confirmation": true
+    },
+    "tags": ["read", "export", "binary", "tier2"],
+    "capabilities": {
+      "actions": ["export"],
+      "objects": ["inventory"],
+      "scopes": [["device"]]
+    }
+  },
+
+
+  {
+    "name": "auth_validate_token",
+    "description": "Validate if the current authentication token is valid",
+    "category": "auth",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/auth/token/validate"
+    },
+    "auth": "bearer",
     "input_schema": {
       "type": "object",
       "properties": {},
@@ -426,16 +330,496 @@
       "allowed_in_auto_mode": true,
       "requires_confirmation": false
     },
-    "tags": [
-      "read",
-      "fabric",
-      "running-config",
-      "troubleshooting",
-      "tier2"
-    ],
+    "tags": ["read", "auth", "tier0"],
+    "capabilities": {
+      "actions": ["validate"],
+      "objects": ["token"],
+      "scopes": [["system"]]
+    }
+  },
+
+  {
+    "name": "auth_get_token_expiry",
+    "description": "Get token expiry time for a given token type",
+    "category": "auth",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/auth/token/expiry"
+    },
+    "auth": "bearer",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Type of the token (e.g. ACCESS)"
+        }
+      },
+      "required": ["type"]
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": ["read", "auth", "tier1"],
     "capabilities": {
       "actions": ["show"],
-      "objects": ["config", "cli"],
+      "objects": ["token"],
+      "scopes": [["system"]]
+    }
+  },
+  
+
+  {
+    "name": "auth_get_all_token_expiry",
+    "description": "Get expiry times for all tokens",
+    "category": "auth",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/auth/token/expiry/all"
+    },
+    "auth": "bearer",
+    "input_schema": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": ["read", "auth", "tier1"],
+    "capabilities": {
+      "actions": ["list"],
+      "objects": ["token"],
+      "scopes": [["system"]]
+    }
+  },
+
+  {
+    "name": "auth_get_clients",
+    "description": "Fetch all registered API clients",
+    "category": "auth",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/auth/clientlist"
+    },
+    "auth": "bearer",
+    "input_schema": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": ["read", "auth", "tier1"],
+    "capabilities": {
+      "actions": ["list"],
+      "objects": ["client"],
+      "scopes": [["system"]]
+    }
+  },
+
+  {
+    "name": "auth_get_client_by_name",
+    "description": "Fetch API client details by name",
+    "category": "auth",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/auth/client"
+    },
+    "auth": "bearer",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" }
+      },
+      "required": ["name"]
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": ["read", "auth", "tier1"],
+    "capabilities": {
+      "actions": ["show"],
+      "objects": ["client"],
+      "scopes": [["system"]]
+    }
+  },
+
+  {
+    "name": "auth_get_execution",
+    "description": "Get detailed execution output by execution ID",
+    "category": "auth",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/auth/execution"
+    },
+    "auth": "bearer",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Execution ID"
+        }
+      },
+      "required": ["id"]
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": ["read", "auth", "execution", "tier1"],
+    "capabilities": {
+      "actions": ["show"],
+      "objects": ["execution", "log"],
+      "scopes": [["system"]]
+    }
+  },
+  
+
+  {
+    "name": "auth_get_executions",
+    "description": "Get the list of all previous executions, optionally filtered by status",
+    "category": "auth",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/auth/executions"
+    },
+    "auth": "bearer",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "limit": {
+          "type": "integer",
+          "description": "Limit the number of executions returned",
+          "default": 10
+        },
+        "status": {
+          "type": "string",
+          "description": "Filter executions by status (failed | succeeded | all)",
+          "default": "all"
+        }
+      },
+      "required": ["limit"]
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": ["read", "auth", "execution", "tier2"],
+    "capabilities": {
+      "actions": ["list"],
+      "objects": ["execution"],
+      "scopes": [["system"]]
+    }
+  },
+
+
+
+
+  {
+    "name": "system_get_feature_settings",
+    "description": "Get system feature settings list",
+    "category": "system",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/system/feature"
+    },
+    "auth": "bearer",
+    "input_schema": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": ["read", "system", "feature", "tier1"],
+    "capabilities": {
+      "actions": ["show"],
+      "objects": ["feature"],
+      "scopes": [["system"]]
+    }
+  },
+
+  {
+    "name": "system_get_settings",
+    "description": "Get system configuration settings",
+    "category": "system",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/system/settings"
+    },
+    "auth": "bearer",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "decrypt": {
+          "type": "boolean",
+          "description": "Decrypt sensitive values",
+          "default": false
+        }
+      },
+      "required": []
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": ["read", "system", "settings", "tier1"],
+    "capabilities": {
+      "actions": ["show"],
+      "objects": ["settings"],
+      "scopes": [["system"]]
+    }
+  },
+
+
+  {
+    "name": "system_get_running_config",
+    "description": "Get running configuration CLI commands",
+    "category": "system",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/system/runningConfig"
+    },
+    "auth": "bearer",
+    "input_schema": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": ["read", "system", "config", "tier2"],
+    "capabilities": {
+      "actions": ["show"],
+      "objects": ["config"],
+      "scopes": [["system"]]
+    }
+  },
+
+  {
+    "name": "system_get_health_status",
+    "description": "Get overall system health and node status",
+    "category": "system",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/system/proxy/status"
+    },
+    "auth": "bearer",
+    "input_schema": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": ["read", "system", "health", "tier1"],
+    "capabilities": {
+      "actions": ["show"],
+      "objects": ["health"],
+      "scopes": [["system"]]
+    }
+  },
+
+  {
+    "name": "system_get_supportsave_list",
+    "description": "Get list of available SupportSave files",
+    "category": "system",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/system/proxy/supportsave"
+    },
+    "auth": "bearer",
+    "input_schema": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": ["read", "system", "supportsave", "tier1"],
+    "capabilities": {
+      "actions": ["list"],
+      "objects": ["supportsave"],
+      "scopes": [["system"]]
+    }
+  },
+
+  {
+    "name": "system_get_supportsave_status",
+    "description": "Get the execution status of a SupportSave request using its request ID",
+    "category": "system",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/system/proxy/supportsavestatus"
+    },
+    "auth": "bearer",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Request ID returned when a SupportSave operation is initiated"
+        }
+      },
+      "required": ["id"]
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": false,
+      "requires_confirmation": false,
+      "notes": "Requires a request ID generated by the SupportSave creation API. Cannot be used with filenames returned by supportsave list."
+    },
+    "usage": {
+      "requires_prior_action": "system_create_supportsave",
+      "notes": "The request ID is only available from the SupportSave creation response. Completed supportsave files do not expose execution IDs."
+    },
+    "tags": ["read", "system", "supportsave", "execution", "tier3"],
+    "capabilities": {
+      "actions": ["show"],
+      "objects": ["supportsave", "execution"],
+      "scopes": [["system"]]
+    }
+  },
+
+  {
+    "name": "system_get_executions",
+    "description": "Get the list of all the requests previously executed",
+    "category": "system",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/system/executions"
+    },
+    "auth": "bearer",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "limit": {
+          "type": "integer",
+          "description": "Limit the number of executions returned",
+          "default": 10
+        },
+        "status": {
+          "type": "string",
+          "description": "Filter executions by status (failed | succeeded | all)",
+          "default": "all"
+        }
+      },
+      "required": ["limit"]
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": ["read", "system", "execution", "tier2"],
+    "capabilities": {
+      "actions": ["list"],
+      "objects": ["execution"],
+      "scopes": [["system"]]
+    }
+  },
+
+  {
+    "name": "system_get_execution",
+    "description": "Get the detailed output of a request previously executed, based on a given request ID",
+    "category": "system",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/system/execution"
+    },
+    "auth": "bearer",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Execution ID"
+        }
+      },
+      "required": ["id"]
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": ["read", "system", "execution", "tier2"],
+    "capabilities": {
+      "actions": ["show"],
+      "objects": ["execution"],
+      "scopes": [["system"]]
+    }
+  },
+
+  {
+    "name": "system_get_last_execution_diagnostic",
+    "description": "Show the most recent failed system execution and why it failed",
+    "category": "system",
+    "method": "COMPOSITE",
+    "auth": "bearer",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "limit": {
+          "type": "integer",
+          "default": 10
+        },
+        "status": {
+          "type": "string",
+          "default": "failed"
+        }
+      },
+      "required": []
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": false,
+      "requires_confirmation": false
+    },
+    "tags": ["read", "system", "diagnostic", "tier2"],
+    "capabilities": {
+      "actions": ["diagnose"],
+      "objects": ["system", "execution"],
       "scopes": [["system"]]
     }
   }
@@ -443,10 +827,50 @@
   
   
   
+
+
+  
+  
+  
+
   
   
   
   
+  
+  
+  
+  
+  
+
+  
+
+
+  
+  
+  
+
+
+  
+  
+  
+  
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
 
 
 ]
