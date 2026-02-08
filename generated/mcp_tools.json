@@ -9254,7 +9254,52 @@
     },
     "required": []
   }
+},
+
+{
+  "name": "fabric_get_fabric_health_timeline",
+  "description": "Tier-2: fabric health timeline (per-fabric). Builds a chronological view by combining current fabric health, event history, and execution history. Correlation between eventhistories.execution_uuid and executions is BEST-EFFORT (IDs may not match); when exact join is not possible, the tool falls back to heuristics (time proximity + command/fabric-name hints). Returns an actionable grouped timeline with next steps.",
+  "category": "fabric",
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier2", "fabric", "health", "timeline", "events", "executions"],
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "name": { "type": "string", "description": "Fabric name. Required." },
+
+      "device_ip": { "type": "string", "description": "Optional device IP filter for event history (if supported by backend; backend may return empty payload)." },
+
+      "include_global": { "type": "boolean", "default": true, "description": "Include global fabrics list (fabrics-health) and validate the fabric name exists." },
+      "include_service_health": { "type": "boolean", "default": true, "description": "Include fabric service health (fabric_get_health / service health)." },
+      "include_health_headline": { "type": "boolean", "default": true, "description": "Include current fabric health headline (fabric-health), with fallback to global list." },
+
+      "include_executions": { "type": "boolean", "default": true, "description": "Include execution list. Note: executions endpoint may not support name filtering; tool fetches system-wide executions and filters locally when possible." },
+      "include_exec_details": { "type": "boolean", "default": false, "description": "Optionally fetch execution detail per execution id/uuid (best-effort, only if endpoint exists). Limited by max_exec_details." },
+
+      "since": { "type": "string", "description": "Optional ISO timestamp (UTC). Locally filter events/executions with time >= since." },
+      "until": { "type": "string", "description": "Optional ISO timestamp (UTC). Locally filter events/executions with time <= until." },
+      "window_hours": { "type": "integer", "default": 168, "minimum": 1, "maximum": 8760, "description": "Convenience time window (hours). Used only if since/until are not provided (now - window_hours .. now)." },
+
+      "limit_events": { "type": "integer", "default": 200, "minimum": 1, "maximum": 5000, "description": "Backend limit for event history fetch (global fetch, then local filter to this fabric)." },
+      "max_events": { "type": "integer", "default": 200, "minimum": 1, "maximum": 5000, "description": "Maximum number of filtered events returned for this fabric after local filtering/sorting." },
+      "max_timeline_items": { "type": "integer", "default": 50, "minimum": 1, "maximum": 5000, "description": "Maximum number of grouped execution timeline entries returned." },
+
+      "exec_limit": { "type": "integer", "default": 100, "minimum": 1, "maximum": 5000, "description": "Backend limit for execution list fetch." },
+      "exec_status": { "type": "string", "default": "all", "description": "Execution status selector. Use 'all' for broad history (matches your working call)." },
+      "max_exec_details": { "type": "integer", "default": 10, "minimum": 1, "maximum": 200, "description": "Maximum execution detail records to fetch when include_exec_details=true." },
+
+      "include_raw": { "type": "boolean", "default": false, "description": "Include raw Tier-1 payloads as events_raw / executions_raw / health_raw when available." }
+    },
+    "required": ["name"]
+  }
 }
+
+
+
 
 
 

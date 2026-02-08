@@ -21991,3 +21991,61 @@ INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
 2026-02-08 17:56:20,457 | INFO  | mcp.invoke | tier2 handler invoked tool=fabric_get_fabric_health_summary request_id=req-53672f08
 2026-02-08 17:56:20,563 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=106 url=https://10.13.85.20:443/v1/fabric/fabrics-health
 2026-02-08 17:56:20,594 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=29 url=https://10.13.85.20:443/v1/fabric/health
+2026-02-08 18:12:48,185 | INFO  | mcp.invoke | invoke start tool=fabric_get_event_history_list request_id=req-bb80aada correlation_id=corr-624b497a context=None
+2026-02-08 18:12:48,185 | INFO  | mcp.invoke | policy decision tool=fabric_get_event_history_list risk=SAFE_READ mode=manual allowed=True
+2026-02-08 18:12:48,237 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=51 url=https://10.13.85.20:443/v1/fabric/eventhistories
+2026-02-08 18:12:48,238 | INFO  | mcp.invoke | invoke success tool=fabric_get_event_history_list status=200 url=https://10.13.85.20:443/v1/fabric/eventhistories correlation_id=corr-624b497a
+2026-02-08 18:12:51,767 | INFO  | mcp.invoke | invoke start tool=fabric_get_event_history_list request_id=req-46e5de69 correlation_id=corr-7c49fbb4 context=None
+2026-02-08 18:12:51,768 | INFO  | mcp.invoke | policy decision tool=fabric_get_event_history_list risk=SAFE_READ mode=manual allowed=True
+2026-02-08 18:12:51,809 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=40 url=https://10.13.85.20:443/v1/fabric/eventhistories
+2026-02-08 18:12:51,810 | INFO  | mcp.invoke | invoke success tool=fabric_get_event_history_list status=200 url=https://10.13.85.20:443/v1/fabric/eventhistories correlation_id=corr-7c49fbb4
+2026-02-08 18:12:58,291 | INFO  | mcp.invoke | invoke start tool=fabric_get_execution_list request_id=req-fade8535 correlation_id=corr-7a81e548 context=None
+2026-02-08 18:12:58,292 | INFO  | mcp.invoke | policy decision tool=fabric_get_execution_list risk=SAFE_READ mode=manual allowed=True
+2026-02-08 18:12:58,327 | INFO  | mcp.transport | XCO request done method=GET status=404 duration_ms=34 url=https://10.13.85.20:443/v1/fabric/executions
+2026-02-08 18:12:58,328 | INFO  | mcp.invoke | invoke success tool=fabric_get_execution_list status=404 url=https://10.13.85.20:443/v1/fabric/executions correlation_id=corr-7a81e548
+2026-02-08 18:24:36,136 | INFO  | mcp.invoke | invoke start tool=fabric_get_event_history_list request_id=req-8714b3d8 correlation_id=corr-bfd1f8cd context=None
+2026-02-08 18:24:36,137 | INFO  | mcp.invoke | policy decision tool=fabric_get_event_history_list risk=SAFE_READ mode=manual allowed=True
+2026-02-08 18:24:36,189 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=51 url=https://10.13.85.20:443/v1/fabric/eventhistories
+2026-02-08 18:24:36,189 | INFO  | mcp.invoke | invoke success tool=fabric_get_event_history_list status=200 url=https://10.13.85.20:443/v1/fabric/eventhistories correlation_id=corr-bfd1f8cd
+2026-02-08 18:24:44,087 | INFO  | mcp.invoke | invoke start tool=fabric_get_event_history_list request_id=req-7f1c0426 correlation_id=corr-3fd54a3f context=None
+2026-02-08 18:24:44,088 | INFO  | mcp.invoke | policy decision tool=fabric_get_event_history_list risk=SAFE_READ mode=manual allowed=True
+2026-02-08 18:24:44,133 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=45 url=https://10.13.85.20:443/v1/fabric/eventhistories
+2026-02-08 18:24:44,134 | INFO  | mcp.invoke | invoke success tool=fabric_get_event_history_list status=200 url=https://10.13.85.20:443/v1/fabric/eventhistories correlation_id=corr-3fd54a3f
+2026-02-08 18:24:56,885 | INFO  | mcp.invoke | invoke start tool=fabric_get_execution_list request_id=req-65eb5a57 correlation_id=corr-28b7282a context=None
+2026-02-08 18:24:56,885 | INFO  | mcp.invoke | policy decision tool=fabric_get_execution_list risk=SAFE_READ mode=manual allowed=True
+2026-02-08 18:24:58,098 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=1213 url=https://10.13.85.20:443/v1/fabric/executions
+2026-02-08 18:24:58,099 | INFO  | mcp.invoke | invoke success tool=fabric_get_execution_list status=200 url=https://10.13.85.20:443/v1/fabric/executions correlation_id=corr-28b7282a
+2026-02-08 18:25:06,052 | INFO  | mcp.invoke | invoke start tool=fabric_get_execution request_id=req-a1463918 correlation_id=corr-0bc9e0d7 context=None
+2026-02-08 18:25:06,052 | ERROR | mcp.invoke | invoke failed tool=fabric_get_execution request_id=req-a1463918 correlation_id=corr-0bc9e0d7 error=fabric_get_execution
+Traceback (most recent call last):
+  File "/home/user01/xco-mcp-server/mcp_runtime/server.py", line 120, in invoke
+    raise ToolNotFound(tool_name)
+mcp_runtime.errors.ToolNotFound: fabric_get_execution
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [93484]
+2026-02-08 19:18:06,118 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-08 19:18:06,118 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=224
+INFO:     Started server process [93781]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [93781]
+2026-02-08 19:25:14,063 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-08 19:25:14,064 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=224
+INFO:     Started server process [93811]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-02-08 19:25:29,352 | INFO  | mcp.invoke | invoke start tool=fabric_get_fabric_health_timeline request_id=req-048958a1 correlation_id=corr-c82fcc3b context=None
+2026-02-08 19:25:29,352 | INFO  | mcp.invoke | policy decision tool=fabric_get_fabric_health_timeline risk=SAFE_READ mode=manual allowed=True
+2026-02-08 19:25:29,353 | INFO  | mcp.invoke | tier2 handler invoked tool=fabric_get_fabric_health_timeline request_id=req-048958a1
+2026-02-08 19:25:29,624 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=271 url=https://10.13.85.20:443/v1/fabric/fabrics-health
+2026-02-08 19:25:29,668 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=43 url=https://10.13.85.20:443/v1/fabric/health
+2026-02-08 19:25:29,807 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=137 url=https://10.13.85.20:443/v1/fabric/fabric-health
+2026-02-08 19:25:29,841 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=33 url=https://10.13.85.20:443/v1/fabric/eventhistories
+2026-02-08 19:25:32,562 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=2720 url=https://10.13.85.20:443/v1/fabric/executions
