@@ -16588,3 +16588,61 @@ INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
 2026-02-07 22:04:09,360 | INFO  | mcp.invoke | policy decision tool=tenant_get_bgp_peers risk=SAFE_READ mode=manual allowed=True
 2026-02-07 22:04:09,528 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=167 url=https://10.13.85.20:443/v1/tenant/bgp/service/peers
 2026-02-07 22:04:09,529 | INFO  | mcp.invoke | invoke success tool=tenant_get_bgp_peers status=200 url=https://10.13.85.20:443/v1/tenant/bgp/service/peers correlation_id=corr-52fac7d0
+2026-02-08 02:29:07,203 | INFO  | mcp.invoke | invoke start tool=tenant_get_mirror_sessions request_id=req-18edbc85 correlation_id=corr-39331bf0 context=None
+2026-02-08 02:29:07,203 | INFO  | mcp.invoke | policy decision tool=tenant_get_mirror_sessions risk=SAFE_READ mode=manual allowed=True
+2026-02-08 02:29:07,397 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=193 url=https://10.13.85.20:443/v1/tenant/mirror/service/sessions
+2026-02-08 02:29:07,398 | INFO  | mcp.invoke | invoke success tool=tenant_get_mirror_sessions status=200 url=https://10.13.85.20:443/v1/tenant/mirror/service/sessions correlation_id=corr-39331bf0
+2026-02-08 02:30:19,101 | INFO  | mcp.invoke | invoke start tool=tenant_get_tenants request_id=req-8ce4c91b correlation_id=corr-64595c79 context=None
+2026-02-08 02:30:19,101 | INFO  | mcp.invoke | policy decision tool=tenant_get_tenants risk=SAFE_READ mode=manual allowed=True
+2026-02-08 02:30:19,251 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=149 url=https://10.13.85.20:443/v1/tenant/tenants
+2026-02-08 02:30:19,252 | INFO  | mcp.invoke | invoke success tool=tenant_get_tenants status=200 url=https://10.13.85.20:443/v1/tenant/tenants correlation_id=corr-64595c79
+2026-02-08 02:30:55,276 | INFO  | mcp.invoke | invoke start tool=tenant_get_mirror_sessions request_id=req-e9899e5b correlation_id=corr-6591650d context=None
+2026-02-08 02:30:55,276 | INFO  | mcp.invoke | policy decision tool=tenant_get_mirror_sessions risk=SAFE_READ mode=manual allowed=True
+2026-02-08 02:30:55,348 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=72 url=https://10.13.85.20:443/v1/tenant/mirror/service/sessions
+2026-02-08 02:30:55,349 | INFO  | mcp.invoke | invoke success tool=tenant_get_mirror_sessions status=200 url=https://10.13.85.20:443/v1/tenant/mirror/service/sessions correlation_id=corr-6591650d
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [88748]
+2026-02-08 02:37:45,955 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-08 02:37:45,955 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=64
+INFO:     Started server process [89392]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-02-08 02:37:53,699 | INFO  | mcp.invoke | invoke start tool=rbac_validate_authorization request_id=req-5b61c8a8 correlation_id=corr-97a7430d context=None
+2026-02-08 02:37:53,699 | INFO  | mcp.invoke | policy decision tool=rbac_validate_authorization risk=SAFE_READ mode=manual allowed=True
+2026-02-08 02:37:53,863 | INFO  | mcp.transport | XCO request done method=GET status=403 duration_ms=163 url=https://10.13.85.20:443/v1/rbac/isauthorized
+2026-02-08 02:37:53,864 | INFO  | mcp.invoke | invoke success tool=rbac_validate_authorization status=403 url=https://10.13.85.20:443/v1/rbac/isauthorized correlation_id=corr-97a7430d
+2026-02-08 02:41:49,757 | INFO  | mcp.invoke | invoke start tool=rbac_get_roles request_id=req-5961a754 correlation_id=corr-ac46cbe2 context=None
+2026-02-08 02:41:49,757 | INFO  | mcp.invoke | policy decision tool=rbac_get_roles risk=SAFE_READ mode=manual allowed=True
+2026-02-08 02:41:49,814 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=56 url=https://10.13.85.20:443/v1/rbac/roles
+2026-02-08 02:41:49,815 | INFO  | mcp.invoke | invoke success tool=rbac_get_roles status=200 url=https://10.13.85.20:443/v1/rbac/roles correlation_id=corr-ac46cbe2
+2026-02-08 02:42:45,326 | INFO  | mcp.invoke | invoke start tool=rbac_validate_authorization request_id=req-8ed09d72 correlation_id=corr-21bf12c9 context=None
+2026-02-08 02:42:45,327 | INFO  | mcp.invoke | policy decision tool=rbac_validate_authorization risk=SAFE_READ mode=manual allowed=True
+2026-02-08 02:42:45,389 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=62 url=https://10.13.85.20:443/v1/rbac/isauthorized
+2026-02-08 02:42:45,390 | INFO  | mcp.invoke | invoke success tool=rbac_validate_authorization status=200 url=https://10.13.85.20:443/v1/rbac/isauthorized correlation_id=corr-21bf12c9
+2026-02-08 02:43:17,406 | INFO  | mcp.invoke | invoke start tool=rbac_validate_tenant_authorization request_id=req-a2b4c639 correlation_id=corr-28bf305d context=None
+2026-02-08 02:43:17,406 | INFO  | mcp.invoke | policy decision tool=rbac_validate_tenant_authorization risk=SAFE_READ mode=manual allowed=True
+2026-02-08 02:43:17,455 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=48 url=https://10.13.85.20:443/v1/rbac/tenant/isauthorized
+2026-02-08 02:43:17,455 | INFO  | mcp.invoke | invoke success tool=rbac_validate_tenant_authorization status=200 url=https://10.13.85.20:443/v1/rbac/tenant/isauthorized correlation_id=corr-28bf305d
+2026-02-08 02:43:44,312 | INFO  | mcp.invoke | invoke start tool=rbac_get_authorized_tenants request_id=req-478f3a91 correlation_id=corr-89067121 context=None
+2026-02-08 02:43:44,313 | INFO  | mcp.invoke | policy decision tool=rbac_get_authorized_tenants risk=SAFE_READ mode=manual allowed=True
+2026-02-08 02:43:44,372 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=59 url=https://10.13.85.20:443/v1/rbac/tenant/authorized-tenants
+2026-02-08 02:43:44,373 | INFO  | mcp.invoke | invoke success tool=rbac_get_authorized_tenants status=200 url=https://10.13.85.20:443/v1/rbac/tenant/authorized-tenants correlation_id=corr-89067121
+2026-02-08 02:44:03,877 | INFO  | mcp.invoke | invoke start tool=rbac_get_role request_id=req-a37974d1 correlation_id=corr-2ef640b8 context=None
+2026-02-08 02:44:03,878 | INFO  | mcp.invoke | policy decision tool=rbac_get_role risk=SAFE_READ mode=manual allowed=True
+2026-02-08 02:44:03,925 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=47 url=https://10.13.85.20:443/v1/rbac/role
+2026-02-08 02:44:03,926 | INFO  | mcp.invoke | invoke success tool=rbac_get_role status=200 url=https://10.13.85.20:443/v1/rbac/role correlation_id=corr-2ef640b8
+2026-02-08 02:44:22,919 | INFO  | mcp.invoke | invoke start tool=rbac_get_roles request_id=req-f7f61a2d correlation_id=corr-a172ab8c context=None
+2026-02-08 02:44:22,919 | INFO  | mcp.invoke | policy decision tool=rbac_get_roles risk=SAFE_READ mode=manual allowed=True
+2026-02-08 02:44:22,962 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=43 url=https://10.13.85.20:443/v1/rbac/roles
+2026-02-08 02:44:22,963 | INFO  | mcp.invoke | invoke success tool=rbac_get_roles status=200 url=https://10.13.85.20:443/v1/rbac/roles correlation_id=corr-a172ab8c
+2026-02-08 02:44:40,554 | INFO  | mcp.invoke | invoke start tool=rbac_get_executions request_id=req-6879ddb6 correlation_id=corr-b9a985a7 context=None
+2026-02-08 02:44:40,555 | INFO  | mcp.invoke | policy decision tool=rbac_get_executions risk=SAFE_READ mode=manual allowed=True
+2026-02-08 02:44:40,601 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=46 url=https://10.13.85.20:443/v1/rbac/executions
+2026-02-08 02:44:40,602 | INFO  | mcp.invoke | invoke success tool=rbac_get_executions status=200 url=https://10.13.85.20:443/v1/rbac/executions correlation_id=corr-b9a985a7
+2026-02-08 02:44:58,134 | INFO  | mcp.invoke | invoke start tool=rbac_get_execution_detail request_id=req-d053f93f correlation_id=corr-c203fa75 context=None
+2026-02-08 02:44:58,135 | INFO  | mcp.invoke | policy decision tool=rbac_get_execution_detail risk=SAFE_READ mode=manual allowed=True
+2026-02-08 02:44:58,541 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=406 url=https://10.13.85.20:443/v1/rbac/execution
+2026-02-08 02:44:58,542 | INFO  | mcp.invoke | invoke success tool=rbac_get_execution_detail status=200 url=https://10.13.85.20:443/v1/rbac/execution correlation_id=corr-c203fa75

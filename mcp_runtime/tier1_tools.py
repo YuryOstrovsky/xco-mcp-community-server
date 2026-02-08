@@ -87,6 +87,16 @@ TIER1_TOOL_NAMES = {
    "tenant_get_mirror_sessions",
 
 
+   "rbac_validate_authorization",
+   "rbac_validate_tenant_authorization",
+   "rbac_get_authorized_tenants",
+   "rbac_get_role",
+   "rbac_get_roles",
+   "rbac_get_executions",
+   "rbac_get_execution_detail",
+   "rbac_get_user_permissions",
+
+
 
 
 

@@ -1799,77 +1799,269 @@
     "objects": ["mirror-session"],
     "scopes": [["tenant"]]
   }
+},
+
+
+
+{
+  "name": "rbac_validate_authorization",
+  "description": "Validate authorization for one or more roles against a method and path",
+  "category": "rbac",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/rbac/isauthorized"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "roles": {
+        "type": "array",
+        "items": { "type": "string" },
+        "minItems": 1
+      },
+      "method": { "type": "string" },
+      "path": { "type": "string" }
+    },
+    "required": ["roles", "method", "path"]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier1"],
+  "capabilities": {
+    "actions": ["validate"],
+    "objects": ["authorization"],
+    "scopes": [["system"]]
+  }
+},
+
+{
+  "name": "rbac_validate_tenant_authorization",
+  "description": "Validate tenant authorization for one or more roles",
+  "category": "rbac",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/rbac/tenant/isauthorized"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "roles": {
+        "type": "array",
+        "items": { "type": "string" },
+        "minItems": 1
+      },
+      "tenant-name": { "type": "string" },
+      "method": { "type": "string" },
+      "path": { "type": "string" }
+    },
+    "required": ["roles", "method", "path"]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier1"],
+  "capabilities": {
+    "actions": ["validate"],
+    "objects": ["tenant-authorization"],
+    "scopes": [["tenant"]]
+  }
+},
+
+{
+  "name": "rbac_get_authorized_tenants",
+  "description": "Get list of tenants authorized for a dynamic role",
+  "category": "rbac",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/rbac/tenant/authorized-tenants"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "roles": {
+        "type": "array",
+        "items": { "type": "string" },
+        "minItems": 1
+      }
+    },
+    "required": ["roles"]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier1"],
+  "capabilities": {
+    "actions": ["list"],
+    "objects": ["tenants"],
+    "scopes": [["rbac"]]
+  }
+},
+
+{
+  "name": "rbac_get_role",
+  "description": "Get specific role defined in EFA",
+  "category": "rbac",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/rbac/role"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "role_name": { "type": "string" }
+    },
+    "required": ["role_name"]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier1"],
+  "capabilities": {
+    "actions": ["show"],
+    "objects": ["role"],
+    "scopes": [["rbac"]]
+  }
+},
+
+{
+  "name": "rbac_get_roles",
+  "description": "Get all roles defined in EFA",
+  "category": "rbac",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/rbac/roles"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "include_internal": { "type": "boolean" }
+    },
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier1"],
+  "capabilities": {
+    "actions": ["list"],
+    "objects": ["roles"],
+    "scopes": [["rbac"]]
+  }
+},
+
+{
+  "name": "rbac_get_executions",
+  "description": "Get list of previous RBAC executions",
+  "category": "rbac",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/rbac/executions"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "limit": { "type": "integer", "default": 10 },
+      "status": {
+        "type": "string",
+        "enum": ["failed", "succeeded", "all"],
+        "default": "all"
+      }
+    },
+    "required": ["limit"]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier1"],
+  "capabilities": {
+    "actions": ["list"],
+    "objects": ["executions"],
+    "scopes": [["system"]]
+  }
+},
+
+{
+  "name": "rbac_get_execution_detail",
+  "description": "Get detailed output of a specific RBAC execution",
+  "category": "rbac",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/rbac/execution"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "id": { "type": "string" }
+    },
+    "required": ["id"]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier1"],
+  "capabilities": {
+    "actions": ["show"],
+    "objects": ["execution"],
+    "scopes": [["system"]]
+  }
+},
+
+{
+  "name": "rbac_get_user_permissions",
+  "description": "Get user view permissions",
+  "category": "rbac",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/rbac/permissions"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier1"],
+  "capabilities": {
+    "actions": ["show"],
+    "objects": ["permissions"],
+    "scopes": [["user"]]
+  }
 }
-
-
-
-
-
-
-
-
-
-
-
-    
-    
-    
-    
-    
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
-
-  
-  
-  
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
-  
-
-
-  
-  
-  
-
-
-  
-  
-  
-  
-
-
-  
-
-
-  
-
-
-
-
-
-
-
-
-
 
 
 
