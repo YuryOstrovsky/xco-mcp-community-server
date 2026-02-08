@@ -104,6 +104,147 @@
   },
 
   {
+    "name": "fabric_get_fabric",
+    "description": "getFabric",
+    "category": "fabric",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/fabric/fabric"
+    },
+    "auth": "none",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "detail": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": [
+      "read",
+      "tier1"
+    ],
+    "capabilities": {
+      "actions": [
+        "show"
+      ],
+      "objects": [
+        "fabric"
+      ],
+      "scopes": [
+        [
+          "system"
+        ]
+      ]
+    }
+  },
+
+
+  {
+    "name": "fabric_validate_fabric",
+    "description": "validateFabric",
+    "category": "fabric",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/fabric/validate"
+    },
+    "auth": "none",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "fabric-name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "fabric-name"
+      ]
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": [
+      "read",
+      "tier1"
+    ],
+    "capabilities": {
+      "actions": [
+        "show"
+      ],
+      "objects": [
+        "fabric"
+      ],
+      "scopes": [
+        [
+          "system"
+        ]
+      ]
+    }
+  },
+
+  {
+    "name": "fabric_get_fabric_setting",
+    "description": "getFabricSetting",
+    "category": "fabric",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/fabric/setting"
+    },
+    "auth": "none",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": [
+      "read",
+      "tier1"
+    ],
+    "capabilities": {
+      "actions": [
+        "show"
+      ],
+      "objects": [
+        "fabric"
+      ],
+      "scopes": [
+        [
+          "system"
+        ]
+      ]
+    }
+  },
+
+
+
+  {
     "name": "fabric_get_fabrics_health",
     "description": "Get health status of all fabrics",
     "category": "fabric",
@@ -121,6 +262,92 @@
   },
 
   {
+    "name": "fabric_get_fabric_health",
+    "description": "getFabricHealth",
+    "category": "fabric",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/fabric/fabric-health"
+    },
+    "auth": "none",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": [
+      "read",
+      "tier1"
+    ],
+    "capabilities": {
+      "actions": [
+        "show"
+      ],
+      "objects": [
+        "fabric"
+      ],
+      "scopes": [
+        [
+          "system"
+        ]
+      ]
+    }
+  },
+
+  {
+    "name": "fabric_get_health",
+    "description": "getHealth",
+    "category": "fabric",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/fabric/health"
+    },
+    "auth": "none",
+    "input_schema": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": [
+      "read",
+      "tier1"
+    ],
+    "capabilities": {
+      "actions": [
+        "show"
+      ],
+      "objects": [
+        "fabric"
+      ],
+      "scopes": [
+        [
+          "system"
+        ]
+      ]
+    }
+  },
+
+
+
+  {
     "name": "fabric_get_fabrics_errors",
     "description": "Get all fabrics errors configured in the application",
     "category": "fabric",
@@ -136,6 +363,52 @@
       "scopes": [["system"]]
     }
   },
+
+  {
+    "name": "fabric_get_fabric_errors",
+    "description": "FabricErrors",
+    "category": "fabric",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/fabric/errors"
+    },
+    "auth": "none",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "fabric-name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "fabric-name"
+      ]
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": [
+      "read",
+      "tier1"
+    ],
+    "capabilities": {
+      "actions": [
+        "show"
+      ],
+      "objects": [
+        "fabric"
+      ],
+      "scopes": [
+        [
+          "system"
+        ]
+      ]
+    }
+  },
+
 
   {
     "name": "fabric_get_devices",
@@ -280,6 +553,198 @@
       "scopes": [["system"]]
     }
   },
+
+  {
+    "name": "fabric_get_execution_list",
+    "description": "Get the list of all previous fabric executions",
+    "category": "fabric",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/fabric/executions"
+    },
+    "auth": "none",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "limit": {
+          "type": "integer",
+          "description": "Limit the number of executions returned",
+          "default": 10
+        },
+        "status": {
+          "type": "string",
+          "description": "Filter executions by status (failed | succeeded | all)",
+          "default": "all"
+        }
+      },
+      "required": ["limit"]
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": ["read", "tier1"],
+    "capabilities": {
+      "actions": ["list"],
+      "objects": ["fabric-executions"],
+      "scopes": [["fabric"]]
+    }
+  },
+  
+
+  {
+    "name": "fabric_get_execution_get",
+    "description": "getExecutionDetail",
+    "category": "fabric",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/fabric/execution"
+    },
+    "auth": "none",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": [
+      "read",
+      "tier1"
+    ],
+    "capabilities": {
+      "actions": [
+        "show"
+      ],
+      "objects": [
+        "fabric"
+      ],
+      "scopes": [
+        [
+          "system"
+        ]
+      ]
+    }
+  },
+
+  {
+    "name": "fabric_get_event_history_list",
+    "description": "getEventHistoryList",
+    "category": "fabric",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/fabric/eventhistories"
+    },
+    "auth": "none",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "execution_uuid": {
+          "type": "string"
+        },
+        "device_ip": {
+          "type": "string"
+        }
+      },
+      "required": []
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": [
+      "read",
+      "tier1"
+    ],
+    "capabilities": {
+      "actions": [
+        "show"
+      ],
+      "objects": [
+        "fabric"
+      ],
+      "scopes": [
+        [
+          "system"
+        ]
+      ]
+    }
+  },
+
+  {
+    "name": "fabric_get_config_show",
+    "description": "getConfigShow",
+    "category": "fabric",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/fabric/config"
+    },
+    "auth": "none",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "fabricName": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "spine",
+            "leaf",
+            "border-leaf",
+            "all"
+          ]
+        },
+        "ip": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "fabricName",
+        "role",
+        "ip"
+      ]
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": [
+      "read",
+      "tier1"
+    ],
+    "capabilities": {
+      "actions": [
+        "show"
+      ],
+      "objects": [
+        "fabric"
+      ],
+      "scopes": [
+        [
+          "system"
+        ]
+      ]
+    }
+  },
+
+
 
   {
     "name": "inventory_get_device_inventory_export",
@@ -530,6 +995,520 @@
       "scopes": [["system"]]
     }
   },
+
+  {
+    "name": "auth_get_api_key",
+    "description": "Get key for XCO client",
+    "category": "auth",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/auth/token/apikey"
+    },
+    "auth": "none",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "clientId": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "clientId"
+      ]
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": false,
+      "requires_confirmation": true
+    },
+    "tags": [
+      "read",
+      "tier1",
+      "sensitive"
+    ],
+    "capabilities": {
+      "actions": [
+        "show"
+      ],
+      "objects": [
+        "auth"
+      ],
+      "scopes": [
+        [
+          "system"
+        ]
+      ]
+    }
+  },
+
+  {
+    "name": "auth_get_ldap_details",
+    "description": "Fetch registered LDAP server details",
+    "category": "auth",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/auth/authenticator/ldap"
+    },
+    "auth": "none",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": [
+      "read",
+      "tier1"
+    ],
+    "capabilities": {
+      "actions": [
+        "show"
+      ],
+      "objects": [
+        "auth"
+      ],
+      "scopes": [
+        [
+          "system"
+        ]
+      ]
+    }
+  },
+
+  {
+    "name": "auth_get_ldap_list",
+    "description": "Get all LDAP connection details",
+    "category": "auth",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/auth/authenticator/ldaplist"
+    },
+    "auth": "none",
+    "input_schema": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": [
+      "read",
+      "tier1"
+    ],
+    "capabilities": {
+      "actions": [
+        "show"
+      ],
+      "objects": [
+        "auth"
+      ],
+      "scopes": [
+        [
+          "system"
+        ]
+      ]
+    }
+  },
+
+  {
+    "name": "auth_get_exec_logs",
+    "description": "Get Execution log list with pagination",
+    "category": "auth",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/auth/execution-logs"
+    },
+    "auth": "none",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "search": {
+          "type": "string"
+        }
+      },
+      "required": []
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": [
+      "read",
+      "tier1"
+    ],
+    "capabilities": {
+      "actions": [
+        "show"
+      ],
+      "objects": [
+        "auth"
+      ],
+      "scopes": [
+        [
+          "system"
+        ]
+      ]
+    }
+  },
+
+  {
+    "name": "auth_get_role_mappings",
+    "description": "Fetch role mapping details",
+    "category": "auth",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/auth/rolemappings"
+    },
+    "auth": "none",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "auth_type": {
+          "type": "string"
+        },
+        "auth_identifier": {
+          "type": "string"
+        }
+      },
+      "required": []
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": [
+      "read",
+      "tier1"
+    ],
+    "capabilities": {
+      "actions": [
+        "show"
+      ],
+      "objects": [
+        "auth"
+      ],
+      "scopes": [
+        [
+          "system"
+        ]
+      ]
+    }
+  },
+
+  {
+    "name": "auth_get_tacacs_by_host",
+    "description": "Fetch TACACS  server details of a sepcific host or all hosts",
+    "category": "auth",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/auth/authenticator/tacacs"
+    },
+    "auth": "none",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "host": {
+          "type": "string"
+        }
+      },
+      "required": []
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": [
+      "read",
+      "tier1"
+    ],
+    "capabilities": {
+      "actions": [
+        "show"
+      ],
+      "objects": [
+        "auth"
+      ],
+      "scopes": [
+        [
+          "system"
+        ]
+      ]
+    }
+  },
+
+  {
+    "name": "auth_get_authentication_summary_list",
+    "description": "Get authentication summary details",
+    "category": "auth",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/auth/authenticator/summary"
+    },
+    "auth": "none",
+    "input_schema": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": [
+      "read",
+      "tier1"
+    ],
+    "capabilities": {
+      "actions": [
+        "show"
+      ],
+      "objects": [
+        "auth"
+      ],
+      "scopes": [
+        [
+          "system"
+        ]
+      ]
+    }
+  },
+
+  {
+    "name": "auth_get_auth_preferences",
+    "description": "Get authentication preferences",
+    "category": "auth",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/auth/authenticator/preference"
+    },
+    "auth": "none",
+    "input_schema": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": [
+      "read",
+      "tier1"
+    ],
+    "capabilities": {
+      "actions": [
+        "show"
+      ],
+      "objects": [
+        "auth"
+      ],
+      "scopes": [
+        [
+          "system"
+        ]
+      ]
+    }
+  },
+
+  {
+    "name": "auth_get_active_user_by_type",
+    "description": "Get the active users details by authentication type",
+    "category": "auth",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/auth/user/active"
+    },
+    "auth": "none",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "auth_type": {
+          "type": "string",
+          "enum": [
+            "TACACS",
+            "LDAP",
+            "LOCAL",
+            "HOST"
+          ]
+        }
+      },
+      "required": [
+        "auth_type"
+      ]
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": [
+      "read",
+      "tier1"
+    ],
+    "capabilities": {
+      "actions": [
+        "show"
+      ],
+      "objects": [
+        "auth"
+      ],
+      "scopes": [
+        [
+          "system"
+        ]
+      ]
+    }
+  },
+  
+  {
+    "name": "auth_get_user_by_name",
+    "description": "Fetch all users details or specific user detail by name",
+    "category": "auth",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/auth/user"
+    },
+    "auth": "none",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "user_name": {
+          "type": "string"
+        }
+      },
+      "required": []
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": [
+      "read",
+      "tier1"
+    ],
+    "capabilities": {
+      "actions": [
+        "show"
+      ],
+      "objects": [
+        "auth"
+      ],
+      "scopes": [
+        [
+          "system"
+        ]
+      ]
+    }
+  },
+
+
+  {
+    "name": "auth_get_host_users",
+    "description": "Get host users.",
+    "category": "auth",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/auth/users/host"
+    },
+    "auth": "none",
+    "input_schema": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": [
+      "read",
+      "tier1"
+    ],
+    "capabilities": {
+      "actions": [
+        "show"
+      ],
+      "objects": [
+        "auth"
+      ],
+      "scopes": [
+        [
+          "system"
+        ]
+      ]
+    }
+  },
+
+  {
+    "name": "auth_get_active_host_users",
+    "description": "Get the host users and the active session details",
+    "category": "auth",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/auth/users/host-active"
+    },
+    "auth": "none",
+    "input_schema": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": [
+      "read",
+      "tier1"
+    ],
+    "capabilities": {
+      "actions": [
+        "show"
+      ],
+      "objects": [
+        "auth"
+      ],
+      "scopes": [
+        [
+          "system"
+        ]
+      ]
+    }
+  },
+
 
 
 
@@ -824,6 +1803,104 @@
     }
   },
 
+  {
+    "name": "system_get_logging_customization",
+    "description": "Get Logging Customization configuration.",
+    "category": "system",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/system/logging"
+    },
+    "auth": "none",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "services": {
+          "type": "string"
+        },
+        "logging_types": {
+          "type": "string"
+        }
+      },
+      "required": []
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": [
+      "read",
+      "tier1"
+    ],
+    "capabilities": {
+      "actions": [
+        "show"
+      ],
+      "objects": [
+        "system"
+      ],
+      "scopes": [
+        [
+          "system"
+        ]
+      ]
+    }
+  },
+  {
+    "name": "system_get_file_download",
+    "description": "Get any file from XCO system.",
+    "category": "system",
+    "method": "GET",
+    "endpoint": {
+      "host": "{XCO_HOST}",
+      "path": "/v1/system/file/download"
+    },
+    "auth": "none",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "file_type": {
+          "type": "string",
+          "enum": [
+            "backup",
+            "supportsave"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "file_type"
+      ]
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": false,
+      "requires_confirmation": true
+    },
+    "tags": [
+      "read",
+      "tier1",
+      "sensitive"
+    ],
+    "capabilities": {
+      "actions": [
+        "show"
+      ],
+      "objects": [
+        "system"
+      ],
+      "scopes": [
+        [
+          "system"
+        ]
+      ]
+    }
+  },
 
 
 
@@ -1035,6 +2112,761 @@
         "scopes": [["system"]]
       }
     },
+
+    {
+      "name": "monitor_get_maria_db_info",
+      "description": "Get MariaDB information.",
+      "category": "monitor",
+      "method": "GET",
+      "endpoint": {
+        "host": "{XCO_HOST}",
+        "port": 8078,
+        "path": "/v1/monitor/status/mariadb"
+      },
+      "auth": "none",
+      "input_schema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "policy": {
+        "risk": "SAFE_READ",
+        "allowed_in_auto_mode": true,
+        "requires_confirmation": false
+      },
+      "tags": [
+        "read",
+        "tier1"
+      ],
+      "capabilities": {
+        "actions": [
+          "show"
+        ],
+        "objects": [
+          "monitor"
+        ],
+        "scopes": [
+          [
+            "system"
+          ]
+        ]
+      }
+    },
+   
+    {
+      "name": "monitor_get_gluster_fs_info",
+      "description": "Get GlusterFS information.",
+      "category": "monitor",
+      "method": "GET",
+      "endpoint": {
+        "host": "{XCO_HOST}",
+        "port": 8078,
+        "path": "/v1/monitor/status/glusterfs"
+      },
+      "auth": "none",
+      "input_schema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "policy": {
+        "risk": "SAFE_READ",
+        "allowed_in_auto_mode": true,
+        "requires_confirmation": false
+      },
+      "tags": [
+        "read",
+        "tier1"
+      ],
+      "capabilities": {
+        "actions": [
+          "show"
+        ],
+        "objects": [
+          "monitor"
+        ],
+        "scopes": [
+          [
+            "system"
+          ]
+        ]
+      }
+    },
+  
+    {
+      "name": "monitor_get_keep_alived_info",
+      "description": "Get Keepalived information.",
+      "category": "monitor",
+      "method": "GET",
+      "endpoint": {
+        "host": "{XCO_HOST}",
+        "port": 8078,
+        "path": "/v1/monitor/status/keepalived"
+      },
+      "auth": "none",
+      "input_schema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "policy": {
+        "risk": "SAFE_READ",
+        "allowed_in_auto_mode": true,
+        "requires_confirmation": false
+      },
+      "tags": [
+        "read",
+        "tier1"
+      ],
+      "capabilities": {
+        "actions": [
+          "show"
+        ],
+        "objects": [
+          "monitor"
+        ],
+        "scopes": [
+          [
+            "system"
+          ]
+        ]
+      }
+    },
+  
+    {
+      "name": "monitor_get_efa_status",
+      "description": "Get EFA status.",
+      "category": "monitor",
+      "method": "GET",
+      "endpoint": {
+        "host": "{XCO_HOST}",
+        "port": 8078,
+        "path": "/v1/monitor/status/efa"
+      },
+      "auth": "none",
+      "input_schema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "policy": {
+        "risk": "SAFE_READ",
+        "allowed_in_auto_mode": true,
+        "requires_confirmation": false
+      },
+      "tags": [
+        "read",
+        "tier1"
+      ],
+      "capabilities": {
+        "actions": [
+          "show"
+        ],
+        "objects": [
+          "monitor"
+        ],
+        "scopes": [
+          [
+            "system"
+          ]
+        ]
+      }
+    },
+  
+    {
+      "name": "monitor_get_redeploy_status",
+      "description": "Redeploy status.",
+      "category": "monitor",
+      "method": "GET",
+      "endpoint": {
+        "host": "{XCO_HOST}",
+        "port": 8078,
+        "path": "/v1/monitor/redeploy/{redeployId}"
+      },
+      "auth": "none",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "redeployId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "redeployId"
+        ]
+      },
+      "policy": {
+        "risk": "SAFE_READ",
+        "allowed_in_auto_mode": true,
+        "requires_confirmation": false
+      },
+      "tags": [
+        "read",
+        "tier1"
+      ],
+      "capabilities": {
+        "actions": [
+          "show"
+        ],
+        "objects": [
+          "monitor"
+        ],
+        "scopes": [
+          [
+            "system"
+          ]
+        ]
+      }
+    },
+  
+    {
+      "name": "monitor_get_certificate_expiry",
+      "description": "Get expiry date of EFA certificates",
+      "category": "monitor",
+      "method": "GET",
+      "endpoint": {
+        "host": "{XCO_HOST}",
+        "port": 8078,
+        "path": "/v1/monitor/certificate/expiry"
+      },
+      "auth": "none",
+      "input_schema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "policy": {
+        "risk": "SAFE_READ",
+        "allowed_in_auto_mode": true,
+        "requires_confirmation": false
+      },
+      "tags": [
+        "read",
+        "tier1"
+      ],
+      "capabilities": {
+        "actions": [
+          "show"
+        ],
+        "objects": [
+          "monitor"
+        ],
+        "scopes": [
+          [
+            "system"
+          ]
+        ]
+      }
+    },
+  
+    {
+      "name": "monitor_get_support_save",
+      "description": "Get support.",
+      "category": "monitor",
+      "method": "GET",
+      "endpoint": {
+        "host": "{XCO_HOST}",
+        "port": 8078,
+        "path": "/v1/system/supportsave"
+      },
+      "auth": "none",
+      "input_schema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "policy": {
+        "risk": "SAFE_READ",
+        "allowed_in_auto_mode": true,
+        "requires_confirmation": false
+      },
+      "tags": [
+        "read",
+        "tier1"
+      ],
+      "capabilities": {
+        "actions": [
+          "show"
+        ],
+        "objects": [
+          "monitor"
+        ],
+        "scopes": [
+          [
+            "system"
+          ]
+        ]
+      }
+    },
+  
+    {
+      "name": "monitor_get_support_save_list",
+      "description": "Get support.",
+      "category": "monitor",
+      "method": "GET",
+      "endpoint": {
+        "host": "{XCO_HOST}",
+        "port": 8078,
+        "path": "/v1/system/supportsavelist"
+      },
+      "auth": "none",
+      "input_schema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "policy": {
+        "risk": "SAFE_READ",
+        "allowed_in_auto_mode": true,
+        "requires_confirmation": false
+      },
+      "tags": [
+        "read",
+        "tier1"
+      ],
+      "capabilities": {
+        "actions": [
+          "show"
+        ],
+        "objects": [
+          "monitor"
+        ],
+        "scopes": [
+          [
+            "system"
+          ]
+        ]
+      }
+    },
+
+    {
+      "name": "monitor_get_backup_list",
+      "description": "Get backup files list.",
+      "category": "monitor",
+      "method": "GET",
+      "endpoint": {
+        "host": "{XCO_HOST}",
+        "port": 8078,
+        "path": "/v1/system/backup"
+      },
+      "auth": "none",
+      "input_schema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "policy": {
+        "risk": "SAFE_READ",
+        "allowed_in_auto_mode": true,
+        "requires_confirmation": false
+      },
+      "tags": [
+        "read",
+        "tier1"
+      ],
+      "capabilities": {
+        "actions": [
+          "show"
+        ],
+        "objects": [
+          "monitor"
+        ],
+        "scopes": [
+          [
+            "system"
+          ]
+        ]
+      }
+    },
+  
+    {
+      "name": "monitor_get_restore_status",
+      "description": "Restore status.",
+      "category": "monitor",
+      "method": "GET",
+      "endpoint": {
+        "host": "{XCO_HOST}",
+        "port": 8078,
+        "path": "/v1/system/restore/{restoreId}"
+      },
+      "auth": "none",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "restoreId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "restoreId"
+        ]
+      },
+      "policy": {
+        "risk": "SAFE_READ",
+        "allowed_in_auto_mode": true,
+        "requires_confirmation": false
+      },
+      "tags": [
+        "read",
+        "tier1"
+      ],
+      "capabilities": {
+        "actions": [
+          "show"
+        ],
+        "objects": [
+          "monitor"
+        ],
+        "scopes": [
+          [
+            "system"
+          ]
+        ]
+      }
+    },
+  
+    {
+      "name": "monitor_get_restore_history",
+      "description": "Restore history.",
+      "category": "monitor",
+      "method": "GET",
+      "endpoint": {
+        "host": "{XCO_HOST}",
+        "port": 8078,
+        "path": "/v1/system/restore-history"
+      },
+      "auth": "none",
+      "input_schema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "policy": {
+        "risk": "SAFE_READ",
+        "allowed_in_auto_mode": true,
+        "requires_confirmation": false
+      },
+      "tags": [
+        "read",
+        "tier1"
+      ],
+      "capabilities": {
+        "actions": [
+          "show"
+        ],
+        "objects": [
+          "monitor"
+        ],
+        "scopes": [
+          [
+            "system"
+          ]
+        ]
+      }
+    },
+    
+    {
+      "name": "monitor_get_sub_interface",
+      "description": "Get subinterface.",
+      "category": "monitor",
+      "method": "GET",
+      "endpoint": {
+        "host": "{XCO_HOST}",
+        "port": 8078,
+        "path": "/v1/mgmt/subinterface"
+      },
+      "auth": "none",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": []
+      },
+      "policy": {
+        "risk": "SAFE_READ",
+        "allowed_in_auto_mode": true,
+        "requires_confirmation": false
+      },
+      "tags": [
+        "read",
+        "tier1"
+      ],
+      "capabilities": {
+        "actions": [
+          "show"
+        ],
+        "objects": [
+          "monitor"
+        ],
+        "scopes": [
+          [
+            "system"
+          ]
+        ]
+      }
+    },
+  
+    {
+      "name": "monitor_get_static_i_ps",
+      "description": "Get static IPs.",
+      "category": "monitor",
+      "method": "GET",
+      "endpoint": {
+        "host": "{XCO_HOST}",
+        "port": 8078,
+        "path": "/v1/mgmt/subinterface/staticips"
+      },
+      "auth": "none",
+      "input_schema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "policy": {
+        "risk": "SAFE_READ",
+        "allowed_in_auto_mode": true,
+        "requires_confirmation": false
+      },
+      "tags": [
+        "read",
+        "tier1"
+      ],
+      "capabilities": {
+        "actions": [
+          "show"
+        ],
+        "objects": [
+          "monitor"
+        ],
+        "scopes": [
+          [
+            "system"
+          ]
+        ]
+      }
+    },
+  
+    {
+      "name": "monitor_get_virtual_route",
+      "description": "Get virtual route.",
+      "category": "monitor",
+      "method": "GET",
+      "endpoint": {
+        "host": "{XCO_HOST}",
+        "port": 8078,
+        "path": "/v1/mgmt/virtualroute"
+      },
+      "auth": "none",
+      "input_schema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "policy": {
+        "risk": "SAFE_READ",
+        "allowed_in_auto_mode": true,
+        "requires_confirmation": false
+      },
+      "tags": [
+        "read",
+        "tier1"
+      ],
+      "capabilities": {
+        "actions": [
+          "show"
+        ],
+        "objects": [
+          "monitor"
+        ],
+        "scopes": [
+          [
+            "system"
+          ]
+        ]
+      }
+    },
+  
+    {
+      "name": "monitor_get_health",
+      "description": "getHealth",
+      "category": "monitor",
+      "method": "GET",
+      "endpoint": {
+        "host": "{XCO_HOST}",
+        "port": 8078,
+        "path": "/v1/healthmanager/health"
+      },
+      "auth": "none",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "resource": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "boolean"
+          }
+        },
+        "required": []
+      },
+      "policy": {
+        "risk": "SAFE_READ",
+        "allowed_in_auto_mode": true,
+        "requires_confirmation": false
+      },
+      "tags": [
+        "read",
+        "tier1"
+      ],
+      "capabilities": {
+        "actions": [
+          "show"
+        ],
+        "objects": [
+          "monitor"
+        ],
+        "scopes": [
+          [
+            "system"
+          ]
+        ]
+      }
+    },
+  
+    {
+      "name": "monitor_get_health_detail",
+      "description": "getHealthDetail",
+      "category": "monitor",
+      "method": "GET",
+      "endpoint": {
+        "host": "{XCO_HOST}",
+        "port": 8078,
+        "path": "/v1/healthmanager/health/detail"
+      },
+      "auth": "none",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "resource": {
+            "type": "string"
+          }
+        },
+        "required": []
+      },
+      "policy": {
+        "risk": "SAFE_READ",
+        "allowed_in_auto_mode": true,
+        "requires_confirmation": false
+      },
+      "tags": [
+        "read",
+        "tier1"
+      ],
+      "capabilities": {
+        "actions": [
+          "show"
+        ],
+        "objects": [
+          "monitor"
+        ],
+        "scopes": [
+          [
+            "system"
+          ]
+        ]
+      }
+    },
+  
+    {
+      "name": "monitor_get_health_inventory",
+      "description": "getHealthInventory",
+      "category": "monitor",
+      "method": "GET",
+      "endpoint": {
+        "host": "{XCO_HOST}",
+        "port": 8078,
+        "path": "/v1/healthmanager/health/inventory"
+      },
+      "auth": "none",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "resource": {
+            "type": "string"
+          }
+        },
+        "required": []
+      },
+      "policy": {
+        "risk": "SAFE_READ",
+        "allowed_in_auto_mode": true,
+        "requires_confirmation": false
+      },
+      "tags": [
+        "read",
+        "tier1"
+      ],
+      "capabilities": {
+        "actions": [
+          "show"
+        ],
+        "objects": [
+          "monitor"
+        ],
+        "scopes": [
+          [
+            "system"
+          ]
+        ]
+      }
+    },
+  
+    {
+      "name": "monitor_get_host_users",
+      "description": "Get host users.",
+      "category": "monitor",
+      "method": "GET",
+      "endpoint": {
+        "host": "{XCO_HOST}",
+        "port": 8078,
+        "path": "/v1/monitor/users/host"
+      },
+      "auth": "none",
+      "input_schema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "policy": {
+        "risk": "SAFE_READ",
+        "allowed_in_auto_mode": true,
+        "requires_confirmation": false
+      },
+      "tags": [
+        "read",
+        "tier1"
+      ],
+      "capabilities": {
+        "actions": [
+          "show"
+        ],
+        "objects": [
+          "monitor"
+        ],
+        "scopes": [
+          [
+            "system"
+          ]
+        ]
+      }
+    },
+  
+
+
+
 
     {
       "name": "notification_get_subscribers",
@@ -1275,6 +3107,3950 @@
           "scopes": [["system"]]
         }
       },
+
+      {
+        "name": "inventory_get_getting_started",
+        "description": "This API will be called when very first time the user logs in",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/getting-started"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_rma_historys",
+        "description": "getRMAHistorys",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/rma-history"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ip": {
+              "type": "string"
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_rma_detail",
+        "description": "getRMADetail",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/rma-detail"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "rma_id": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "rma_id"
+          ]
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_multi_tpvm_upgrade_status",
+        "description": "getMultiTpvmUpgradeStatus",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/switches/tpvm-upgrade"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "ip_address": {
+              "type": "string"
+            },
+            "execution_id": {
+              "type": "string"
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_tpvm_upgrade_status",
+        "description": "getTpvmUpgradeStatus",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/switch/tpvm-upgrade"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "ip_address": {
+              "type": "string"
+            },
+            "execution_id": {
+              "type": "string"
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_tpvm_list",
+        "description": "getTpvmList",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/switch/tpvm/list"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_switch_setting",
+        "description": "getSwitchSetting",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/switchconfig/setting"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "ip_address": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "ip_address"
+          ]
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_switch_health_status",
+        "description": "switchHealthStatus",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/switchhealth/status"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "ip_address": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "ip_address"
+          ]
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_firmware_download_status",
+        "description": "getFirmwareDownloadStatus",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/switches/firmware-download"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "fabric_name": {
+              "type": "string"
+            },
+            "execution_id": {
+              "type": "string"
+            },
+            "prepared_list_name": {
+              "type": "string"
+            },
+            "device_ips": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "device_type": {
+              "type": "string",
+              "enum": [
+                "fabric",
+                "npb"
+              ]
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": false,
+          "requires_confirmation": true
+        },
+        "tags": [
+          "read",
+          "tier1",
+          "sensitive"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_firmware_download_history_status",
+        "description": "getFirmwareDownloadHistoryStatus",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/switches/firmware-download/history"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "fabric_name": {
+              "type": "string"
+            },
+            "execution_id": {
+              "type": "string"
+            },
+            "prepared_list_name": {
+              "type": "string"
+            },
+            "device_ips": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "device_type": {
+              "type": "string",
+              "enum": [
+                "fabric",
+                "npb"
+              ]
+            },
+            "search": {
+              "type": "string"
+            },
+            "pagination": {
+              "type": "string"
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": false,
+          "requires_confirmation": true
+        },
+        "tags": [
+          "read",
+          "tier1",
+          "sensitive"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_firmware_download_operation_history",
+        "description": "getFirmwareDownloadOperationHistory",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/switches/firmware-download/operational/history"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "fabric_name": {
+              "type": "string"
+            },
+            "execution_id": {
+              "type": "string"
+            },
+            "prepared_list_name": {
+              "type": "string"
+            },
+            "device_ips": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "device_type": {
+              "type": "string",
+              "enum": [
+                "fabric",
+                "npb"
+              ]
+            },
+            "last_execution_history": {
+              "type": "boolean"
+            },
+            "fwdl_task_id": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "search": {
+              "type": "string"
+            },
+            "pagination": {
+              "type": "string"
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": false,
+          "requires_confirmation": true
+        },
+        "tags": [
+          "read",
+          "tier1",
+          "sensitive"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_prepared_switches",
+        "description": "getPreparedSwitches",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/switches/firmware-download/prepare"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ips": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "fabric_name": {
+              "type": "string"
+            },
+            "prepared_list_name": {
+              "type": "string"
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": false,
+          "requires_confirmation": true
+        },
+        "tags": [
+          "read",
+          "tier1",
+          "sensitive"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_device_tacacs_configs",
+        "description": "getDeviceTacacsConfigs",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/switches/tacacs"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ip": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "device_ip"
+          ]
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_device_tacacs_config",
+        "description": "getDeviceTacacsConfig",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/switches/tacacs-config"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ip": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "device_ip",
+            "name"
+          ]
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_aaa_config",
+        "description": "getAAAConfig",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/switches/aaa"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ip": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "device_ip"
+          ]
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_interfaces",
+        "description": "getInterfaces",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/interfaces"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ips": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "device_ids": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "All",
+                "Physical",
+                "Loopback",
+                "VE",
+                "PO"
+              ]
+            },
+            "admin_state": {
+              "type": "string",
+              "enum": [
+                "Up",
+                "Down",
+                "All"
+              ]
+            },
+            "rme": {
+              "type": "boolean"
+            },
+            "oper_state": {
+              "type": "string",
+              "enum": [
+                "Up",
+                "Down",
+                "All"
+              ]
+            },
+            "fabric_intf_role": {
+              "type": "string",
+              "enum": [
+                "fabric",
+                "edge"
+              ]
+            },
+            "search": {
+              "type": "string"
+            },
+            "pagination": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "admin_state",
+            "oper_state"
+          ]
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_list_breakout_ports",
+        "description": "List Breakout Interface Port",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/interfaces/breakout"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ips": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "fabric_name": {
+              "type": "string"
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_port_channels",
+        "description": "getPortChannels",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/portchannels"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ips": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "device_ids": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "po_numbers": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_lldp_data",
+        "description": "getLldpData",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/lldp_data"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "remote_macs": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "device_ips": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "neighbor_type": {
+              "type": "string",
+              "enum": [
+                "all",
+                "edge",
+                "fabric"
+              ]
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_links",
+        "description": "getLinks",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/links"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ips": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "device_ids": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "ids": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "fabric_name": {
+              "type": "string"
+            },
+            "fabric_id": {
+              "type": "integer"
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_vlan_ss",
+        "description": "getVLANs",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/vlans"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ip": {
+              "type": "string"
+            },
+            "device_id": {
+              "type": "integer"
+            },
+            "vlan_ids": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_mirror_sessions",
+        "description": "getMirrorSessions",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/mirror-session"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ip": {
+              "type": "string"
+            },
+            "device_id": {
+              "type": "integer"
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_drift_reconcile_historys",
+        "description": "getDriftReconcileHistorys",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/drift-reconciles"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ip": {
+              "type": "string"
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_drift_reconcile_detail",
+        "description": "getDriftReconcileDetail",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/drift-reconcile-detail"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "dr_id": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "dr_id"
+          ]
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_config_backup_historys",
+        "description": "getConfigBackupHistorys",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/config-backups"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ip": {
+              "type": "string"
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_config_backup_detail",
+        "description": "getConfigBackupDetail",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/config-backup-detail"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "cb_id": {
+              "type": "string"
+            },
+            "show_config": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "cb_id"
+          ]
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_config_replay_historys",
+        "description": "getConfigReplayHistorys",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/config-replays"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ip": {
+              "type": "string"
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_config_replay_detail",
+        "description": "getConfigReplayDetail",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/config-replay-detail"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "cr_id": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "cr_id"
+          ]
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_v_es",
+        "description": "getVEs",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/veinterfaces"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ips": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "device_ids": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "ve_ids": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_router_bgp",
+        "description": "getRouterBgp",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/bgp"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ip": {
+              "type": "string"
+            },
+            "device_id": {
+              "type": "integer"
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_mct_management_cluster",
+        "description": "getMCTManagementCluster",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/mct/management"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ip": {
+              "type": "string"
+            },
+            "device_id": {
+              "type": "integer"
+            },
+            "node_ids": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "ids": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_mct_cluster_configuration",
+        "description": "getMCTClusterConfiguration",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/mct/cluster"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ip": {
+              "type": "string"
+            },
+            "device_id": {
+              "type": "integer"
+            },
+            "cluster_ids": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "ids": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_mct_cluster_clients",
+        "description": "getMCTClusterClients",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/mct/client"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ip": {
+              "type": "string"
+            },
+            "device_id": {
+              "type": "integer"
+            },
+            "client_ids": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "cluster_id": {
+              "type": "integer"
+            },
+            "ids": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_lif",
+        "description": "getLIF",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/lif"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ip": {
+              "type": "string"
+            },
+            "device_id": {
+              "type": "integer"
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_evpn_instance",
+        "description": "getEVPNInstance",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/evpn"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ip": {
+              "type": "string"
+            },
+            "device_id": {
+              "type": "integer"
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_pseudowire_profile",
+        "description": "getPseudowireProfile",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/pwprofile"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ip": {
+              "type": "string"
+            },
+            "device_id": {
+              "type": "integer"
+            },
+            "pseudowire_profiles": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_bridge_domain",
+        "description": "getBridgeDomain",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/bridgedomain"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ip": {
+              "type": "string"
+            },
+            "device_id": {
+              "type": "integer"
+            },
+            "bridge_domains": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_overlay_gateway",
+        "description": "getOverlayGateway",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/overlaygateway"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ip": {
+              "type": "string"
+            },
+            "device_id": {
+              "type": "integer"
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_tunnel",
+        "description": "getTunnel",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/tunnel"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ip": {
+              "type": "string"
+            },
+            "device_id": {
+              "type": "integer"
+            },
+            "ids": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "tunnel_numbers": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_vrf",
+        "description": "getVRF",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/vrf"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ip": {
+              "type": "string"
+            },
+            "device_id": {
+              "type": "integer"
+            },
+            "ids": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "vrfs": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_vrrp",
+        "description": "getVRRP",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/vrrp"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ip": {
+              "type": "string"
+            },
+            "device_id": {
+              "type": "integer"
+            },
+            "int_type": {
+              "type": "string",
+              "enum": [
+                "ethernet",
+                "ve"
+              ]
+            },
+            "int_name": {
+              "type": "string"
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_router_pim",
+        "description": "getRouterPim",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/pim"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ip": {
+              "type": "string"
+            },
+            "device_id": {
+              "type": "integer"
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_ip_prefix_list",
+        "description": "getIPPrefixList",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/ip-prefix-list"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ip": {
+              "type": "string"
+            },
+            "device_id": {
+              "type": "integer"
+            },
+            "prefixlist_name": {
+              "type": "string"
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_route_map",
+        "description": "getRouteMap",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/route-map"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ip": {
+              "type": "string"
+            },
+            "device_id": {
+              "type": "integer"
+            },
+            "routemap_name": {
+              "type": "string"
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_community_list",
+        "description": "getCommunityList",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/community-list"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ip": {
+              "type": "string"
+            },
+            "device_id": {
+              "type": "integer"
+            },
+            "communitylist_name": {
+              "type": "string"
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_ext_community_list",
+        "description": "getExtCommunityList",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/extcommunity-list"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ip": {
+              "type": "string"
+            },
+            "device_id": {
+              "type": "integer"
+            },
+            "extcommunitylist_name": {
+              "type": "string"
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_policy",
+        "description": "get",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/policy/policy"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ip": {
+              "type": "string"
+            },
+            "device_id": {
+              "type": "integer"
+            },
+            "policy_type": {
+              "type": "string",
+              "enum": [
+                "large-community-list",
+                "qos-map",
+                "policy-map"
+              ]
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_execution_get",
+        "description": "getExecutionDetail",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/execution"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id"
+          ]
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_execution_list",
+        "description": "getExecutionList",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/executions"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "limit": {
+              "type": "integer"
+            },
+            "status": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "limit"
+          ]
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_running_config",
+        "description": "GetRunningConfig",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/runningConfig"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_key_value_list",
+        "description": "getKeyValueList",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/keys"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "prefix": {
+              "type": "string"
+            },
+            "decrypt": {
+              "type": "boolean"
+            },
+            "limit": {
+              "type": "integer"
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_value_for_key",
+        "description": "Get a specific key vale pair based on key_name.\n",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/keys/{name}"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "decrypt": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "name"
+          ]
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_firmware_hosts",
+        "description": "getFirmwareHosts",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/firmware-hosts"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "host_ips": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_firmware_host_protocols",
+        "description": "getFirmwareHostProtocols",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/firmware-host/protocols"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_firmware_host",
+        "description": "getFirmwareHost",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/firmware-host"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "ip_address": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "ip_address"
+          ]
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_device_details",
+        "description": "Get device discovery interval time & device details",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/device/discovery"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "fabric_name": {
+              "type": "string"
+            },
+            "device_ips": {
+              "type": "string"
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_device_adapter_status",
+        "description": "Get device adapter statuses",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/debug/deviceadapterstatus"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ips": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "fabric_name": {
+              "type": "string"
+            },
+            "fabric-all": {
+              "type": "boolean"
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_devices_lock_status",
+        "description": "Get devices lock statuses",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/debug/deviceslock"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_service_lock_status",
+        "description": "getServiceLockStatus",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/servicelockstatus"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_fwdl_in_progress_devices",
+        "description": "Get FWDL In progress devices",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/debug/updatefwdlstatus"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_device_inventory_structure",
+        "description": "This API will return the device inventory structure information based on the type",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/switches/inventory-structure"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_type": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "device_type"
+          ]
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_device_inventory_ports",
+        "description": "This API will return the device port inventory information",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/switches/inventory-info-ports"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_id": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "device_id"
+          ]
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_device_certificates_expiry",
+        "description": "Get Device Certificates Expiry",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/certificate/expiry"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ips": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "fabric_name": {
+              "type": "string"
+            },
+            "fabric-all": {
+              "type": "boolean"
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_dsc_historys",
+        "description": "GetDSCHistorys",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/dsc-history"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ip": {
+              "type": "string"
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_device_state",
+        "description": "getDeviceState",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/device-current-state"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ip": {
+              "type": "string"
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_dsc_detail",
+        "description": "getDSCDetail",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/device-state"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "dsc_id": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "dsc_id"
+          ]
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_health",
+        "description": "getHealth",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/health"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_ntp_servers",
+        "description": "getNtpServers",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/ntp/server"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ips": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "fabric_name": {
+              "type": "string"
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_ntp_disable",
+        "description": "getNtpDisable",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/ntp/disable"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ips": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "fabric_name": {
+              "type": "string"
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_snmp_communities",
+        "description": "getSnmpCommunities",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/snmp/community"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ips": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_snmp_users",
+        "description": "getSnmpUsers",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/snmp/user"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ips": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_snmp_hosts",
+        "description": "getSnmpHosts",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/snmp/host"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ips": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_snmp_groups",
+        "description": "getSnmpGroups",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/snmp/group"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ips": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_snmp_views",
+        "description": "getSnmpViews",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/snmp/view"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ips": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_snmp_use_vrfs",
+        "description": "getSnmpUseVrfs",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/snmp/use-vrf"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ips": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_device_timezone",
+        "description": "getDeviceTimezone",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/timezone"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ips": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "fabric_name": {
+              "type": "string"
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_supported_device_timezones",
+        "description": "getSupportedDeviceTimezones",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/timezone/debug-show"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_bindings",
+        "description": "getBindings",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/policy/bindings"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ips": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "name_of_instance": {
+              "type": "string"
+            },
+            "type_of_instance": {
+              "type": "string",
+              "enum": [
+                "route-map",
+                "prefix-list"
+              ]
+            }
+          },
+          "required": [
+            "device_ips",
+            "name_of_instance",
+            "type_of_instance"
+          ]
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_threshold_monitors",
+        "description": "getThresholdMonitors",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/thresholdmonitor"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ips": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "fabric_name": {
+              "type": "string"
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_all_locations",
+        "description": "Fetch locations details",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/locations"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "search": {
+              "type": "string"
+            },
+            "pagination": {
+              "type": "string"
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_download_locations",
+        "description": "Download Locations in CSV file",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/locations-download"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": false,
+          "requires_confirmation": true
+        },
+        "tags": [
+          "read",
+          "tier1",
+          "sensitive"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+      {
+        "name": "inventory_get_secure_settings",
+        "description": "getSecureSettings",
+        "category": "inventory",
+        "method": "GET",
+        "endpoint": {
+          "host": "{XCO_HOST}",
+          "path": "/v1/inventory/securesettings"
+        },
+        "auth": "none",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "device_ip": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": []
+        },
+        "policy": {
+          "risk": "SAFE_READ",
+          "allowed_in_auto_mode": true,
+          "requires_confirmation": false
+        },
+        "tags": [
+          "read",
+          "tier1"
+        ],
+        "capabilities": {
+          "actions": [
+            "show"
+          ],
+          "objects": [
+            "inventory"
+          ],
+          "scopes": [
+            [
+              "system"
+            ]
+          ]
+        }
+      },
+    
     
       {
         "name": "faultmanager_get_alarm_history",
@@ -1801,6 +7577,841 @@
   }
 },
 
+{
+  "name": "tenant_get_vrfs",
+  "description": "getVrfs",
+  "category": "tenant",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/tenant/vrfs"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "tenant_name": {
+        "type": "string"
+      },
+      "search": {
+        "type": "string"
+      },
+      "pagination": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "tenant_name"
+    ]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": [
+    "read",
+    "tier1"
+  ],
+  "capabilities": {
+    "actions": [
+      "show"
+    ],
+    "objects": [
+      "tenant"
+    ],
+    "scopes": [
+      [
+        "system"
+      ]
+    ]
+  }
+},
+
+{
+  "name": "tenant_get_vrf",
+  "description": "getVrf",
+  "category": "tenant",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/tenant/vrf"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string"
+      },
+      "tenant_name": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "name",
+      "tenant_name"
+    ]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": [
+    "read",
+    "tier1"
+  ],
+  "capabilities": {
+    "actions": [
+      "show"
+    ],
+    "objects": [
+      "tenant"
+    ],
+    "scopes": [
+      [
+        "system"
+      ]
+    ]
+  }
+},
+
+
+
+{
+  "name": "tenant_get_vrf_static_routes",
+  "description": "getVrfStaticRoutes",
+  "category": "tenant",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/tenant/vrf/static-routes"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "search": {
+        "type": "string"
+      },
+      "pagination": {
+        "type": "string"
+      },
+      "name": {
+        "type": "string"
+      },
+      "tenant_name": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "name",
+      "tenant_name"
+    ]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": [
+    "read",
+    "tier1"
+  ],
+  "capabilities": {
+    "actions": [
+      "show"
+    ],
+    "objects": [
+      "tenant"
+    ],
+    "scopes": [
+      [
+        "system"
+      ]
+    ]
+  }
+},
+
+{
+  "name": "tenant_get_vrf_route_target",
+  "description": "getVrfRouteTarget",
+  "category": "tenant",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/tenant/vrf/route-target"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "search": {
+        "type": "string"
+      },
+      "pagination": {
+        "type": "string"
+      },
+      "name": {
+        "type": "string"
+      },
+      "tenant_name": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "name",
+      "tenant_name"
+    ]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": [
+    "read",
+    "tier1"
+  ],
+  "capabilities": {
+    "actions": [
+      "show"
+    ],
+    "objects": [
+      "tenant"
+    ],
+    "scopes": [
+      [
+        "system"
+      ]
+    ]
+  }
+},
+
+{
+  "name": "tenant_get_vrf_static_routes_bfd",
+  "description": "getVrfStaticRoutesBFD",
+  "category": "tenant",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/tenant/vrf/static-routes-bfd"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "search": {
+        "type": "string"
+      },
+      "pagination": {
+        "type": "string"
+      },
+      "name": {
+        "type": "string"
+      },
+      "tenant_name": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "name",
+      "tenant_name"
+    ]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": [
+    "read",
+    "tier1"
+  ],
+  "capabilities": {
+    "actions": [
+      "show"
+    ],
+    "objects": [
+      "tenant"
+    ],
+    "scopes": [
+      [
+        "system"
+      ]
+    ]
+  }
+},
+
+{
+  "name": "tenant_get_vrf_error",
+  "description": "getVrfError",
+  "category": "tenant",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/tenant/vrf/errors"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string"
+      },
+      "tenant_name": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "name",
+      "tenant_name"
+    ]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": [
+    "read",
+    "tier1"
+  ],
+  "capabilities": {
+    "actions": [
+      "show"
+    ],
+    "objects": [
+      "tenant"
+    ],
+    "scopes": [
+      [
+        "system"
+      ]
+    ]
+  }
+},
+
+{
+  "name": "tenant_get_endpoint_groups",
+  "description": "getEndpointGroups",
+  "category": "tenant",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/tenant/endpointgroups"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "tenant_name": {
+        "type": "string"
+      },
+      "search": {
+        "type": "string"
+      },
+      "pagination": {
+        "type": "string"
+      }
+    },
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": [
+    "read",
+    "tier1"
+  ],
+  "capabilities": {
+    "actions": [
+      "show"
+    ],
+    "objects": [
+      "tenant"
+    ],
+    "scopes": [
+      [
+        "system"
+      ]
+    ]
+  }
+},
+
+{
+  "name": "tenant_get_endpoint_group",
+  "description": "getEndpointGroup",
+  "category": "tenant",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/tenant/endpointgroup"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string"
+      },
+      "tenant_name": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "name",
+      "tenant_name"
+    ]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": [
+    "read",
+    "tier1"
+  ],
+  "capabilities": {
+    "actions": [
+      "show"
+    ],
+    "objects": [
+      "tenant"
+    ],
+    "scopes": [
+      [
+        "system"
+      ]
+    ]
+  }
+},
+{
+  "name": "tenant_get_endpoint_group_error",
+  "description": "getEndpointGroupError",
+  "category": "tenant",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/tenant/endpointgroup/errors"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string"
+      },
+      "tenant_name": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "name",
+      "tenant_name"
+    ]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": [
+    "read",
+    "tier1"
+  ],
+  "capabilities": {
+    "actions": [
+      "show"
+    ],
+    "objects": [
+      "tenant"
+    ],
+    "scopes": [
+      [
+        "system"
+      ]
+    ]
+  }
+},
+{
+  "name": "tenant_get_bgp_service_peer_groups",
+  "description": "getBgpServicePeerGroups",
+  "category": "tenant",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/tenant/bgp/service/peer-groups"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "search": {
+        "type": "string"
+      },
+      "pagination": {
+        "type": "string"
+      },
+      "tenant_name": {
+        "type": "string"
+      }
+    },
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": [
+    "read",
+    "tier1"
+  ],
+  "capabilities": {
+    "actions": [
+      "show"
+    ],
+    "objects": [
+      "tenant"
+    ],
+    "scopes": [
+      [
+        "system"
+      ]
+    ]
+  }
+},
+{
+  "name": "tenant_get_bgp_service_peer_group",
+  "description": "getBgpServicePeerGroup",
+  "category": "tenant",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/tenant/bgp/service/peer-group"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string"
+      },
+      "tenant_name": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "name",
+      "tenant_name"
+    ]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": [
+    "read",
+    "tier1"
+  ],
+  "capabilities": {
+    "actions": [
+      "show"
+    ],
+    "objects": [
+      "tenant"
+    ],
+    "scopes": [
+      [
+        "system"
+      ]
+    ]
+  }
+},
+{
+  "name": "tenant_get_mirror_service_session",
+  "description": "getMirrorServiceSession",
+  "category": "tenant",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/tenant/mirror/service/session"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string"
+      },
+      "tenant_name": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "name",
+      "tenant_name"
+    ]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": [
+    "read",
+    "tier1"
+  ],
+  "capabilities": {
+    "actions": [
+      "show"
+    ],
+    "objects": [
+      "tenant"
+    ],
+    "scopes": [
+      [
+        "system"
+      ]
+    ]
+  }
+},
+{
+  "name": "tenant_get_execution_get",
+  "description": "getExecutionDetail",
+  "category": "tenant",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/tenant/execution"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "id"
+    ]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": [
+    "read",
+    "tier1"
+  ],
+  "capabilities": {
+    "actions": [
+      "show"
+    ],
+    "objects": [
+      "tenant"
+    ],
+    "scopes": [
+      [
+        "system"
+      ]
+    ]
+  }
+},
+{
+  "name": "tenant_get_execution_list",
+  "description": "getExecutionList",
+  "category": "tenant",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/tenant/executions"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "limit": {
+        "type": "integer"
+      },
+      "status": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "limit"
+    ]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": [
+    "read",
+    "tier1"
+  ],
+  "capabilities": {
+    "actions": [
+      "show"
+    ],
+    "objects": [
+      "tenant"
+    ],
+    "scopes": [
+      [
+        "system"
+      ]
+    ]
+  }
+},
+{
+  "name": "tenant_get_running_config",
+  "description": "GetRunningConfig",
+  "category": "tenant",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/tenant/runningConfig"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": [
+    "read",
+    "tier1"
+  ],
+  "capabilities": {
+    "actions": [
+      "show"
+    ],
+    "objects": [
+      "tenant"
+    ],
+    "scopes": [
+      [
+        "system"
+      ]
+    ]
+  }
+},
+{
+  "name": "tenant_get_event_history_list",
+  "description": "getEventHistoryList",
+  "category": "tenant",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/tenant/eventhistories"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "execution_uuid": {
+        "type": "string"
+      },
+      "device_ip": {
+        "type": "string"
+      }
+    },
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": [
+    "read",
+    "tier1"
+  ],
+  "capabilities": {
+    "actions": [
+      "show"
+    ],
+    "objects": [
+      "tenant"
+    ],
+    "scopes": [
+      [
+        "system"
+      ]
+    ]
+  }
+},
+{
+  "name": "tenant_get_locks",
+  "description": "Get lock detail",
+  "category": "tenant",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/tenant/debug/lock"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "type": {
+        "type": "string",
+        "enum": [
+          "service",
+          "device",
+          "port",
+          "vlan",
+          "vrf",
+          "epg"
+        ]
+      }
+    },
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": [
+    "read",
+    "tier1"
+  ],
+  "capabilities": {
+    "actions": [
+      "show"
+    ],
+    "objects": [
+      "tenant"
+    ],
+    "scopes": [
+      [
+        "system"
+      ]
+    ]
+  }
+},
+
+
+
+
+
+
 
 
 {
@@ -2061,7 +8672,508 @@
     "objects": ["permissions"],
     "scopes": [["user"]]
   }
+},
+
+
+
+
+{
+  "name": "licensing_get_health",
+  "description": "Get health status of the licensing service",
+  "category": "licensing",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/licensing/health"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier1", "health"],
+  "capabilities": {
+    "actions": ["show"],
+    "objects": ["licensing-health"],
+    "scopes": [["system"]]
+  }
+},
+
+{
+  "name": "licensing_get_licenses",
+  "description": "Show all licenses added to XCO",
+  "category": "licensing",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/licensing/license"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier1"],
+  "capabilities": {
+    "actions": ["list"],
+    "objects": ["licenses"],
+    "scopes": [["system"]]
+  }
+},
+
+
+
+
+
+
+{
+  "name": "vcenter_get_vcenters",
+  "description": "Get registered vCenter servers",
+  "category": "vcenter",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/vmware/vcenter"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "host_name": { "type": "string" }
+    },
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier1"],
+  "capabilities": {
+    "actions": ["list"],
+    "objects": ["vcenter"],
+    "scopes": [["system"]]
+  }
+},
+
+{
+  "name": "vcenter_get_vcenter_details",
+  "description": "Get vCenter detailed information",
+  "category": "vcenter",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/vmware/vcenter/details"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "host_name": { "type": "string" }
+    },
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier1"],
+  "capabilities": {
+    "actions": ["show"],
+    "objects": ["vcenter-details"],
+    "scopes": [["system"]]
+  }
+},
+
+{
+  "name": "vcenter_get_esxi_details",
+  "description": "Get ESXi host details from vCenter",
+  "category": "vcenter",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/vmware/vcenter/host/details"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "host_name": { "type": "string" },
+      "server_ip": { "type": "string" }
+    },
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier1"],
+  "capabilities": {
+    "actions": ["show"],
+    "objects": ["esxi-host"],
+    "scopes": [["system"]]
+  }
+},
+
+{
+  "name": "vcenter_get_tenant_details",
+  "description": "Get tenant mapping for vCenter",
+  "category": "vcenter",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/vmware/vcenter/tenant"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "host_name": { "type": "string" }
+    },
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier1"],
+  "capabilities": {
+    "actions": ["list"],
+    "objects": ["tenant-mapping"],
+    "scopes": [["system"]]
+  }
+},
+
+{
+  "name": "vcenter_get_events",
+  "description": "Get vCenter events",
+  "category": "vcenter",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/vmware/events"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "host_name": { "type": "string" },
+      "page_number": { "type": "integer" },
+      "limit": { "type": "integer" }
+    },
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier1"],
+  "capabilities": {
+    "actions": ["list"],
+    "objects": ["events"],
+    "scopes": [["system"]]
+  }
+},
+
+{
+  "name": "vcenter_get_physical_links",
+  "description": "Get physical NIC to switch links",
+  "category": "vcenter",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/vmware/links/physical"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "host_name": { "type": "string" },
+      "server_ip": { "type": "string" }
+    },
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier1"],
+  "capabilities": {
+    "actions": ["show"],
+    "objects": ["physical-links"],
+    "scopes": [["system"]]
+  }
+},
+{
+  "name": "vcenter_get_virtual_links",
+  "description": "Get virtual NIC links",
+  "category": "vcenter",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/vmware/links/virtual"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "server_ip": { "type": "string" }
+    },
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier1"],
+  "capabilities": {
+    "actions": ["show"],
+    "objects": ["virtual-links"],
+    "scopes": [["system"]]
+  }
+},
+{
+  "name": "vcenter_get_unconnected_pnics",
+  "description": "Get disconnected physical NICs",
+  "category": "vcenter",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/vmware/pnics/disconnected"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "host_name": { "type": "string" },
+      "server_ip": { "type": "string" }
+    },
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier1"],
+  "capabilities": {
+    "actions": ["list"],
+    "objects": ["pnics"],
+    "scopes": [["system"]]
+  }
+},
+
+{
+  "name": "vcenter_get_executions",
+  "description": "Get vCenter service executions",
+  "category": "vcenter",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/vmware/executions"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "limit": { "type": "integer" },
+      "status": { "type": "string" }
+    },
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier1"],
+  "capabilities": {
+    "actions": ["list"],
+    "objects": ["executions"],
+    "scopes": [["system"]]
+  }
+},
+
+
+
+
+
+
+{
+  "name": "hyperv_get_servers",
+  "description": "Get registered Hyper-V / SCVMM servers",
+  "category": "hyperv",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/microsoft/hyperv"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "host_name": { "type": "string" }
+    },
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier1"],
+  "capabilities": {
+    "actions": ["list"],
+    "objects": ["hyperv-server"],
+    "scopes": [["system"]]
+  }
+},
+
+{
+  "name": "hyperv_get_physical_links",
+  "description": "Get physical NIC to switch links for Hyper-V",
+  "category": "hyperv",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/microsoft/hyperv/links/physical"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "host_name": { "type": "string" },
+      "hyperv_host": { "type": "string" }
+    },
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier1"],
+  "capabilities": {
+    "actions": ["show"],
+    "objects": ["physical-links"],
+    "scopes": [["system"]]
+  }
+},
+
+{
+  "name": "hyperv_get_virtual_links",
+  "description": "Get virtual NIC to logical network links for Hyper-V",
+  "category": "hyperv",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/microsoft/hyperv/links/virtual"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "hyperv_host": { "type": "string" }
+    },
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier1"],
+  "capabilities": {
+    "actions": ["show"],
+    "objects": ["virtual-links"],
+    "scopes": [["system"]]
+  }
+},
+
+{
+  "name": "hyperv_get_service_settings",
+  "description": "Get Hyper-V service settings",
+  "category": "hyperv",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/microsoft/hyperv/settings"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier1"],
+  "capabilities": {
+    "actions": ["show"],
+    "objects": ["service-settings"],
+    "scopes": [["system"]]
+  }
+},
+
+{
+  "name": "hyperv_get_executions",
+  "description": "Get Hyper-V execution history",
+  "category": "hyperv",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/microsoft/hyperv/executions"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "limit": { "type": "integer" },
+      "status": { "type": "string" }
+    },
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier1"],
+  "capabilities": {
+    "actions": ["list"],
+    "objects": ["executions"],
+    "scopes": [["system"]]
+  }
 }
+
+
+
+
+
+
+
+
 
 
 
