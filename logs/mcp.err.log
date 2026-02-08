@@ -16314,3 +16314,277 @@ mcp_runtime.errors.ToolNotFound: snmp_get_users
 2026-02-07 17:21:22,757 | INFO  | mcp.invoke | policy decision tool=snmp_get_executions risk=SAFE_READ mode=manual allowed=True
 2026-02-07 17:21:22,793 | INFO  | mcp.transport | XCO request done method=GET status=404 duration_ms=36 url=https://10.13.85.20:443/v1/snmp/executions
 2026-02-07 17:21:22,794 | INFO  | mcp.invoke | invoke success tool=snmp_get_executions status=404 url=https://10.13.85.20:443/v1/snmp/executions correlation_id=corr-9da9b2f3
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [87926]
+2026-02-07 20:45:13,358 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-07 20:45:13,358 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=53
+INFO:     Started server process [88314]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-02-07 20:45:44,759 | INFO  | mcp.invoke | invoke start tool=tenant_get_health request_id=req-3f03a48d correlation_id=corr-f134141b context=None
+2026-02-07 20:45:44,760 | INFO  | mcp.invoke | policy decision tool=tenant_get_health risk=SAFE_READ mode=manual allowed=True
+2026-02-07 20:45:44,873 | ERROR | mcp.transport | XCO request failed (network) method=GET url=https://10.13.85.20:8083/v1/tenant/health error=HTTPSConnectionPool(host='10.13.85.20', port=8083): Max retries exceeded with url: /v1/tenant/health (Caused by NewConnectionError("HTTPSConnection(host='10.13.85.20', port=8083): Failed to establish a new connection: [Errno 111] Connection refused"))
+Traceback (most recent call last):
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/urllib3/connection.py", line 204, in _new_conn
+    sock = connection.create_connection(
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/urllib3/util/connection.py", line 85, in create_connection
+    raise err
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/urllib3/util/connection.py", line 73, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [Errno 111] Connection refused
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/urllib3/connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/urllib3/connectionpool.py", line 488, in _make_request
+    raise new_e
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/urllib3/connectionpool.py", line 464, in _make_request
+    self._validate_conn(conn)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/urllib3/connectionpool.py", line 1093, in _validate_conn
+    conn.connect()
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/urllib3/connection.py", line 759, in connect
+    self.sock = sock = self._new_conn()
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/urllib3/connection.py", line 219, in _new_conn
+    raise NewConnectionError(
+urllib3.exceptions.NewConnectionError: HTTPSConnection(host='10.13.85.20', port=8083): Failed to establish a new connection: [Errno 111] Connection refused
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/requests/adapters.py", line 644, in send
+    resp = conn.urlopen(
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/urllib3/connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/urllib3/util/retry.py", line 535, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='10.13.85.20', port=8083): Max retries exceeded with url: /v1/tenant/health (Caused by NewConnectionError("HTTPSConnection(host='10.13.85.20', port=8083): Failed to establish a new connection: [Errno 111] Connection refused"))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/user01/xco-mcp-server/mcp_runtime/transport.py", line 104, in request
+    resp = requests.request(
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/requests/adapters.py", line 677, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPSConnectionPool(host='10.13.85.20', port=8083): Max retries exceeded with url: /v1/tenant/health (Caused by NewConnectionError("HTTPSConnection(host='10.13.85.20', port=8083): Failed to establish a new connection: [Errno 111] Connection refused"))
+2026-02-07 20:45:44,877 | ERROR | mcp.invoke | invoke failed tool=tenant_get_health request_id=req-3f03a48d correlation_id=corr-f134141b error=HTTPSConnectionPool(host='10.13.85.20', port=8083): Max retries exceeded with url: /v1/tenant/health (Caused by NewConnectionError("HTTPSConnection(host='10.13.85.20', port=8083): Failed to establish a new connection: [Errno 111] Connection refused"))
+Traceback (most recent call last):
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/urllib3/connection.py", line 204, in _new_conn
+    sock = connection.create_connection(
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/urllib3/util/connection.py", line 85, in create_connection
+    raise err
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/urllib3/util/connection.py", line 73, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [Errno 111] Connection refused
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/urllib3/connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/urllib3/connectionpool.py", line 488, in _make_request
+    raise new_e
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/urllib3/connectionpool.py", line 464, in _make_request
+    self._validate_conn(conn)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/urllib3/connectionpool.py", line 1093, in _validate_conn
+    conn.connect()
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/urllib3/connection.py", line 759, in connect
+    self.sock = sock = self._new_conn()
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/urllib3/connection.py", line 219, in _new_conn
+    raise NewConnectionError(
+urllib3.exceptions.NewConnectionError: HTTPSConnection(host='10.13.85.20', port=8083): Failed to establish a new connection: [Errno 111] Connection refused
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/requests/adapters.py", line 644, in send
+    resp = conn.urlopen(
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/urllib3/connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/urllib3/util/retry.py", line 535, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='10.13.85.20', port=8083): Max retries exceeded with url: /v1/tenant/health (Caused by NewConnectionError("HTTPSConnection(host='10.13.85.20', port=8083): Failed to establish a new connection: [Errno 111] Connection refused"))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/user01/xco-mcp-server/mcp_runtime/server.py", line 270, in invoke
+    response = self.transport.request(
+  File "/home/user01/xco-mcp-server/mcp_runtime/transport.py", line 104, in request
+    resp = requests.request(
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/home/user01/xco-mcp-server/.venv/lib/python3.10/site-packages/requests/adapters.py", line 677, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPSConnectionPool(host='10.13.85.20', port=8083): Max retries exceeded with url: /v1/tenant/health (Caused by NewConnectionError("HTTPSConnection(host='10.13.85.20', port=8083): Failed to establish a new connection: [Errno 111] Connection refused"))
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [88314]
+2026-02-07 20:50:34,068 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-07 20:50:34,068 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=53
+INFO:     Started server process [88351]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-02-07 20:50:38,279 | INFO  | mcp.invoke | invoke start tool=tenant_get_health request_id=req-3cbfa919 correlation_id=corr-83a25738 context=None
+2026-02-07 20:50:38,279 | INFO  | mcp.invoke | policy decision tool=tenant_get_health risk=SAFE_READ mode=manual allowed=True
+2026-02-07 20:50:38,429 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=150 url=https://10.13.85.20:443/v1/tenant/health
+2026-02-07 20:50:38,431 | INFO  | mcp.invoke | invoke success tool=tenant_get_health status=200 url=https://10.13.85.20:443/v1/tenant/health correlation_id=corr-83a25738
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [88351]
+2026-02-07 20:52:33,239 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-07 20:52:33,239 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=53
+INFO:     Started server process [88371]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-02-07 20:52:37,396 | INFO  | mcp.invoke | invoke start tool=tenant_get_health request_id=req-d7095e65 correlation_id=corr-6d4afa9e context=None
+2026-02-07 20:52:37,396 | INFO  | mcp.invoke | policy decision tool=tenant_get_health risk=SAFE_READ mode=manual allowed=True
+2026-02-07 20:52:37,547 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=150 url=https://10.13.85.20:443/v1/tenant/health
+2026-02-07 20:52:37,548 | INFO  | mcp.invoke | invoke success tool=tenant_get_health status=200 url=https://10.13.85.20:443/v1/tenant/health correlation_id=corr-6d4afa9e
+2026-02-07 20:53:02,036 | INFO  | mcp.invoke | invoke start tool=tenant_get_tenants request_id=req-9c7e281d correlation_id=corr-e33f2a51 context=None
+2026-02-07 20:53:02,036 | INFO  | mcp.invoke | policy decision tool=tenant_get_tenants risk=SAFE_READ mode=manual allowed=True
+2026-02-07 20:53:02,208 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=171 url=https://10.13.85.20:443/v1/tenant/tenants
+2026-02-07 20:53:02,209 | INFO  | mcp.invoke | invoke success tool=tenant_get_tenants status=200 url=https://10.13.85.20:443/v1/tenant/tenants correlation_id=corr-e33f2a51
+2026-02-07 20:54:22,710 | INFO  | mcp.invoke | invoke start tool=tenant_get_tenant request_id=req-870734b8 correlation_id=corr-72ffbc3c context=None
+2026-02-07 20:54:22,710 | INFO  | mcp.invoke | policy decision tool=tenant_get_tenant risk=SAFE_READ mode=manual allowed=True
+2026-02-07 20:54:22,748 | INFO  | mcp.transport | XCO request done method=GET status=404 duration_ms=37 url=https://10.13.85.20:443/v1/tenant/tenant
+2026-02-07 20:54:22,749 | INFO  | mcp.invoke | invoke success tool=tenant_get_tenant status=404 url=https://10.13.85.20:443/v1/tenant/tenant correlation_id=corr-72ffbc3c
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [88371]
+2026-02-07 20:57:05,104 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-07 20:57:05,105 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=53
+INFO:     Started server process [88416]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-02-07 20:57:07,858 | INFO  | mcp.invoke | invoke start tool=tenant_get_tenant request_id=req-123a5ff8 correlation_id=corr-d7130d5f context=None
+2026-02-07 20:57:07,859 | INFO  | mcp.invoke | policy decision tool=tenant_get_tenant risk=SAFE_READ mode=manual allowed=True
+2026-02-07 20:57:07,995 | INFO  | mcp.transport | XCO request done method=GET status=404 duration_ms=135 url=https://10.13.85.20:443/v1/tenant/tenant/{id}
+2026-02-07 20:57:07,996 | INFO  | mcp.invoke | invoke success tool=tenant_get_tenant status=404 url=https://10.13.85.20:443/v1/tenant/tenant/{id} correlation_id=corr-d7130d5f
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [88416]
+2026-02-07 20:59:50,365 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-07 20:59:50,365 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=53
+INFO:     Started server process [88438]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-02-07 20:59:52,189 | INFO  | mcp.invoke | invoke start tool=tenant_get_tenant request_id=req-46f3932c correlation_id=corr-bf519879 context=None
+2026-02-07 20:59:52,189 | INFO  | mcp.invoke | policy decision tool=tenant_get_tenant risk=SAFE_READ mode=manual allowed=True
+2026-02-07 20:59:52,369 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=179 url=https://10.13.85.20:443/v1/tenant/tenant
+2026-02-07 20:59:52,370 | INFO  | mcp.invoke | invoke success tool=tenant_get_tenant status=200 url=https://10.13.85.20:443/v1/tenant/tenant correlation_id=corr-bf519879
+2026-02-07 21:00:54,313 | INFO  | mcp.invoke | invoke start tool=tenant_get_portchannels request_id=req-44b08579 correlation_id=corr-3893c3ff context=None
+2026-02-07 21:00:54,314 | INFO  | mcp.invoke | policy decision tool=tenant_get_portchannels risk=SAFE_READ mode=manual allowed=True
+2026-02-07 21:00:54,343 | INFO  | mcp.transport | XCO request done method=GET status=404 duration_ms=28 url=https://10.13.85.20:443/v1/tenant/portchannels
+2026-02-07 21:00:54,343 | INFO  | mcp.invoke | invoke success tool=tenant_get_portchannels status=404 url=https://10.13.85.20:443/v1/tenant/portchannels correlation_id=corr-3893c3ff
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [88438]
+2026-02-07 21:04:31,489 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-07 21:04:31,489 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=53
+INFO:     Started server process [88528]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-02-07 21:04:33,418 | INFO  | mcp.invoke | invoke start tool=tenant_get_portchannels request_id=req-1783b2b0 correlation_id=corr-73c7b35e context=None
+2026-02-07 21:04:33,419 | INFO  | mcp.invoke | policy decision tool=tenant_get_portchannels risk=SAFE_READ mode=manual allowed=True
+2026-02-07 21:04:33,616 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=197 url=https://10.13.85.20:443/v1/tenant/portchannels
+2026-02-07 21:04:33,617 | INFO  | mcp.invoke | invoke success tool=tenant_get_portchannels status=200 url=https://10.13.85.20:443/v1/tenant/portchannels correlation_id=corr-73c7b35e
+2026-02-07 21:05:33,082 | INFO  | mcp.invoke | invoke start tool=tenant_get_bgp_peer_operational request_id=req-3b937f2a correlation_id=corr-b3e7aaed context=None
+2026-02-07 21:05:33,083 | INFO  | mcp.invoke | policy decision tool=tenant_get_bgp_peer_operational risk=SAFE_READ mode=manual allowed=True
+2026-02-07 21:05:33,121 | INFO  | mcp.transport | XCO request done method=GET status=404 duration_ms=37 url=https://10.13.85.20:443/v1/tenant/bgp/service/peer/operational
+2026-02-07 21:05:33,122 | INFO  | mcp.invoke | invoke success tool=tenant_get_bgp_peer_operational status=404 url=https://10.13.85.20:443/v1/tenant/bgp/service/peer/operational correlation_id=corr-b3e7aaed
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [88528]
+2026-02-07 21:10:23,676 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-07 21:10:23,677 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=52
+INFO:     Started server process [88580]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-02-07 21:10:25,580 | INFO  | mcp.invoke | invoke start tool=tenant_get_bgp_peer_operational request_id=req-0a879b14 correlation_id=corr-509119a1 context=None
+2026-02-07 21:10:25,581 | ERROR | mcp.invoke | invoke failed tool=tenant_get_bgp_peer_operational request_id=req-0a879b14 correlation_id=corr-509119a1 error=tenant_get_bgp_peer_operational
+Traceback (most recent call last):
+  File "/home/user01/xco-mcp-server/mcp_runtime/server.py", line 120, in invoke
+    raise ToolNotFound(tool_name)
+mcp_runtime.errors.ToolNotFound: tenant_get_bgp_peer_operational
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [88580]
+2026-02-07 21:13:47,860 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-07 21:13:47,860 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=53
+INFO:     Started server process [88603]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-02-07 21:13:49,961 | INFO  | mcp.invoke | invoke start tool=tenant_get_bgp_peer_operational request_id=req-d001a6d3 correlation_id=corr-df9e401c context=None
+2026-02-07 21:13:49,961 | INFO  | mcp.invoke | policy decision tool=tenant_get_bgp_peer_operational risk=SAFE_READ mode=manual allowed=True
+2026-02-07 21:13:50,121 | INFO  | mcp.transport | XCO request done method=GET status=404 duration_ms=159 url=https://10.13.85.20:443/v1/tenant/bgp/service/peer/operational
+2026-02-07 21:13:50,122 | INFO  | mcp.invoke | invoke success tool=tenant_get_bgp_peer_operational status=404 url=https://10.13.85.20:443/v1/tenant/bgp/service/peer/operational correlation_id=corr-df9e401c
+2026-02-07 21:18:08,037 | INFO  | mcp.invoke | invoke start tool=tenant_get_mirror_sessions request_id=req-ac2f4d01 correlation_id=corr-48a967dd context=None
+2026-02-07 21:18:08,037 | INFO  | mcp.invoke | policy decision tool=tenant_get_mirror_sessions risk=SAFE_READ mode=manual allowed=True
+2026-02-07 21:18:08,107 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=69 url=https://10.13.85.20:443/v1/tenant/mirror/service/sessions
+2026-02-07 21:18:08,108 | INFO  | mcp.invoke | invoke success tool=tenant_get_mirror_sessions status=200 url=https://10.13.85.20:443/v1/tenant/mirror/service/sessions correlation_id=corr-48a967dd
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [88603]
+2026-02-07 21:39:59,634 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-07 21:39:59,634 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=55
+INFO:     Started server process [88676]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-02-07 21:41:26,707 | INFO  | mcp.invoke | invoke start tool=tenant_get_portchannel request_id=req-b554ae0f correlation_id=corr-dcb6403a context=None
+2026-02-07 21:41:26,708 | INFO  | mcp.invoke | policy decision tool=tenant_get_portchannel risk=SAFE_READ mode=manual allowed=True
+2026-02-07 21:41:26,869 | INFO  | mcp.transport | XCO request done method=GET status=404 duration_ms=161 url=https://10.13.85.20:443/v1/tenant/portchannel
+2026-02-07 21:41:26,871 | INFO  | mcp.invoke | invoke success tool=tenant_get_portchannel status=404 url=https://10.13.85.20:443/v1/tenant/portchannel correlation_id=corr-dcb6403a
+2026-02-07 21:45:57,000 | INFO  | mcp.invoke | invoke start tool=tenant_get_portchannel request_id=req-03bf0da1 correlation_id=corr-54e1c540 context=None
+2026-02-07 21:45:57,001 | INFO  | mcp.invoke | policy decision tool=tenant_get_portchannel risk=SAFE_READ mode=manual allowed=True
+2026-02-07 21:45:57,089 | INFO  | mcp.transport | XCO request done method=GET status=409 duration_ms=88 url=https://10.13.85.20:443/v1/tenant/portchannel
+2026-02-07 21:45:57,090 | INFO  | mcp.invoke | invoke success tool=tenant_get_portchannel status=409 url=https://10.13.85.20:443/v1/tenant/portchannel correlation_id=corr-54e1c540
+2026-02-07 21:51:26,790 | INFO  | mcp.invoke | invoke start tool=tenant_get_bgp_peer request_id=req-3b0d890b correlation_id=corr-90a97959 context=None
+2026-02-07 21:51:26,790 | INFO  | mcp.invoke | policy decision tool=tenant_get_bgp_peer risk=SAFE_READ mode=manual allowed=True
+2026-02-07 21:51:26,833 | INFO  | mcp.transport | XCO request done method=GET status=404 duration_ms=42 url=https://10.13.85.20:443/v1/tenant/bgp/service/peer
+2026-02-07 21:51:26,834 | INFO  | mcp.invoke | invoke success tool=tenant_get_bgp_peer status=404 url=https://10.13.85.20:443/v1/tenant/bgp/service/peer correlation_id=corr-90a97959
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [88676]
+2026-02-07 22:02:16,391 | INFO  | mcp.transport | XCOTransport initialized host=10.13.85.20 verify_tls=False timeout=20s
+2026-02-07 22:02:16,392 | INFO  | mcp.server | MCPServer initialized auto_mode=False tools=56
+INFO:     Started server process [88748]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-02-07 22:04:09,360 | INFO  | mcp.invoke | invoke start tool=tenant_get_bgp_peers request_id=req-a3ec31cf correlation_id=corr-52fac7d0 context=None
+2026-02-07 22:04:09,360 | INFO  | mcp.invoke | policy decision tool=tenant_get_bgp_peers risk=SAFE_READ mode=manual allowed=True
+2026-02-07 22:04:09,528 | INFO  | mcp.transport | XCO request done method=GET status=200 duration_ms=167 url=https://10.13.85.20:443/v1/tenant/bgp/service/peers
+2026-02-07 22:04:09,529 | INFO  | mcp.invoke | invoke success tool=tenant_get_bgp_peers status=200 url=https://10.13.85.20:443/v1/tenant/bgp/service/peers correlation_id=corr-52fac7d0

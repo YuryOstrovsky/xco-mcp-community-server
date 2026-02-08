@@ -74,7 +74,18 @@ TIER1_TOOL_NAMES = {
    "snmp_get_trap_subscribers",
    "snmp_get_executions",
    "snmp_get_execution",
-   
+
+
+   "tenant_get_health",
+   "tenant_get_tenants",
+   "tenant_get_tenant",
+   "tenant_get_portchannels",
+   "tenant_get_portchannel",
+   "tenant_get_bgp_peer_operational",
+   "tenant_get_bgp_peers",
+   "tenant_get_bgp_peer",
+   "tenant_get_mirror_sessions",
+
 
 
 

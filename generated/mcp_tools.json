@@ -1476,7 +1476,335 @@
     "objects": ["execution", "log"],
     "scopes": [["system"]]
   }
+},
+
+
+
+
+{
+  "name": "tenant_get_health",
+  "description": "Get health status of the Tenant service",
+  "category": "tenant",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/tenant/health"
+  },
+  "auth": "bearer",
+  "input_schema": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tenant", "health", "tier1"],
+  "capabilities": {
+    "actions": ["show"],
+    "objects": ["health"],
+    "scopes": [["system"]]
+  }
+},
+
+{
+  "name": "tenant_get_tenants",
+  "description": "Get all tenants configured in the Tenant service",
+  "category": "tenant",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/tenant/tenants"
+  },
+  "auth": "bearer",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "search": { "type": "string" },
+      "pagination": { "type": "string" },
+      "include": {
+        "type": "array",
+        "items": { "type": "string", "enum": ["utilization"] }
+      }
+    },
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tenant", "tier1"],
+  "capabilities": {
+    "actions": ["list"],
+    "objects": ["tenant"],
+    "scopes": [["system"]]
+  }
+},
+
+{
+  "name": "tenant_get_tenant",
+  "description": "Get tenant details by tenant name",
+  "category": "tenant",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/tenant/tenant"
+  },
+  "auth": "bearer",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": "Name of the tenant"
+      },
+      "include": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": ["utilization"]
+        },
+        "description": "Optional fields to include"
+      }
+    },
+    "required": ["name"]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tenant", "tier1"],
+  "capabilities": {
+    "actions": ["show"],
+    "objects": ["tenant"],
+    "scopes": [["fabric"]]
+  }
+},
+
+
+
+{
+  "name": "tenant_get_portchannels",
+  "description": "Get all port-channels configured for a tenant",
+  "category": "tenant",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/tenant/portchannels"
+  },
+  "auth": "bearer",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "tenant_name": {
+        "type": "string",
+        "description": "Tenant to which this port-channel belongs"
+      },
+      "search": {
+        "type": "object",
+        "description": "Optional search filter"
+      },
+      "pagination": {
+        "type": "object",
+        "description": "Optional pagination options"
+      }
+    },
+    "required": ["tenant_name"]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tenant", "portchannel", "tier1"],
+  "capabilities": {
+    "actions": ["list"],
+    "objects": ["portchannel"],
+    "scopes": [["tenant"]]
+  }
+},
+
+{
+  "name": "tenant_get_portchannel",
+  "description": "Get detailed Portchannel configuration for a tenant",
+  "category": "tenant",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/tenant/portchannel"
+  },
+  "auth": "bearer",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "name": { "type": "string" },
+      "tenant_name": { "type": "string" },
+      "po_id": { "type": "string" },
+      "device_ip": { "type": "string" }
+    },
+    "required": ["tenant_name"]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": false,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tenant", "portchannel", "tier2"],
+  "capabilities": {
+    "actions": ["inspect"],
+    "objects": ["portchannel"],
+    "scopes": [["tenant"], ["device"]]
+  }
+},
+
+
+
+{
+  "name": "tenant_get_bgp_peer_operational",
+  "description": "Get operational state of BGP peers for a tenant",
+  "category": "tenant",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/tenant/bgp/service/peer/operational"
+  },
+  "auth": "bearer",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "tenant_name": {
+        "type": "string",
+        "description": "Tenant to which this BGP peer belongs"
+      },
+      "vrf_name": {
+        "type": "string",
+        "description": "Optional VRF name to filter BGP peers"
+      }
+    },
+    "required": ["tenant_name"]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tenant", "bgp", "operational", "tier2"],
+  "capabilities": {
+    "actions": ["show"],
+    "objects": ["bgp-peer"],
+    "scopes": [["tenant"], ["vrf"]]
+  }
+},
+
+{
+  "name": "tenant_get_bgp_peers",
+  "description": "Get list of BGP peer configurations for a tenant",
+  "category": "tenant",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/tenant/bgp/service/peers"
+  },
+  "auth": "bearer",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "tenant_name": {
+        "type": "string",
+        "description": "Tenant to which the BGP peers belong"
+      },
+      "vrf_name": {
+        "type": "string",
+        "description": "Optional VRF name"
+      }
+    },
+    "required": ["tenant_name"]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": false,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tenant", "bgp", "tier2"],
+  "capabilities": {
+    "actions": ["list"],
+    "objects": ["bgp", "peer"],
+    "scopes": [["tenant"], ["vrf"]]
+  }
+},
+
+
+{
+  "name": "tenant_get_bgp_peer",
+  "description": "Get BGP peer configuration for a tenant",
+  "category": "tenant",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/tenant/bgp/service/peer"
+  },
+  "auth": "bearer",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "tenant_name": { "type": "string" },
+      "vrf_name": { "type": "string" }
+    },
+    "required": ["tenant_name"]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": false,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tenant", "bgp", "tier2"],
+  "capabilities": {
+    "actions": ["inspect"],
+    "objects": ["bgp", "peer"],
+    "scopes": [["tenant"], ["vrf"]]
+  }
+},
+
+
+
+{
+  "name": "tenant_get_mirror_sessions",
+  "description": "Get mirror service sessions for a tenant",
+  "category": "tenant",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/tenant/mirror/service/sessions"
+  },
+  "auth": "bearer",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "tenant_name": { "type": "string" }
+    },
+    "required": ["tenant_name"]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": false,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tenant", "mirror", "tier2"],
+  "capabilities": {
+    "actions": ["list"],
+    "objects": ["mirror-session"],
+    "scopes": [["tenant"]]
+  }
 }
+
+
+
+
+
 
 
 
