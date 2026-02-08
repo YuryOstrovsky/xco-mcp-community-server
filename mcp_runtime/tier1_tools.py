@@ -25,7 +25,7 @@ TIER1_TOOL_NAMES = {
 
     "inventory_getswitches",
     "inventory_switch_inventory_summary",
-    "inventory_switch_inventory_info"
+    "inventory_switch_inventory_info",
 
     "inventory_get_rma_history",
     "inventory_get_rma_detail",

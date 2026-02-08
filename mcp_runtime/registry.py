@@ -3,6 +3,9 @@ from pathlib import Path
 
 from mcp_runtime.tier1_tools import TIER1_TOOL_NAMES
 from tools.system.diagnostics import system_get_last_execution_diagnostic
+from tools.fabric.overview import fabric_get_fabric_overview
+from tools.fabric.health_summary import fabric_get_fabric_health_summary
+
 
 TOOLS_FILE = Path("generated/mcp_tools.json")
 
@@ -41,6 +44,16 @@ class MCPRegistry:
         self.handlers["system_get_last_execution_diagnostic"] = (
             system_get_last_execution_diagnostic
         )
+
+        self.handlers["fabric_get_fabric_overview"] = (
+            fabric_get_fabric_overview
+        )
+
+        # ---- Tier-2 registrations (EXPLICIT) ----
+        self.handlers["fabric_get_fabric_health_summary"] = (
+            fabric_get_fabric_health_summary
+        )
+
 
         return self
 

@@ -9165,7 +9165,112 @@
     "objects": ["executions"],
     "scopes": [["system"]]
   }
+},
+
+
+
+
+
+
+
+
+{
+  "name": "fabric_get_fabric_overview",
+  "description": "Tier-2: Compact fabric overview (headline + optional errors/devices summary). Set include_raw=true to include raw Tier-1 payloads (large).",
+  "category": "fabric",
+  "method": "COMPOSITE",
+  "auth": "bearer",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "fabric_name": {
+        "type": "string",
+        "description": "Optional: filter to a single fabric by name"
+      },
+      "include_health": {
+        "type": "boolean",
+        "default": true,
+        "description": "If true, enrich output with fabric health data (via Tier-1)."
+      },
+      "include_errors": {
+        "type": "boolean",
+        "default": true,
+        "description": "If true, include fabric errors data when available (via Tier-1)."
+      },
+      "include_devices": {
+        "type": "boolean",
+        "default": false,
+        "description": "If true, include per-fabric devices_summary (counts by role/firmware/config state)."
+      },
+      "include_raw": {
+        "type": "boolean",
+        "default": false,
+        "description": "If true, include raw Tier-1 payloads (summary_raw/health_raw/devices_raw). Output becomes large."
+      }
+    },
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "fabric", "overview", "tier2"],
+  "capabilities": {
+    "actions": ["show", "summarize"],
+    "objects": ["fabric"],
+    "scopes": [["fabric"], ["system"]]
+  }
+},
+
+
+{
+  "name": "fabric_get_fabric_health_summary",
+  "description": "Tier-2: fabric health summary (global + per-fabric). Combines fabrics-health, fabric-health, service health, and optional errors into an actionable summary with next steps.",
+  "category": "fabric",
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier2", "fabric", "health", "summary"],
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "name": { "type": "string", "description": "Fabric name. If omitted, runs in global mode." },
+
+      "include_global": { "type": "boolean", "default": true, "description": "Include global fabrics list (fabrics-health)." },
+      "include_service_health": { "type": "boolean", "default": true, "description": "Include fabric service health (fabric_get_health / service health)." },
+      "include_errors": { "type": "boolean", "default": false, "description": "Include errors sections using fabrics-errors and fabric-errors (with fallback)." },
+
+      "expand_unhealthy": { "type": "boolean", "default": false, "description": "In global mode, expand first unhealthy fabrics into partial summaries." },
+      "max_expand": { "type": "integer", "default": 3, "minimum": 1, "maximum": 50 },
+
+      "max_fabrics": { "type": "integer", "default": 200, "minimum": 1, "maximum": 5000 },
+      "max_unhealthy_devices": { "type": "integer", "default": 50, "minimum": 1, "maximum": 5000 },
+      "max_error_items": { "type": "integer", "default": 50, "minimum": 1, "maximum": 5000 },
+
+      "include_raw": { "type": "boolean", "default": false, "description": "Include raw Tier-1 per-fabric health payload as health_raw." }
+    },
+    "required": []
+  }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
