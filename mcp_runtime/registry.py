@@ -8,6 +8,15 @@ from tools.fabric.health_summary import fabric_get_fabric_health_summary
 from tools.fabric.health_timeline import fabric_get_fabric_health_timeline
 from tools.fabric.validation_report import fabric_get_fabric_validation_report
 from tools.fabric.errors_summary import fabric_get_fabric_errors_summary
+from tools.fabric.execution_last_failed import fabric_get_fabric_execution_last_failed
+from tools.fabric.execution_recent import fabric_get_fabric_execution_recent
+from tools.fabric.efa_command_list import fabric_get_fabric_efa_command_list
+#from tools.inventory.fabric_switches_summary import inventory_get_fabric_switches_summary
+
+
+
+
+
 
 
 
@@ -73,6 +82,31 @@ class MCPRegistry:
         self.handlers["fabric_get_fabric_errors_summary"] = (
             fabric_get_fabric_errors_summary
         )
+
+        self.handlers["fabric_get_fabric_execution_last_failed"] = (
+            fabric_get_fabric_execution_last_failed
+        )
+
+        self.handlers["fabric_get_fabric_execution_recent"] = (
+            fabric_get_fabric_execution_recent
+        )
+
+        self.handlers["fabric_get_fabric_efa_command_list"] = (
+            fabric_get_fabric_efa_command_list
+        )
+
+ #       self.handlers["inventory_get_fabric_switches_summary"] = (
+ #           inventory_get_fabric_switches_summary
+ #       )
+
+
+
+        
+
+
+
+
+        
 
 
         

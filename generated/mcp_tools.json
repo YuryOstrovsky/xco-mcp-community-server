@@ -9399,7 +9399,185 @@
       ["system"]
     ]
   }
+},
+
+{
+  "name": "fabric_get_fabric_execution_last_failed",
+  "description": "Tier-2: Find the most recent FAILED fabric execution for a given fabric name (best-effort match), and return a compact actionable summary. Uses Tier-1 fabric_get_execution_list and optionally fabric_get_execution_get.",
+  "category": "fabric",
+  "method": "COMPOSITE",
+  "auth": "bearer",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": "Fabric name (e.g., DC)."
+      },
+      "limit": {
+        "type": "integer",
+        "default": 50,
+        "description": "How many failed executions to request from Tier-1 list before local filtering."
+      },
+      "include_detail": {
+        "type": "boolean",
+        "default": true,
+        "description": "If true, fetch execution detail for the matched execution (Tier-1 fabric_get_execution_get)."
+      },
+      "include_raw": {
+        "type": "boolean",
+        "default": false,
+        "description": "If true, include raw Tier-1 payloads (can be large)."
+      }
+    },
+    "required": ["name"]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "fabric", "execution", "tier2"],
+  "capabilities": {
+    "actions": ["show", "summarize"],
+    "objects": ["fabric", "fabric-executions"],
+    "scopes": [["fabric"], ["system"]]
+  }
+},
+
+{
+  "name": "fabric_get_fabric_execution_recent",
+  "description": "Tier-2: recent fabric executions (per-fabric). Fetches execution list, correlates executions to a fabric name/id using best-effort heuristics, optionally fetches execution detail for the most recent matched executions, and returns an actionable summary + next steps.",
+  "category": "fabric",
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": [
+    "read",
+    "tier2",
+    "fabric",
+    "executions",
+    "recent"
+  ],
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": "Fabric name. Required."
+      },
+      "limit": {
+        "type": "integer",
+        "default": 50,
+        "minimum": 1,
+        "maximum": 5000,
+        "description": "How many executions to request from Tier-1 execution list."
+      },
+      "status": {
+        "type": "string",
+        "default": "all",
+        "description": "Status filter passed to execution list: failed | succeeded | all."
+      },
+      "max_items": {
+        "type": "integer",
+        "default": 10,
+        "minimum": 1,
+        "maximum": 200,
+        "description": "Maximum matched executions returned in the output list."
+      },
+      "include_detail": {
+        "type": "boolean",
+        "default": false,
+        "description": "If true, fetch execution detail for up to detail_limit matched executions."
+      },
+      "detail_limit": {
+        "type": "integer",
+        "default": 3,
+        "minimum": 1,
+        "maximum": 50,
+        "description": "Max number of matched executions to fetch detail for when include_detail=true."
+      },
+      "include_raw": {
+        "type": "boolean",
+        "default": false,
+        "description": "Include raw Tier-1 payloads under raw."
+      }
+    },
+    "required": [
+      "name"
+    ]
+  }
+},
+
+{
+  "name": "fabric_get_fabric_efa_command_list",
+  "description": "Return the EFA command/script lines (from XCO runningConfig) correlated to a specific fabric name",
+  "category": "fabric",
+  "method": "COMPOSITE",
+  "endpoint": null,
+  "auth": "inherits",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "name": { "type": "string", "description": "Fabric name (e.g. DC)" },
+      "max_items": { "type": "integer", "description": "Max matched command lines to return (default 200)", "default": 200 },
+      "include_full_text": { "type": "boolean", "description": "Include full extracted script text (default false)", "default": false },
+      "include_raw": { "type": "boolean", "description": "Include raw Tier-1 outputs (default false)", "default": false }
+    },
+    "required": ["name"]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier2", "fabric", "efa"]
+},
+
+{
+  "name": "inventory_get_fabric_switches_summary",
+  "description": "Tier-2: Summarize switches that belong to a specific fabric. Composite tool: validates fabric exists (fabric_get_fabrics), fetches switches from Inventory (inventory_getswitches) using fabric-id, and optionally enriches a limited number of switches with per-device inventory summary (inventory_switch_inventory_summary_info). Returns breakdowns (role/model/status) + compact switch list + next actions.",
+  "category": "inventory",
+  "method": "POST",
+  "endpoint": {
+    "host": "{MCP_HOST}",
+    "path": "/invoke"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "name": { "type": "string", "description": "Fabric name (e.g. DC). Required." },
+
+      "max_items": { "type": "integer", "default": 200, "minimum": 1, "maximum": 5000, "description": "Max switches returned in signals.switches.items (after local truncation)." },
+
+      "include_per_switch_summary": { "type": "boolean", "default": false, "description": "If true, fetch inventory summary-info for a limited number of switches (best-effort, requires device_id)." },
+      "per_switch_limit": { "type": "integer", "default": 5, "minimum": 1, "maximum": 50, "description": "How many switches to enrich with inventory_switch_inventory_summary_info when include_per_switch_summary=true." },
+
+      "include_raw": { "type": "boolean", "default": false, "description": "Include raw Tier-1 responses under raw (debug)." }
+    },
+    "required": ["name"]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier2", "composite", "inventory", "switches", "fabric"],
+  "capabilities": {
+    "actions": ["show", "list", "summarize"],
+    "objects": ["inventory", "switches", "fabric"],
+    "scopes": [["system"], ["fabric"]]
+  }
 }
+
+
+
+
+
+
 
 
 
