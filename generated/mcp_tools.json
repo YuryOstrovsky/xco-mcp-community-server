@@ -9296,7 +9296,114 @@
     },
     "required": ["name"]
   }
+},
+
+{
+  "name": "fabric_get_fabric_validation_report",
+  "description": "Tier-2: Pre-change readiness / audit report for a fabric. Correlates health, errors, locks, and validation endpoints into a PASS/WARN/FAIL verdict with next actions.",
+  "category": "fabric",
+  "method": "COMPOSITE",
+  "auth": "bearer",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "name": { "type": "string", "description": "Fabric name (preferred)." },
+      "fabric_name": { "type": "string", "description": "Alias for name." },
+      "include_health": { "type": "boolean", "default": true, "description": "If true, include fabric health headline + device health counts." },
+      "include_errors": { "type": "boolean", "default": true, "description": "If true, include fabric errors (and fail verdict if any errors exist)." },
+      "include_locks": { "type": "boolean", "default": true, "description": "If true, include service locks (warn verdict if any locks exist)." },
+      "include_validate_fabric": { "type": "boolean", "default": true, "description": "If true, call fabric_validate_fabric and include its findings." },
+      "include_topology_validation": { "type": "boolean", "default": false, "description": "If true, call fabric_validate_physical_topology and include its findings." },
+      "max_error_items": { "type": "integer", "default": 50 },
+      "max_lock_items": { "type": "integer", "default": 50 },
+      "max_validation_items": { "type": "integer", "default": 50 },
+      "include_raw": { "type": "boolean", "default": false, "description": "If true, include raw Tier-1 responses under payload.raw (large)." }
+    },
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "fabric", "validation", "diagnostic", "tier2"],
+  "capabilities": {
+    "actions": ["validate", "diagnose", "summarize"],
+    "objects": ["fabric"],
+    "scopes": [["fabric"], ["system"]]
+  }
+},
+
+{
+  "name": "fabric_get_fabric_errors_summary",
+  "description": "Tier-2: Fabric errors summary. Calls Tier-1 fabric_get_fabric_errors (and optionally fabric_get_fabrics_errors + fabric_get_fabric_health) and returns an actionable summary (counts, top error types, affected devices when present) with next steps. Set include_raw=true to include raw Tier-1 payloads.",
+  "category": "fabric",
+  "method": "COMPOSITE",
+  "auth": "bearer",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": "Fabric name (required)."
+      },
+      "include_health": {
+        "type": "boolean",
+        "default": true,
+        "description": "If true, also fetch fabric health (fabric_get_fabric_health) to include device health counts for context."
+      },
+      "include_global": {
+        "type": "boolean",
+        "default": false,
+        "description": "If true, also fetch global fabrics errors (fabric_get_fabrics_errors) for context."
+      },
+      "max_error_items": {
+        "type": "integer",
+        "default": 50,
+        "minimum": 1,
+        "maximum": 5000,
+        "description": "Maximum number of error items to return if the endpoint provides a list."
+      },
+      "include_raw": {
+        "type": "boolean",
+        "default": false,
+        "description": "If true, include raw Tier-1 payloads under raw.{...}. Output becomes large."
+      }
+    },
+    "required": ["name"]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": [
+    "read",
+    "tier2",
+    "fabric",
+    "errors",
+    "summary"
+  ],
+  "capabilities": {
+    "actions": [
+      "show",
+      "summarize",
+      "triage"
+    ],
+    "objects": [
+      "fabric",
+      "error"
+    ],
+    "scopes": [
+      ["fabric"],
+      ["system"]
+    ]
+  }
 }
+
+
+
+
 
 
 

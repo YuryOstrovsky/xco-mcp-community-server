@@ -6,6 +6,12 @@ from tools.system.diagnostics import system_get_last_execution_diagnostic
 from tools.fabric.overview import fabric_get_fabric_overview
 from tools.fabric.health_summary import fabric_get_fabric_health_summary
 from tools.fabric.health_timeline import fabric_get_fabric_health_timeline
+from tools.fabric.validation_report import fabric_get_fabric_validation_report
+from tools.fabric.errors_summary import fabric_get_fabric_errors_summary
+
+
+
+
 
 
 
@@ -51,7 +57,7 @@ class MCPRegistry:
             fabric_get_fabric_overview
         )
 
-        # ---- Tier-2 registrations (EXPLICIT) ----
+        
         self.handlers["fabric_get_fabric_health_summary"] = (
             fabric_get_fabric_health_summary
         )
@@ -59,6 +65,17 @@ class MCPRegistry:
         self.handlers["fabric_get_fabric_health_timeline"] = (
             fabric_get_fabric_health_timeline
         )
+
+        self.handlers["fabric_get_fabric_validation_report"] = (
+            fabric_get_fabric_validation_report
+        )
+
+        self.handlers["fabric_get_fabric_errors_summary"] = (
+            fabric_get_fabric_errors_summary
+        )
+
+
+        
 
 
         return self
