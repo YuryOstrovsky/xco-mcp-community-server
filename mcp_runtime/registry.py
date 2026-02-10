@@ -11,7 +11,8 @@ from tools.fabric.errors_summary import fabric_get_fabric_errors_summary
 from tools.fabric.execution_last_failed import fabric_get_fabric_execution_last_failed
 from tools.fabric.execution_recent import fabric_get_fabric_execution_recent
 from tools.fabric.efa_command_list import fabric_get_fabric_efa_command_list
-#from tools.inventory.fabric_switches_summary import inventory_get_fabric_switches_summary
+from tools.inventory.fabric_switches_summary import inventory_get_fabric_switches_summary
+
 
 
 
@@ -95,9 +96,10 @@ class MCPRegistry:
             fabric_get_fabric_efa_command_list
         )
 
- #       self.handlers["inventory_get_fabric_switches_summary"] = (
- #           inventory_get_fabric_switches_summary
- #       )
+        self.handlers["inventory_get_fabric_switches_summary"] = (
+            inventory_get_fabric_switches_summary
+        )
+
 
 
 
