@@ -9571,7 +9571,42 @@
     "objects": ["inventory", "switches", "fabric"],
     "scopes": [["system"], ["fabric"]]
   }
+},
+
+{
+  "name": "inventory_get_software_version_mismatch",
+  "description": "Tier-2: Scan switches per fabric and detect firmware/software version mismatches grouped by fabric/role/model/global. Uses fabric_get_fabrics + inventory_getswitches.",
+  "category": "inventory",
+  "method": "COMPOSITE",
+  "endpoint": { "host": "tier2", "path": "inventory_get_software_version_mismatch" },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "fabric_name": { "type": "string", "description": "Optional fabric name filter (e.g., DC)" },
+      "group_by": { "type": "string", "enum": ["fabric", "role", "model", "global"], "default": "fabric" },
+      "include_outliers": { "type": "boolean", "default": true },
+      "outlier_limit": { "type": "integer", "default": 20 },
+      "min_group_size": { "type": "integer", "default": 2 },
+      "include_raw": { "type": "boolean", "default": false }
+    },
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier2", "inventory", "switches", "versions"],
+  "capabilities": {
+    "actions": ["show", "analyze"],
+    "objects": ["switches", "inventory"],
+    "scopes": [["fabric"], ["system"]]
+  }
+
+  
 }
+
 
 
 
