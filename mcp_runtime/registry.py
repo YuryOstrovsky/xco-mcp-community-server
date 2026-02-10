@@ -15,6 +15,12 @@ from tools.inventory.fabric_switches_summary import inventory_get_fabric_switche
 from tools.inventory.software_version_mismatch import inventory_get_software_version_mismatch
 from tools.inventory.device_health_rollup import inventory_get_device_health_rollup
 from tools.inventory.unreachable_devices import inventory_get_unreachable_devices
+from tools.tenant.service_epg_health_summary import tenant_get_service_epg_health_summary
+from tools.tenant.service_epg_alarm_summary import tenant_get_service_epg_alarm_summary
+from tools.tenant.service_epg_event_logs import tenant_get_service_epg_event_logs
+
+
+
 
 
 
@@ -118,6 +124,21 @@ class MCPRegistry:
         self.handlers["inventory_get_unreachable_devices"] = (
             inventory_get_unreachable_devices
         )
+
+        self.handlers["tenant_get_service_epg_health_summary"] = (
+            tenant_get_service_epg_health_summary
+        )
+
+        self.handlers["tenant_get_service_epg_alarm_summary"] = (
+            tenant_get_service_epg_alarm_summary
+        )
+
+        self.handlers["tenant_get_service_epg_event_logs"] = (
+            tenant_get_service_epg_event_logs
+        )
+
+
+
 
 
 

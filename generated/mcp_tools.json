@@ -9727,7 +9727,269 @@
     "objects": ["inventory", "devices", "reachability", "alarms"],
     "scopes": [["fabric"], ["system"]]
   }
+},
+
+{
+  "name": "tenant_get_service_epg_health_summary",
+  "description": "Tier-2: Real-time, table-friendly health summary for a tenant's VRFs + Endpoint Groups (EPGs), enriched via per-object error endpoints and optional recent execution signals.",
+  "category": "tenant",
+  "method": "COMPOSITE",
+  "endpoint": {
+    "host": "tier2",
+    "path": "tenant_get_service_epg_health_summary"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "tenant_name": {
+        "type": "string",
+        "description": "Tenant name to summarize (required)."
+      },
+      "include_rows": {
+        "type": "boolean",
+        "default": true,
+        "description": "If true, include per-EPG table rows."
+      },
+      "include_vrf_summary": {
+        "type": "boolean",
+        "default": true,
+        "description": "If true, include per-VRF summary rows."
+      },
+      "max_epgs": {
+        "type": "integer",
+        "default": 300,
+        "description": "Max EPGs to scan (cap 300)."
+      },
+      "max_vrfs": {
+        "type": "integer",
+        "default": 200,
+        "description": "Max VRFs to scan (cap 200)."
+      },
+      "max_rows": {
+        "type": "integer",
+        "default": 2000,
+        "description": "Max rows to return in 'rows' (cap 2000)."
+      },
+      "include_recent_executions": {
+        "type": "boolean",
+        "default": true,
+        "description": "If true, include recent tenant execution rollup (tenant_get_execution_list)."
+      },
+      "execution_limit": {
+        "type": "integer",
+        "default": 20,
+        "description": "How many executions to fetch (1..200)."
+      },
+      "execution_status": {
+        "type": "string",
+        "description": "Optional execution status filter (e.g., FAILED)."
+      },
+      "include_events": {
+        "type": "boolean",
+        "default": false,
+        "description": "If true, fetch event history for the most recent FAILED execution (best-effort)."
+      },
+      "include_locks": {
+        "type": "boolean",
+        "default": false,
+        "description": "If true, include lock counts for service/vrf/epg."
+      },
+      "include_raw": {
+        "type": "boolean",
+        "default": false,
+        "description": "If true, include tier-1 raw responses (debug)."
+      }
+    },
+    "required": [
+      "tenant_name"
+    ]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": [
+    "read",
+    "tier2"
+  ],
+  "capabilities": {
+    "actions": [
+      "show",
+      "analyze"
+    ],
+    "objects": [
+      "tenant",
+      "vrf",
+      "epg",
+      "health",
+      "errors"
+    ],
+    "scopes": [
+      [
+        "tenant"
+      ],
+      [
+        "system"
+      ]
+    ]
+  }
+},
+
+{
+  "name": "tenant_get_service_epg_alarm_summary",
+  "description": "Tier-2: Show tenant-scoped Service/EPG alarms/alerts with filters (severity/type/state) using faultmanager history + tenant EPG scoping.",
+  "category": "tenant",
+  "method": "COMPOSITE",
+  "endpoint": {
+    "host": "tier2",
+    "path": "tenant_get_service_epg_alarm_summary"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "tenant_name": {
+        "type": "string",
+        "description": "Tenant name (required). If not found, tool returns suggested_tenants via tenant_get_tenants."
+      },
+      "include_alarms": {
+        "type": "boolean",
+        "default": true,
+        "description": "Include FaultManager alarms (faultmanager_get_alarm_history)."
+      },
+      "include_alerts": {
+        "type": "boolean",
+        "default": true,
+        "description": "Include FaultManager alerts (faultmanager_get_alert_history)."
+      },
+      "severity": {
+        "type": "string",
+        "description": "Optional exact severity filter (alerts, and best-effort for alarms). Example: Critical."
+      },
+      "severity_min": {
+        "type": "string",
+        "description": "Optional minimum severity (Critical>Major>Minor>Warning>Info). Applies to alerts and best-effort alarms."
+      },
+      "alarm_type": {
+        "type": "string",
+        "description": "Optional alarm_type filter for alarms (passed to faultmanager_get_alarm_history)."
+      },
+      "resource_contains": {
+        "type": "string",
+        "description": "Optional substring filter applied to resource/name/message (post-filter)."
+      },
+      "message_contains": {
+        "type": "string",
+        "description": "Optional substring filter applied to message/description fields (post-filter)."
+      },
+      "epg_name_contains": {
+        "type": "string",
+        "description": "Optional substring filter applied to EPG matching (limits to alarms that match this EPG)."
+      },
+      "unacked": {
+        "type": "boolean",
+        "default": true,
+        "description": "Alarm state filter (alarms only)."
+      },
+      "acked": {
+        "type": "boolean",
+        "default": false,
+        "description": "Alarm state filter (alarms only)."
+      },
+      "cleared": {
+        "type": "boolean",
+        "default": false,
+        "description": "Alarm state filter (alarms only)."
+      },
+      "closed": {
+        "type": "boolean",
+        "default": false,
+        "description": "Alarm state filter (alarms only)."
+      },
+      "alert_limit": {
+        "type": "integer",
+        "default": 300,
+        "description": "Limit parameter for alert history (1..500)."
+      },
+      "max_records": {
+        "type": "integer",
+        "default": 200,
+        "description": "Max matched records returned (1..2000)."
+      },
+      "include_raw": {
+        "type": "boolean",
+        "default": false,
+        "description": "If true, include tier-1 raw responses (debug)."
+      }
+    },
+    "required": ["tenant_name"]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier2"],
+  "capabilities": {
+    "actions": ["show", "analyze"],
+    "objects": ["tenant", "epg", "alarms", "alerts"],
+    "scopes": [["system"], ["tenant"]]
+  }
+},
+
+{
+  "name": "tenant_get_service_epg_event_logs",
+  "description": "Event logs for a tenant/service scope (filters: date range, severity, fuzzy query). Tier-2 composite over tenant executions + event histories.",
+  "category": "tenant",
+  "method": "COMPOSITE",
+  "endpoint": {
+    "host": "tier2",
+    "path": "tenant_get_service_epg_event_logs"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "tenant_name": { "type": "string" },
+
+      "service_name_contains": { "type": "string" },
+      "epg_name_contains": { "type": "string" },
+
+      "start_time": { "type": "string" },
+      "end_time": { "type": "string" },
+
+      "severity_min": { "type": "string" },
+      "query": { "type": "string" },
+
+      "execution_status": { "type": "string" },
+      "execution_limit": { "type": "integer" },
+
+      "execution_uuid": { "type": "string" },
+      "device_ip": { "type": "string" },
+
+      "max_events": { "type": "integer" },
+      "allow_unscoped": { "type": "boolean" },
+      "include_raw": { "type": "boolean" }
+    },
+    "required": ["tenant_name"]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier2", "tenant", "events", "logs"],
+  "capabilities": {
+    "actions": ["show", "list"],
+    "objects": ["tenant", "events"],
+    "scopes": [["tenant"]]
+  }
 }
+
+
+
 
 
 
