@@ -9671,7 +9671,64 @@
     "objects": ["inventory"],
     "scopes": [["device"]]
   }
+},
+
+{
+  "name": "inventory_get_unreachable_devices",
+  "description": "Tier-2: Show devices currently unreachable/down (best-effort last_seen/last_error) using inventory + faultmanager alarms.",
+  "category": "inventory",
+  "method": "COMPOSITE",
+  "endpoint": { "host": "tier2", "path": "inventory_get_unreachable_devices" },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "fabric_name": {
+        "type": "string",
+        "description": "Optional fabric name filter (e.g., DC). If omitted, scans all fabrics."
+      },
+      "include_alarms": {
+        "type": "boolean",
+        "default": false,
+        "description": "If true, include top alarm snippets per unreachable device."
+      },
+      "alarm_limit": {
+        "type": "integer",
+        "default": 3,
+        "description": "Max alarm snippets per device when include_alarms=true (1..20)."
+      },
+      "group_by": {
+        "type": "string",
+        "enum": ["fabric", "role"],
+        "default": "fabric",
+        "description": "Grouping for unreachable device rollups."
+      },
+      "unreachable_only": {
+        "type": "boolean",
+        "default": true,
+        "description": "If true, return only unreachable devices (default). If false, return all devices with reachability classification."
+      },
+      "include_raw": {
+        "type": "boolean",
+        "default": false,
+        "description": "If true, include tier-1 raw responses (debug)."
+      }
+    },
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier2"],
+  "capabilities": {
+    "actions": ["show", "analyze"],
+    "objects": ["inventory", "devices", "reachability", "alarms"],
+    "scopes": [["fabric"], ["system"]]
+  }
 }
+
 
 
 
