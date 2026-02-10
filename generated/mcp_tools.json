@@ -9605,7 +9605,76 @@
   }
 
   
+},
+
+{
+  "name": "inventory_get_device_health_rollup",
+  "description": "Tier-2: Roll up device health to explain which devices are driving fabric health (e.g., Red). Composite of monitor_get_health_inventory + fabric_get_fabrics_health + fabric_get_fabrics + inventory_getswitches.",
+  "category": "inventory",
+  "method": "COMPOSITE",
+  "endpoint": { "host": "tier2", "path": "inventory_get_device_health_rollup" },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "fabric_name": { "type": "string", "description": "Optional fabric name filter (e.g., DC). If omitted, scans all fabrics." },
+      "group_by": { "type": "string", "enum": ["fabric", "role", "global"], "default": "fabric" },
+      "min_severity": { "type": "string", "enum": ["red", "yellow", "green", "unknown"], "default": "yellow" },
+      "driver_limit": { "type": "integer", "default": 10, "description": "Max drivers (unhealthy devices) per group." },
+      "include_healthy": { "type": "boolean", "default": false, "description": "If true, includes green devices in lists (otherwise only unhealthy per min_severity)." },
+      "health_resource": { "type": "string", "default": "inventory", "description": "Resource string passed to monitor_get_health_inventory. If it returns empty/invalid, tool will try safe fallbacks." },
+      "include_raw": { "type": "boolean", "default": false }
+    },
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier2", "inventory", "health", "rollup"],
+  "capabilities": {
+    "actions": ["show", "analyze"],
+    "objects": ["inventory", "switches", "health"],
+    "scopes": [["fabric"], ["system"]]
+  }
+},
+
+{
+  "name": "inventory_switch_inventory_info",
+  "description": "Get hardware inventory information for a single switch",
+  "category": "inventory",
+  "method": "GET",
+  "endpoint": {
+    "host": "{XCO_HOST}",
+    "path": "/v1/inventory/switches/inventory-info"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "device_id": {
+        "type": "integer",
+        "description": "Switch device id (from inventory_getswitches or fabric switch lists)"
+      }
+    },
+    "required": ["device_id"]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier1"],
+  "capabilities": {
+    "actions": ["show"],
+    "objects": ["inventory"],
+    "scopes": [["device"]]
+  }
 }
+
+
+
 
 
 

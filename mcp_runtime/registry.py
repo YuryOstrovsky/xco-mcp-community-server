@@ -13,6 +13,10 @@ from tools.fabric.execution_recent import fabric_get_fabric_execution_recent
 from tools.fabric.efa_command_list import fabric_get_fabric_efa_command_list
 from tools.inventory.fabric_switches_summary import inventory_get_fabric_switches_summary
 from tools.inventory.software_version_mismatch import inventory_get_software_version_mismatch
+from tools.inventory.device_health_rollup import inventory_get_device_health_rollup
+# from tools.inventory.unreachable_devices import inventory_get_unreachable_devices
+
+
 
 
 
@@ -105,6 +109,16 @@ class MCPRegistry:
         self.handlers["inventory_get_software_version_mismatch"] = (
             inventory_get_software_version_mismatch
         )
+
+        self.handlers["inventory_get_device_health_rollup"] = (
+            inventory_get_device_health_rollup
+        )
+
+ #       self.handlers["inventory_get_unreachable_devices"] = (
+ #           inventory_get_unreachable_devices
+ #       )
+
+
 
 
 
