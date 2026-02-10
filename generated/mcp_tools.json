@@ -10059,7 +10059,261 @@
     "objects": ["tenant", "epg", "alarms", "alerts", "history"],
     "scopes": [["tenant"], ["system"]]
   }
+},
+
+{
+  "name": "fault_get_active_alarms_top",
+  "description": "Tier-2 (read-only, v1): Show top ACTIVE alarms by severity and the resources they attach to. Composite uses ONLY existing tier-1 tools: faultmanager_get_alarm_history (active/unacked/uncleared/closed filters) and optionally faultmanager_get_alarm_inventory (detail enrichment). Output includes totals, by_severity counts, and top alarm groups with top impacted resources and sample instances.",
+  "category": "faultmanager",
+  "method": "COMPOSITE",
+  "endpoint": {
+    "host": "tier2",
+    "path": "fault_get_active_alarms_top"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "top_n": {
+        "type": "integer",
+        "default": 10,
+        "description": "How many alarm groups to return (1..100)."
+      },
+      "max_records": {
+        "type": "integer",
+        "default": 500,
+        "description": "Max active alarm records to process from tier-1 (1..5000)."
+      },
+      "severity_min": {
+        "type": "string",
+        "description": "Optional minimum severity (Critical>Major>Minor>Warning>Info)."
+      },
+      "query": {
+        "type": "string",
+        "description": "Optional substring search across alarm text fields (e.g., 'certificate', 'bgp')."
+      },
+      "alarm_type": {
+        "type": "string",
+        "description": "Optional alarm_type filter passed to faultmanager_get_alarm_history (and inventory enrichment)."
+      },
+      "resource": {
+        "type": "string",
+        "description": "Optional exact resource filter passed to faultmanager_get_alarm_history."
+      },
+      "resource_query": {
+        "type": "string",
+        "description": "Optional substring filter applied locally to resource (useful when resource needs partial match)."
+      },
+      "include_inventory": {
+        "type": "boolean",
+        "default": false,
+        "description": "If true, calls faultmanager_get_alarm_inventory(detail=true) to enrich alarms with catalog details."
+      },
+      "include_samples": {
+        "type": "boolean",
+        "default": true,
+        "description": "If true, include up to sample_per_group alarm instances per top group."
+      },
+      "sample_per_group": {
+        "type": "integer",
+        "default": 3,
+        "description": "How many sample instances to return per group (0..10)."
+      },
+      "include_raw": {
+        "type": "boolean",
+        "default": false,
+        "description": "If true, include tier-1 raw responses (debug)."
+      }
+    },
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": [
+    "read",
+    "tier2"
+  ],
+  "capabilities": {
+    "actions": [
+      "show",
+      "analyze",
+      "summarize"
+    ],
+    "objects": [
+      "alarms",
+      "faultmanager",
+      "resources"
+    ],
+    "scopes": [
+      [
+        "system"
+      ]
+    ]
+  }
+},
+
+{
+  "name": "fault_get_alarm_details_with_context",
+  "description": "Tier-2 (read-only): Explain an alarm (what it is, what it impacts, and related recent context). Composite uses ONLY existing tier-1 tools: faultmanager_get_alarm_history (instances + resource/severity), faultmanager_get_alarm_inventory(detail=true) (catalog explanation), faultmanager_get_alert_history (recent related alerts by resource + time window), monitor_get_health_detail(resource) (resource health), and optionally tenant_get_event_history_list(device_ip) when device_ip can be derived from resource.",
+  "category": "faultmanager",
+  "method": "COMPOSITE",
+  "endpoint": {
+    "host": "tier2",
+    "path": "fault_get_alarm_details_with_context"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": "Alarm name (preferred). Example: CertificateExpiration"
+      },
+      "alarm_id": {
+        "type": "integer",
+        "description": "Alarm id (if known)."
+      },
+      "resource": {
+        "type": "string",
+        "description": "Exact resource string to scope to (optional)."
+      },
+      "active_only": {
+        "type": "boolean",
+        "default": true,
+        "description": "If true, fetches active alarms (unacked=true, acked=false, cleared=false, closed=false)."
+      },
+      "window_hours": {
+        "type": "integer",
+        "default": 24,
+        "description": "How far back to look for related alerts (and optional tenant events)."
+      },
+      "max_instances": {
+        "type": "integer",
+        "default": 20,
+        "description": "Max alarm instances to return."
+      },
+      "alert_limit": {
+        "type": "integer",
+        "default": 100,
+        "description": "Max related alerts to fetch per selected resource."
+      },
+      "top_resources": {
+        "type": "integer",
+        "default": 3,
+        "description": "How many top resources to include context for."
+      },
+      "include_inventory": {
+        "type": "boolean",
+        "default": true,
+        "description": "If true, includes faultmanager_get_alarm_inventory(detail=true) explanation."
+      },
+      "include_alerts": {
+        "type": "boolean",
+        "default": true,
+        "description": "If true, includes related alerts from faultmanager_get_alert_history."
+      },
+      "include_health": {
+        "type": "boolean",
+        "default": true,
+        "description": "If true, includes monitor_get_health_detail for selected resources."
+      },
+      "include_tenant_events": {
+        "type": "boolean",
+        "default": true,
+        "description": "If true, and device_ip can be derived from resource, includes tenant_get_event_history_list(device_ip)."
+      },
+      "include_raw": {
+        "type": "boolean",
+        "default": false,
+        "description": "If true, includes tier-1 raw outputs for debugging."
+      }
+    },
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier2"],
+  "capabilities": {
+    "actions": ["show", "analyze", "summarize", "explain"],
+    "objects": ["alarms", "alerts", "health", "resources"],
+    "scopes": [["system"]]
+  }
+},
+
+{
+  "name": "fault_get_fabric_health_related_alerts",
+  "description": "Tier-2 (read-only): Find alerts that indicate fabric health restored/degraded recently. Composite uses ONLY existing tier-1 tools: faultmanager_get_alert_history (filter by fabric resource + time window), fabric_get_fabrics (validate fabric_name + suggestions). Produces summary counts + curated alert list + signal classification (restored/degraded/other).",
+  "category": "faultmanager",
+  "method": "COMPOSITE",
+  "endpoint": {
+    "host": "tier2",
+    "path": "fault_get_fabric_health_related_alerts"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "fabric_name": {
+        "type": "string",
+        "description": "Fabric name (e.g. DC). Required."
+      },
+      "window_hours": {
+        "type": "integer",
+        "default": 24,
+        "description": "Lookback window for alert history."
+      },
+      "max_records": {
+        "type": "integer",
+        "default": 200,
+        "description": "Max alerts returned after filtering."
+      },
+      "alert_limit": {
+        "type": "integer",
+        "default": 300,
+        "description": "Tier-1 fetch limit sent to faultmanager_get_alert_history."
+      },
+      "severity": {
+        "type": "string",
+        "description": "Optional severity filter passed to Tier-1 (e.g. Critical, Major, Warning, Info)."
+      },
+      "signal": {
+        "type": "string",
+        "description": "Optional signal filter: 'restored' or 'degraded' (post-filter classification)."
+      },
+      "include_other": {
+        "type": "boolean",
+        "default": false,
+        "description": "If true, include alerts that are fabric-scoped but not classified as restored/degraded."
+      },
+      "include_raw": {
+        "type": "boolean",
+        "default": false,
+        "description": "If true, include tier-1 raw outputs for debugging."
+      }
+    },
+    "required": ["fabric_name"]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier2"],
+  "capabilities": {
+    "actions": ["show", "analyze", "summarize"],
+    "objects": ["alerts", "fabric", "health"],
+    "scopes": [["system"]]
+  }
 }
+
+
+
 
 
 

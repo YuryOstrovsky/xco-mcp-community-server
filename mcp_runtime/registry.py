@@ -19,6 +19,12 @@ from tools.tenant.service_epg_health_summary import tenant_get_service_epg_healt
 from tools.tenant.service_epg_alarm_summary import tenant_get_service_epg_alarm_summary
 from tools.tenant.service_epg_event_logs import tenant_get_service_epg_event_logs
 from tools.tenant.service_epg_historical_report_stub import tenant_get_service_epg_historical_report_stub
+from tools.faultmanager.active_alarms_top import fault_get_active_alarms_top
+from tools.faultmanager.alarm_details_with_context import fault_get_alarm_details_with_context
+from tools.faultmanager.fabric_health_related_alerts import fault_get_fabric_health_related_alerts
+
+
+
 
 
 
@@ -142,6 +148,23 @@ class MCPRegistry:
         self.handlers["tenant_get_service_epg_historical_report_stub"] = (
             tenant_get_service_epg_historical_report_stub
         )
+
+        self.handlers["fault_get_active_alarms_top"] = (
+            fault_get_active_alarms_top
+        )
+
+        self.handlers["fault_get_alarm_details_with_context"] = (
+            fault_get_alarm_details_with_context
+        )
+
+        self.handlers["fault_get_fabric_health_related_alerts"] = (
+            fault_get_fabric_health_related_alerts
+        )
+
+
+
+
+
 
 
 

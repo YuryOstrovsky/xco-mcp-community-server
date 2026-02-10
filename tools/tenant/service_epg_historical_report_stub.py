@@ -164,6 +164,11 @@ def _get_time_ms(rec: dict) -> Optional[int]:
             "raised_at",
             "lastUpdated",
             "last_updated",
+            # common alarm keys in some XCO versions
+            "lastUpdatedTime",
+            "last_updated_time",
+            "LastChanged",
+            "lastChanged",
         ],
     )
     return _parse_ts_to_ms(v)
@@ -226,6 +231,7 @@ def _is_tenant_not_found(res: dict) -> bool:
 def _iso_from_ms(ms: int) -> str:
     return datetime.fromtimestamp(ms / 1000.0, tz=timezone.utc).isoformat()
 
+
 def _go_time_from_ms(ms: int) -> str:
     """
     FaultManager alert history in this lab expects Go-style time layout:
@@ -233,7 +239,6 @@ def _go_time_from_ms(ms: int) -> str:
     i.e. no timezone suffix, no fractional seconds.
     """
     return datetime.fromtimestamp(ms / 1000.0, tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%S")
-
 
 
 def tenant_get_service_epg_historical_report_stub(
@@ -253,14 +258,6 @@ def tenant_get_service_epg_historical_report_stub(
       - tenant_get_vrfs (scope terms)
       - faultmanager_get_alert_history (time-bounded alerts)
       - faultmanager_get_alarm_history (best-effort alarms; time-bounded locally)
-
-    Typical use-cases:
-      1) Weekly "tenant health pulse" (7 days)
-      2) Monthly ops snapshot (30 days)
-      3) Escalation focus: only Major+ / Critical+
-      4) Keyword hunt: search alarms/alerts for "bgp", "vxlan", "certificate", etc.
-      5) Tenant discovery: retry with suggestions if tenant_name is wrong
-      6) Debug/evidence: include_raw=true for tier-1 response capture
     """
 
     tenant_name = _norm_str((inputs or {}).get("tenant_name"))
@@ -363,6 +360,8 @@ def tenant_get_service_epg_historical_report_stub(
             n = _pick_first(rec, ["name", "Name", "vrfName", "vrf_name"])
             if isinstance(n, str) and n.strip():
                 vrf_names.append(n.strip())
+    else:
+        warnings.append(f"tenant_get_vrfs returned status={vrf_res.get('status')}")
     if vrf_names:
         scope_terms.extend([x.lower() for x in vrf_names[:200]])
 
@@ -375,6 +374,8 @@ def tenant_get_service_epg_historical_report_stub(
             n = _pick_first(rec, ["name", "Name", "endpointGroupName", "endpoint_group_name"])
             if isinstance(n, str) and n.strip():
                 epg_names.append(n.strip())
+    else:
+        warnings.append(f"tenant_get_endpoint_groups returned status={epg_res.get('status')}")
     if epg_names:
         scope_terms.extend([x.lower() for x in epg_names[:400]])
 
@@ -396,10 +397,11 @@ def tenant_get_service_epg_historical_report_stub(
     }
 
     # -----------------------
-    # 3) Alerts (time-bounded by Tier-1 endpoint + local scoping)
+    # 3) Alerts
     # -----------------------
     alerts_all: List[dict] = []
-    alerts_scoped: List[dict] = []
+    alerts_filtered: List[dict] = []  # after time+severity+query
+    alerts_scoped: List[dict] = []    # filtered + scope_terms
     top_unscoped_resources: Counter = Counter()
 
     if include_alerts:
@@ -437,6 +439,8 @@ def tenant_get_service_epg_historical_report_stub(
             if query and query.lower() not in _record_text(rec):
                 continue
 
+            alerts_filtered.append(rec)
+
             if is_scoped(rec):
                 alerts_scoped.append(rec)
             else:
@@ -458,16 +462,16 @@ def tenant_get_service_epg_historical_report_stub(
                 )
 
     # -----------------------
-    # 4) Alarms (no time params in Tier-1 schema; time-bounded locally)
+    # 4) Alarms
     # -----------------------
     alarms_all: List[dict] = []
-    alarms_scoped: List[dict] = []
+    alarms_filtered: List[dict] = []  # after time+severity+query
+    alarms_scoped: List[dict] = []    # filtered + scope_terms
     top_unscoped_alarm_resources: Counter = Counter()
 
     if include_alarms:
         alarm_params = {"unacked616": True, "acked": False, "cleared": False, "closed": False}
 
-        # NOTE: Some environments accept resource filter, others may not.
         alarm_params_res = dict(alarm_params)
         alarm_params_res["resource"] = tenant_name
 
@@ -480,7 +484,6 @@ def tenant_get_service_epg_historical_report_stub(
         else:
             warnings.append(f"faultmanager_get_alarm_history(resource=tenant) returned status={alarms_res.get('status')}")
 
-        # If resource-scoped returns nothing, fall back to global alarm history.
         if not alarms_all:
             alarms_res2 = call_tier1("faultmanager_get_alarm_history", alarm_params)
             if include_raw:
@@ -505,6 +508,8 @@ def tenant_get_service_epg_historical_report_stub(
 
             if query and query.lower() not in _record_text(rec):
                 continue
+
+            alarms_filtered.append(rec)
 
             if is_scoped_alarm(rec):
                 alarms_scoped.append(rec)
@@ -532,7 +537,23 @@ def tenant_get_service_epg_historical_report_stub(
     def slim_record(rec: dict) -> dict:
         return {
             "timestamp": _pick_first(
-                rec, ["Timestamp", "timestamp", "TimeCreated", "timeCreated", "created", "createdAt"]
+                rec,
+                [
+                    "Timestamp",
+                    "timestamp",
+                    "TimeCreated",
+                    "timeCreated",
+                    "created",
+                    "createdAt",
+                    "LastRaised",
+                    "lastRaised",
+                    "lastUpdated",
+                    "last_updated",
+                    "lastUpdatedTime",
+                    "last_updated_time",
+                    "LastChanged",
+                    "lastChanged",
+                ],
             ),
             "severity": _get_severity(rec),
             "resource": _pick_first(rec, ["resource", "Resource"]),
@@ -541,8 +562,11 @@ def tenant_get_service_epg_historical_report_stub(
         }
 
     if allow_unscoped:
-        alerts_out = alerts_scoped + [r for r in alerts_all if r not in alerts_scoped]
-        alarms_out = alarms_scoped + [r for r in alarms_all if r not in alarms_scoped]
+        alerts_scoped_ids = {id(r) for r in alerts_scoped}
+        alarms_scoped_ids = {id(r) for r in alarms_scoped}
+
+        alerts_out = alerts_scoped + [r for r in alerts_filtered if id(r) not in alerts_scoped_ids]
+        alarms_out = alarms_scoped + [r for r in alarms_filtered if id(r) not in alarms_scoped_ids]
     else:
         alerts_out = alerts_scoped
         alarms_out = alarms_scoped
@@ -558,10 +582,28 @@ def tenant_get_service_epg_historical_report_stub(
         s = (_get_severity(rec) or "Unknown").strip()
         sev_counts[s.lower()] += 1
 
+    # -----------------------
+    # SMALL IMPROVEMENTS (requested)
+    # 1) Echo filters in the payload so logs are self-describing.
+    # 2) Add "after_filters" and "filtered_out" counts to summary.
+    # -----------------------
+
     payload: Dict[str, Any] = {
         "tenant_name": tenant_name,
         "window_days": window_days,
         "time_range": time_range,
+        "input_echo": {
+            "tenant_name": tenant_name,
+            "window_days": window_days,
+            "allow_unscoped": allow_unscoped,
+            "include_alerts": include_alerts,
+            "include_alarms": include_alarms,
+            "severity": severity,
+            "severity_min": severity_min,
+            "query": query,
+            "alert_limit": alert_limit,
+            "max_records": max_records,
+        },
         "scope": {
             "vrf_count": len(vrf_names),
             "epg_count": len(epg_names),
@@ -569,8 +611,14 @@ def tenant_get_service_epg_historical_report_stub(
         },
         "summary": {
             "alerts_total_fetched": len(alerts_all),
-            "alerts_matched": len(alerts_scoped),
             "alarms_total_fetched": len(alarms_all),
+
+            "alerts_after_filters": len(alerts_filtered),
+            "alarms_after_filters": len(alarms_filtered),
+            "alerts_filtered_out": max(0, len(alerts_all) - len(alerts_filtered)),
+            "alarms_filtered_out": max(0, len(alarms_all) - len(alarms_filtered)),
+
+            "alerts_matched": len(alerts_scoped),
             "alarms_matched": len(alarms_scoped),
             "returned_alerts": len(alerts_out),
             "returned_alarms": len(alarms_out),
@@ -588,5 +636,4 @@ def tenant_get_service_epg_historical_report_stub(
         payload["tier1_raw"] = raw
 
     return {"status": 200, "payload": payload}
-
 
