@@ -9986,7 +9986,82 @@
     "objects": ["tenant", "events"],
     "scopes": [["tenant"]]
   }
+},
+
+{
+  "name": "tenant_get_service_epg_historical_report_stub",
+  "description": "Tier-2 (read-only, v1): Generate a simple historical health/alarm summary for a tenant's Service/EPG scope for the last 7/30 days. Use-cases: (1) Weekly tenant health pulse (7d) summary + top impacted resources. (2) Monthly ops snapshot (30d) with severity breakdown. (3) Escalation focus: only Major+/Critical+ using severity_min. (4) Keyword hunt across history using query (e.g., bgp/vxlan/certificate). (5) Tenant discovery: if tenant_name is wrong, returns suggested_tenants + next_actions. (6) Debug/evidence mode: include_raw=true captures tier-1 responses. Composite uses ONLY existing tier-1 tools: tenant_get_tenant (+tenant_get_tenants for suggestions), tenant_get_endpoint_groups, tenant_get_vrfs, faultmanager_get_alert_history (time-bounded), faultmanager_get_alarm_history (best-effort, time-bounded locally).",
+  "category": "tenant",
+  "method": "COMPOSITE",
+  "endpoint": { "host": "tier2", "path": "tenant_get_service_epg_historical_report_stub" },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "tenant_name": {
+        "type": "string",
+        "description": "Tenant name (required). If not found, tool returns suggested_tenants via tenant_get_tenants."
+      },
+      "window_days": {
+        "type": "integer",
+        "default": 7,
+        "description": "How many days back to summarize (commonly 7 or 30)."
+      },
+      "include_alerts": {
+        "type": "boolean",
+        "default": true,
+        "description": "Include FaultManager alerts (faultmanager_get_alert_history)."
+      },
+      "include_alarms": {
+        "type": "boolean",
+        "default": true,
+        "description": "Include FaultManager alarms (faultmanager_get_alarm_history, time-bounded locally)."
+      },
+      "severity": {
+        "type": "string",
+        "description": "Optional exact severity filter (alerts, and best-effort for alarms). Example: Critical."
+      },
+      "severity_min": {
+        "type": "string",
+        "description": "Optional minimum severity (Critical>Major>Minor>Warning>Info). Applies to alerts and best-effort alarms."
+      },
+      "query": {
+        "type": "string",
+        "description": "Optional fuzzy substring filter across alert/alarm text (e.g., 'BGP', 'VXLAN')."
+      },
+      "alert_limit": {
+        "type": "integer",
+        "default": 300,
+        "description": "Limit parameter for alert history (1..500)."
+      },
+      "max_records": {
+        "type": "integer",
+        "default": 200,
+        "description": "Max records returned per section (alerts/alarms) (1..2000)."
+      },
+      "allow_unscoped": {
+        "type": "boolean",
+        "default": false,
+        "description": "If true, include system/global (unscoped) alerts/alarms when tenant-scoped matches are sparse."
+      },
+      "include_raw": {
+        "type": "boolean",
+        "default": false,
+        "description": "If true, include tier-1 raw responses (debug)."
+      }
+    },
+    "required": ["tenant_name"]
+  },
+  "policy": { "risk": "SAFE_READ", "allowed_in_auto_mode": true, "requires_confirmation": false },
+  "tags": ["read", "tier2"],
+  "capabilities": {
+    "actions": ["show", "analyze", "summarize"],
+    "objects": ["tenant", "epg", "alarms", "alerts", "history"],
+    "scopes": [["tenant"], ["system"]]
+  }
 }
+
+
 
 
 

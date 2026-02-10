@@ -18,6 +18,8 @@ from tools.inventory.unreachable_devices import inventory_get_unreachable_device
 from tools.tenant.service_epg_health_summary import tenant_get_service_epg_health_summary
 from tools.tenant.service_epg_alarm_summary import tenant_get_service_epg_alarm_summary
 from tools.tenant.service_epg_event_logs import tenant_get_service_epg_event_logs
+from tools.tenant.service_epg_historical_report_stub import tenant_get_service_epg_historical_report_stub
+
 
 
 
@@ -136,6 +138,11 @@ class MCPRegistry:
         self.handlers["tenant_get_service_epg_event_logs"] = (
             tenant_get_service_epg_event_logs
         )
+
+        self.handlers["tenant_get_service_epg_historical_report_stub"] = (
+            tenant_get_service_epg_historical_report_stub
+        )
+
 
 
 
