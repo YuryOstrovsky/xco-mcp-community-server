@@ -103,7 +103,6 @@ Python libraries (minimum):
 - `prometheus-client`
 - `markdown` (optional; enables rendered HTML tool catalog)
 
-> Recommendation: create a pinned `requirements.txt` once your environment is stable (see below).
 
 ---
 
@@ -131,10 +130,10 @@ pip install -r requirements.txt
 
 Create a `.env` file in the repo root (same level as `api/`, `mcp_runtime/`, etc).
 
-Example (your current setup):
+Example :
 
-```dotenv
-XCO_HOST=10.13.85.20
+```
+XCO_HOST=<IP_ADDR/FQDN>
 XCO_USERNAME=<your_XCO_username>
 XCO_PASSWORD=<your_XCO_password>
 XCO_VERIFY_TLS=false
@@ -154,8 +153,6 @@ XCO_TIMEOUT_SECONDS=20
 - `XCO_TIMEOUT_SECONDS` (default: `20`) — HTTP request timeout
 - `XCO_READ_ONLY` (recommended: `1`) — **guardrail flag**; this repo ships only `SAFE_READ` tools by default
 
-> Note: there is some legacy code that references `XCO_BASE_URL`, but the **current runtime** uses `XCO_HOST` + port
-> to construct URLs in the transport layer.
 
 ---
 
