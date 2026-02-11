@@ -118,24 +118,12 @@ cd xco-mcp-server
 python3 -m venv .venv
 source .venv/bin/activate
 
-# 3) Install deps (minimum)
+# 3) Install deps
 pip install --upgrade pip
-pip install fastapi uvicorn requests python-dotenv prometheus-client markdown
-```
-
-### Optional: generate a `requirements.txt` (recommended)
-
-Once you've installed everything you need and the server runs cleanly:
-
-```bash
-pip freeze > requirements.txt
-```
-
-Then future installs become:
-
-```bash
 pip install -r requirements.txt
 ```
+
+
 
 ---
 
