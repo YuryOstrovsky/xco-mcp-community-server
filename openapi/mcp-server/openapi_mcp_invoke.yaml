@@ -1,0 +1,5638 @@
+openapi: 3.1.0
+info:
+  title: XCO MCP Server (/invoke) API
+  version: 0.1.0
+  description: "Auto-generated OpenAPI spec for the MCP server HTTP shim. Primary endpoint is POST /invoke with {tool, inputs}. Tool schemas are derived from mcp_tools.json."
+servers:
+  -
+    url: "http://127.0.0.1:8000"
+paths:
+  /invoke:
+    post:
+      summary: Invoke a tool by name
+      requestBody:
+        required: "True"
+        content:
+          application/json:
+            schema:
+              oneOf:
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_getswitches
+                    inputs:
+                      type: object
+                      properties:
+                        fabric-id:
+                          type: string
+                        id:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_switch_inventory_summary
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_switch_inventory_info
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - fabric_get_fabrics
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - fabric_get_fabric
+                    inputs:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        detail:
+                          type: boolean
+                      required:
+                        - name
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - fabric_validate_fabric
+                    inputs:
+                      type: object
+                      properties:
+                        fabric-name:
+                          type: string
+                      required:
+                        - "fabric-name"
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - fabric_get_fabric_setting
+                    inputs:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                      required:
+                        - name
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - fabric_get_fabrics_health
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - fabric_get_fabric_health
+                    inputs:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                      required:
+                        - name
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - fabric_get_health
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - fabric_get_fabrics_errors
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - fabric_get_fabric_errors
+                    inputs:
+                      type: object
+                      properties:
+                        fabric-name:
+                          type: string
+                      required:
+                        - "fabric-name"
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - fabric_get_devices
+                    inputs:
+                      type: object
+                      properties:
+                        fabric-name:
+                          type: string
+                      required:
+                        - "fabric-name"
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - fabric_get_physical_topology
+                    inputs:
+                      type: object
+                      properties:
+                        fabric-name:
+                          type: string
+                      required:
+                        - "fabric-name"
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - fabric_get_underlay_topology
+                    inputs:
+                      type: object
+                      properties:
+                        fabric-name:
+                          type: string
+                      required:
+                        - "fabric-name"
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - fabric_get_overlay_topology
+                    inputs:
+                      type: object
+                      properties:
+                        fabric-name:
+                          type: string
+                      required:
+                        - "fabric-name"
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - fabric_validate_physical_topology
+                    inputs:
+                      type: object
+                      properties:
+                        fabric-name:
+                          type: string
+                      required:
+                        - "fabric-name"
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - fabric_get_service_locks
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - fabric_get_running_config
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - fabric_get_execution_list
+                    inputs:
+                      type: object
+                      properties:
+                        limit:
+                          type: integer
+                          description: Limit the number of executions returned
+                          default: 10
+                        status:
+                          type: string
+                          description: "Filter executions by status (failed | succeeded | all)"
+                          default: all
+                      required:
+                        - limit
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - fabric_get_execution_get
+                    inputs:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                      required:
+                        - id
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - fabric_get_event_history_list
+                    inputs:
+                      type: object
+                      properties:
+                        execution_uuid:
+                          type: string
+                        device_ip:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - fabric_get_config_show
+                    inputs:
+                      type: object
+                      properties:
+                        fabricName:
+                          type: string
+                        role:
+                          type: string
+                          enum:
+                            - spine
+                            - leaf
+                            - "border-leaf"
+                            - all
+                        ip:
+                          type: string
+                      required:
+                        - fabricName
+                        - role
+                        - ip
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_device_inventory_export
+                    inputs:
+                      type: object
+                      properties:
+                        device_id:
+                          type: integer
+                      required:
+                        - device_id
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - auth_validate_token
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - auth_get_token_expiry
+                    inputs:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          description: Type of the token (e.g. ACCESS)
+                      required:
+                        - type
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - auth_get_all_token_expiry
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - auth_get_clients
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - auth_get_client_by_name
+                    inputs:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                      required:
+                        - name
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - auth_get_execution
+                    inputs:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: Execution ID
+                      required:
+                        - id
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - auth_get_executions
+                    inputs:
+                      type: object
+                      properties:
+                        limit:
+                          type: integer
+                          description: Limit the number of executions returned
+                          default: 10
+                        status:
+                          type: string
+                          description: "Filter executions by status (failed | succeeded | all)"
+                          default: all
+                      required:
+                        - limit
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - auth_get_api_key
+                    inputs:
+                      type: object
+                      properties:
+                        clientId:
+                          type: string
+                      required:
+                        - clientId
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - auth_get_ldap_details
+                    inputs:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                      required:
+                        - name
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - auth_get_ldap_list
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - auth_get_exec_logs
+                    inputs:
+                      type: object
+                      properties:
+                        search:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - auth_get_role_mappings
+                    inputs:
+                      type: object
+                      properties:
+                        auth_type:
+                          type: string
+                        auth_identifier:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - auth_get_tacacs_by_host
+                    inputs:
+                      type: object
+                      properties:
+                        host:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - auth_get_authentication_summary_list
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - auth_get_auth_preferences
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - auth_get_active_user_by_type
+                    inputs:
+                      type: object
+                      properties:
+                        auth_type:
+                          type: string
+                          enum:
+                            - TACACS
+                            - LDAP
+                            - LOCAL
+                            - HOST
+                      required:
+                        - auth_type
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - auth_get_user_by_name
+                    inputs:
+                      type: object
+                      properties:
+                        user_name:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - auth_get_host_users
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - auth_get_active_host_users
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - system_get_feature_settings
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - system_get_settings
+                    inputs:
+                      type: object
+                      properties:
+                        decrypt:
+                          type: boolean
+                          description: Decrypt sensitive values
+                          default: "False"
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - system_get_running_config
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - system_get_health_status
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - system_get_supportsave_list
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - system_get_supportsave_status
+                    inputs:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: Request ID returned when a SupportSave operation is initiated
+                      required:
+                        - id
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - system_get_executions
+                    inputs:
+                      type: object
+                      properties:
+                        limit:
+                          type: integer
+                          description: Limit the number of executions returned
+                          default: 10
+                        status:
+                          type: string
+                          description: "Filter executions by status (failed | succeeded | all)"
+                          default: all
+                      required:
+                        - limit
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - system_get_execution
+                    inputs:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: Execution ID
+                      required:
+                        - id
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - system_get_last_execution_diagnostic
+                    inputs:
+                      type: object
+                      properties:
+                        limit:
+                          type: integer
+                          default: 10
+                        status:
+                          type: string
+                          default: failed
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - system_get_logging_customization
+                    inputs:
+                      type: object
+                      properties:
+                        services:
+                          type: string
+                        logging_types:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - system_get_file_download
+                    inputs:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        file_type:
+                          type: string
+                          enum:
+                            - backup
+                            - supportsave
+                      required:
+                        - name
+                        - file_type
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - monitor_get_service_status
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - monitor_get_k3s_status
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - monitor_get_k3s_nodes
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - monitor_get_k3s_pods
+                    inputs:
+                      type: object
+                      properties:
+                        namespace:
+                          type: string
+                      required:
+                        - namespace
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - monitor_get_k3s_resources
+                    inputs:
+                      type: object
+                      properties:
+                        namespace:
+                          type: string
+                      required:
+                        - namespace
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - monitor_get_deployment_config
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - monitor_get_all_status
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - monitor_get_maria_db_info
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - monitor_get_gluster_fs_info
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - monitor_get_keep_alived_info
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - monitor_get_efa_status
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - monitor_get_redeploy_status
+                    inputs:
+                      type: object
+                      properties:
+                        redeployId:
+                          type: string
+                      required:
+                        - redeployId
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - monitor_get_certificate_expiry
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - monitor_get_support_save
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - monitor_get_support_save_list
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - monitor_get_backup_list
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - monitor_get_restore_status
+                    inputs:
+                      type: object
+                      properties:
+                        restoreId:
+                          type: string
+                      required:
+                        - restoreId
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - monitor_get_restore_history
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - monitor_get_sub_interface
+                    inputs:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - monitor_get_static_i_ps
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - monitor_get_virtual_route
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - monitor_get_health
+                    inputs:
+                      type: object
+                      properties:
+                        resource:
+                          type: string
+                        detail:
+                          type: boolean
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - monitor_get_health_detail
+                    inputs:
+                      type: object
+                      properties:
+                        resource:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - monitor_get_health_inventory
+                    inputs:
+                      type: object
+                      properties:
+                        resource:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - monitor_get_host_users
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - notification_get_subscribers
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - notification_get_subscriber
+                    inputs:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: Subscriber ID
+                      required:
+                        - id
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - notification_get_executions
+                    inputs:
+                      type: object
+                      properties:
+                        limit:
+                          type: integer
+                          default: 10
+                          description: Limit the number of executions returned
+                        status:
+                          type: string
+                          default: all
+                          description: "Filter executions by status (failed | succeeded | all)"
+                      required:
+                        - limit
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - faultmanager_get_health
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - faultmanager_get_alert_inventory
+                    inputs:
+                      type: object
+                      properties:
+                        alert_id:
+                          type: integer
+                        resource:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - faultmanager_get_alert_history
+                    inputs:
+                      type: object
+                      properties:
+                        alert_id:
+                          type: integer
+                        severity:
+                          type: string
+                          enum:
+                            - Critical
+                            - Major
+                            - Minor
+                            - Warning
+                            - Info
+                        resource:
+                          type: string
+                        limit:
+                          type: integer
+                        before_timestamp:
+                          type: string
+                        after_timestamp:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - faultmanager_get_alarm_inventory
+                    inputs:
+                      type: object
+                      properties:
+                        alarm_id:
+                          type: integer
+                        name:
+                          type: string
+                        resource:
+                          type: string
+                        alarm_type:
+                          type: string
+                        detail:
+                          type: boolean
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_getting_started
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_rma_historys
+                    inputs:
+                      type: object
+                      properties:
+                        device_ip:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_rma_detail
+                    inputs:
+                      type: object
+                      properties:
+                        rma_id:
+                          type: string
+                      required:
+                        - rma_id
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_multi_tpvm_upgrade_status
+                    inputs:
+                      type: object
+                      properties:
+                        ip_address:
+                          type: string
+                        execution_id:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_tpvm_upgrade_status
+                    inputs:
+                      type: object
+                      properties:
+                        ip_address:
+                          type: string
+                        execution_id:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_tpvm_list
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_switch_setting
+                    inputs:
+                      type: object
+                      properties:
+                        ip_address:
+                          type: string
+                      required:
+                        - ip_address
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_switch_health_status
+                    inputs:
+                      type: object
+                      properties:
+                        ip_address:
+                          type: string
+                      required:
+                        - ip_address
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_firmware_download_status
+                    inputs:
+                      type: object
+                      properties:
+                        fabric_name:
+                          type: string
+                        execution_id:
+                          type: string
+                        prepared_list_name:
+                          type: string
+                        device_ips:
+                          type: array
+                          items:
+                            type: string
+                        device_type:
+                          type: string
+                          enum:
+                            - fabric
+                            - npb
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_firmware_download_history_status
+                    inputs:
+                      type: object
+                      properties:
+                        fabric_name:
+                          type: string
+                        execution_id:
+                          type: string
+                        prepared_list_name:
+                          type: string
+                        device_ips:
+                          type: array
+                          items:
+                            type: string
+                        device_type:
+                          type: string
+                          enum:
+                            - fabric
+                            - npb
+                        search:
+                          type: string
+                        pagination:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_firmware_download_operation_history
+                    inputs:
+                      type: object
+                      properties:
+                        fabric_name:
+                          type: string
+                        execution_id:
+                          type: string
+                        prepared_list_name:
+                          type: string
+                        device_ips:
+                          type: array
+                          items:
+                            type: string
+                        device_type:
+                          type: string
+                          enum:
+                            - fabric
+                            - npb
+                        last_execution_history:
+                          type: boolean
+                        fwdl_task_id:
+                          type: array
+                          items:
+                            type: integer
+                        search:
+                          type: string
+                        pagination:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_prepared_switches
+                    inputs:
+                      type: object
+                      properties:
+                        device_ips:
+                          type: array
+                          items:
+                            type: string
+                        fabric_name:
+                          type: string
+                        prepared_list_name:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_device_tacacs_configs
+                    inputs:
+                      type: object
+                      properties:
+                        device_ip:
+                          type: string
+                      required:
+                        - device_ip
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_device_tacacs_config
+                    inputs:
+                      type: object
+                      properties:
+                        device_ip:
+                          type: string
+                        name:
+                          type: string
+                      required:
+                        - device_ip
+                        - name
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_aaa_config
+                    inputs:
+                      type: object
+                      properties:
+                        device_ip:
+                          type: string
+                      required:
+                        - device_ip
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_interfaces
+                    inputs:
+                      type: object
+                      properties:
+                        device_ips:
+                          type: array
+                          items:
+                            type: string
+                        device_ids:
+                          type: array
+                          items:
+                            type: integer
+                        type:
+                          type: string
+                          enum:
+                            - All
+                            - Physical
+                            - Loopback
+                            - VE
+                            - PO
+                        admin_state:
+                          type: string
+                          enum:
+                            - Up
+                            - Down
+                            - All
+                        rme:
+                          type: boolean
+                        oper_state:
+                          type: string
+                          enum:
+                            - Up
+                            - Down
+                            - All
+                        fabric_intf_role:
+                          type: string
+                          enum:
+                            - fabric
+                            - edge
+                        search:
+                          type: string
+                        pagination:
+                          type: string
+                      required:
+                        - type
+                        - admin_state
+                        - oper_state
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_list_breakout_ports
+                    inputs:
+                      type: object
+                      properties:
+                        device_ips:
+                          type: array
+                          items:
+                            type: string
+                        fabric_name:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_port_channels
+                    inputs:
+                      type: object
+                      properties:
+                        device_ips:
+                          type: array
+                          items:
+                            type: string
+                        device_ids:
+                          type: array
+                          items:
+                            type: integer
+                        po_numbers:
+                          type: array
+                          items:
+                            type: integer
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_lldp_data
+                    inputs:
+                      type: object
+                      properties:
+                        remote_macs:
+                          type: array
+                          items:
+                            type: string
+                        device_ips:
+                          type: array
+                          items:
+                            type: string
+                        neighbor_type:
+                          type: string
+                          enum:
+                            - all
+                            - edge
+                            - fabric
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_links
+                    inputs:
+                      type: object
+                      properties:
+                        device_ips:
+                          type: array
+                          items:
+                            type: string
+                        device_ids:
+                          type: array
+                          items:
+                            type: integer
+                        ids:
+                          type: array
+                          items:
+                            type: integer
+                        fabric_name:
+                          type: string
+                        fabric_id:
+                          type: integer
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_vlan_ss
+                    inputs:
+                      type: object
+                      properties:
+                        device_ip:
+                          type: string
+                        device_id:
+                          type: integer
+                        vlan_ids:
+                          type: array
+                          items:
+                            type: integer
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_mirror_sessions
+                    inputs:
+                      type: object
+                      properties:
+                        device_ip:
+                          type: string
+                        device_id:
+                          type: integer
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_drift_reconcile_historys
+                    inputs:
+                      type: object
+                      properties:
+                        device_ip:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_drift_reconcile_detail
+                    inputs:
+                      type: object
+                      properties:
+                        dr_id:
+                          type: string
+                      required:
+                        - dr_id
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_config_backup_historys
+                    inputs:
+                      type: object
+                      properties:
+                        device_ip:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_config_backup_detail
+                    inputs:
+                      type: object
+                      properties:
+                        cb_id:
+                          type: string
+                        show_config:
+                          type: boolean
+                      required:
+                        - cb_id
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_config_replay_historys
+                    inputs:
+                      type: object
+                      properties:
+                        device_ip:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_config_replay_detail
+                    inputs:
+                      type: object
+                      properties:
+                        cr_id:
+                          type: string
+                      required:
+                        - cr_id
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_v_es
+                    inputs:
+                      type: object
+                      properties:
+                        device_ips:
+                          type: array
+                          items:
+                            type: string
+                        device_ids:
+                          type: array
+                          items:
+                            type: integer
+                        ve_ids:
+                          type: array
+                          items:
+                            type: integer
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_router_bgp
+                    inputs:
+                      type: object
+                      properties:
+                        device_ip:
+                          type: string
+                        device_id:
+                          type: integer
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_mct_management_cluster
+                    inputs:
+                      type: object
+                      properties:
+                        device_ip:
+                          type: string
+                        device_id:
+                          type: integer
+                        node_ids:
+                          type: array
+                          items:
+                            type: integer
+                        ids:
+                          type: array
+                          items:
+                            type: integer
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_mct_cluster_configuration
+                    inputs:
+                      type: object
+                      properties:
+                        device_ip:
+                          type: string
+                        device_id:
+                          type: integer
+                        cluster_ids:
+                          type: array
+                          items:
+                            type: integer
+                        ids:
+                          type: array
+                          items:
+                            type: integer
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_mct_cluster_clients
+                    inputs:
+                      type: object
+                      properties:
+                        device_ip:
+                          type: string
+                        device_id:
+                          type: integer
+                        client_ids:
+                          type: array
+                          items:
+                            type: integer
+                        cluster_id:
+                          type: integer
+                        ids:
+                          type: array
+                          items:
+                            type: integer
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_lif
+                    inputs:
+                      type: object
+                      properties:
+                        device_ip:
+                          type: string
+                        device_id:
+                          type: integer
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_evpn_instance
+                    inputs:
+                      type: object
+                      properties:
+                        device_ip:
+                          type: string
+                        device_id:
+                          type: integer
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_pseudowire_profile
+                    inputs:
+                      type: object
+                      properties:
+                        device_ip:
+                          type: string
+                        device_id:
+                          type: integer
+                        pseudowire_profiles:
+                          type: array
+                          items:
+                            type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_bridge_domain
+                    inputs:
+                      type: object
+                      properties:
+                        device_ip:
+                          type: string
+                        device_id:
+                          type: integer
+                        bridge_domains:
+                          type: array
+                          items:
+                            type: integer
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_overlay_gateway
+                    inputs:
+                      type: object
+                      properties:
+                        device_ip:
+                          type: string
+                        device_id:
+                          type: integer
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_tunnel
+                    inputs:
+                      type: object
+                      properties:
+                        device_ip:
+                          type: string
+                        device_id:
+                          type: integer
+                        ids:
+                          type: array
+                          items:
+                            type: integer
+                        tunnel_numbers:
+                          type: array
+                          items:
+                            type: integer
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_vrf
+                    inputs:
+                      type: object
+                      properties:
+                        device_ip:
+                          type: string
+                        device_id:
+                          type: integer
+                        ids:
+                          type: array
+                          items:
+                            type: integer
+                        vrfs:
+                          type: array
+                          items:
+                            type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_vrrp
+                    inputs:
+                      type: object
+                      properties:
+                        device_ip:
+                          type: string
+                        device_id:
+                          type: integer
+                        int_type:
+                          type: string
+                          enum:
+                            - ethernet
+                            - ve
+                        int_name:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_router_pim
+                    inputs:
+                      type: object
+                      properties:
+                        device_ip:
+                          type: string
+                        device_id:
+                          type: integer
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_ip_prefix_list
+                    inputs:
+                      type: object
+                      properties:
+                        device_ip:
+                          type: string
+                        device_id:
+                          type: integer
+                        prefixlist_name:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_route_map
+                    inputs:
+                      type: object
+                      properties:
+                        device_ip:
+                          type: string
+                        device_id:
+                          type: integer
+                        routemap_name:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_community_list
+                    inputs:
+                      type: object
+                      properties:
+                        device_ip:
+                          type: string
+                        device_id:
+                          type: integer
+                        communitylist_name:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_ext_community_list
+                    inputs:
+                      type: object
+                      properties:
+                        device_ip:
+                          type: string
+                        device_id:
+                          type: integer
+                        extcommunitylist_name:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_policy
+                    inputs:
+                      type: object
+                      properties:
+                        device_ip:
+                          type: string
+                        device_id:
+                          type: integer
+                        policy_type:
+                          type: string
+                          enum:
+                            - "large-community-list"
+                            - "qos-map"
+                            - "policy-map"
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_execution_get
+                    inputs:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                      required:
+                        - id
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_execution_list
+                    inputs:
+                      type: object
+                      properties:
+                        limit:
+                          type: integer
+                        status:
+                          type: string
+                      required:
+                        - limit
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_running_config
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_key_value_list
+                    inputs:
+                      type: object
+                      properties:
+                        prefix:
+                          type: string
+                        decrypt:
+                          type: boolean
+                        limit:
+                          type: integer
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_value_for_key
+                    inputs:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        decrypt:
+                          type: boolean
+                      required:
+                        - name
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_firmware_hosts
+                    inputs:
+                      type: object
+                      properties:
+                        host_ips:
+                          type: array
+                          items:
+                            type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_firmware_host_protocols
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_firmware_host
+                    inputs:
+                      type: object
+                      properties:
+                        ip_address:
+                          type: string
+                      required:
+                        - ip_address
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_device_details
+                    inputs:
+                      type: object
+                      properties:
+                        fabric_name:
+                          type: string
+                        device_ips:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_device_adapter_status
+                    inputs:
+                      type: object
+                      properties:
+                        device_ips:
+                          type: array
+                          items:
+                            type: string
+                        fabric_name:
+                          type: string
+                        fabric-all:
+                          type: boolean
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_devices_lock_status
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_service_lock_status
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_fwdl_in_progress_devices
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_device_inventory_structure
+                    inputs:
+                      type: object
+                      properties:
+                        device_type:
+                          type: integer
+                      required:
+                        - device_type
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_device_inventory_ports
+                    inputs:
+                      type: object
+                      properties:
+                        device_id:
+                          type: integer
+                      required:
+                        - device_id
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_device_certificates_expiry
+                    inputs:
+                      type: object
+                      properties:
+                        device_ips:
+                          type: array
+                          items:
+                            type: string
+                        fabric_name:
+                          type: string
+                        fabric-all:
+                          type: boolean
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_dsc_historys
+                    inputs:
+                      type: object
+                      properties:
+                        device_ip:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_device_state
+                    inputs:
+                      type: object
+                      properties:
+                        device_ip:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_dsc_detail
+                    inputs:
+                      type: object
+                      properties:
+                        dsc_id:
+                          type: string
+                      required:
+                        - dsc_id
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_health
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_ntp_servers
+                    inputs:
+                      type: object
+                      properties:
+                        device_ips:
+                          type: array
+                          items:
+                            type: string
+                        fabric_name:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_ntp_disable
+                    inputs:
+                      type: object
+                      properties:
+                        device_ips:
+                          type: array
+                          items:
+                            type: string
+                        fabric_name:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_snmp_communities
+                    inputs:
+                      type: object
+                      properties:
+                        device_ips:
+                          type: array
+                          items:
+                            type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_snmp_users
+                    inputs:
+                      type: object
+                      properties:
+                        device_ips:
+                          type: array
+                          items:
+                            type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_snmp_hosts
+                    inputs:
+                      type: object
+                      properties:
+                        device_ips:
+                          type: array
+                          items:
+                            type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_snmp_groups
+                    inputs:
+                      type: object
+                      properties:
+                        device_ips:
+                          type: array
+                          items:
+                            type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_snmp_views
+                    inputs:
+                      type: object
+                      properties:
+                        device_ips:
+                          type: array
+                          items:
+                            type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_snmp_use_vrfs
+                    inputs:
+                      type: object
+                      properties:
+                        device_ips:
+                          type: array
+                          items:
+                            type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_device_timezone
+                    inputs:
+                      type: object
+                      properties:
+                        device_ips:
+                          type: array
+                          items:
+                            type: string
+                        fabric_name:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_supported_device_timezones
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_bindings
+                    inputs:
+                      type: object
+                      properties:
+                        device_ips:
+                          type: array
+                          items:
+                            type: string
+                        name_of_instance:
+                          type: string
+                        type_of_instance:
+                          type: string
+                          enum:
+                            - "route-map"
+                            - "prefix-list"
+                      required:
+                        - device_ips
+                        - name_of_instance
+                        - type_of_instance
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_threshold_monitors
+                    inputs:
+                      type: object
+                      properties:
+                        device_ips:
+                          type: array
+                          items:
+                            type: string
+                        fabric_name:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_all_locations
+                    inputs:
+                      type: object
+                      properties:
+                        search:
+                          type: string
+                        pagination:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_download_locations
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_secure_settings
+                    inputs:
+                      type: object
+                      properties:
+                        device_ip:
+                          type: array
+                          items:
+                            type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - faultmanager_get_alarm_history
+                    inputs:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        alarm_id:
+                          type: integer
+                        alarm_type:
+                          type: string
+                        resource:
+                          type: string
+                        unacked:
+                          type: boolean
+                        acked:
+                          type: boolean
+                        cleared:
+                          type: boolean
+                        closed:
+                          type: boolean
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - faultmanager_get_alarm_summary
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - snmp_get_health
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - snmp_get_trap_subscribers
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - snmp_get_executions
+                    inputs:
+                      type: object
+                      properties:
+                        limit:
+                          type: integer
+                          default: 10
+                          description: Limit the number of executions returned
+                        status:
+                          type: string
+                          default: all
+                          description: "Filter executions by status (failed | succeeded | all)"
+                      required:
+                        - limit
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - snmp_get_execution
+                    inputs:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: Execution ID
+                      required:
+                        - id
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - tenant_get_health
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - tenant_get_tenants
+                    inputs:
+                      type: object
+                      properties:
+                        search:
+                          type: string
+                        pagination:
+                          type: string
+                        include:
+                          type: array
+                          items:
+                            type: string
+                            enum:
+                              - utilization
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - tenant_get_tenant
+                    inputs:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: Name of the tenant
+                        include:
+                          type: array
+                          items:
+                            type: string
+                            enum:
+                              - utilization
+                          description: Optional fields to include
+                      required:
+                        - name
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - tenant_get_portchannels
+                    inputs:
+                      type: object
+                      properties:
+                        tenant_name:
+                          type: string
+                          description: "Tenant to which this port-channel belongs"
+                        search:
+                          type: object
+                          description: Optional search filter
+                        pagination:
+                          type: object
+                          description: Optional pagination options
+                      required:
+                        - tenant_name
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - tenant_get_portchannel
+                    inputs:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        tenant_name:
+                          type: string
+                        po_id:
+                          type: string
+                        device_ip:
+                          type: string
+                      required:
+                        - tenant_name
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - tenant_get_bgp_peer_operational
+                    inputs:
+                      type: object
+                      properties:
+                        tenant_name:
+                          type: string
+                          description: Tenant to which this BGP peer belongs
+                        vrf_name:
+                          type: string
+                          description: Optional VRF name to filter BGP peers
+                      required:
+                        - tenant_name
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - tenant_get_bgp_peers
+                    inputs:
+                      type: object
+                      properties:
+                        tenant_name:
+                          type: string
+                          description: Tenant to which the BGP peers belong
+                        vrf_name:
+                          type: string
+                          description: Optional VRF name
+                      required:
+                        - tenant_name
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - tenant_get_bgp_peer
+                    inputs:
+                      type: object
+                      properties:
+                        tenant_name:
+                          type: string
+                        vrf_name:
+                          type: string
+                      required:
+                        - tenant_name
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - tenant_get_mirror_sessions
+                    inputs:
+                      type: object
+                      properties:
+                        tenant_name:
+                          type: string
+                      required:
+                        - tenant_name
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - tenant_get_vrfs
+                    inputs:
+                      type: object
+                      properties:
+                        tenant_name:
+                          type: string
+                        search:
+                          type: string
+                        pagination:
+                          type: string
+                      required:
+                        - tenant_name
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - tenant_get_vrf
+                    inputs:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        tenant_name:
+                          type: string
+                      required:
+                        - name
+                        - tenant_name
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - tenant_get_vrf_static_routes
+                    inputs:
+                      type: object
+                      properties:
+                        search:
+                          type: string
+                        pagination:
+                          type: string
+                        name:
+                          type: string
+                        tenant_name:
+                          type: string
+                      required:
+                        - name
+                        - tenant_name
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - tenant_get_vrf_route_target
+                    inputs:
+                      type: object
+                      properties:
+                        search:
+                          type: string
+                        pagination:
+                          type: string
+                        name:
+                          type: string
+                        tenant_name:
+                          type: string
+                      required:
+                        - name
+                        - tenant_name
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - tenant_get_vrf_static_routes_bfd
+                    inputs:
+                      type: object
+                      properties:
+                        search:
+                          type: string
+                        pagination:
+                          type: string
+                        name:
+                          type: string
+                        tenant_name:
+                          type: string
+                      required:
+                        - name
+                        - tenant_name
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - tenant_get_vrf_error
+                    inputs:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        tenant_name:
+                          type: string
+                      required:
+                        - name
+                        - tenant_name
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - tenant_get_endpoint_groups
+                    inputs:
+                      type: object
+                      properties:
+                        tenant_name:
+                          type: string
+                        search:
+                          type: string
+                        pagination:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - tenant_get_endpoint_group
+                    inputs:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        tenant_name:
+                          type: string
+                      required:
+                        - name
+                        - tenant_name
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - tenant_get_endpoint_group_error
+                    inputs:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        tenant_name:
+                          type: string
+                      required:
+                        - name
+                        - tenant_name
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - tenant_get_bgp_service_peer_groups
+                    inputs:
+                      type: object
+                      properties:
+                        search:
+                          type: string
+                        pagination:
+                          type: string
+                        tenant_name:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - tenant_get_bgp_service_peer_group
+                    inputs:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        tenant_name:
+                          type: string
+                      required:
+                        - name
+                        - tenant_name
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - tenant_get_mirror_service_session
+                    inputs:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        tenant_name:
+                          type: string
+                      required:
+                        - name
+                        - tenant_name
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - tenant_get_execution_get
+                    inputs:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                      required:
+                        - id
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - tenant_get_execution_list
+                    inputs:
+                      type: object
+                      properties:
+                        limit:
+                          type: integer
+                        status:
+                          type: string
+                      required:
+                        - limit
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - tenant_get_running_config
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - tenant_get_event_history_list
+                    inputs:
+                      type: object
+                      properties:
+                        execution_uuid:
+                          type: string
+                        device_ip:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - tenant_get_locks
+                    inputs:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                            - service
+                            - device
+                            - port
+                            - vlan
+                            - vrf
+                            - epg
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - rbac_validate_authorization
+                    inputs:
+                      type: object
+                      properties:
+                        roles:
+                          type: array
+                          items:
+                            type: string
+                          minItems: 1
+                        method:
+                          type: string
+                        path:
+                          type: string
+                      required:
+                        - roles
+                        - method
+                        - path
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - rbac_validate_tenant_authorization
+                    inputs:
+                      type: object
+                      properties:
+                        roles:
+                          type: array
+                          items:
+                            type: string
+                          minItems: 1
+                        tenant-name:
+                          type: string
+                        method:
+                          type: string
+                        path:
+                          type: string
+                      required:
+                        - roles
+                        - method
+                        - path
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - rbac_get_authorized_tenants
+                    inputs:
+                      type: object
+                      properties:
+                        roles:
+                          type: array
+                          items:
+                            type: string
+                          minItems: 1
+                      required:
+                        - roles
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - rbac_get_role
+                    inputs:
+                      type: object
+                      properties:
+                        role_name:
+                          type: string
+                      required:
+                        - role_name
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - rbac_get_roles
+                    inputs:
+                      type: object
+                      properties:
+                        include_internal:
+                          type: boolean
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - rbac_get_executions
+                    inputs:
+                      type: object
+                      properties:
+                        limit:
+                          type: integer
+                          default: 10
+                        status:
+                          type: string
+                          enum:
+                            - failed
+                            - succeeded
+                            - all
+                          default: all
+                      required:
+                        - limit
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - rbac_get_execution_detail
+                    inputs:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                      required:
+                        - id
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - rbac_get_user_permissions
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - licensing_get_health
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - licensing_get_licenses
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - vcenter_get_vcenters
+                    inputs:
+                      type: object
+                      properties:
+                        host_name:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - vcenter_get_vcenter_details
+                    inputs:
+                      type: object
+                      properties:
+                        host_name:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - vcenter_get_esxi_details
+                    inputs:
+                      type: object
+                      properties:
+                        host_name:
+                          type: string
+                        server_ip:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - vcenter_get_tenant_details
+                    inputs:
+                      type: object
+                      properties:
+                        host_name:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - vcenter_get_events
+                    inputs:
+                      type: object
+                      properties:
+                        host_name:
+                          type: string
+                        page_number:
+                          type: integer
+                        limit:
+                          type: integer
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - vcenter_get_physical_links
+                    inputs:
+                      type: object
+                      properties:
+                        host_name:
+                          type: string
+                        server_ip:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - vcenter_get_virtual_links
+                    inputs:
+                      type: object
+                      properties:
+                        server_ip:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - vcenter_get_unconnected_pnics
+                    inputs:
+                      type: object
+                      properties:
+                        host_name:
+                          type: string
+                        server_ip:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - vcenter_get_executions
+                    inputs:
+                      type: object
+                      properties:
+                        limit:
+                          type: integer
+                        status:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - hyperv_get_servers
+                    inputs:
+                      type: object
+                      properties:
+                        host_name:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - hyperv_get_physical_links
+                    inputs:
+                      type: object
+                      properties:
+                        host_name:
+                          type: string
+                        hyperv_host:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - hyperv_get_virtual_links
+                    inputs:
+                      type: object
+                      properties:
+                        hyperv_host:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - hyperv_get_service_settings
+                    inputs:
+                      type: object
+                      properties:
+
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - hyperv_get_executions
+                    inputs:
+                      type: object
+                      properties:
+                        limit:
+                          type: integer
+                        status:
+                          type: string
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - fabric_get_fabric_overview
+                    inputs:
+                      type: object
+                      properties:
+                        fabric_name:
+                          type: string
+                          description: "Optional: filter to a single fabric by name"
+                        include_health:
+                          type: boolean
+                          default: "True"
+                          description: "If true, enrich output with fabric health data (via Tier-1)."
+                        include_errors:
+                          type: boolean
+                          default: "True"
+                          description: "If true, include fabric errors data when available (via Tier-1)."
+                        include_devices:
+                          type: boolean
+                          default: "False"
+                          description: "If true, include per-fabric devices_summary (counts by role/firmware/config state)."
+                        include_raw:
+                          type: boolean
+                          default: "False"
+                          description: "If true, include raw Tier-1 payloads (summary_raw/health_raw/devices_raw). Output becomes large."
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - fabric_get_fabric_health_summary
+                    inputs:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: "Fabric name. If omitted, runs in global mode."
+                        include_global:
+                          type: boolean
+                          default: "True"
+                          description: "Include global fabrics list (fabrics-health)."
+                        include_service_health:
+                          type: boolean
+                          default: "True"
+                          description: Include fabric service health (fabric_get_health / service health).
+                        include_errors:
+                          type: boolean
+                          default: "False"
+                          description: "Include errors sections using fabrics-errors and fabric-errors (with fallback)."
+                        expand_unhealthy:
+                          type: boolean
+                          default: "False"
+                          description: "In global mode, expand first unhealthy fabrics into partial summaries."
+                        max_expand:
+                          type: integer
+                          default: 3
+                          minimum: 1
+                          maximum: 50
+                        max_fabrics:
+                          type: integer
+                          default: 200
+                          minimum: 1
+                          maximum: 5000
+                        max_unhealthy_devices:
+                          type: integer
+                          default: 50
+                          minimum: 1
+                          maximum: 5000
+                        max_error_items:
+                          type: integer
+                          default: 50
+                          minimum: 1
+                          maximum: 5000
+                        include_raw:
+                          type: boolean
+                          default: "False"
+                          description: "Include raw Tier-1 per-fabric health payload as health_raw."
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - fabric_get_fabric_health_timeline
+                    inputs:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: Fabric name. Required.
+                        device_ip:
+                          type: string
+                          description: Optional device IP filter for event history (if supported by backend; backend may return empty payload).
+                        include_global:
+                          type: boolean
+                          default: "True"
+                          description: "Include global fabrics list (fabrics-health) and validate the fabric name exists."
+                        include_service_health:
+                          type: boolean
+                          default: "True"
+                          description: Include fabric service health (fabric_get_health / service health).
+                        include_health_headline:
+                          type: boolean
+                          default: "True"
+                          description: "Include current fabric health headline (fabric-health), with fallback to global list."
+                        include_executions:
+                          type: boolean
+                          default: "True"
+                          description: "Include execution list. Note: executions endpoint may not support name filtering; tool fetches system-wide executions and filters locally when possible."
+                        include_exec_details:
+                          type: boolean
+                          default: "False"
+                          description: "Optionally fetch execution detail per execution id/uuid (best-effort, only if endpoint exists). Limited by max_exec_details."
+                        since:
+                          type: string
+                          description: "Optional ISO timestamp (UTC). Locally filter events/executions with time >= since."
+                        until:
+                          type: string
+                          description: "Optional ISO timestamp (UTC). Locally filter events/executions with time <= until."
+                        window_hours:
+                          type: integer
+                          default: 168
+                          minimum: 1
+                          maximum: 8760
+                          description: "Convenience time window (hours). Used only if since/until are not provided (now - window_hours .. now)."
+                        limit_events:
+                          type: integer
+                          default: 200
+                          minimum: 1
+                          maximum: 5000
+                          description: "Backend limit for event history fetch (global fetch, then local filter to this fabric)."
+                        max_events:
+                          type: integer
+                          default: 200
+                          minimum: 1
+                          maximum: 5000
+                          description: Maximum number of filtered events returned for this fabric after local filtering/sorting.
+                        max_timeline_items:
+                          type: integer
+                          default: 50
+                          minimum: 1
+                          maximum: 5000
+                          description: Maximum number of grouped execution timeline entries returned.
+                        exec_limit:
+                          type: integer
+                          default: 100
+                          minimum: 1
+                          maximum: 5000
+                          description: Backend limit for execution list fetch.
+                        exec_status:
+                          type: string
+                          default: all
+                          description: Execution status selector. Use 'all' for broad history (matches your working call).
+                        max_exec_details:
+                          type: integer
+                          default: 10
+                          minimum: 1
+                          maximum: 200
+                          description: "Maximum execution detail records to fetch when include_exec_details=true."
+                        include_raw:
+                          type: boolean
+                          default: "False"
+                          description: "Include raw Tier-1 payloads as events_raw / executions_raw / health_raw when available."
+                      required:
+                        - name
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - fabric_get_fabric_validation_report
+                    inputs:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: Fabric name (preferred).
+                        fabric_name:
+                          type: string
+                          description: Alias for name.
+                        include_health:
+                          type: boolean
+                          default: "True"
+                          description: "If true, include fabric health headline + device health counts."
+                        include_errors:
+                          type: boolean
+                          default: "True"
+                          description: "If true, include fabric errors (and fail verdict if any errors exist)."
+                        include_locks:
+                          type: boolean
+                          default: "True"
+                          description: "If true, include service locks (warn verdict if any locks exist)."
+                        include_validate_fabric:
+                          type: boolean
+                          default: "True"
+                          description: "If true, call fabric_validate_fabric and include its findings."
+                        include_topology_validation:
+                          type: boolean
+                          default: "False"
+                          description: "If true, call fabric_validate_physical_topology and include its findings."
+                        max_error_items:
+                          type: integer
+                          default: 50
+                        max_lock_items:
+                          type: integer
+                          default: 50
+                        max_validation_items:
+                          type: integer
+                          default: 50
+                        include_raw:
+                          type: boolean
+                          default: "False"
+                          description: "If true, include raw Tier-1 responses under payload.raw (large)."
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - fabric_get_fabric_errors_summary
+                    inputs:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: Fabric name (required).
+                        include_health:
+                          type: boolean
+                          default: "True"
+                          description: "If true, also fetch fabric health (fabric_get_fabric_health) to include device health counts for context."
+                        include_global:
+                          type: boolean
+                          default: "False"
+                          description: "If true, also fetch global fabrics errors (fabric_get_fabrics_errors) for context."
+                        max_error_items:
+                          type: integer
+                          default: 50
+                          minimum: 1
+                          maximum: 5000
+                          description: Maximum number of error items to return if the endpoint provides a list.
+                        include_raw:
+                          type: boolean
+                          default: "False"
+                          description: "If true, include raw Tier-1 payloads under raw.{...}. Output becomes large."
+                      required:
+                        - name
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - fabric_get_fabric_execution_last_failed
+                    inputs:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: "Fabric name (e.g., DC)."
+                        limit:
+                          type: integer
+                          default: 50
+                          description: "How many failed executions to request from Tier-1 list before local filtering."
+                        include_detail:
+                          type: boolean
+                          default: "True"
+                          description: "If true, fetch execution detail for the matched execution (Tier-1 fabric_get_execution_get)."
+                        include_raw:
+                          type: boolean
+                          default: "False"
+                          description: "If true, include raw Tier-1 payloads (can be large)."
+                      required:
+                        - name
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - fabric_get_fabric_execution_recent
+                    inputs:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: Fabric name. Required.
+                        limit:
+                          type: integer
+                          default: 50
+                          minimum: 1
+                          maximum: 5000
+                          description: "How many executions to request from Tier-1 execution list."
+                        status:
+                          type: string
+                          default: all
+                          description: "Status filter passed to execution list: failed | succeeded | all."
+                        max_items:
+                          type: integer
+                          default: 10
+                          minimum: 1
+                          maximum: 200
+                          description: Maximum matched executions returned in the output list.
+                        include_detail:
+                          type: boolean
+                          default: "False"
+                          description: "If true, fetch execution detail for up to detail_limit matched executions."
+                        detail_limit:
+                          type: integer
+                          default: 3
+                          minimum: 1
+                          maximum: 50
+                          description: "Max number of matched executions to fetch detail for when include_detail=true."
+                        include_raw:
+                          type: boolean
+                          default: "False"
+                          description: "Include raw Tier-1 payloads under raw."
+                      required:
+                        - name
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - fabric_get_fabric_efa_command_list
+                    inputs:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: Fabric name (e.g. DC)
+                        max_items:
+                          type: integer
+                          description: Max matched command lines to return (default 200)
+                          default: 200
+                        include_full_text:
+                          type: boolean
+                          description: Include full extracted script text (default false)
+                          default: "False"
+                        include_raw:
+                          type: boolean
+                          description: "Include raw Tier-1 outputs (default false)"
+                          default: "False"
+                      required:
+                        - name
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_fabric_switches_summary
+                    inputs:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: Fabric name (e.g. DC). Required.
+                        max_items:
+                          type: integer
+                          default: 200
+                          minimum: 1
+                          maximum: 5000
+                          description: Max switches returned in signals.switches.items (after local truncation).
+                        include_per_switch_summary:
+                          type: boolean
+                          default: "False"
+                          description: "If true, fetch inventory summary-info for a limited number of switches (best-effort, requires device_id)."
+                        per_switch_limit:
+                          type: integer
+                          default: 5
+                          minimum: 1
+                          maximum: 50
+                          description: "How many switches to enrich with inventory_switch_inventory_summary_info when include_per_switch_summary=true."
+                        include_raw:
+                          type: boolean
+                          default: "False"
+                          description: "Include raw Tier-1 responses under raw (debug)."
+                      required:
+                        - name
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_software_version_mismatch
+                    inputs:
+                      type: object
+                      properties:
+                        fabric_name:
+                          type: string
+                          description: "Optional fabric name filter (e.g., DC)"
+                        group_by:
+                          type: string
+                          enum:
+                            - fabric
+                            - role
+                            - model
+                            - global
+                          default: fabric
+                        include_outliers:
+                          type: boolean
+                          default: "True"
+                        outlier_limit:
+                          type: integer
+                          default: 20
+                        min_group_size:
+                          type: integer
+                          default: 2
+                        include_raw:
+                          type: boolean
+                          default: "False"
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_device_health_rollup
+                    inputs:
+                      type: object
+                      properties:
+                        fabric_name:
+                          type: string
+                          description: "Optional fabric name filter (e.g., DC). If omitted, scans all fabrics."
+                        group_by:
+                          type: string
+                          enum:
+                            - fabric
+                            - role
+                            - global
+                          default: fabric
+                        min_severity:
+                          type: string
+                          enum:
+                            - red
+                            - yellow
+                            - green
+                            - unknown
+                          default: yellow
+                        driver_limit:
+                          type: integer
+                          default: 10
+                          description: Max drivers (unhealthy devices) per group.
+                        include_healthy:
+                          type: boolean
+                          default: "False"
+                          description: "If true, includes green devices in lists (otherwise only unhealthy per min_severity)."
+                        health_resource:
+                          type: string
+                          default: inventory
+                          description: "Resource string passed to monitor_get_health_inventory. If it returns empty/invalid, tool will try safe fallbacks."
+                        include_raw:
+                          type: boolean
+                          default: "False"
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_switch_inventory_info
+                    inputs:
+                      type: object
+                      properties:
+                        device_id:
+                          type: integer
+                          description: Switch device id (from inventory_getswitches or fabric switch lists)
+                      required:
+                        - device_id
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_unreachable_devices
+                    inputs:
+                      type: object
+                      properties:
+                        fabric_name:
+                          type: string
+                          description: "Optional fabric name filter (e.g., DC). If omitted, scans all fabrics."
+                        include_alarms:
+                          type: boolean
+                          default: "False"
+                          description: "If true, include top alarm snippets per unreachable device."
+                        alarm_limit:
+                          type: integer
+                          default: 3
+                          description: "Max alarm snippets per device when include_alarms=true (1..20)."
+                        group_by:
+                          type: string
+                          enum:
+                            - fabric
+                            - role
+                          default: fabric
+                          description: Grouping for unreachable device rollups.
+                        unreachable_only:
+                          type: boolean
+                          default: "True"
+                          description: "If true, return only unreachable devices (default). If false, return all devices with reachability classification."
+                        include_raw:
+                          type: boolean
+                          default: "False"
+                          description: "If true, include tier-1 raw responses (debug)."
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - tenant_get_service_epg_health_summary
+                    inputs:
+                      type: object
+                      properties:
+                        tenant_name:
+                          type: string
+                          description: Tenant name to summarize (required).
+                        include_rows:
+                          type: boolean
+                          default: "True"
+                          description: "If true, include per-EPG table rows."
+                        include_vrf_summary:
+                          type: boolean
+                          default: "True"
+                          description: "If true, include per-VRF summary rows."
+                        max_epgs:
+                          type: integer
+                          default: 300
+                          description: Max EPGs to scan (cap 300).
+                        max_vrfs:
+                          type: integer
+                          default: 200
+                          description: Max VRFs to scan (cap 200).
+                        max_rows:
+                          type: integer
+                          default: 2000
+                          description: Max rows to return in 'rows' (cap 2000).
+                        include_recent_executions:
+                          type: boolean
+                          default: "True"
+                          description: "If true, include recent tenant execution rollup (tenant_get_execution_list)."
+                        execution_limit:
+                          type: integer
+                          default: 20
+                          description: How many executions to fetch (1..200).
+                        execution_status:
+                          type: string
+                          description: "Optional execution status filter (e.g., FAILED)."
+                        include_events:
+                          type: boolean
+                          default: "False"
+                          description: "If true, fetch event history for the most recent FAILED execution (best-effort)."
+                        include_locks:
+                          type: boolean
+                          default: "False"
+                          description: "If true, include lock counts for service/vrf/epg."
+                        include_raw:
+                          type: boolean
+                          default: "False"
+                          description: "If true, include tier-1 raw responses (debug)."
+                      required:
+                        - tenant_name
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - tenant_get_service_epg_alarm_summary
+                    inputs:
+                      type: object
+                      properties:
+                        tenant_name:
+                          type: string
+                          description: "Tenant name (required). If not found, tool returns suggested_tenants via tenant_get_tenants."
+                        include_alarms:
+                          type: boolean
+                          default: "True"
+                          description: Include FaultManager alarms (faultmanager_get_alarm_history).
+                        include_alerts:
+                          type: boolean
+                          default: "True"
+                          description: Include FaultManager alerts (faultmanager_get_alert_history).
+                        severity:
+                          type: string
+                          description: "Optional exact severity filter (alerts, and best-effort for alarms). Example: Critical."
+                        severity_min:
+                          type: string
+                          description: "Optional minimum severity (Critical>Major>Minor>Warning>Info). Applies to alerts and best-effort alarms."
+                        alarm_type:
+                          type: string
+                          description: Optional alarm_type filter for alarms (passed to faultmanager_get_alarm_history).
+                        resource_contains:
+                          type: string
+                          description: "Optional substring filter applied to resource/name/message (post-filter)."
+                        message_contains:
+                          type: string
+                          description: "Optional substring filter applied to message/description fields (post-filter)."
+                        epg_name_contains:
+                          type: string
+                          description: Optional substring filter applied to EPG matching (limits to alarms that match this EPG).
+                        unacked:
+                          type: boolean
+                          default: "True"
+                          description: Alarm state filter (alarms only).
+                        acked:
+                          type: boolean
+                          default: "False"
+                          description: Alarm state filter (alarms only).
+                        cleared:
+                          type: boolean
+                          default: "False"
+                          description: Alarm state filter (alarms only).
+                        closed:
+                          type: boolean
+                          default: "False"
+                          description: Alarm state filter (alarms only).
+                        alert_limit:
+                          type: integer
+                          default: 300
+                          description: Limit parameter for alert history (1..500).
+                        max_records:
+                          type: integer
+                          default: 200
+                          description: Max matched records returned (1..2000).
+                        include_raw:
+                          type: boolean
+                          default: "False"
+                          description: "If true, include tier-1 raw responses (debug)."
+                      required:
+                        - tenant_name
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - tenant_get_service_epg_event_logs
+                    inputs:
+                      type: object
+                      properties:
+                        tenant_name:
+                          type: string
+                        service_name_contains:
+                          type: string
+                        epg_name_contains:
+                          type: string
+                        start_time:
+                          type: string
+                        end_time:
+                          type: string
+                        severity_min:
+                          type: string
+                        query:
+                          type: string
+                        execution_status:
+                          type: string
+                        execution_limit:
+                          type: integer
+                        execution_uuid:
+                          type: string
+                        device_ip:
+                          type: string
+                        max_events:
+                          type: integer
+                        allow_unscoped:
+                          type: boolean
+                        include_raw:
+                          type: boolean
+                      required:
+                        - tenant_name
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - tenant_get_service_epg_historical_report_stub
+                    inputs:
+                      type: object
+                      properties:
+                        tenant_name:
+                          type: string
+                          description: "Tenant name (required). If not found, tool returns suggested_tenants via tenant_get_tenants."
+                        window_days:
+                          type: integer
+                          default: 7
+                          description: How many days back to summarize (commonly 7 or 30).
+                        include_alerts:
+                          type: boolean
+                          default: "True"
+                          description: Include FaultManager alerts (faultmanager_get_alert_history).
+                        include_alarms:
+                          type: boolean
+                          default: "True"
+                          description: "Include FaultManager alarms (faultmanager_get_alarm_history, time-bounded locally)."
+                        severity:
+                          type: string
+                          description: "Optional exact severity filter (alerts, and best-effort for alarms). Example: Critical."
+                        severity_min:
+                          type: string
+                          description: "Optional minimum severity (Critical>Major>Minor>Warning>Info). Applies to alerts and best-effort alarms."
+                        query:
+                          type: string
+                          description: "Optional fuzzy substring filter across alert/alarm text (e.g., 'BGP', 'VXLAN')."
+                        alert_limit:
+                          type: integer
+                          default: 300
+                          description: Limit parameter for alert history (1..500).
+                        max_records:
+                          type: integer
+                          default: 200
+                          description: Max records returned per section (alerts/alarms) (1..2000).
+                        allow_unscoped:
+                          type: boolean
+                          default: "False"
+                          description: "If true, include system/global (unscoped) alerts/alarms when tenant-scoped matches are sparse."
+                        include_raw:
+                          type: boolean
+                          default: "False"
+                          description: "If true, include tier-1 raw responses (debug)."
+                      required:
+                        - tenant_name
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - fault_get_active_alarms_top
+                    inputs:
+                      type: object
+                      properties:
+                        top_n:
+                          type: integer
+                          default: 10
+                          description: How many alarm groups to return (1..100).
+                        max_records:
+                          type: integer
+                          default: 500
+                          description: "Max active alarm records to process from tier-1 (1..5000)."
+                        severity_min:
+                          type: string
+                          description: "Optional minimum severity (Critical>Major>Minor>Warning>Info)."
+                        query:
+                          type: string
+                          description: "Optional substring search across alarm text fields (e.g., 'certificate', 'bgp')."
+                        alarm_type:
+                          type: string
+                          description: Optional alarm_type filter passed to faultmanager_get_alarm_history (and inventory enrichment).
+                        resource:
+                          type: string
+                          description: Optional exact resource filter passed to faultmanager_get_alarm_history.
+                        resource_query:
+                          type: string
+                          description: Optional substring filter applied locally to resource (useful when resource needs partial match).
+                        include_inventory:
+                          type: boolean
+                          default: "False"
+                          description: "If true, calls faultmanager_get_alarm_inventory(detail=true) to enrich alarms with catalog details."
+                        include_samples:
+                          type: boolean
+                          default: "True"
+                          description: "If true, include up to sample_per_group alarm instances per top group."
+                        sample_per_group:
+                          type: integer
+                          default: 3
+                          description: How many sample instances to return per group (0..10).
+                        include_raw:
+                          type: boolean
+                          default: "False"
+                          description: "If true, include tier-1 raw responses (debug)."
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - fault_get_alarm_details_with_context
+                    inputs:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: "Alarm name (preferred). Example: CertificateExpiration"
+                        alarm_id:
+                          type: integer
+                          description: Alarm id (if known).
+                        resource:
+                          type: string
+                          description: Exact resource string to scope to (optional).
+                        active_only:
+                          type: boolean
+                          default: "True"
+                          description: "If true, fetches active alarms (unacked=true, acked=false, cleared=false, closed=false)."
+                        window_hours:
+                          type: integer
+                          default: 24
+                          description: How far back to look for related alerts (and optional tenant events).
+                        max_instances:
+                          type: integer
+                          default: 20
+                          description: Max alarm instances to return.
+                        alert_limit:
+                          type: integer
+                          default: 100
+                          description: Max related alerts to fetch per selected resource.
+                        top_resources:
+                          type: integer
+                          default: 3
+                          description: How many top resources to include context for.
+                        include_inventory:
+                          type: boolean
+                          default: "True"
+                          description: "If true, includes faultmanager_get_alarm_inventory(detail=true) explanation."
+                        include_alerts:
+                          type: boolean
+                          default: "True"
+                          description: "If true, includes related alerts from faultmanager_get_alert_history."
+                        include_health:
+                          type: boolean
+                          default: "True"
+                          description: "If true, includes monitor_get_health_detail for selected resources."
+                        include_tenant_events:
+                          type: boolean
+                          default: "True"
+                          description: "If true, and device_ip can be derived from resource, includes tenant_get_event_history_list(device_ip)."
+                        include_raw:
+                          type: boolean
+                          default: "False"
+                          description: "If true, includes tier-1 raw outputs for debugging."
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - fault_get_fabric_health_related_alerts
+                    inputs:
+                      type: object
+                      properties:
+                        fabric_name:
+                          type: string
+                          description: Fabric name (e.g. DC). Required.
+                        window_hours:
+                          type: integer
+                          default: 24
+                          description: Lookback window for alert history.
+                        max_records:
+                          type: integer
+                          default: 200
+                          description: Max alerts returned after filtering.
+                        alert_limit:
+                          type: integer
+                          default: 300
+                          description: "Tier-1 fetch limit sent to faultmanager_get_alert_history."
+                        severity:
+                          type: string
+                          description: "Optional severity filter passed to Tier-1 (e.g. Critical, Major, Warning, Info)."
+                        signal:
+                          type: string
+                          description: "Optional signal filter: 'restored' or 'degraded' (post-filter classification)."
+                        include_other:
+                          type: boolean
+                          default: "False"
+                          description: "If true, include alerts that are fabric-scoped but not classified as restored/degraded."
+                        include_raw:
+                          type: boolean
+                          default: "False"
+                          description: "If true, include tier-1 raw outputs for debugging."
+                      required:
+                        - fabric_name
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - notification_get_recent_events_filtered
+                    inputs:
+                      type: object
+                      properties:
+                        sources:
+                          type: array
+                          items:
+                            type: string
+                          default:
+                            - system
+                            - fabric
+                            - tenant
+                            - inventory
+                            - snmp
+                            - auth
+                            - rbac
+                          description: "Which execution sources to query (uses existing Tier-1 execution tools)."
+                        status:
+                          type: string
+                          default: all
+                          description: "Filter executions by status when supported (failed | succeeded | all)."
+                        last_n:
+                          type: integer
+                          default: 50
+                          description: Return the last N events after filtering.
+                        limit_per_source:
+                          type: integer
+                          default: 10
+                          description: How many executions to pull per source before extracting events.
+                        severity_min:
+                          type: string
+                          description: "Minimum normalized severity (Info|Warning|Major|Critical)."
+                        event_type:
+                          type: string
+                          description: Substring match against normalized event type.
+                        resource:
+                          type: string
+                          description: Substring match against normalized resource.
+                        query:
+                          type: string
+                          description: Substring match across type/resource/message.
+                        include_raw:
+                          type: boolean
+                          default: "False"
+                          description: Include tier1_raw payloads for troubleshooting.
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - notification_get_last_failed_delivery_or_errors
+                    inputs:
+                      type: object
+                      properties:
+                        window_hours:
+                          type: integer
+                          default: 168
+                          minimum: 1
+                          maximum: 2160
+                          description: "Local time filter over execution start/end time (best-effort). 168h=7d."
+                        limit:
+                          type: integer
+                          default: 200
+                          minimum: 1
+                          maximum: 5000
+                          description: "How many executions to request from Tier-1 notification_get_executions before local filtering."
+                        status:
+                          type: string
+                          default: failed
+                          description: "Tier-1 status filter: failed | succeeded | all."
+                        query:
+                          type: string
+                          description: Optional keyword search over command/parameters/status/user_name.
+                        max_items:
+                          type: integer
+                          default: 10
+                          minimum: 1
+                          maximum: 200
+                          description: Maximum number of recent failed executions returned under recent_failed.
+                        fallback_detect_non_success:
+                          type: boolean
+                          default: "True"
+                          description: "If Tier-1 status=failed returns none, optionally re-query status=all and detect non-success statuses locally."
+                        include_raw:
+                          type: boolean
+                          default: "False"
+                          description: "If true, include raw Tier-1 responses under tier1_raw (can be large)."
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - monitor_get_platform_quick_status
+                    inputs:
+                      type: object
+                      properties:
+                        include_efa:
+                          type: boolean
+                          default: "True"
+                          description: "If true, include EFA status (monitor_get_efa_status)."
+                        include_services:
+                          type: boolean
+                          default: "True"
+                          description: "If true, include service status summary (monitor_get_service_status)."
+                        include_health:
+                          type: boolean
+                          default: "True"
+                          description: "If true, include platform health summary (monitor_get_health)."
+                        include_health_detail:
+                          type: boolean
+                          default: "False"
+                          description: "If true, fetch monitor_get_health_detail for selected resources (see detail_only_on_problem/max_detail)."
+                        detail_only_on_problem:
+                          type: boolean
+                          default: "True"
+                          description: "If true, only fetch health detail for resources considered unhealthy/degraded."
+                        max_detail:
+                          type: integer
+                          default: 10
+                          description: Max number of resources to fetch health detail for.
+                        include_raw:
+                          type: boolean
+                          default: "False"
+                          description: "If true, include raw Tier-1 responses under tier1_raw (large)."
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - system_get_ha_and_node_health_summary
+                    inputs:
+                      type: object
+                      properties:
+                        include_system_health_status:
+                          type: boolean
+                          default: "True"
+                        include_monitor:
+                          type: boolean
+                          default: "True"
+                        include_keepalived:
+                          type: boolean
+                          default: "True"
+                        include_gluster:
+                          type: boolean
+                          default: "True"
+                        include_k3s_nodes:
+                          type: boolean
+                          default: "True"
+                        include_health:
+                          type: boolean
+                          default: "True"
+                        include_health_inventory:
+                          type: boolean
+                          default: "True"
+                        include_health_detail:
+                          type: boolean
+                          default: "False"
+                        detail_only_on_problem:
+                          type: boolean
+                          default: "True"
+                        max_detail:
+                          type: integer
+                          default: 10
+                        include_raw:
+                          type: boolean
+                          default: "False"
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - system_get_certificates_expiring_soon
+                    inputs:
+                      type: object
+                      properties:
+                        window_days:
+                          type: integer
+                          default: 90
+                        include_efa_certs:
+                          type: boolean
+                          default: "True"
+                        include_device_certs:
+                          type: boolean
+                          default: "True"
+                        device_ips:
+                          type: array
+                          items:
+                            type: string
+                        fabric_name:
+                          type: string
+                        fabric_all:
+                          type: boolean
+                        max_items:
+                          type: integer
+                          default: 200
+                        include_ok:
+                          type: boolean
+                          default: "False"
+                        include_raw:
+                          type: boolean
+                          default: "False"
+                      required:
+
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - system_get_certificate_alarm_context
+                    inputs:
+                      type: object
+                      properties:
+                        active_only:
+                          type: boolean
+                          default: "True"
+                        severity_min:
+                          type: string
+                          enum:
+                            - Info
+                            - Warning
+                            - Minor
+                            - Major
+                            - Critical
+                        require_expiry_terms:
+                          type: boolean
+                          default: "True"
+                        max_alarms:
+                          type: integer
+                          default: 200
+                        name:
+                          type: string
+                        alarm_id:
+                          type: integer
+                        alarm_type:
+                          type: string
+                        resource:
+                          type: string
+                        include_expiry_context:
+                          type: boolean
+                          default: "True"
+                        include_efa_certs:
+                          type: boolean
+                          default: "True"
+                        include_device_certs:
+                          type: boolean
+                          default: "True"
+                        device_ips:
+                          type: array
+                          items:
+                            type: string
+                        fabric_name:
+                          type: string
+                        fabric_all:
+                          type: boolean
+                        include_raw:
+                          type: boolean
+                          default: "False"
+                      required:
+
+      responses:
+        200:
+          description: Invocation response envelope.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  session_id:
+                    type: string
+                  result:
+                    type: object
+                required:
+                  - result
