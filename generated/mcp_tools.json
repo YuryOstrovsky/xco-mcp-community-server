@@ -10378,7 +10378,152 @@
     "objects": ["event", "execution"],
     "scopes": [["system"]]
   }
+},
+
+{
+  "name": "notification_get_last_failed_delivery_or_errors",
+  "description": "Tier-2: Find the most recent FAILED notification execution (notification pipeline issues). Uses Tier-1 notification_get_executions. If backend returns no failures, can optionally fallback to status=all and detect non-success locally.",
+  "category": "notification",
+  "method": "COMPOSITE",
+  "auth": "bearer",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "window_hours": {
+        "type": "integer",
+        "default": 168,
+        "minimum": 1,
+        "maximum": 2160,
+        "description": "Local time filter over execution start/end time (best-effort). 168h=7d."
+      },
+      "limit": {
+        "type": "integer",
+        "default": 200,
+        "minimum": 1,
+        "maximum": 5000,
+        "description": "How many executions to request from Tier-1 notification_get_executions before local filtering."
+      },
+      "status": {
+        "type": "string",
+        "default": "failed",
+        "description": "Tier-1 status filter: failed | succeeded | all."
+      },
+      "query": {
+        "type": "string",
+        "description": "Optional keyword search over command/parameters/status/user_name."
+      },
+      "max_items": {
+        "type": "integer",
+        "default": 10,
+        "minimum": 1,
+        "maximum": 200,
+        "description": "Maximum number of recent failed executions returned under recent_failed."
+      },
+      "fallback_detect_non_success": {
+        "type": "boolean",
+        "default": true,
+        "description": "If Tier-1 status=failed returns none, optionally re-query status=all and detect non-success statuses locally."
+      },
+      "include_raw": {
+        "type": "boolean",
+        "default": false,
+        "description": "If true, include raw Tier-1 responses under tier1_raw (can be large)."
+      }
+    },
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": [
+    "read",
+    "tier2",
+    "notification",
+    "executions",
+    "diagnostic",
+    "errors"
+  ],
+  "capabilities": {
+    "actions": [
+      "show",
+      "diagnose",
+      "summarize"
+    ],
+    "objects": [
+      "notification",
+      "notification-executions"
+    ],
+    "scopes": [
+      [
+        "system"
+      ]
+    ]
+  }
+},
+
+{
+  "name": "monitor_get_platform_quick_status",
+  "description": "Tier-2: Single view platform status (EFA + services + health). Optionally fetch health detail for problematic resources. Set include_raw=true for Tier-1 evidence (large).",
+  "category": "monitor",
+  "method": "COMPOSITE",
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "include_efa": {
+        "type": "boolean",
+        "default": true,
+        "description": "If true, include EFA status (monitor_get_efa_status)."
+      },
+      "include_services": {
+        "type": "boolean",
+        "default": true,
+        "description": "If true, include service status summary (monitor_get_service_status)."
+      },
+      "include_health": {
+        "type": "boolean",
+        "default": true,
+        "description": "If true, include platform health summary (monitor_get_health)."
+      },
+      "include_health_detail": {
+        "type": "boolean",
+        "default": false,
+        "description": "If true, fetch monitor_get_health_detail for selected resources (see detail_only_on_problem/max_detail)."
+      },
+      "detail_only_on_problem": {
+        "type": "boolean",
+        "default": true,
+        "description": "If true, only fetch health detail for resources considered unhealthy/degraded."
+      },
+      "max_detail": {
+        "type": "integer",
+        "default": 10,
+        "description": "Max number of resources to fetch health detail for."
+      },
+      "include_raw": {
+        "type": "boolean",
+        "default": false,
+        "description": "If true, include raw Tier-1 responses under tier1_raw (large)."
+      }
+    },
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "monitor", "platform", "status", "tier2"],
+  "capabilities": {
+    "actions": ["show", "summarize"],
+    "objects": ["platform", "monitor", "service", "health"],
+    "scopes": [["system"], ["cluster"]]
+  }
 }
+
+
 
 
 

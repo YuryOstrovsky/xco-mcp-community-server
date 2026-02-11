@@ -23,6 +23,11 @@ from tools.faultmanager.active_alarms_top import fault_get_active_alarms_top
 from tools.faultmanager.alarm_details_with_context import fault_get_alarm_details_with_context
 from tools.faultmanager.fabric_health_related_alerts import fault_get_fabric_health_related_alerts
 from tools.notification.recent_events_filtered import notification_get_recent_events_filtered
+from tools.notification.last_failed_delivery_or_errors import notification_get_last_failed_delivery_or_errors
+from tools.monitor.platform_quick_status import monitor_get_platform_quick_status
+
+   
+
 
 
 
@@ -164,31 +169,16 @@ class MCPRegistry:
 
         self.handlers["notification_get_recent_events_filtered"] = (
             notification_get_recent_events_filtered
+        ),
+
+        self.handlers["notification_get_last_failed_delivery_or_errors"] = (
+            notification_get_last_failed_delivery_or_errors
         )
 
+        self.handlers["monitor_get_platform_quick_status"] = (
+            monitor_get_platform_quick_status
+        )
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-
-
-
-
-        
 
 
         
