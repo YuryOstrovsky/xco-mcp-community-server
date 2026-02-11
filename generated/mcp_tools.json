@@ -10594,63 +10594,55 @@
     "objects": ["certificates"],
     "scopes": [["system"]]
   }
+},
+
+{
+  "name": "system_get_certificate_alarm_context",
+  "description": "Any current alarms about certificate expiry and which cert is it? Composite of faultmanager alarms filtered to certificate/expiry + certificate expiry metadata (monitor + device).",
+  "category": "system",
+  "method": "COMPOSITE",
+  "endpoint": null,
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "active_only": { "type": "boolean", "default": true },
+      "severity_min": {
+        "type": "string",
+        "enum": ["Info", "Warning", "Minor", "Major", "Critical"]
+      },
+      "require_expiry_terms": { "type": "boolean", "default": true },
+      "max_alarms": { "type": "integer", "default": 200 },
+
+      "name": { "type": "string" },
+      "alarm_id": { "type": "integer" },
+      "alarm_type": { "type": "string" },
+      "resource": { "type": "string" },
+
+      "include_expiry_context": { "type": "boolean", "default": true },
+      "include_efa_certs": { "type": "boolean", "default": true },
+      "include_device_certs": { "type": "boolean", "default": true },
+
+      "device_ips": { "type": "array", "items": { "type": "string" } },
+      "fabric_name": { "type": "string" },
+      "fabric_all": { "type": "boolean" },
+
+      "include_raw": { "type": "boolean", "default": false }
+    },
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "system", "certificates", "alarms", "tier2"],
+  "capabilities": {
+    "actions": ["show", "triage", "summarize"],
+    "objects": ["system", "certificates", "alarms"],
+    "scopes": [["system"]]
+  }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 ]

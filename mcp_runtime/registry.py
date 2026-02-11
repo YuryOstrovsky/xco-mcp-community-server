@@ -27,10 +27,7 @@ from tools.notification.last_failed_delivery_or_errors import notification_get_l
 from tools.monitor.platform_quick_status import monitor_get_platform_quick_status
 from tools.system.ha_and_node_health_summary import system_get_ha_and_node_health_summary
 from tools.system.certificates_expiring_soon import system_get_certificates_expiring_soon
-
-
-
-
+from tools.system.certificate_alarm_context import system_get_certificate_alarm_context
 
 
 
@@ -168,6 +165,11 @@ class MCPRegistry:
         self.handlers["system_get_certificates_expiring_soon"] = (
             system_get_certificates_expiring_soon
         )
+
+        self.handlers["system_get_certificate_alarm_context"] = (
+            system_get_certificate_alarm_context
+        )
+
 
 
 
