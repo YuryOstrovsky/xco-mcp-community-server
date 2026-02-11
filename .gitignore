@@ -43,4 +43,5 @@ venv/
 # Test tools
 test*
 xco_get_token.py
-
+.gitignore
+mcp-server.log
