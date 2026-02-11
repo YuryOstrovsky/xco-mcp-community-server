@@ -25,26 +25,8 @@ from tools.faultmanager.fabric_health_related_alerts import fault_get_fabric_hea
 from tools.notification.recent_events_filtered import notification_get_recent_events_filtered
 from tools.notification.last_failed_delivery_or_errors import notification_get_last_failed_delivery_or_errors
 from tools.monitor.platform_quick_status import monitor_get_platform_quick_status
-
-   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+from tools.system.ha_and_node_health_summary import system_get_ha_and_node_health_summary
+from tools.system.certificates_expiring_soon import system_get_certificates_expiring_soon
 
 
 
@@ -169,7 +151,7 @@ class MCPRegistry:
 
         self.handlers["notification_get_recent_events_filtered"] = (
             notification_get_recent_events_filtered
-        ),
+        )
 
         self.handlers["notification_get_last_failed_delivery_or_errors"] = (
             notification_get_last_failed_delivery_or_errors
@@ -178,6 +160,15 @@ class MCPRegistry:
         self.handlers["monitor_get_platform_quick_status"] = (
             monitor_get_platform_quick_status
         )
+
+        self.handlers["system_get_ha_and_node_health_summary"] = (
+            system_get_ha_and_node_health_summary
+        )
+
+        self.handlers["system_get_certificates_expiring_soon"] = (
+            system_get_certificates_expiring_soon
+        )
+
 
 
 

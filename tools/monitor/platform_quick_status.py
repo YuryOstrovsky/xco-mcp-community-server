@@ -1,15 +1,42 @@
-# tools/notification/last_failed_delivery_or_errors.py
+# tools/monitor/platform_quick_status.py
 
 from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
-from datetime import datetime, timezone, timedelta
-import re
 
 
-# ---------------------------
-# Small safe helpers
-# ---------------------------
+# ------------------------------------------------------------
+# Small helpers (defensive parsing)
+# ------------------------------------------------------------
+
+def _as_bool(v: Any, default: bool = False) -> bool:
+    if v is None:
+        return default
+    if isinstance(v, bool):
+        return v
+    s = str(v).strip().lower()
+    if s in ("1", "true", "yes", "y", "on"):
+        return True
+    if s in ("0", "false", "no", "n", "off"):
+        return False
+    return default
+
+
+def _as_int(v: Any, default: int) -> int:
+    try:
+        if v is None:
+            return default
+        return int(v)
+    except Exception:
+        return default
+
+
+def _norm_str(v: Any) -> Optional[str]:
+    if v is None:
+        return None
+    s = str(v).strip()
+    return s if s else None
+
 
 def _safe_get(d: Any, *keys: str, default=None):
     cur = d
@@ -20,419 +47,342 @@ def _safe_get(d: Any, *keys: str, default=None):
     return default if cur is None else cur
 
 
-def _as_list(payload: Any) -> List[Any]:
+def _extract_list(payload: Any, preferred_keys: List[str]) -> List[dict]:
+    """Extract a list[dict] from common response shapes."""
     if payload is None:
         return []
     if isinstance(payload, list):
-        return payload
+        return [x for x in payload if isinstance(x, dict)]
     if isinstance(payload, dict):
+        for k in preferred_keys:
+            v = payload.get(k)
+            if isinstance(v, list):
+                return [x for x in v if isinstance(x, dict)]
         items = payload.get("items")
         if isinstance(items, list):
-            return items
-        nested = payload.get("payload")
-        if isinstance(nested, dict):
-            items2 = nested.get("items")
-            if isinstance(items2, list):
-                return items2
+            return [x for x in items if isinstance(x, dict)]
     return []
 
 
-def _coerce_int(v: Any, default: int) -> int:
-    try:
-        return int(v)
-    except Exception:
-        return default
-
-
-def _norm(v: Any) -> str:
-    return str(v).strip() if v is not None else ""
-
-
-def _parse_time(ts: Any) -> Optional[datetime]:
-    if not isinstance(ts, str) or not ts:
-        return None
-    try:
-        if ts.endswith("Z"):
-            ts = ts[:-1] + "+00:00"
-        dt = datetime.fromisoformat(ts)
-        if dt.tzinfo is None:
-            dt = dt.replace(tzinfo=timezone.utc)
-        return dt
-    except Exception:
-        return None
-
-
-def _exec_time(ex: Dict[str, Any]) -> Optional[datetime]:
-    dt = _parse_time(ex.get("start_time"))
-    return dt if dt is not None else _parse_time(ex.get("end_time"))
-
-
-def _normalize_status(raw: Any) -> str:
+def _health_is_problem(rec: dict) -> bool:
     """
-    Normalize backend status strings into a stable token.
-    Examples:
-      "Completed(2.87ms)" -> "completed"
-      "FAILED" -> "failed"
-      "Succeeded (ok)" -> "succeeded"
+    Health manager varies across environments. In your lab:
+      - StatusText may be "Success"
+      - HQI.Color may be "Black"
+      - HQI.Value may be non-zero even when OK
+    So we treat StatusText Success/OK/Healthy as healthy, and only treat
+    explicit bad colors / text / contributors as problems.
     """
-    s = _norm(raw).lower()
-    if not s:
-        return "unknown"
-    # strip timing suffix like "(2.873133ms)" or "(ok)"
-    s = re.sub(r"\s*\(.*\)\s*$", "", s).strip()
-    # collapse spaces/underscores
-    s = re.sub(r"[\s_]+", " ", s).strip()
-    return s
+    st = str(rec.get("StatusText") or "").strip().lower()
 
+    # Your lab's healthy signal
+    if st in ("success", "ok", "healthy"):
+        return False
 
-def _status_str(ex: Dict[str, Any]) -> str:
-    return _normalize_status(ex.get("status"))
-
-
-def _is_success_status(status: str) -> bool:
-    """
-    Success-ish states across customer deployments.
-    """
-    s = _normalize_status(status)
-    if s in ("succeeded", "success", "successful", "completed", "complete", "ok", "done", "passed", "finished"):
+    # If status text explicitly indicates problems
+    if any(tok in st for tok in ("fail", "error", "unhealthy", "degraded", "down")):
         return True
-    # accept common prefixes
-    for p in ("succeeded", "success", "completed", "complete", "finished", "passed"):
-        if s.startswith(p):
+
+    hqi = rec.get("HQI") if isinstance(rec, dict) else None
+    if isinstance(hqi, dict):
+        color = str(hqi.get("Color") or "").strip().lower()
+
+        # treat only clearly bad colors as problems
+        if color in ("red", "orange", "yellow"):
             return True
+
+        # don't treat non-green as automatically bad in this lab
+        # (black/unknown may still be fine)
+
+    # Default: if nothing screams "bad", consider healthy
     return False
 
 
-def _is_running_or_pending(status: str) -> bool:
-    s = _normalize_status(status)
-    return s in ("running", "in progress", "in-progress", "pending", "queued", "started") or s.startswith("running")
 
+def _service_is_problem(rec: dict) -> bool:
+    status = str(rec.get("status") or "").strip().lower()
+    active = str(rec.get("active") or "").strip().lower()
 
-def _looks_failed(status: str) -> bool:
-    """
-    Failure-ish detector used only for fallback mode (status=all).
-    We DO NOT want to classify 'running' or 'pending' as failures.
-    """
-    s = _normalize_status(status)
-    if _is_success_status(s):
+    # systemd-style strings from your lab, e.g.
+    # "active (running) since Mon ..."
+    if "(running)" in active or active.startswith("active"):
         return False
-    if _is_running_or_pending(s):
+
+    # common health words
+    if status in ("ok", "healthy", "running", "active", "up"):
         return False
-    # strong failure terms
-    if any(tok in s for tok in ("fail", "error", "exception", "timeout", "denied", "unauthorized", "forbidden", "aborted")):
+
+    # some payloads may use boolean-ish active fields
+    if active in ("true", "yes", "1", "active", "running", "up"):
+        return False
+
+    # explicit negative tokens
+    if any(tok in status for tok in ("down", "fail", "error", "unhealthy", "stopped", "inactive")):
         return True
-    # if it's neither success nor running/pending nor unknown, treat as suspicious/non-success
-    return s not in ("unknown", "")
-
-
-def _matches_query(ex: Dict[str, Any], q: str) -> bool:
-    if not q:
+    if any(tok in active for tok in ("down", "false", "no", "0", "inactive", "stopped", "dead", "failed")):
         return True
-    q = q.lower().strip()
-    if not q:
+
+    # if we really can't tell, don't mark as problem
+    return False
+
+
+
+def _node_is_problem(rec: dict) -> bool:
+    status = str(rec.get("status") or "").strip().lower()
+    if status in ("up", "ready", "ok", "healthy", "running"):
+        return False
+    if any(tok in status for tok in ("down", "fail", "error", "unhealthy", "notready", "not ready")):
         return True
-    hay = " ".join(
-        [
-            _norm(ex.get("command")),
-            _norm(ex.get("parameters")),
-            _norm(ex.get("status")),
-            _norm(ex.get("user_name")),
-        ]
-    ).lower()
-    return q in hay
+    return bool(status) and status not in ("up", "ready", "ok", "healthy", "running")
 
 
-def _pick_most_recent(execs: List[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
-    best = None
-    best_ts = None
-    for ex in execs:
-        dt = _exec_time(ex)
-        if dt is None:
-            continue
-        if best is None or dt > best_ts:
-            best = ex
-            best_ts = dt
-    return best
+# ------------------------------------------------------------
+# Tool implementation
+# ------------------------------------------------------------
 
-
-def _trim_execution(ex: Dict[str, Any]) -> Dict[str, Any]:
-    dt = _exec_time(ex)
-    params = ex.get("parameters")
-    # normalize the common "null" string into JSON null
-    if isinstance(params, str) and params.strip().lower() == "null":
-        params = None
-
-    return {
-        "id": ex.get("id"),
-        "command": ex.get("command"),
-        "parameters": params,
-        "status": ex.get("status"),
-        "status_norm": _status_str(ex),
-        "user_name": ex.get("user_name"),
-        "start_time": ex.get("start_time"),
-        "end_time": ex.get("end_time"),
-        "timestamp": (dt.isoformat() if isinstance(dt, datetime) else None),
-    }
-
-
-# ---------------------------
-# Transport adapter (GET)
-# ---------------------------
-
-def _transport_get(transport: Any, path: str, params: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    Best-effort adapter for whatever transport object the runtime passes.
-    Expected return: {"status": int, "payload": Any, ...}
-    """
-    for meth_name in ("request", "send", "call"):
-        fn = getattr(transport, meth_name, None)
-        if not callable(fn):
-            continue
-        try:
-            res = fn(method="GET", path=path, params=params)
-            if isinstance(res, dict) and "status" in res:
-                return res
-        except TypeError:
-            pass
-        except Exception as e:
-            return {"status": 500, "payload": None, "error": f"transport.{meth_name} failed: {e}"}
-
-    fn = getattr(transport, "get", None)
-    if callable(fn):
-        try:
-            res = fn(path, params=params)
-            if isinstance(res, dict) and "status" in res:
-                return res
-        except Exception as e:
-            return {"status": 500, "payload": None, "error": f"transport.get failed: {e}"}
-
-    return {"status": 500, "payload": None, "error": "No compatible GET method found on transport"}
-
-
-# ---------------------------
-# Tier-1 calling helper
-# ---------------------------
-
-def _call_tier1(
-    tool_name: str,
-    tool_inputs: Dict[str, Any],
+def monitor_get_platform_quick_status(
     *,
-    registry: Any = None,
-    transport: Any = None,
-) -> Dict[str, Any]:
-    """
-    Call Tier-1 tools in the most reliable way available:
-    1) If registry exposes invoke/call/run methods, try those.
-    2) Else if registry exposes tool catalog + transport exists, call endpoint via transport.
-    3) Else fallback to direct known endpoint path for notification executions.
-    """
-    if registry is not None:
-        for meth in ("invoke_tool", "invoke", "call", "run", "invoke_tier1"):
-            fn = getattr(registry, meth, None)
-            if callable(fn):
-                try:
-                    res = fn(tool_name, tool_inputs)
-                    if isinstance(res, dict) and "status" in res:
-                        return res
-                except TypeError:
-                    pass
-                except Exception as e:
-                    return {"status": 500, "payload": None, "error": f"registry.{meth} failed: {e}"}
-
-        tool_def = None
-        get_tool = getattr(registry, "get_tool", None)
-        if callable(get_tool):
-            try:
-                tool_def = get_tool(tool_name)
-            except Exception:
-                tool_def = None
-
-        if tool_def is None:
-            tools_dict = getattr(registry, "tools", None)
-            if isinstance(tools_dict, dict):
-                tool_def = tools_dict.get(tool_name)
-
-        if tool_def and transport is not None and isinstance(tool_def, dict):
-            endpoint = tool_def.get("endpoint", {}) or {}
-            path = endpoint.get("path")
-            method = (tool_def.get("method") or "GET").upper()
-            if method == "GET" and isinstance(path, str) and path.startswith("/"):
-                return _transport_get(transport, path, tool_inputs)
-
-    if transport is not None:
-        if tool_name == "notification_get_executions":
-            return _transport_get(transport, "/v1/notification/executions", tool_inputs)
-
-    return {"status": 500, "payload": None, "error": f"Tool not registered / callable: {tool_name}"}
-
-
-# ---------------------------
-# Tier-2 tool
-# ---------------------------
-
-def notification_get_last_failed_delivery_or_errors(
-    inputs: Dict[str, Any],
-    *,
-    registry=None,
-    transport=None,
-    http_client=None,
+    inputs: dict,
+    registry,
+    transport,
+    context: dict,
     **kwargs,
-) -> Dict[str, Any]:
-    """
-    Tier-2: Recent notification pipeline failures.
+) -> dict:
+    """Tier-2 composite: platform heartbeat (EFA + services + health).
 
-    Composite:
-      - Tier-1 notification_get_executions (status=failed by default)
-      - local time window filtering + optional keyword filtering
-      - optional fallback to status=all and detect failure-ish statuses locally
-
-    Returns:
-      - last_failed (single most recent)
-      - recent_failed (up to max_items)
-      - summary + next actions
+    Uses ONLY existing Tier-1 tools in this repo:
+      - monitor_get_efa_status
+      - monitor_get_service_status
+      - monitor_get_health
+      - monitor_get_health_detail (optional)
     """
 
-    window_hours = _coerce_int(inputs.get("window_hours", 168), 168)
-    window_hours = max(1, min(window_hours, 2160))  # up to 90 days
+    inputs = inputs or {}
 
-    limit = _coerce_int(inputs.get("limit", 200), 200)
-    limit = max(1, min(limit, 5000))
+    include_efa = _as_bool(inputs.get("include_efa"), True)
+    include_services = _as_bool(inputs.get("include_services"), True)
+    include_health = _as_bool(inputs.get("include_health"), True)
+    include_health_detail = _as_bool(inputs.get("include_health_detail"), False)
+    detail_only_on_problem = _as_bool(inputs.get("detail_only_on_problem"), True)
+    max_detail = max(0, min(_as_int(inputs.get("max_detail"), 10), 200))
+    include_raw = _as_bool(inputs.get("include_raw"), False)
 
-    status = _norm(inputs.get("status", "failed")).lower() or "failed"
-    if status not in ("failed", "succeeded", "all"):
-        return {
-            "status": 400,
-            "error": "invalid status",
-            "payload": {
-                "error": "Invalid 'status' (must be: failed | succeeded | all)",
-                "status": status,
-                "expected": ["failed", "succeeded", "all"],
-            },
-        }
+    tier1_raw: Dict[str, Any] = {}
+    warnings: List[str] = []
 
-    query = _norm(inputs.get("query", ""))
+    def call_tier1(tool_name: str, params: Optional[dict] = None) -> dict:
+        tool = registry.get(tool_name)
+        if not tool:
+            return {"status": 0, "payload": None, "error": f"Tier-1 tool not found: {tool_name}"}
+        endpoint = tool.get("endpoint") or {}
+        path = endpoint.get("path")
+        method = tool.get("method")
+        if not path or not method:
+            return {"status": 0, "payload": None, "error": f"Tier-1 tool missing endpoint/method: {tool_name}"}
+        try:
+            return transport.request(
+                method=method,
+                port=endpoint.get("port"),
+                path=path,
+                params=params or {},
+                context=context or {},
+            )
+        except Exception as e:
+            return {"status": 0, "payload": None, "error": str(e)}
 
-    max_items = _coerce_int(inputs.get("max_items", 10), 10)
-    max_items = max(1, min(max_items, 200))
+    # --------------------------------------------------------
+    # 1) Fetch requested Tier-1 payloads
+    # --------------------------------------------------------
 
-    include_raw = bool(inputs.get("include_raw", False))
-    fallback_detect_non_success = bool(inputs.get("fallback_detect_non_success", True))
+    efa_res = None
+    svc_res = None
+    health_res = None
 
-    input_echo = {
-        "window_hours": window_hours,
-        "limit": limit,
-        "status": status,
-        "query": (query if query else None),
-        "max_items": max_items,
-        "fallback_detect_non_success": fallback_detect_non_success,
-        "include_raw": include_raw,
-    }
+    if include_efa:
+        efa_res = call_tier1("monitor_get_efa_status")
+        if include_raw:
+            tier1_raw["monitor_get_efa_status"] = efa_res
+        if int(efa_res.get("status") or 0) != 200:
+            warnings.append(f"monitor_get_efa_status failed (status={efa_res.get('status')}).")
 
-    raw: Dict[str, Any] = {}
-    now = datetime.now(timezone.utc)
-    cutoff = now - timedelta(hours=window_hours)
+    if include_services:
+        svc_res = call_tier1("monitor_get_service_status")
+        if include_raw:
+            tier1_raw["monitor_get_service_status"] = svc_res
+        if int(svc_res.get("status") or 0) != 200:
+            warnings.append(f"monitor_get_service_status failed (status={svc_res.get('status')}).")
 
-    # 1) Primary Tier-1 fetch
-    tier1_primary = _call_tier1(
-        "notification_get_executions",
-        {"limit": limit, "status": status},
-        registry=registry,
-        transport=transport,
+    if include_health:
+        # keep it light: summary view; health_detail provides deep-dive
+        health_res = call_tier1("monitor_get_health", {"detail": False})
+        if include_raw:
+            tier1_raw["monitor_get_health"] = health_res
+        if int(health_res.get("status") or 0) != 200:
+            warnings.append(f"monitor_get_health failed (status={health_res.get('status')}).")
+
+    ok_any = any(
+        int((r or {}).get("status") or 0) == 200
+        for r in (efa_res, svc_res, health_res)
+        if r is not None
     )
-    if include_raw:
-        raw["notification_get_executions"] = tier1_primary
-
-    primary_status = int(tier1_primary.get("status") or 500)
-    if primary_status != 200:
+    if not ok_any:
         return {
             "status": 502,
-            "error": "tier1 notification_get_executions failed",
+            "error": "all tier1 calls failed",
             "payload": {
-                "input_echo": input_echo,
-                "tier1_status": primary_status,
-                "warnings": [
-                    "Tier-1 notification_get_executions returned non-200; cannot determine notification pipeline failures."
-                ],
-                "next_actions": [
-                    {"action": "retry", "hint": "Retry with a smaller limit (e.g., 50) or check auth/connectivity."},
-                    {"action": "debug", "hint": "Invoke Tier-1 notification_get_executions directly to inspect status/payload."},
-                ],
-                **({"tier1_raw": raw} if include_raw else {}),
+                "input_echo": {
+                    "include_efa": include_efa,
+                    "include_services": include_services,
+                    "include_health": include_health,
+                    "include_health_detail": include_health_detail,
+                    "detail_only_on_problem": detail_only_on_problem,
+                    "max_detail": max_detail,
+                    "include_raw": include_raw,
+                },
+                "warnings": warnings or ["No Tier-1 data could be fetched."],
+                **({"tier1_raw": tier1_raw} if include_raw else {}),
             },
         }
 
-    primary_items = [x for x in _as_list(tier1_primary.get("payload")) if isinstance(x, dict)]
+    # --------------------------------------------------------
+    # 2) Parse + summarize
+    # --------------------------------------------------------
 
-    def _filter_window_and_query(items: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        out: List[Dict[str, Any]] = []
-        for ex in items:
-            dt = _exec_time(ex)
-            if dt is None:
-                continue
-            if dt < cutoff:
-                continue
-            if not _matches_query(ex, query):
-                continue
-            out.append(ex)
-        return out
+    efa_nodes: List[dict] = []
+    services: List[dict] = []
+    health_items: List[dict] = []
 
-    in_window = _filter_window_and_query(primary_items)
+    if isinstance(efa_res, dict) and int(efa_res.get("status") or 0) == 200:
+        efa_nodes = _extract_list(efa_res.get("payload"), ["nodes", "Nodes"])
 
-    # 2) Fallback: if status=failed returned nothing meaningful, try status=all and detect failures locally
-    used_fallback = False
-    effective_items = primary_items
+    if isinstance(svc_res, dict) and int(svc_res.get("status") or 0) == 200:
+        services = _extract_list(svc_res.get("payload"), ["services", "Services"])
 
-    if not in_window and status == "failed" and fallback_detect_non_success:
-        tier1_all = _call_tier1(
-            "notification_get_executions",
-            {"limit": limit, "status": "all"},
-            registry=registry,
-            transport=transport,
+    if isinstance(health_res, dict) and int(health_res.get("status") or 0) == 200:
+        health_items = _extract_list(health_res.get("payload"), ["items", "Items"])
+
+    efa_problems = [n for n in efa_nodes if _node_is_problem(n)]
+    svc_problems = [s for s in services if _service_is_problem(s)]
+    health_problems = [h for h in health_items if _health_is_problem(h)]
+
+    def _hqi_value(h: dict) -> int:
+        try:
+            return int(_safe_get(h, "HQI", "Value", default=0) or 0)
+        except Exception:
+            return 0
+
+    health_problems_sorted = sorted(health_problems, key=_hqi_value, reverse=True)
+
+    top_health_problems = []
+    for h in health_problems_sorted[: min(len(health_problems_sorted), 20)]:
+        top_health_problems.append(
+            {
+                "resource": h.get("Resource"),
+                "hqi": h.get("HQI"),
+                "status_text": h.get("StatusText"),
+            }
         )
-        if include_raw:
-            raw["notification_get_executions:fallback_all"] = tier1_all
 
-        if int(tier1_all.get("status") or 500) == 200:
-            all_items = [x for x in _as_list(tier1_all.get("payload")) if isinstance(x, dict)]
-            all_items = _filter_window_and_query(all_items)
-            # Only keep true failure-ish statuses (avoid Completed(...), Running, etc.)
-            all_items = [ex for ex in all_items if _looks_failed(ex.get("status"))]
+    # --------------------------------------------------------
+    # 3) Optional health detail (only for selected resources)
+    # --------------------------------------------------------
 
-            in_window = all_items
-            used_fallback = True
-            effective_items = [x for x in _as_list(tier1_all.get("payload")) if isinstance(x, dict)]
+    health_detail: List[dict] = []
+    if include_health and include_health_detail and max_detail > 0 and health_items:
+        candidates = health_items
+        if detail_only_on_problem:
+            candidates = health_problems_sorted
 
-    # Sort by time desc
-    in_window.sort(key=lambda ex: (_exec_time(ex) or datetime.fromtimestamp(0, tz=timezone.utc)), reverse=True)
+        selected_resources: List[str] = []
+        for h in candidates:
+            r = _norm_str(h.get("Resource"))
+            if r and r not in selected_resources:
+                selected_resources.append(r)
+            if len(selected_resources) >= max_detail:
+                break
 
-    last_failed = _pick_most_recent(in_window) if in_window else None
+        for r in selected_resources:
+            det = call_tier1("monitor_get_health_detail", {"resource": r})
+            if include_raw:
+                tier1_raw[f"monitor_get_health_detail:{r}"] = det
+            if int(det.get("status") or 0) != 200:
+                warnings.append(f"monitor_get_health_detail failed for resource={r} (status={det.get('status')}).")
+                continue
+            payload = det.get("payload")
+            if isinstance(payload, dict):
+                health_detail.append(
+                    {
+                        "resource": payload.get("Resource") or r,
+                        "hqi": payload.get("HQI"),
+                        "contributors": payload.get("Contributors"),
+                        "status_text": payload.get("StatusText"),
+                    }
+                )
+
+    # --------------------------------------------------------
+    # 4) Overall summary + response
+    # --------------------------------------------------------
 
     summary = {
-        "executions_total_fetched_primary": len(primary_items),
-        "executions_total_fetched_effective": len(effective_items),
-        "executions_in_window": len(in_window),
-        "returned_recent_failed": min(len(in_window), max_items),
-        "last_failed_found": (last_failed is not None),
-        "tier1_mode_used": ("fallback_failure_detect" if used_fallback else f"status={status}"),
+        "efa": {
+            "included": include_efa,
+            "nodes_total": len(efa_nodes),
+            "nodes_problem": len(efa_problems),
+        },
+        "services": {
+            "included": include_services,
+            "services_total": len(services),
+            "services_problem": len(svc_problems),
+        },
+        "health": {
+            "included": include_health,
+            "resources_total": len(health_items),
+            "resources_problem": len(health_problems),
+            "detail_fetched": len(health_detail),
+        },
     }
 
-    warnings: List[str] = []
-    next_actions: List[Dict[str, str]] = []
-
-    if last_failed is None:
-        warnings.append("No failed notification executions found in the requested window.")
-        next_actions.append({"action": "retry", "hint": "Increase window_hours (e.g., 720 for 30 days)."})
-        next_actions.append({"action": "retry", "hint": "Increase limit (e.g., 500) to look further back."})
-        next_actions.append({"action": "retry", "hint": "Try query='error' or query='timeout' to scan for pipeline issues."})
+    platform_ok = True
+    if include_efa and len(efa_problems) > 0:
+        platform_ok = False
+    if include_services and len(svc_problems) > 0:
+        platform_ok = False
+    if include_health and len(health_problems) > 0:
+        platform_ok = False
 
     payload = {
-        "input_echo": input_echo,
+        "input_echo": {
+            "include_efa": include_efa,
+            "include_services": include_services,
+            "include_health": include_health,
+            "include_health_detail": include_health_detail,
+            "detail_only_on_problem": detail_only_on_problem,
+            "max_detail": max_detail,
+            "include_raw": include_raw,
+        },
+        "platform_ok": platform_ok,
         "summary": summary,
-        "last_failed": (_trim_execution(last_failed) if isinstance(last_failed, dict) else None),
-        "recent_failed": [_trim_execution(x) for x in in_window[:max_items]],
+        "efa": (
+            {"nodes": efa_nodes, "problems": efa_problems}
+            if include_efa
+            else None
+        ),
+        "services": (
+            {"services": services, "problems": svc_problems}
+            if include_services
+            else None
+        ),
+        "health": (
+            {
+                "items": health_items,
+                "top_problems": top_health_problems,
+                "detail": health_detail if include_health_detail else None,
+            }
+            if include_health
+            else None
+        ),
         "warnings": warnings,
-        "next_actions": next_actions,
-        **({"tier1_raw": raw} if include_raw else {}),
+        **({"tier1_raw": tier1_raw} if include_raw else {}),
     }
 
     return {"status": 200, "payload": payload}

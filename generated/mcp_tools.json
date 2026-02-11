@@ -10521,7 +10521,82 @@
     "objects": ["platform", "monitor", "service", "health"],
     "scopes": [["system"], ["cluster"]]
   }
+},
+
+{
+  "name": "system_get_ha_and_node_health_summary",
+  "description": "Tier-2: Summarize HA redundancy + node health + storage signals, and correlate with HealthManager resources. Uses only existing Tier-1 tools: system_get_health_status, monitor_get_keep_alived_info, monitor_get_gluster_fs_info, monitor_get_k3s_nodes, monitor_get_health (+ optional inventory/detail).",
+  "category": "system",
+  "method": "COMPOSITE",
+  "auth": "bearer",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "include_system_health_status": { "type": "boolean", "default": true },
+      "include_monitor": { "type": "boolean", "default": true },
+      "include_keepalived": { "type": "boolean", "default": true },
+      "include_gluster": { "type": "boolean", "default": true },
+      "include_k3s_nodes": { "type": "boolean", "default": true },
+      "include_health": { "type": "boolean", "default": true },
+
+      "include_health_inventory": { "type": "boolean", "default": true },
+      "include_health_detail": { "type": "boolean", "default": false },
+      "detail_only_on_problem": { "type": "boolean", "default": true },
+      "max_detail": { "type": "integer", "default": 10 },
+
+      "include_raw": { "type": "boolean", "default": false }
+    },
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "system", "ha", "health", "tier2"],
+  "capabilities": {
+    "actions": ["show", "summarize"],
+    "objects": ["system", "ha", "node", "health", "storage"],
+    "scopes": [["system"], ["cluster"]]
+  }
+},{
+  "name": "system_get_certificates_expiring_soon",
+  "description": "Show certificates expiring soon (bucketed 30/60/90 days, UI-style color/severity). Composite of monitor cert expiry + device cert expiry.",
+  "category": "system",
+  "method": "COMPOSITE",
+  "endpoint": null,
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "window_days": { "type": "integer", "default": 90 },
+      "include_efa_certs": { "type": "boolean", "default": true },
+      "include_device_certs": { "type": "boolean", "default": true },
+
+      "device_ips": { "type": "array", "items": { "type": "string" } },
+      "fabric_name": { "type": "string" },
+      "fabric_all": { "type": "boolean" },
+
+      "max_items": { "type": "integer", "default": 200 },
+      "include_ok": { "type": "boolean", "default": false },
+      "include_raw": { "type": "boolean", "default": false }
+    },
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier2"],
+  "capabilities": {
+    "actions": ["show"],
+    "objects": ["certificates"],
+    "scopes": [["system"]]
+  }
 }
+
+
 
 
 
