@@ -147,8 +147,8 @@ Example (your current setup):
 
 ```dotenv
 XCO_HOST=10.13.85.20
-XCO_USERNAME=ubuntu
-XCO_PASSWORD=ubuntu
+XCO_USERNAME=<your_XCO_username>
+XCO_PASSWORD=<your_XCO_password>
 XCO_VERIFY_TLS=false
 
 # SAFETY: enforce read-only at MCP layer (recommended)
@@ -246,15 +246,16 @@ curl -sS -X POST http://127.0.0.1:8000/invoke \
 Tier-1 tools are described in JSON (not Python handlers):
 
 1. Add/modify the tool entry in `generated/mcp_tools.json`
-2. Regenerate the human catalog (optional): `docs/TOOL_CATALOG.md`
-3. Restart the server
+2. Allow tool in `tier1_tools.py` catalog
+3. Regenerate the human catalog (optional): `docs/TOOL_CATALOG.md`
+4. Restart the server
 
 > If you’re using the generator pipeline (`tools/parse_openapi.py`, `tools/resolve_endpoints.py`, etc.),
 > keep those outputs under `generated/` and commit the final `generated/mcp_tools.json`.
 
 ### Add a Tier-2 tool (composite)
 1. Create the handler file under `tools/<category>/<tool_name>.py`
-2. Import and register it in `mcp_runtime/registry.py`
+2. Import and register it in `mcp_runtime/registry.py` and add handler
 3. Add a matching tool spec entry in `generated/mcp_tools.json`
    - Tag it as Tier-2 (e.g., include `tier2` in `tags`)
    - Keep policy as `SAFE_READ` unless you are intentionally adding mutations
@@ -282,7 +283,6 @@ Tier-2 handlers are invoked with:
 
 ## Security notes
 
-- Treat `.env` as **sensitive** (credentials). Do not commit it.
 - This repo currently ships only `SAFE_READ` tools. If you introduce write tools:
   - tighten policy checks (`mcp_runtime/policy.py`)
   - use the mutation registry/ledger for rollbacks/auditing
