@@ -2259,3 +2259,6 @@ INFO:     127.0.0.1:36550 - "POST /invoke HTTP/1.1" 200 OK
 >>> SESSION.get_context CALLED
 >>> stored ctx = {}
 INFO:     127.0.0.1:51908 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     10.121.1.18:57917 - "GET /docs/tools HTTP/1.1" 200 OK
+INFO:     10.121.1.18:57917 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     10.121.1.18:57918 - "GET /openapi/mcp-invoke.yaml HTTP/1.1" 200 OK

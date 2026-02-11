@@ -14,6 +14,8 @@ from typing import Optional, Dict, Any
 
 from mcp_runtime.server import MCPServer
 from mcp_runtime.session_store import SessionStore
+from api.docs_routes import router as docs_router
+
 
 # -------------------------------------------------
 # App & MCP initialization
@@ -21,6 +23,7 @@ from mcp_runtime.session_store import SessionStore
 
 app = FastAPI(title="XCO MCP Server")
 
+app.include_router(docs_router)
 mcp = MCPServer(auto_mode=False)
 session_store = SessionStore()
 

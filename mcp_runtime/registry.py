@@ -173,10 +173,6 @@ class MCPRegistry:
 
 
 
-
-        
-
-
         return self
 
     def list_tools(self):
