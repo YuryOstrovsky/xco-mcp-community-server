@@ -22,6 +22,7 @@ from tools.tenant.service_epg_historical_report_stub import tenant_get_service_e
 from tools.faultmanager.active_alarms_top import fault_get_active_alarms_top
 from tools.faultmanager.alarm_details_with_context import fault_get_alarm_details_with_context
 from tools.faultmanager.fabric_health_related_alerts import fault_get_fabric_health_related_alerts
+from tools.notification.recent_events_filtered import notification_get_recent_events_filtered
 
 
 
@@ -160,6 +161,11 @@ class MCPRegistry:
         self.handlers["fault_get_fabric_health_related_alerts"] = (
             fault_get_fabric_health_related_alerts
         )
+
+        self.handlers["notification_get_recent_events_filtered"] = (
+            notification_get_recent_events_filtered
+        )
+
 
 
 

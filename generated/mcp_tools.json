@@ -10310,7 +10310,76 @@
     "objects": ["alerts", "fabric", "health"],
     "scopes": [["system"]]
   }
+},
+
+{
+  "name": "notification_get_recent_events_filtered",
+  "description": "Get recent execution-derived events across services and filter by severity/type/resource/query (Tier-2 composite).",
+  "category": "notification",
+  "method": "COMPOSITE",
+  "endpoint": null,
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "sources": {
+        "type": "array",
+        "items": { "type": "string" },
+        "default": ["system", "fabric", "tenant", "inventory", "snmp", "auth", "rbac"],
+        "description": "Which execution sources to query (uses existing Tier-1 execution tools)."
+      },
+      "status": {
+        "type": "string",
+        "default": "all",
+        "description": "Filter executions by status when supported (failed | succeeded | all)."
+      },
+      "last_n": {
+        "type": "integer",
+        "default": 50,
+        "description": "Return the last N events after filtering."
+      },
+      "limit_per_source": {
+        "type": "integer",
+        "default": 10,
+        "description": "How many executions to pull per source before extracting events."
+      },
+      "severity_min": {
+        "type": "string",
+        "description": "Minimum normalized severity (Info|Warning|Major|Critical)."
+      },
+      "event_type": {
+        "type": "string",
+        "description": "Substring match against normalized event type."
+      },
+      "resource": {
+        "type": "string",
+        "description": "Substring match against normalized resource."
+      },
+      "query": {
+        "type": "string",
+        "description": "Substring match across type/resource/message."
+      },
+      "include_raw": {
+        "type": "boolean",
+        "default": false,
+        "description": "Include tier1_raw payloads for troubleshooting."
+      }
+    },
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier2", "notification", "events", "composite"],
+  "capabilities": {
+    "actions": ["list", "show"],
+    "objects": ["event", "execution"],
+    "scopes": [["system"]]
+  }
 }
+
 
 
 
