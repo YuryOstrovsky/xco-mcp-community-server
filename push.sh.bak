@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+set -e
+
+# ---- Config ----
+BRANCH="main"
+REMOTE="origin"
+
+# ---- Ensure we're in a git repo ----
+if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  echo "ERROR: Not inside a git repository"
+  exit 1
+fi
+
+# ---- Ensure correct branch ----
+CURRENT_BRANCH=$(git branch --show-current)
+if [ "$CURRENT_BRANCH" != "$BRANCH" ]; then
+  echo "ERROR: You are on branch '$CURRENT_BRANCH' (expected '$BRANCH')"
+  exit 1
+fi
+
+echo "== Git status =="
+git status --short
+echo
+
+# ---- Stage everything (including untracked) ----
+git add .
+
+# ---- Check if there is anything to commit ----
+if git diff --cached --quiet; then
+  echo "Nothing to commit. Working tree clean."
+  exit 0
+fi
+
+# ---- Commit message ----
+if [ -z "$1" ]; then
+  COMMIT_MSG="sync: MCP runtime update $(date '+%Y-%m-%d %H:%M')"
+else
+  COMMIT_MSG="$1"
+fi
+
+echo "== Committing =="
+git commit -m "$COMMIT_MSG"
+
+echo
+echo "== Pushing to $REMOTE/$BRANCH =="
+git push "$REMOTE" "$BRANCH"
+
+echo
+echo "✅ Push complete"
+
