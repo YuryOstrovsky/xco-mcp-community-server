@@ -128,7 +128,7 @@ pip install -r requirements.txt
 
 ## Configuration
 
-Create a `.env` file in the repo root (same level as `api/`, `mcp_runtime/`, etc).
+Create a `.env` file in the repo root.
 
 Example :
 
