@@ -2262,3 +2262,13 @@ INFO:     127.0.0.1:51908 - "POST /invoke HTTP/1.1" 200 OK
 INFO:     10.121.1.18:57917 - "GET /docs/tools HTTP/1.1" 200 OK
 INFO:     10.121.1.18:57917 - "GET /favicon.ico HTTP/1.1" 404 Not Found
 INFO:     10.121.1.18:57918 - "GET /openapi/mcp-invoke.yaml HTTP/1.1" 200 OK
+INFO:     10.121.1.18:58273 - "GET /swagger HTTP/1.1" 200 OK
+INFO:     10.121.1.18:58273 - "GET /openapi/mcp-invoke.yaml HTTP/1.1" 200 OK
+INFO:     10.121.1.18:58521 - "GET /docs HTTP/1.1" 200 OK
+INFO:     10.121.1.18:58521 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     10.121.1.18:58788 - "GET /swagger HTTP/1.1" 200 OK
+INFO:     10.121.1.18:58788 - "GET /openapi/mcp-invoke.yaml HTTP/1.1" 200 OK
+INFO:     10.121.1.18:58789 - "GET /docs/tools HTTP/1.1" 200 OK
+INFO:     10.121.1.18:58870 - "GET //openapi/mcp-invoke.yaml HTTP/1.1" 404 Not Found
+INFO:     10.121.1.18:58908 - "GET /openapi/mcp-invoke.yaml HTTP/1.1" 200 OK
+INFO:     10.121.1.18:59190 - "GET /docs/tools/html HTTP/1.1" 200 OK
