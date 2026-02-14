@@ -546,7 +546,7 @@
     "auth": "none",
     "input_schema": { "type": "object", "properties": {}, "required": [] },
     "policy": { "risk": "SAFE_READ", "allowed_in_auto_mode": true, "requires_confirmation": false },
-    "tags": ["read", "fabric", "running-config", "tier2"],
+    "tags": ["read", "fabric", "running-config", "tier1"],
     "capabilities": {
       "actions": ["show"],
       "objects": ["config", "cli"],
@@ -9449,6 +9449,7 @@
   "name": "fabric_get_fabric_execution_recent",
   "description": "Tier-2: recent fabric executions (per-fabric). Fetches execution list, correlates executions to a fabric name/id using best-effort heuristics, optionally fetches execution detail for the most recent matched executions, and returns an actionable summary + next steps.",
   "category": "fabric",
+  "method": "COMPOSITE",
   "policy": {
     "risk": "SAFE_READ",
     "allowed_in_auto_mode": true,
@@ -9540,7 +9541,7 @@
   "name": "inventory_get_fabric_switches_summary",
   "description": "Tier-2: Summarize switches that belong to a specific fabric. Composite tool: validates fabric exists (fabric_get_fabrics), fetches switches from Inventory (inventory_getswitches) using fabric-id, and optionally enriches a limited number of switches with per-device inventory summary (inventory_switch_inventory_summary_info). Returns breakdowns (role/model/status) + compact switch list + next actions.",
   "category": "inventory",
-  "method": "POST",
+  "method": "COMPOSITE",
   "endpoint": {
     "host": "{MCP_HOST}",
     "path": "/invoke"
@@ -10642,7 +10643,76 @@
     "objects": ["system", "certificates", "alarms"],
     "scopes": [["system"]]
   }
+},
+
+{
+  "name": "inventory_get_switches_widget_table",
+  "description": "UI-ready switch inventory table (for MCP client widget). Composite: inventory_getswitches + optional per-switch health/status enrichment tool. Returns flat rows with fields matching widget columns (IP, Status, Name, Model, Type, MAC, Location, Firmware, Added On, Fabric).",
+  "category": "inventory",
+  "method": "COMPOSITE",
+  "endpoint": null,
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "fabric_name": {
+        "type": "string",
+        "description": "If provided, filters the resulting table to this fabric (when supported by underlying inventory tool)."
+      },
+      "fabric_all": {
+        "type": "boolean",
+        "default": false,
+        "description": "If true, attempts to include devices across all fabrics (if supported by underlying tools)."
+      },
+      "device_ips": {
+        "type": "array",
+        "items": { "type": "string" },
+        "description": "Optional: restrict to specific device management IPs."
+      },
+      "device_ids": {
+        "type": "array",
+        "items": { "type": "integer" },
+        "description": "Optional: restrict to specific device IDs (preferred join key if available)."
+      },
+
+      "include_status": {
+        "type": "boolean",
+        "default": true,
+        "description": "If true, enriches each row with Status via a secondary tool call (status_tool)."
+      },
+      "status_tool": {
+        "type": "string",
+        "default": "monitor_get_inventory_health_summary",
+        "description": "Name of an existing tool that can return per-device health/status keyed by device_id or ip."
+      },
+
+      "max_items": {
+        "type": "integer",
+        "default": 200,
+        "description": "Maximum number of rows to return."
+      },
+
+      "include_raw": {
+        "type": "boolean",
+        "default": false,
+        "description": "If true, includes the raw inventory record per row (for debugging)."
+      }
+    },
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "inventory", "switches", "widget", "tier2", "table"],
+  "capabilities": {
+    "actions": ["show", "list", "summarize"],
+    "objects": ["inventory", "switches", "fabric"],
+    "scopes": [["inventory"], ["fabric"]]
+  }
 }
+
 
 
 ]

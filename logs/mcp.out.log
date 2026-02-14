@@ -3975,3 +3975,1133 @@ INFO:     127.0.0.1:53134 - "GET /tools HTTP/1.1" 200 OK
 INFO:     127.0.0.1:52986 - "POST /invoke HTTP/1.1" 200 OK
 INFO:     127.0.0.1:52994 - "POST /invoke HTTP/1.1" 200 OK
 INFO:     127.0.0.1:52956 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34186 - "GET /tools HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:34190 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:49998 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58186 - "GET /tools HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:55402 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:37562 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37572 - "GET /tools HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:48784 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:54310 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33356 - "GET /tools HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:51130 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:38610 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:38606 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:38598 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:38576 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38624 - "GET /tools HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38602 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38620 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38584 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:55798 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:55806 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:55822 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:55788 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55854 - "GET /tools HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55830 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55844 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55816 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:38678 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41070 - "GET /tools HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:46758 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:53292 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:53254 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:53280 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:53294 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53308 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:53320 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:53350 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:53368 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:53338 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:53342 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53390 - "GET /tools HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53366 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53382 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53266 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53328 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:60596 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:40314 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:59538 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:59546 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:36378 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:36380 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:47280 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:59564 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:59568 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:40104 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:49012 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:55702 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:55712 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:55704 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:55676 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:55738 - "GET /tools HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55728 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55734 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55690 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:54102 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:52220 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:36636 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:41650 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:47170 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:58792 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:54068 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:41222 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:32914 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:32906 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:32892 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:32932 - "GET /tools HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:32872 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:32900 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:32916 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:32886 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37920 - "GET /tools HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:37934 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:37942 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:55492 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:55496 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:58800 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:58808 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:43726 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:57168 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:33124 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:33134 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:33114 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33150 - "GET /tools HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:33086 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33136 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33140 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33098 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:40494 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:40502 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:54006 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:54008 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:48184 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:48190 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:48198 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:48212 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:48224 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:42438 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:42454 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:42458 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:42466 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60994 - "GET /tools HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:33744 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:57004 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:56482 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:56502 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:56500 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:56530 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56542 - "GET /tools HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56490 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56534 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56514 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38500 - "GET /tools HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37924 - "GET /tools HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:40930 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:33144 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:33160 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:33162 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:33174 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:53988 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     10.121.1.18:57016 - "GET /docs/tools HTTP/1.1" 200 OK
+INFO:     10.121.1.18:57016 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     10.121.1.18:57016 - "GET /docs/ HTTP/1.1" 307 Temporary Redirect
+INFO:     10.121.1.18:57016 - "GET /docs HTTP/1.1" 200 OK
+INFO:     10.121.1.18:57016 - "GET /openapi.json HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:44650 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:44654 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:44640 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:44694 - "GET /tools HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:44626 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44670 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44686 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44628 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42666 - "GET /tools HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:60996 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:39876 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:39880 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:39856 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:39860 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39894 - "GET /tools HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39872 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39892 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39844 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:41156 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:37926 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45330 - "GET /tools HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:43256 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:50234 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:56270 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:56294 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:56248 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:56254 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56286 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56308 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56234 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:38952 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:52876 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:52904 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:52864 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:52858 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52926 - "GET /tools HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52892 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52920 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52860 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:60390 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46380 - "GET /tools HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:50574 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:48958 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:48966 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:37322 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:38530 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:59326 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:59348 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:59312 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:59314 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59334 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59358 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59308 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:41920 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:45748 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:45774 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:45740 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:45734 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:45836 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:45822 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45760 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:45804 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45858 - "GET /tools HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:45790 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45816 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45778 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45842 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45730 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45786 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:49656 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:49658 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:49610 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:49634 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49674 - "GET /tools HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49646 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49670 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49624 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:39100 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:39106 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:39056 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:39072 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39124 - "GET /tools HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39084 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39122 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39052 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:42232 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:42244 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:42218 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:42188 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42266 - "GET /tools HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42206 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42250 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42198 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:52712 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:52724 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:52704 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52756 - "GET /tools HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:52688 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52728 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52744 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52700 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:52862 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:52876 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:52844 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:52874 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52904 - "GET /tools HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52884 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52888 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52858 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:47202 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:36076 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:56738 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51200 - "GET /tools HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:37252 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:53934 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:56868 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:56872 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:56850 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:56866 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56880 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56884 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56848 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45034 - "GET /tools HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:55128 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35988 - "GET /tools HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:53994 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:40094 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:41220 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:41216 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:41198 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41232 - "GET /tools HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:41182 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41214 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41226 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41178 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:39478 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:39492 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:39472 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39524 - "GET /tools HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:39446 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39506 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39516 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39458 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:44906 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:44914 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:44886 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:44898 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44938 - "GET /tools HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44902 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44924 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44890 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:56142 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:53032 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:57290 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:40282 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:36498 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:36514 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:51306 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:35458 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+>>> SESSION.update_context CALLED
+>>> ctx = {}
+INFO:     127.0.0.1:51720 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54726 - "POST /invoke HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:43384 - "POST /invoke HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:51780 - "POST /invoke HTTP/1.1" 422 Unprocessable Entity
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:55594 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:51038 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:44810 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:36594 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:34898 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:60780 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:44578 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:38060 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:54652 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:59062 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:51652 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:59374 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:40872 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:48174 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:48178 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:34842 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:50706 - "POST /invoke HTTP/1.1" 200 OK

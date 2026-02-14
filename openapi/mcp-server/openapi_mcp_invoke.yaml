@@ -69,6 +69,32 @@ paths:
 
                 -
                   type: object
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - inventory_get_switches_widget_table
+                    inputs:
+                      type: object
+                      properties:
+                        fabric_name:
+                          type: string
+                        max_items:
+                          type: integer
+                          default: 200
+                        include_device_details:
+                          type: boolean
+                          default: false
+                        include_raw:
+                          type: boolean
+                          default: false
+                      required: []
+                  required:
+                    - tool
+                    - inputs
+
+                -
+                  type: object
                   required:
                     - tool
                     - inputs

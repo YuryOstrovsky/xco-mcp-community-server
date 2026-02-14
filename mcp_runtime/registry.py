@@ -28,6 +28,7 @@ from tools.monitor.platform_quick_status import monitor_get_platform_quick_statu
 from tools.system.ha_and_node_health_summary import system_get_ha_and_node_health_summary
 from tools.system.certificates_expiring_soon import system_get_certificates_expiring_soon
 from tools.system.certificate_alarm_context import system_get_certificate_alarm_context
+from tools.inventory.switches_widget_table import inventory_get_switches_widget_table
 
 
 
@@ -169,6 +170,11 @@ class MCPRegistry:
         self.handlers["system_get_certificate_alarm_context"] = (
             system_get_certificate_alarm_context
         )
+
+        self.handlers["inventory_get_switches_widget_table"] = (
+            inventory_get_switches_widget_table
+        )
+
 
 
 
