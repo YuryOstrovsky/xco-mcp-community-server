@@ -1449,6 +1449,246 @@ def restconf_get_clock(
 
     return payload
 
+
+
+def restconf_get_system_maintenance_status(
+    *,
+    inputs: dict,
+    registry,
+    transport,
+    context: dict,
+    **kwargs,
+) -> dict:
+    """
+    Tier-2: System maintenance mode status via RESTCONF RPC:
+      POST /restconf/operations/brocade-system-maintenance:get-maint-mode-status
+
+    Returns a single item with the key maintenance-mode fields.
+    """
+    switch_ip = _as_str(inputs.get("switch_ip"))
+    if not switch_ip:
+        return {
+            "meta": {"tool": "restconf_get_system_maintenance_status", "ok": False, "error": "Missing switch_ip"},
+            "summary": {"signals": {"restconf_ok": False}},
+            "items": [],
+            "warnings": [],
+        }
+
+    include_raw = bool(inputs.get("include_raw") or False)
+
+    # Optional overrides
+    username = inputs.get("username")
+    password = inputs.get("password")
+    verify_tls = inputs.get("verify_tls")
+    timeout_seconds = inputs.get("timeout_seconds")
+
+    warnings: list[str] = []
+
+    try:
+        client = make_client(
+            switch_ip,
+            username=username,
+            password=password,
+            verify_tls=verify_tls,
+            timeout_seconds=timeout_seconds,
+        )
+
+        raw_json = None
+        # Prefer explicit helper if present, otherwise fall back to generic RPC post
+        if hasattr(client, "get_maint_mode_status"):
+            raw_json = client.get_maint_mode_status()
+        else:
+            raw_json = client._post_rpc("brocade-system-maintenance:get-maint-mode-status", {})
+
+        out = None
+        if isinstance(raw_json, dict):
+            out = raw_json.get("brocade-system-maintenance:output") or raw_json.get("output") or raw_json
+        if not isinstance(out, dict):
+            warnings.append(f"Unexpected maintenance status shape: {type(out).__name__}")
+            out = {}
+
+        item = {
+            "config_status": _as_str(out.get("config-status")),
+            "overall_status": _as_str(out.get("overall-status")),
+            "num_stages": _as_int(out.get("num-stages"), 0),
+            "current_stage": _as_int(out.get("current-stage"), 0),
+            "max_time": _as_int(out.get("max-time"), 0),
+            "max_enable_time": _as_int(out.get("max-enable-time"), 0),
+            "max_disable_time": _as_int(out.get("max-disable-time"), 0),
+        }
+
+        payload = {
+            "meta": {
+                "tool": "restconf_get_system_maintenance_status",
+                "switch_ip": switch_ip,
+                "ok": True,
+                "source": "direct_switch_restconf",
+            },
+            "summary": {
+                "signals": {"restconf_ok": True},
+                "config_status": item.get("config_status"),
+                "overall_status": item.get("overall_status"),
+                "stages": {
+                    "current_stage": item.get("current_stage"),
+                    "num_stages": item.get("num_stages"),
+                },
+            },
+            "items": [item],
+            "warnings": warnings,
+        }
+
+        if include_raw and raw_json is not None:
+            payload["raw_json"] = raw_json
+
+        return payload
+
+    except RestconfError as e:
+        return {
+            "meta": {
+                "tool": "restconf_get_system_maintenance_status",
+                "switch_ip": switch_ip,
+                "ok": False,
+                "error": str(e),
+                "source": "direct_switch_restconf",
+            },
+            "summary": {"signals": {"restconf_ok": False}},
+            "items": [],
+            "warnings": warnings,
+        }
+
+
+def restconf_get_system_maintenance_rate_monitoring(
+    *,
+    inputs: dict,
+    registry,
+    transport,
+    context: dict,
+    **kwargs,
+) -> dict:
+    """
+    Tier-2: System maintenance rate monitoring status via RESTCONF RPC:
+      POST /restconf/operations/brocade-system-maintenance:get-system-maintenance-rate-monitoring
+
+    Some SLX builds return HTTP 204 No Content when this feature is not configured/enabled.
+    """
+    switch_ip = _as_str(inputs.get("switch_ip"))
+    if not switch_ip:
+        return {
+            "meta": {"tool": "restconf_get_system_maintenance_rate_monitoring", "ok": False, "error": "Missing switch_ip"},
+            "summary": {"signals": {"restconf_ok": False}},
+            "items": [],
+            "warnings": [],
+        }
+
+    include_raw = bool(inputs.get("include_raw") or False)
+
+    # Optional overrides
+    username = inputs.get("username")
+    password = inputs.get("password")
+    verify_tls = inputs.get("verify_tls")
+    timeout_seconds = inputs.get("timeout_seconds")
+
+    warnings: list[str] = []
+
+    try:
+        client = make_client(
+            switch_ip,
+            username=username,
+            password=password,
+            verify_tls=verify_tls,
+            timeout_seconds=timeout_seconds,
+        )
+
+        raw_json = None
+        if hasattr(client, "get_system_maintenance_rate_monitoring"):
+            raw_json = client.get_system_maintenance_rate_monitoring()
+        else:
+            raw_json = client._post_rpc("brocade-system-maintenance:get-system-maintenance-rate-monitoring", {})
+
+        # 204 No Content support: we return a minimal payload with a warning.
+        if isinstance(raw_json, dict) and raw_json.get("_meta", {}).get("status_code") == 204:
+            warnings.append("RPC returned HTTP 204 No Content. Rate monitoring may be disabled or not configured.")
+            summary = {
+                "signals": {"restconf_ok": True},
+                "has_data": False,
+            }
+            item = {"status_code": 204, "note": "no content"}
+            payload = {
+                "meta": {"tool": "restconf_get_system_maintenance_rate_monitoring", "ok": True},
+                "summary": summary,
+                "items": [item],
+                "warnings": warnings,
+            }
+            if include_raw:
+                payload["raw_json"] = raw_json
+            return payload
+
+        # Normal JSON output case (if/when enabled)
+        out = None
+        if isinstance(raw_json, dict):
+            out = (
+                raw_json.get("brocade-system-maintenance:output")
+                or raw_json.get("output")
+                or raw_json
+            )
+
+        if not isinstance(out, dict):
+            warnings.append("Unexpected RPC response shape (expected JSON object).")
+            out = {}
+
+        # Best-effort summary: pick a few obvious keys if present
+        summary = {
+            "signals": {"restconf_ok": True},
+            "has_data": True if out else False,
+        }
+
+        item = {}
+        for k in (
+            "config-status",
+            "overall-status",
+            "num-stages",
+            "current-stage",
+            "max-time",
+            "max-enable-time",
+            "max-disable-time",
+            "rate-monitoring-status",
+            "rate-monitoring",
+            "enabled",
+            "status",
+        ):
+            if k in out:
+                item[k.replace("-", "_")] = out[k]
+
+        # If we didn't find known keys, just pass through a subset (avoid huge payloads)
+        if not item and out:
+            for k in list(out.keys())[:30]:
+                item[k.replace("-", "_")] = out[k]
+
+        payload = {
+            "meta": {"tool": "restconf_get_system_maintenance_rate_monitoring", "ok": True},
+            "summary": summary,
+            "items": [item] if item else [],
+            "warnings": warnings,
+        }
+        if include_raw:
+            payload["raw_json"] = raw_json
+
+        return payload
+
+    except RestconfError as e:
+        return {
+            "meta": {"tool": "restconf_get_system_maintenance_rate_monitoring", "ok": False, "error": str(e)},
+            "summary": {"signals": {"restconf_ok": False}},
+            "items": [],
+            "warnings": [str(e)],
+        }
+    except Exception as e:
+        return {
+            "meta": {"tool": "restconf_get_system_maintenance_rate_monitoring", "ok": False, "error": f"Unexpected error: {e}"},
+            "summary": {"signals": {"restconf_ok": False}},
+            "items": [],
+            "warnings": [f"Unexpected error: {e}"],
+        }
 def restconf_get_port_statistics_summary(
     *,
     inputs: dict,
@@ -2255,246 +2495,4 @@ def restconf_get_running_config(
         resp["raw_xml"] = raw_xml
     return resp
 
-
-def restconf_get_user_sessions(
-    registry,
-    inputs,
-    context=None,
-    request_id=None,
-    correlation_id=None,
-    auto_mode=False,
-    **kwargs,
-):
-    """
-    Tier-2: Show active user sessions via SLX user-session-info operation (XML).
-    inputs: {
-      switch_ip, max_items, username_filter, source_ip_filter,
-      include_raw, max_bytes,
-      username, password, verify_tls, timeout_seconds
-    }
-    """
-    tool_name = "restconf_get_user_sessions"
-
-    switch_ip = (inputs.get("switch_ip") or "").strip()
-    max_items = int(inputs.get("max_items", 50))
-    username_filter = (inputs.get("username_filter") or "").strip()
-    source_ip_filter = (inputs.get("source_ip_filter") or "").strip()
-
-    include_raw = bool(inputs.get("include_raw", False))
-    max_bytes = int(inputs.get("max_bytes", 200000))
-
-    username = inputs.get("username")
-    password = inputs.get("password")
-    verify_tls = inputs.get("verify_tls")
-    timeout_seconds = inputs.get("timeout_seconds")
-
-    if not switch_ip:
-        return {
-            "meta": {
-                "tool": tool_name,
-                "switch_ip": None,
-                "ok": False,
-                "source": "direct_switch_restconf",
-                "error": "Missing required input: switch_ip",
-            },
-            "summary": {"signals": {"restconf_ok": False}},
-            "items": [],
-            "warnings": ["Provide switch_ip."],
-        }
-
-    # ---- Call switch /rest/operations/user-session-info ----
-    try:
-        client = make_client(
-            switch_ip,
-            username=username,
-            password=password,
-            verify_tls=verify_tls,
-            timeout_seconds=timeout_seconds,
-        )
-        status, headers, text = client.get_user_session_info_xml()
-    except Exception as e:
-        return {
-            "meta": {
-                "tool": tool_name,
-                "switch_ip": switch_ip,
-                "ok": False,
-                "source": "direct_switch_restconf",
-                "error": f"REST call failed: {str(e)}",
-            },
-            "summary": {"signals": {"restconf_ok": False}},
-            "items": [],
-            "warnings": ["REST call failed (connect/auth/TLS). Try include_raw and check credentials/env."],
-        }
-
-    content_type = None
-    if isinstance(headers, dict):
-        content_type = headers.get("content-type") or headers.get("Content-Type")
-
-    raw_xml = None
-    if include_raw:
-        b = (text or "").encode("utf-8", errors="replace")
-        truncated = len(b) > max_bytes
-        snippet = b[:max_bytes].decode("utf-8", errors="replace")
-        raw_xml = {
-            "status": status,
-            "content_type": content_type,
-            "byte_len": len(b),
-            "truncated": truncated,
-            "content": snippet,
-        }
-
-    if not (200 <= int(status) < 300):
-        resp = {
-            "meta": {
-                "tool": tool_name,
-                "switch_ip": switch_ip,
-                "ok": False,
-                "source": "direct_switch_restconf",
-                "error": f"HTTP {status} from /rest/operations/user-session-info",
-            },
-            "summary": {"signals": {"restconf_ok": False}},
-            "items": [],
-            "warnings": ["Switch returned non-2xx. Use include_raw to inspect response."],
-        }
-        if include_raw and raw_xml is not None:
-            resp["raw_xml"] = raw_xml
-        return resp
-
-    # ---- Parse XML (sanitize just in case) ----
-    try:
-        xml_text = _sanitize_slx_xml(text or "")
-        root = ET.fromstring(xml_text)
-    except Exception as e:
-        resp = {
-            "meta": {
-                "tool": tool_name,
-                "switch_ip": switch_ip,
-                "ok": False,
-                "source": "direct_switch_restconf",
-                "error": f"XML parse failed: {str(e)}",
-            },
-            "summary": {"signals": {"restconf_ok": False}},
-            "items": [],
-            "warnings": ["Failed parsing session XML; try include_raw for inspection."],
-        }
-        if include_raw and raw_xml is not None:
-            resp["raw_xml"] = raw_xml
-        return resp
-
-    def local(tag: str) -> str:
-        return tag.split("}", 1)[1] if "}" in tag else tag
-
-    def leaf_map(el) -> dict:
-        d = {}
-        for c in list(el):
-            if len(list(c)) == 0 and (c.text or "").strip():
-                d[local(c.tag)] = (c.text or "").strip()
-        return d
-
-    def norm_key(k: str) -> str:
-        return (k or "").strip().replace("-", "_").replace(".", "_")
-
-    def pick(rec: dict, keys: list[str]) -> str | None:
-        for k in keys:
-            v = rec.get(k)
-            if v is not None and str(v).strip() != "":
-                return str(v).strip()
-        return None
-
-    # Heuristic: collect any element that "looks like" a session record
-    candidates = []
-    for el in root.iter():
-        m = leaf_map(el)
-        if not m:
-            continue
-
-        ltag = local(el.tag).lower()
-        keys_l = {k.lower() for k in m.keys()}
-
-        has_user = any(k in keys_l for k in ["user-name", "username", "login-name", "user", "account", "name"])
-        has_ip = any("ip" in k for k in keys_l) or any(k in keys_l for k in ["remote-host", "client-host", "source-host"])
-
-        looks_like_session = ("session" in ltag) or (has_user and has_ip)
-
-        if looks_like_session:
-            rec = {norm_key(k): v for k, v in m.items()}
-            rec["node"] = local(el.tag)
-            candidates.append(rec)
-
-    # If still empty, try root as a single record
-    if not candidates:
-        m = leaf_map(root)
-        if m:
-            candidates.append({norm_key(k): v for k, v in m.items()} | {"node": local(root.tag)})
-
-    # Deduplicate
-    deduped = []
-    seen = set()
-    for s in candidates:
-        u = pick(s, ["user_name", "username", "login_name", "user", "account", "name"]) or ""
-        ip = pick(s, ["source_ip", "src_ip", "remote_ip", "client_ip", "ip_address", "ip"]) or ""
-        sid = pick(s, ["session_id", "sid", "id"]) or ""
-        tty = pick(s, ["tty", "line", "terminal"]) or ""
-        st = pick(s, ["login_time", "start_time"]) or ""
-        key = (u, ip, sid, tty, st)
-        if key in seen:
-            continue
-        seen.add(key)
-        deduped.append(s)
-
-    items = deduped
-
-    # Filters
-    if username_filter:
-        uf = username_filter.lower()
-        items = [
-            s for s in items
-            if uf in (pick(s, ["user_name", "username", "login_name", "user", "account", "name"]) or "").lower()
-        ]
-    if source_ip_filter:
-        sf = source_ip_filter.lower()
-        items = [
-            s for s in items
-            if sf in (pick(s, ["source_ip", "src_ip", "remote_ip", "client_ip", "ip_address", "ip"]) or "").lower()
-        ]
-
-    # Truncate
-    if max_items > 0:
-        items = items[:max_items]
-
-    users = []
-    for s in items:
-        u = pick(s, ["user_name", "username", "login_name", "user", "account", "name"])
-        if u and u not in users:
-            users.append(u)
-
-    warnings = []
-    if not items:
-        warnings.append("No sessions parsed from XML. Try include_raw to inspect, or adjust parser for your SLX build output.")
-
-    summary = {
-        "signals": {"restconf_ok": True},
-        "session_count": len(items),
-        "unique_users": len(users),
-        "example_users": users[:8],
-        "filters": {
-            "username_filter": username_filter or None,
-            "source_ip_filter": source_ip_filter or None,
-        },
-    }
-
-    resp = {
-        "meta": {
-            "tool": tool_name,
-            "switch_ip": switch_ip,
-            "ok": True,
-            "source": "direct_switch_restconf",
-        },
-        "summary": summary,
-        "items": items,
-        "warnings": warnings,
-    }
-    if include_raw and raw_xml is not None:
-        resp["raw_xml"] = raw_xml
-    return resp
 

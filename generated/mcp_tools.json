@@ -11268,8 +11268,8 @@
 },
 
 {
-  "name": "restconf_get_user_sessions",
-  "description": "Tier-2: Show active management user sessions via SLX vendor operation /rest/operations/user-session-info (XML). Returns parsed session list with optional raw XML snippet.",
+  "name": "restconf_get_system_maintenance_status",
+  "description": "Tier-2: Get system maintenance / maintenance-mode status via RESTCONF RPC (brocade-system-maintenance:get-maint-mode-status).",
   "category": "restconf",
   "method": "COMPOSITE",
   "endpoint": null,
@@ -11277,44 +11277,108 @@
   "input_schema": {
     "type": "object",
     "properties": {
-      "switch_ip": { "type": "string", "description": "Switch management IP/FQDN (required)." },
-      "max_items": { "type": "integer", "default": 50, "description": "Max sessions to return." },
-      "username_filter": { "type": "string", "description": "Optional substring filter on username." },
-      "source_ip_filter": { "type": "string", "description": "Optional substring filter on source IP." },
-      "include_raw": { "type": "boolean", "default": false, "description": "Include raw XML snippet for troubleshooting." },
-      "max_bytes": { "type": "integer", "default": 200000, "description": "Max bytes of raw XML snippet to include when include_raw=true." },
-
-      "username": { "type": "string", "description": "Optional override RESTCONF username." },
-      "password": { "type": "string", "description": "Optional override RESTCONF password." },
-      "verify_tls": { "type": "boolean", "description": "Optional override TLS verification." },
-      "timeout_seconds": { "type": "integer", "description": "Optional override request timeout." }
+      "switch_ip": {
+        "type": "string",
+        "description": "Switch management IP/FQDN (required)."
+      },
+      "include_raw": {
+        "type": "boolean",
+        "default": false,
+        "description": "Include raw RESTCONF payload for troubleshooting."
+      },
+      "username": {
+        "type": "string",
+        "description": "Optional override RESTCONF username."
+      },
+      "password": {
+        "type": "string",
+        "description": "Optional override RESTCONF password."
+      },
+      "verify_tls": {
+        "type": "boolean",
+        "description": "Optional override TLS verification."
+      },
+      "timeout_seconds": {
+        "type": "integer",
+        "description": "Optional override request timeout."
+      }
     },
-    "required": ["switch_ip"]
+    "required": [
+      "switch_ip"
+    ]
   },
   "policy": {
     "risk": "SAFE_READ",
     "allowed_in_auto_mode": true,
     "requires_confirmation": false
   },
-  "tags": ["read", "tier2", "restconf", "sessions", "aaa", "users"]
+  "tags": [
+    "read",
+    "tier2",
+    "restconf",
+    "system",
+    "maintenance",
+    "mode",
+    "status"
+  ]
+},
+
+{
+  "name": "restconf_get_system_maintenance_rate_monitoring",
+  "description": "Tier-2: Get system maintenance rate monitoring status via RESTCONF RPC (brocade-system-maintenance:get-system-maintenance-rate-monitoring). Some builds return HTTP 204 when not configured.",
+  "category": "restconf",
+  "method": "COMPOSITE",
+  "endpoint": null,
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "switch_ip": {
+        "type": "string",
+        "description": "Switch management IP/FQDN (required)."
+      },
+      "include_raw": {
+        "type": "boolean",
+        "default": false,
+        "description": "Include raw RESTCONF payload for troubleshooting."
+      },
+      "username": {
+        "type": "string",
+        "description": "Optional override RESTCONF username."
+      },
+      "password": {
+        "type": "string",
+        "description": "Optional override RESTCONF password."
+      },
+      "verify_tls": {
+        "type": "boolean",
+        "description": "Optional override TLS verification."
+      },
+      "timeout_seconds": {
+        "type": "integer",
+        "description": "Optional override request timeout."
+      }
+    },
+    "required": [
+      "switch_ip"
+    ]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": [
+    "read",
+    "tier2",
+    "restconf",
+    "system",
+    "maintenance",
+    "rate",
+    "monitoring",
+    "status"
+  ]
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

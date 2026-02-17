@@ -121,13 +121,17 @@ class RestconfClient:
             url,
             headers=headers,
             data=data,
-            timeout=self.timeout_seconds,
+timeout=self.timeout_seconds,
         )
         return r.status_code, dict(r.headers), r.text
 
 
     def _post_rpc(self, rpc: str, payload: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
-        """POST /restconf/operations/<rpc> with JSON (yang-data+json)."""
+        """POST /restconf/operations/<rpc> with JSON (yang-data+json).
+
+        Note: some RPCs legitimately return HTTP 204 No Content. In that case we return
+        a small meta dict instead of raising / JSON-parsing.
+        """
         url = f"{self.base_url}/operations/{rpc}"
         body = payload if payload is not None else {}
         r = self.session.post(
@@ -136,6 +140,8 @@ class RestconfClient:
             json=body,
             timeout=self.timeout_seconds,
         )
+        if r.status_code == 204 or not (r.text or "").strip():
+            return {"_meta": {"status_code": r.status_code}}
         if r.status_code >= 400:
             raise RestconfError(f"RESTCONF RPC {rpc} failed: {r.status_code} {r.text[:300]}")
         try:
@@ -168,6 +174,21 @@ class RestconfClient:
         return self._get_json("/operations")
 
     # ---- RPC wrappers (XML bodies) ----
+
+
+    def get_maint_mode_status(self) -> Dict[str, Any]:
+        """RPC: brocade-system-maintenance:get-maint-mode-status"""
+        return self._post_rpc("brocade-system-maintenance:get-maint-mode-status", {})
+
+    def get_system_maintenance_rate_monitoring(self) -> Dict[str, Any]:
+        """RPC: brocade-system-maintenance:get-system-maintenance-rate-monitoring.
+
+        Some builds return 204 No Content when rate monitoring isn't configured/enabled.
+        In that case this returns {"_meta": {"status_code": 204}}.
+        """
+        return self._post_rpc("brocade-system-maintenance:get-system-maintenance-rate-monitoring", {})
+
+
 
     def show_firmware_version(self) -> Dict[str, Any]:
         """RPC: show-firmware-version"""
@@ -257,24 +278,6 @@ class RestconfClient:
             config_path = config_path[1:]
         path = "/config/running" + (f"/{config_path}" if config_path else "")
         return self._rest_get_text(path, accept="application/vnd.configuration.resource+xml")
-
-    def get_user_session_info_xml(self) -> Tuple[int, Dict[str, str], str]:
-        """
-        Invoke /rest/operations/user-session-info (XML).
-        SLX 'operations' are invoked via POST with an XML body.
-        """
-        body = "<user-session-info/>"
-        return self._rest_post_text(
-            "/operations/user-session-info",
-            data=body,
-            accept="application/vnd.base.resource+xml",
-            content_type="application/vnd.base.resource+xml",
-        )
-
-
-# ---------------------------
-# SLX /rest config datastore helpers
-# ---------------------------
 
 
     

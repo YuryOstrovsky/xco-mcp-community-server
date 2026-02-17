@@ -4112,3 +4112,29 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 - Tags: `read`, `tier1`
 
 ---
+
+---
+# RESTCONF Toolpack
+
+This section documents the RESTCONF-focused Tier-2 tools added for SLX switches.
+
+## Tier-2 RESTCONF tools
+
+| Tool | Description | Example use case |
+|---|---|---|
+| `restconf_show_firmware_version` | Query SLX switch via RESTCONF to retrieve OS version, firmware build, uptime, CPU and memory info. | AI: 'What firmware version is running on switch 10.13.9.66?' |
+| `restconf_get_interface_detail` | Retrieve detailed interface information including status and counters from the switch. | UI: Drill into a specific interface to view operational state and statistics. |
+| `restconf_list_operations` | List all RESTCONF RPC operations supported by the switch. | AI: 'What RESTCONF operations does this switch support?' |
+| `restconf_get_lldp_neighbor_detail` | Retrieve LLDP neighbor details to understand connected devices. | AI: 'Show LLDP neighbors for switch 10.13.9.66.' |
+| `restconf_get_port_statistics_summary` | Summarize port traffic statistics and errors across interfaces. | UI: Display top ports by traffic or error counters. |
+| `restconf_get_media_detail` | Retrieve physical media/transceiver details for switch ports. | AI: 'Show optics details for Ethernet 0/1.' |
+| `restconf_get_arp_table` | Retrieve the ARP table entries from the switch. | AI: 'List ARP entries on the switch.' |
+| `restconf_get_clock` | Retrieve system clock/time information from the switch. | UI: Display current device time for troubleshooting. |
+| `restconf_get_vlan_brief` | Retrieve VLAN summary information configured on the switch. | AI: 'Show VLAN summary on this switch.' |
+| `restconf_get_vrf_summary` | Retrieve VRF configuration and summary information. | AI: 'List all VRFs configured on the switch.' |
+| `restconf_get_ip_interface` | Retrieve IP interface configuration and status details. | UI: Show all IP interfaces with their state and addresses. |
+| `restconf_get_running_config` | Retrieve running configuration directly from the switch via RESTCONF. | AI: 'Fetch running configuration for backup review.' |
+| `restconf_get_system_maintenance_status` | Retrieve system maintenance mode status and stage information. | AI: 'Is maintenance mode enabled on this switch?' |
+| `restconf_get_system_maintenance_rate_monitoring` | Retrieve maintenance rate monitoring configuration/status (may return 204 if disabled). | AI: 'Check if maintenance rate monitoring is configured.' |
+
+**Common input:** `switch_ip` (management IP/FQDN). Optional: `include_raw`, and credential overrides (`username`, `password`, `verify_tls`, `timeout_seconds`).

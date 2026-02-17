@@ -42,7 +42,9 @@ from restconf.tools import (
     restconf_get_vrf_summary,
     restconf_get_ip_interface,
     restconf_get_running_config,
-    restconf_get_user_sessions, 
+    restconf_get_system_maintenance_status,
+    restconf_get_system_maintenance_rate_monitoring,
+    
 )
 
 
@@ -241,14 +243,15 @@ class MCPRegistry:
             restconf_get_running_config
         )
 
-        self.handlers["restconf_get_user_sessions"] = (
-            restconf_get_user_sessions
+        self.handlers["restconf_get_system_maintenance_status"] = (
+            restconf_get_system_maintenance_status
         )
 
+        self.handlers["restconf_get_system_maintenance_rate_monitoring"] = (
+            restconf_get_system_maintenance_rate_monitoring
+        )
 
-
-
-
+       
 
         return self
 

@@ -128,7 +128,7 @@ pip install -r requirements.txt
 
 ## Configuration
 
-Create a `.env` file in the repo root.
+Create a `.env` file in the repo root (same level as `api/`, `mcp_runtime/`, etc).
 
 Example :
 
@@ -272,3 +272,52 @@ Tier-2 handlers are invoked with:
   - tighten policy checks (`mcp_runtime/policy.py`)
   - use the mutation registry/ledger for rollbacks/auditing
   - consider running behind a reverse proxy and restricting access by network/IP
+
+---
+## RESTCONF toolpack (SLX switches)
+
+The server includes a set of **Tier-2 RESTCONF** tools for interrogating SLX switches (tested with SLX9150).
+
+### RESTCONF configuration (.env)
+
+Add the following to your `.env` (values shown are the lab defaults):
+
+```bash
+RESTCONF_USERNAME=admin
+RESTCONF_PASSWORD=password
+RESTCONF_VERIFY_TLS=false
+```
+
+Restart the service after changing `.env`:
+
+```bash
+sudo systemctl restart xco-mcp
+```
+
+### RESTCONF Tier-2 tools available
+
+| Tool | What it does |
+|---|---|
+| `restconf_show_firmware_version` | Query SLX switch via RESTCONF to retrieve OS version, firmware build, uptime, CPU and memory info. |
+| `restconf_get_interface_detail` | Retrieve detailed interface information including status and counters from the switch. |
+| `restconf_list_operations` | List all RESTCONF RPC operations supported by the switch. |
+| `restconf_get_lldp_neighbor_detail` | Retrieve LLDP neighbor details to understand connected devices. |
+| `restconf_get_port_statistics_summary` | Summarize port traffic statistics and errors across interfaces. |
+| `restconf_get_media_detail` | Retrieve physical media/transceiver details for switch ports. |
+| `restconf_get_arp_table` | Retrieve the ARP table entries from the switch. |
+| `restconf_get_clock` | Retrieve system clock/time information from the switch. |
+| `restconf_get_vlan_brief` | Retrieve VLAN summary information configured on the switch. |
+| `restconf_get_vrf_summary` | Retrieve VRF configuration and summary information. |
+| `restconf_get_ip_interface` | Retrieve IP interface configuration and status details. |
+| `restconf_get_running_config` | Retrieve running configuration directly from the switch via RESTCONF. |
+| `restconf_get_system_maintenance_status` | Retrieve system maintenance mode status and stage information. |
+| `restconf_get_system_maintenance_rate_monitoring` | Retrieve maintenance rate monitoring configuration/status (may return 204 if disabled). |
+
+### Example invoke
+
+```bash
+export MCP="http://127.0.0.1:8000"
+curl -sS -X POST "$MCP/invoke" -H "Content-Type: application/json" \
+  -d '{"tool":"restconf_get_system_maintenance_status","inputs":{"switch_ip":"10.13.9.66"}}' \
+| jq '.result.status, .result.payload.summary'
+```
