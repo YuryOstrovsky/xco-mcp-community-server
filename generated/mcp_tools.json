@@ -10711,7 +10711,214 @@
     "objects": ["inventory", "switches", "fabric"],
     "scopes": [["inventory"], ["fabric"]]
   }
+},
+
+{
+  "name": "restconf_show_firmware_version",
+  "description": "Read-only: Query an SLX switch directly via RESTCONF RPC to return OS/firmware version + uptime (bypasses XCO).",
+  "category": "restconf",
+  "method": "COMPOSITE",
+  "endpoint": { "host": "tier2", "path": "restconf_show_firmware_version" },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "switch_ip": {
+        "type": "string",
+        "description": "Management IP/FQDN of the target switch (required)."
+      },
+      "username": {
+        "type": "string",
+        "description": "Optional override RESTCONF username (falls back to RESTCONF_USER env)."
+      },
+      "password": {
+        "type": "string",
+        "description": "Optional override RESTCONF password (falls back to RESTCONF_PASS env)."
+      },
+      "verify_tls": {
+        "type": "boolean",
+        "default": false,
+        "description": "If true, verify TLS cert (else -k / insecure). Defaults to RESTCONF_VERIFY_TLS env if set."
+      },
+      "include_raw": {
+        "type": "boolean",
+        "default": false,
+        "description": "If true, include raw RESTCONF RPC response for debugging."
+      }
+    },
+    "required": ["switch_ip"]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "restconf", "switch", "firmware", "tier2"],
+  "capabilities": {
+    "actions": ["show"],
+    "objects": ["switch", "firmware", "system"],
+    "scopes": [["device"]]
+  }
+},
+
+{
+  "name": "restconf_get_interface_detail",
+  "description": "Read-only: Query an SLX switch directly via RESTCONF RPC (get-interface-detail) to return rich port/interface statistics (RX/TX octets/packets/errors) and state. Optional interface_name filter.",
+  "category": "restconf",
+  "method": "COMPOSITE",
+  "endpoint": { "host": "tier2", "path": "restconf_get_interface_detail" },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "switch_ip": {
+        "type": "string",
+        "description": "Management IP/FQDN of the target switch (required)."
+      },
+      "interface_name": {
+        "type": "string",
+        "description": "Optional. Example: 'Ethernet 0/1' or '0/1' or 'Port-channel 64' or '64'."
+      },
+      "username": {
+        "type": "string",
+        "description": "Optional override RESTCONF username (falls back to RESTCONF_USERNAME/RESTCONF_USER env)."
+      },
+      "password": {
+        "type": "string",
+        "description": "Optional override RESTCONF password (falls back to RESTCONF_PASSWORD/RESTCONF_PASS env)."
+      },
+      "verify_tls": {
+        "type": "boolean",
+        "default": false,
+        "description": "If true, verify TLS cert (else insecure). Defaults to RESTCONF_VERIFY_TLS env if set."
+      },
+      "max_items": {
+        "type": "integer",
+        "default": 200,
+        "description": "Limit number of returned interfaces in items[]."
+      },
+      "include_raw": {
+        "type": "boolean",
+        "default": false,
+        "description": "If true, include raw RESTCONF RPC response for debugging."
+      }
+    },
+    "required": ["switch_ip"]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "restconf", "switch", "interface", "statistics", "tier2"],
+  "capabilities": {
+    "actions": ["get", "show"],
+    "objects": ["switch", "interface", "counters"],
+    "scopes": [["device"]]
+  }
+},
+
+{
+  "name": "restconf_list_operations",
+  "description": "Tier-2: List RESTCONF RPC operations exposed by a switch (useful for discovery; filterable).",
+  "category": "restconf",
+  "method": "COMPOSITE",
+  "endpoint": null,
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "switch_ip": { "type": "string", "description": "Switch management IP." },
+      "filter": { "type": "string", "description": "Optional substring filter (case-insensitive). Example: lldp", "default": "" },
+      "max_items": { "type": "integer", "description": "Max operations returned (default 200).", "default": 200 },
+
+      "username": { "type": "string", "description": "Optional override (otherwise uses env/defaults)." },
+      "password": { "type": "string", "description": "Optional override (otherwise uses env/defaults)." },
+      "verify_tls": { "type": "boolean", "description": "Optional override for TLS verification." }
+    },
+    "required": ["switch_ip"]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier2", "restconf", "discovery"],
+  "capabilities": {
+    "actions": ["list", "show"],
+    "objects": ["restconf", "operations"],
+    "scopes": [["device"], ["system"]]
+  }
+},
+
+{
+  "name": "restconf_get_lldp_neighbor_detail",
+  "description": "Tier-2: Get LLDP neighbor details directly from a switch via RESTCONF RPC (brocade-lldp-ext:get-lldp-neighbor-detail).",
+  "category": "restconf",
+  "method": "COMPOSITE",
+  "endpoint": null,
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "switch_ip": { "type": "string", "description": "Switch management IP." },
+      "interface_name": { "type": "string", "description": "Optional: filter to a specific local interface (e.g. Ethernet 0/1)." },
+      "max_items": { "type": "integer", "description": "Max neighbors returned (default 200).", "default": 200 },
+
+      "username": { "type": "string", "description": "Optional override (otherwise uses env/defaults)." },
+      "password": { "type": "string", "description": "Optional override (otherwise uses env/defaults)." },
+      "verify_tls": { "type": "boolean", "description": "Optional override for TLS verification." }
+    },
+    "required": ["switch_ip"]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier2", "restconf", "lldp", "neighbors"],
+  "capabilities": {
+    "actions": ["list", "show"],
+    "objects": ["lldp", "neighbors"],
+    "scopes": [["device"], ["interface"]]
+  }
+},
+
+{
+  "name": "restconf_get_port_statistics_summary",
+  "category": "restconf",
+  "tier": 2,
+  "method": "COMPOSITE",
+  "host": "tier2",
+  "path": "/restconf_get_port_statistics_summary",
+  "description": "RESTCONF Tier-2: Summarize Ethernet port counters (octets/errors) across ports using get-interface-detail RPC.",
+  "composite": true,
+  "read_only": true,
+  "inputs_schema": {
+    "type": "object",
+    "properties": {
+      "switch_ip": { "type": "string", "description": "Switch management IP" },
+      "max_ports": { "type": "integer", "description": "Max ethernet ports to include (default 64)" },
+      "top_n": { "type": "integer", "description": "Top N ports by total octets (default 5)" },
+      "include_raw": { "type": "boolean", "description": "Include raw RESTCONF payload for troubleshooting" },
+      "username": { "type": "string", "description": "Optional override RESTCONF username" },
+      "password": { "type": "string", "description": "Optional override RESTCONF password" },
+      "verify_tls": { "type": "boolean", "description": "Optional override TLS verification" },
+      "timeout_seconds": { "type": "integer", "description": "Optional override request timeout" }
+    },
+    "required": ["switch_ip"]
+  },
+  "output_schema": {
+    "type": "object",
+    "description": "Summary + list of port counters"
+  }
 }
+
+
+
+
+
+
 
 
 

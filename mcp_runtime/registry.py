@@ -29,6 +29,16 @@ from tools.system.ha_and_node_health_summary import system_get_ha_and_node_healt
 from tools.system.certificates_expiring_soon import system_get_certificates_expiring_soon
 from tools.system.certificate_alarm_context import system_get_certificate_alarm_context
 from tools.inventory.switches_widget_table import inventory_get_switches_widget_table
+from restconf.tools import (
+    restconf_show_firmware_version,
+    restconf_get_interface_detail,
+    restconf_list_operations,
+    restconf_get_lldp_neighbor_detail,
+    restconf_get_port_statistics_summary,
+)
+
+
+
 
 
 
@@ -174,6 +184,31 @@ class MCPRegistry:
         self.handlers["inventory_get_switches_widget_table"] = (
             inventory_get_switches_widget_table
         )
+
+        self.handlers["restconf_show_firmware_version"] = (
+            restconf_show_firmware_version
+        )
+
+        self.handlers["restconf_get_interface_detail"] = (
+            restconf_get_interface_detail
+        )
+
+        self.handlers["restconf_list_operations"] = (
+            restconf_list_operations
+        )
+
+        self.handlers["restconf_get_lldp_neighbor_detail"] = (
+            restconf_get_lldp_neighbor_detail
+        )
+
+        self.handlers["restconf_get_port_statistics_summary"] = (
+            restconf_get_port_statistics_summary
+        )
+
+
+
+
+
 
 
 
