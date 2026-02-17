@@ -1,5 +1,16 @@
 from __future__ import annotations
 
+import xml.etree.ElementTree as ET
+
+def _sanitize_slx_xml(text: str) -> str:
+    """Fix known SLX RESTCONF XML quirks that break strict XML parsers.
+    Observed: invalid attribute xmlns:="..." (empty prefix). We strip it.
+    """
+    if not text:
+        return text
+    # Remove invalid empty-prefix xmlns declarations like:  xmlns:="urn:..."
+    return re.sub(r"\s+xmlns:\s*=\s*\"[^\"]*\"", "", text)
+
 import re
 
 from typing import Any, Dict, List, Optional, Tuple
@@ -1611,36 +1622,263 @@ def restconf_get_port_statistics_summary(
 
 
 
-def restconf_get_interface_switchport(inputs: dict) -> dict:
-    """Tier-2: Show interface switchport details via RESTCONF RPC (brocade-interface-ext:get-interface-switchport).
+def restconf_get_vrf_summary(
+    *,
+    inputs: dict,
+    registry,
+    transport,
+    context: dict,
+    **kwargs,
+) -> dict:
+    """Read-only: List VRFs via RESTCONF data tree.
 
-    Returns empty items (with restconf_ok=true) when the device reports no switchport/L2 interfaces.
+    Primary: GET /restconf/data/brocade-vrf:vrf (JSON)
+    Fallback: GET /restconf/data/brocade-vrf:vrf (XML) because some SLX builds
+    return "application/yang-data+json" that is NOT strict JSON (e.g., trailing commas).
     """
-    switch_ip = inputs.get("switch_ip")
+    switch_ip = _as_str(inputs.get("switch_ip"))
     if not switch_ip:
-        raise ValueError("switch_ip is required")
+        return {
+            "meta": {"tool": "restconf_get_vrf_summary", "ok": False, "error": "Missing switch_ip"},
+            "summary": {"signals": {"restconf_ok": False}},
+            "items": [],
+            "warnings": [],
+        }
 
+    name_filter = _as_str(inputs.get("name_filter"))
+    max_items = _as_int(inputs.get("max_items"), 200)
     include_raw = bool(inputs.get("include_raw", False))
-    interface_filter = (inputs.get("interface_name") or "").strip()
-    mode_filter = (inputs.get("mode_filter") or "").strip().lower()
-    vlan_filter = inputs.get("vlan_id")
-    max_items = int(inputs.get("max_items", 200))
 
-    client = make_client(
-        switch_ip=switch_ip,
-        username=inputs.get("username"),
-        password=inputs.get("password"),
-        verify_tls=inputs.get("verify_tls"),
-        timeout_seconds=inputs.get("timeout_seconds"),
-    )
+    # Optional overrides
+    username = inputs.get("username")
+    password = inputs.get("password")
+    verify_tls = inputs.get("verify_tls")
+    timeout_seconds = inputs.get("timeout_seconds")
 
     warnings: list[str] = []
+
+    client = make_client(
+        switch_ip,
+        username=username,
+        password=password,
+        verify_tls=verify_tls,
+        timeout_seconds=timeout_seconds,
+    )
+
+    raw_json = None
+    raw_xml = None
+
+    # Try JSON first (may fail if device returns non-strict JSON)
     try:
-        raw = client.get_interface_switchport()
+        raw_json = client.get_vrf_tree()
     except RestconfError as e:
+        warnings.append("JSON parse failed for VRF tree; falling back to XML.")
+        warnings.append(f"JSON error: {str(e)}")
+
+    items: list[dict] = []
+
+    if raw_json and isinstance(raw_json, dict):
+        # SLX may use a fully-qualified key like "urn:brocade.com:mgmt:brocade-vrf:vrf"
+        # or "brocade-vrf:vrf". Normalize both.
+        root = None
+        for k in ("brocade-vrf:vrf", "urn:brocade.com:mgmt:brocade-vrf:vrf"):
+            if k in raw_json:
+                root = raw_json.get(k)
+                break
+        if root is None:
+            # fallback to common shapes
+            root = raw_json.get("vrf") or raw_json
+
+        vrfs = []
+        if isinstance(root, list):
+            vrfs = root
+        elif isinstance(root, dict):
+            vrfs = root.get("vrf") or root.get("vrf-entry") or []
+        else:
+            vrfs = []
+
+        if not isinstance(vrfs, list):
+            warnings.append(f"Unexpected VRF JSON shape: {type(vrfs).__name__}")
+            vrfs = []
+
+        for it in vrfs:
+            if not isinstance(it, dict):
+                continue
+            name = _as_str(it.get("vrf-name") or it.get("name") or it.get("vrf"))
+            if not name:
+                continue
+            if name_filter and name_filter.lower() not in name.lower():
+                continue
+            items.append(
+                {
+                    "name": name,
+                    "vrf_id": it.get("vrf-id") or it.get("vrf_id"),
+                    "rd": it.get("route-distinguisher") or it.get("rd"),
+                    "vni": it.get("vni"),
+                    "router_id": it.get("router-id") or it.get("router_id"),
+                }
+            )
+
+    # If JSON path didn't yield items (or JSON parse failed), do XML fallback
+    if not items:
+        try:
+            status, headers, text = client.get_vrf_tree_xml()
+            raw_xml = {"status": status, "content_type": headers.get("Content-Type", ""), "xml": text}
+            # Parse: may be a single <vrf> element or a container with multiple
+            # The namespace is typically urn:brocade.com:mgmt:brocade-vrf
+            # We'll discover namespace from the root tag.
+            # Some SLX builds emit an invalid attribute like xmlns:="..." (empty prefix).
+            # Strip it so standard XML parsers can handle the payload.
+            text_sanitized = re.sub(r"\sxmlns:='[^']*'|\sxmlns:=\"[^\"]*\"", "", text)
+            root = ET.fromstring(text_sanitized)
+            # Extract namespace
+            m = re.match(r"^\{([^}]+)\}", root.tag)
+            ns = m.group(1) if m else "urn:brocade.com:mgmt:brocade-vrf"
+            def q(tag: str) -> str:
+                return f"{{{ns}}}{tag}"
+
+            # Case A: root is <vrf> for one VRF
+            if root.tag.endswith("vrf"):
+                n_el = root.find(q("vrf-name"))
+                if n_el is not None and (n_el.text or "").strip():
+                    vrf_names = [(n_el.text or "").strip()]
+                else:
+                    # maybe multiple children <vrf> ... uncommon, but handle
+                    vrf_names = [(el.text or "").strip() for el in root.findall(".//" + q("vrf-name")) if (el.text or "").strip()]
+            else:
+                vrf_names = [(el.text or "").strip() for el in root.findall(".//" + q("vrf-name")) if (el.text or "").strip()]
+
+            # Deduplicate while keeping order
+            seen = set()
+            ordered = []
+            for n in vrf_names:
+                if n not in seen:
+                    seen.add(n)
+                    ordered.append(n)
+
+            for name in ordered:
+                if name_filter and name_filter.lower() not in name.lower():
+                    continue
+                items.append({"name": name})
+
+        except Exception as e:
+            return {
+                "meta": {
+                    "tool": "restconf_get_vrf_summary",
+                    "switch_ip": switch_ip,
+                    "ok": False,
+                    "source": "direct_switch_restconf",
+                    "error": f"XML fallback failed: {str(e)}",
+                },
+                "summary": {"signals": {"restconf_ok": False}},
+                "items": [],
+                "warnings": warnings,
+            }
+
+    items = sorted(items, key=lambda x: x.get("name") or "")
+    if max_items and len(items) > max_items:
+        warnings.append(f"Truncated items to max_items={max_items} (from {len(items)}).")
+        items = items[:max_items]
+
+    payload = {
+        "meta": {
+            "tool": "restconf_get_vrf_summary",
+            "switch_ip": switch_ip,
+            "ok": True,
+            "source": "direct_switch_restconf",
+        },
+        "summary": {
+            "signals": {"restconf_ok": True},
+            "vrf_count": len(items),
+            "filtered": bool(name_filter),
+            "name_filter": name_filter if name_filter else None,
+            "example_vrfs": [x.get("name") for x in items[:10] if x.get("name")],
+        },
+        "items": items,
+        "warnings": warnings,
+    }
+
+    if include_raw:
+        if raw_json is not None:
+            payload["raw_json"] = raw_json
+        if raw_xml is not None:
+            payload["raw_xml"] = raw_xml
+
+    return payload
+
+
+def restconf_get_ip_interface(
+    *,
+    inputs: dict,
+    registry,
+    transport,
+    context: dict,
+    **kwargs,
+) -> dict:
+    """Tier-2: best-effort L3 IP addressing per interface (IPv4/IPv6).
+
+    Uses RESTCONF data tree:
+      GET /restconf/data/brocade-interface:interface?depth=unbounded
+
+    Notes (SLX quirks):
+    - Some SLX builds return non-strict JSON; we use XML.
+    - XML can contain invalid `xmlns:="..."` (empty prefix); we sanitize it.
+    - Some interface nodes containing IP info may not have a direct <name> child,
+      so we also accept nodes that contain <ip-address> / IPv6 address leaves.
+    """
+    tool_name = "restconf_get_ip_interface"
+    switch_ip = _as_str(inputs.get("switch_ip"))
+    if not switch_ip:
+        return {
+            "meta": {"tool": tool_name, "ok": False, "error": "Missing switch_ip"},
+            "summary": {"signals": {"restconf_ok": False}},
+            "items": [],
+            "warnings": [],
+        }
+
+    interface_name = _as_str(inputs.get("interface_name"))
+    include_ipv6 = bool(inputs.get("include_ipv6", True))
+    max_items = _as_int(inputs.get("max_items"), 200)
+    include_raw = bool(inputs.get("include_raw", False))
+
+    username = inputs.get("username")
+    password = inputs.get("password")
+    verify_tls = inputs.get("verify_tls")
+    timeout_seconds = inputs.get("timeout_seconds")
+
+    warnings: list[str] = []
+    client = make_client(
+        switch_ip,
+        username=username,
+        password=password,
+        verify_tls=verify_tls,
+        timeout_seconds=timeout_seconds,
+    )
+
+    raw_xml = None
+    items: list[dict] = []
+
+    # Fetch XML tree
+    try:
+        status, headers, text = client.get_interface_tree_xml(depth="unbounded")
+        raw_xml = {"status": status, "content_type": headers.get("Content-Type", ""), "xml": text}
+        if status >= 400:
+            return {
+                "meta": {
+                    "tool": tool_name,
+                    "switch_ip": switch_ip,
+                    "ok": False,
+                    "source": "direct_switch_restconf",
+                    "error": f"RESTCONF GET interface tree failed: {status}",
+                },
+                "summary": {"signals": {"restconf_ok": False}},
+                "items": [],
+                "warnings": [],
+            }
+    except Exception as e:
         return {
             "meta": {
-                "tool": "restconf_get_interface_switchport",
+                "tool": tool_name,
                 "switch_ip": switch_ip,
                 "ok": False,
                 "source": "direct_switch_restconf",
@@ -1651,81 +1889,364 @@ def restconf_get_interface_switchport(inputs: dict) -> dict:
             "warnings": [],
         }
 
-    out = (raw or {}).get("brocade-interface-ext:output") or {}
-    has_more = out.get("has-more")
-    last_if_type = out.get("last-interface-type")
-    last_if_name = out.get("last-interface-name")
+    # Parse XML with sanitization
+    try:
+        xml_text = _sanitize_slx_xml(raw_xml.get("xml", "") if raw_xml else "")
+        root = ET.fromstring(xml_text)
+    except Exception as e:
+        return {
+            "meta": {
+                "tool": tool_name,
+                "switch_ip": switch_ip,
+                "ok": False,
+                "source": "direct_switch_restconf",
+                "error": f"XML parse failed: {str(e)}",
+            },
+            "summary": {"signals": {"restconf_ok": False}},
+            "items": [],
+            "warnings": ["Failed parsing interface XML; try include_raw for inspection."],
+        }
 
-    iface_list = out.get("interface")
-    if iface_list is None:
-        iface_list = []
-        if list(out.keys()) == ["has-more"] or (len(out.keys()) == 1 and "has-more" in out):
-            warnings.append("No switchport interfaces returned (device may have no L2/switchport ports).")
-        else:
-            warnings.append(f"RPC output did not include 'interface' list (keys={sorted(out.keys())}).")
+    def local(tag: str) -> str:
+        return tag.split("}", 1)[1] if "}" in tag else tag
 
-    if not isinstance(iface_list, list):
-        warnings.append(f"Unexpected type for output.interface: {type(iface_list).__name__}")
-        iface_list = []
+    def norm_name(s: str) -> str:
+        return s.lower().replace("ethernet", "").replace("eth", "").strip()
 
-    items = []
-    for it in iface_list:
-        if not isinstance(it, dict):
+    def _best_effort_if_name(el) -> str | None:
+        """Try to derive a stable interface name from common leaf tags.
+
+        Order:
+        1) direct children: name/interface-name/if-name
+        2) any descendant leaf with those tags
+        """
+        def _valid_name(s: str) -> bool:
+            s = (s or "").strip()
+            if not s:
+                return False
+            # Reject purely-numeric or single-character names like '0' that appear as indices.
+            if re.fullmatch(r"\d+", s):
+                return False
+            if len(s) <= 1:
+                return False
+            # Prefer names that look like real interfaces (letters, '/', '-', or common prefixes).
+            if re.search(r"[A-Za-z]", s) or ("/" in s) or ("-" in s):
+                return True
+            if s.lower() in ("mgmt", "management"):
+                return True
+            return False
+
+        # 1) direct children
+        for ch in list(el):
+            lt = local(ch.tag)
+            if lt in ("name", "interface-name", "if-name") and (ch.text or "").strip():
+                cand = (ch.text or "").strip()
+                if _valid_name(cand):
+                    return cand
+
+        # 2) descendants
+        for leaf in el.iter():
+            lt = local(leaf.tag)
+            if lt in ("name", "interface-name", "if-name") and (leaf.text or "").strip():
+                cand = (leaf.text or "").strip()
+                if _valid_name(cand):
+                    return cand
+
+        return None
+
+    # Candidate elements: any element named "interface" that has either a name-like child
+    # OR contains ip-address / ipv6-address leaves.
+    candidates = []
+    for el in root.iter():
+        if local(el.tag) != "interface":
             continue
-        if_type = _as_str(it.get("interface-type"))
-        if_name = _as_str(it.get("interface-name"))
-        display_name = f"{if_type} {if_name}".strip()
 
-        mode = _as_str(it.get("mode") or it.get("switchport-mode") or it.get("port-mode"))
-        access_vlan = it.get("access-vlan") or it.get("access_vlan") or it.get("access-vlan-id")
-        native_vlan = it.get("native-vlan") or it.get("native_vlan")
-        trunk_vlans = it.get("trunk-vlans") or it.get("allowed-vlans") or it.get("trunk_vlans")
+        has_name = False
+        has_ip_leaf = False
 
-        access_vlan_s = _as_str(access_vlan)
-        native_vlan_s = _as_str(native_vlan)
+        for ch in list(el):
+            lt = local(ch.tag)
+            if lt in ("name", "interface-name", "if-name") and (ch.text or "").strip():
+                has_name = True
+            if lt in ("ip-address", "ipv4-address", "ipv6-address", "ipv6-addr", "address"):
+                if (ch.text or "").strip():
+                    has_ip_leaf = True
 
-        # Filters (client-side)
-        if interface_filter and interface_filter.lower() not in display_name.lower() and interface_filter.lower() not in if_name.lower():
-            continue
-        if mode_filter and mode_filter != mode.lower():
-            continue
-        if vlan_filter is not None:
-            vf = str(vlan_filter)
-            hay = " ".join([access_vlan_s, native_vlan_s, _as_str(trunk_vlans)])
-            if vf not in hay:
+        # Also consider nested leaves (some structures put ip leaves deeper)
+        if not has_ip_leaf:
+            for leaf in el.iter():
+                lt = local(leaf.tag)
+                if lt in ("ip-address", "ipv4-address", "ipv6-address", "ipv6-addr"):
+                    if (leaf.text or "").strip():
+                        has_ip_leaf = True
+                        break
+
+        if has_name or has_ip_leaf:
+            candidates.append(el)
+
+    # Deduplicate by (name, first_ip)
+    seen = set()
+
+    for el in candidates:
+        # Find a name, if present (best effort)
+        name = _best_effort_if_name(el)
+
+        ipv4 = []
+        ipv6 = []
+        vrf = None
+
+        for leaf in el.iter():
+            t = (leaf.text or "").strip()
+            if not t:
                 continue
+            lt = local(leaf.tag)
+
+            if lt in ("vrf-name", "vrf"):
+                if not vrf:
+                    vrf = t
+                continue
+
+            # Prefer explicit IP leaf names
+            if lt in ("ip-address", "ipv4-address") and "." in t:
+                if re.match(r"^\d{1,3}(\.\d{1,3}){3}(/\d{1,2})?$", t) and t not in ipv4:
+                    ipv4.append(t)
+
+            if include_ipv6 and lt in ("ipv6-address", "ipv6-addr") and ":" in t:
+                if re.match(r"^[0-9a-fA-F:]+(/\d{1,3})?$", t) and t not in ipv6:
+                    ipv6.append(t)
+
+            # Fallback: any text that looks like an IP
+            if "." in t and re.match(r"^\d{1,3}(\.\d{1,3}){3}(/\d{1,2})?$", t) and t not in ipv4:
+                ipv4.append(t)
+            if include_ipv6 and ":" in t and re.match(r"^[0-9a-fA-F:]+(/\d{1,3})?$", t) and t not in ipv6:
+                ipv6.append(t)
+
+        if not ipv4 and not ipv6:
+            continue
+
+        if not name:
+            # If one of the IPv4s matches the switch_ip, treat as mgmt interface.
+            if any((ip.split("/", 1)[0] == switch_ip) for ip in ipv4):
+                name = "mgmt"
+            else:
+                name = "unnamed-interface"
+
+        if interface_name:
+            q = norm_name(interface_name)
+            if q and q not in name.lower() and q not in norm_name(name):
+                continue
+
+        key = (name, ipv4[0] if ipv4 else "", ipv6[0] if ipv6 else "")
+        if key in seen:
+            continue
+        seen.add(key)
 
         items.append(
             {
-                "interface_type": if_type,
-                "interface_name": if_name,
-                "display": display_name,
-                "mode": mode,
-                "access_vlan": access_vlan_s,
-                "native_vlan": native_vlan_s,
-                "trunk_vlans": trunk_vlans if isinstance(trunk_vlans, (list, dict)) else _as_str(trunk_vlans),
-                "details": it,
+                "name": name,
+                "vrf": vrf,
+                "ipv4": ipv4,
+                "ipv6": ipv6,
+                "ipv4_count": len(ipv4),
+                "ipv6_count": len(ipv6),
             }
         )
-        if len(items) >= max_items:
-            break
+
+    items = sorted(items, key=lambda x: x.get("name") or "")
+    if max_items and len(items) > max_items:
+        warnings.append(f"Truncated items to max_items={max_items} (from {len(items)}).")
+        items = items[:max_items]
+
+    ipv4_total = sum(int(x.get("ipv4_count") or 0) for x in items)
+    ipv6_total = sum(int(x.get("ipv6_count") or 0) for x in items)
+
+    if not items:
+        warnings.append("No L3 IP addresses found in interface tree (may be expected if L2-only).")
+
+    payload = {
+        "meta": {"tool": tool_name, "switch_ip": switch_ip, "ok": True, "source": "direct_switch_restconf"},
+        "summary": {
+            "signals": {"restconf_ok": True},
+            "interface_with_ip_count": len(items),
+            "ipv4_address_count": ipv4_total,
+            "ipv6_address_count": ipv6_total,
+            "filtered": bool(interface_name),
+            "interface_name": interface_name if interface_name else None,
+        },
+        "items": items,
+        "warnings": warnings,
+    }
+
+    if include_raw:
+        payload["raw_xml"] = raw_xml
+
+    return payload
+
+
+def restconf_get_running_config(
+    *,
+    inputs: dict,
+    registry,
+    transport,
+    context: dict,
+    **kwargs,
+) -> dict:
+    """Tier-2: Retrieve running configuration snapshot via SLX /rest config datastore.
+
+    SLX exposes running config under:
+      GET https://<switch>/rest/config/running  (XML, vendor media type)
+
+    This is NOT a standard /restconf/data tree and NOT an RPC under /restconf/operations.
+    We normalize the response into:
+      - summary: key identity fields (hostname, chassis), section count
+      - items: top-level config sections (tag + y:self path when present)
+
+    Inputs:
+      - config_path: optional suffix under /rest/config/running (e.g. "interface")
+      - max_bytes: max raw XML bytes to include when include_raw=true
+    """
+    tool_name = "restconf_get_running_config"
+    switch_ip = _as_str(inputs.get("switch_ip"))
+    if not switch_ip:
+        return {
+            "meta": {"tool": tool_name, "ok": False, "error": "Missing switch_ip"},
+            "summary": {"signals": {"restconf_ok": False}},
+            "items": [],
+            "warnings": [],
+        }
+
+    config_path = _as_str(inputs.get("config_path")) or ""
+    include_raw = bool(inputs.get("include_raw", False))
+    max_bytes = _as_int(inputs.get("max_bytes"), 200_000)
+
+    username = inputs.get("username")
+    password = inputs.get("password")
+    verify_tls = inputs.get("verify_tls")
+    timeout_seconds = inputs.get("timeout_seconds")
+
+    warnings: list[str] = []
+    client = make_client(
+        switch_ip,
+        username=username,
+        password=password,
+        verify_tls=verify_tls,
+        timeout_seconds=timeout_seconds,
+    )
+
+    # Fetch XML
+    raw_xml = None
+    try:
+        status, headers, text = client.get_running_config_xml(config_path=config_path)
+        content_type = headers.get("Content-Type", "")
+        raw_xml = {
+            "status": status,
+            "content_type": content_type,
+            "byte_len": len(text or ""),
+        }
+        if include_raw:
+            snippet = (text or "")
+            if max_bytes and len(snippet) > max_bytes:
+                raw_xml["truncated"] = True
+                raw_xml["max_bytes"] = max_bytes
+                raw_xml["xml_snippet"] = snippet[:max_bytes]
+            else:
+                raw_xml["truncated"] = False
+                raw_xml["xml_snippet"] = snippet
+
+        if status >= 400:
+            return {
+                "meta": {
+                    "tool": tool_name,
+                    "switch_ip": switch_ip,
+                    "ok": False,
+                    "source": "direct_switch_restconf",
+                    "error": f"REST /config/running failed: {status}",
+                },
+                "summary": {"signals": {"restconf_ok": False}},
+                "items": [],
+                "warnings": [],
+            }
+    except Exception as e:
+        return {
+            "meta": {
+                "tool": tool_name,
+                "switch_ip": switch_ip,
+                "ok": False,
+                "source": "direct_switch_restconf",
+                "error": str(e),
+            },
+            "summary": {"signals": {"restconf_ok": False}},
+            "items": [],
+            "warnings": [],
+        }
+
+    # Parse XML (sanitize just in case)
+    try:
+        xml_text = _sanitize_slx_xml(text or "")
+        root = ET.fromstring(xml_text)
+    except Exception as e:
+        return {
+            "meta": {
+                "tool": tool_name,
+                "switch_ip": switch_ip,
+                "ok": False,
+                "source": "direct_switch_restconf",
+                "error": f"XML parse failed: {str(e)}",
+            },
+            "summary": {"signals": {"restconf_ok": False}},
+            "items": [],
+            "warnings": ["Failed parsing running config XML; try include_raw for inspection."],
+        }
+
+    def local(tag: str) -> str:
+        return tag.split("}", 1)[1] if "}" in tag else tag
+
+    def get_attr_self(el) -> str | None:
+        # Attribute is typically y:self where y maps to http://brocade.com/ns/rest
+        for k, v in (el.attrib or {}).items():
+            if k.endswith("}self") or k == "self":
+                return v
+        return None
+
+    items: list[dict] = []
+    host_name = None
+    chassis_name = None
+
+    # Discover host/chassis under switch-attributes (brocade-ras)
+    for child in list(root):
+        if local(child.tag) == "switch-attributes":
+            for leaf in list(child):
+                lt = local(leaf.tag)
+                if lt == "host-name" and (leaf.text or "").strip():
+                    host_name = (leaf.text or "").strip()
+                elif lt == "chassis-name" and (leaf.text or "").strip():
+                    chassis_name = (leaf.text or "").strip()
+
+    # Top-level sections
+    for child in list(root):
+        sec = {
+            "section": local(child.tag),
+            "self": get_attr_self(child),
+        }
+        items.append(sec)
+
+    # Optional filter by config_path: if user requests a subpath, we still return the top-level view of that subtree
+    # (child tags of the returned root element).
+    if config_path:
+        warnings.append(f"Fetched subtree under /rest/config/running/{config_path.strip('/')}; items represent top-level elements of that subtree.")
 
     summary = {
         "signals": {"restconf_ok": True},
-        "returned": len(items),
-        "interfaces_seen": len(iface_list),
-        "filtered": bool(interface_filter or mode_filter or vlan_filter is not None),
+        "config_path": config_path or None,
+        "section_count": len(items),
+        "host_name": host_name,
+        "chassis_name": chassis_name,
+        "example_sections": [it["section"] for it in items[:8]],
     }
-    if has_more is not None:
-        summary["has_more"] = bool(has_more)
-    if last_if_type is not None:
-        summary["last_interface_type"] = _as_str(last_if_type)
-    if last_if_name is not None:
-        summary["last_interface_name"] = _as_str(last_if_name)
 
-    payload = {
+    resp = {
         "meta": {
-            "tool": "restconf_get_interface_switchport",
+            "tool": tool_name,
             "switch_ip": switch_ip,
             "ok": True,
             "source": "direct_switch_restconf",
@@ -1734,6 +2255,6 @@ def restconf_get_interface_switchport(inputs: dict) -> dict:
         "items": items,
         "warnings": warnings,
     }
-    if include_raw:
-        payload["raw"] = raw
-    return payload
+    if include_raw and raw_xml is not None:
+        resp["raw_xml"] = raw_xml
+    return resp

@@ -39,7 +39,9 @@ from restconf.tools import (
     restconf_get_arp_table,
     restconf_get_clock,
     restconf_get_vlan_brief,
-    restconf_get_interface_switchport,
+    restconf_get_vrf_summary,
+    restconf_get_ip_interface,
+    restconf_get_running_config, 
 )
 
 
@@ -226,18 +228,17 @@ class MCPRegistry:
             restconf_get_vlan_brief
         )
 
-        self.handlers["restconf_get_interface_switchport"] = (
-             restconf_get_interface_switchport,
+        self.handlers["restconf_get_vrf_summary"] = (
+            restconf_get_vrf_summary
         )
 
+        self.handlers["restconf_get_ip_interface"] = (
+            restconf_get_ip_interface
+        )
 
-
-
-
-
-
-
-
+        self.handlers["restconf_get_running_config"] = (
+            restconf_get_running_config
+        )
 
 
 

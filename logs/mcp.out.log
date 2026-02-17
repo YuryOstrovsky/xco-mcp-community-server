@@ -8052,3 +8052,74 @@ INFO:     127.0.0.1:34864 - "POST /invoke HTTP/1.1" 500 Internal Server Error
 >>> SESSION.get_context CALLED
 >>> stored ctx = {}
 INFO:     127.0.0.1:33598 - "POST /invoke HTTP/1.1" 500 Internal Server Error
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:47196 - "POST /invoke HTTP/1.1" 500 Internal Server Error
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:44002 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:60232 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:39996 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56280 - "GET /tools HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:33974 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:51352 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:37772 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:34882 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:56238 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48808 - "GET /tools HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:56400 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:56974 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:56368 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:43274 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:38334 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:48458 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44644 - "GET /tools HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40040 - "POST /invoke HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:41520 - "POST /invoke HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:45386 - "POST /invoke HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:57212 - "POST /invoke HTTP/1.1" 500 Internal Server Error
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:60040 - "POST /invoke HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52526 - "GET /tools HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:60968 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:46012 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:41536 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:51666 - "POST /invoke HTTP/1.1" 200 OK
+>>> SESSION.get_context CALLED
+>>> stored ctx = {}
+INFO:     127.0.0.1:35904 - "POST /invoke HTTP/1.1" 200 OK
