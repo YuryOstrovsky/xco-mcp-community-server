@@ -120,6 +120,35 @@ class RestconfClient:
             body = "<get-interface-detail></get-interface-detail>"
         return self._post_xml("/operations/get-interface-detail", body)
 
+    def get_media_detail(self, interface_name: Optional[str] = None) -> Dict[str, Any]:
+        # brocade-interface-ext:get-media-detail
+        # Platforms vary on parameter tags. We'll send a few common ones.
+        if interface_name:
+            raw = str(interface_name).strip()
+            short = raw
+            for prefix in ("Ethernet", "Eth", "eth", "ethernet"):
+                short = short.replace(prefix, "")
+            short = short.strip()
+
+            body = (
+                "<get-media-detail>"
+                f"<if-name>{raw}</if-name>"
+                f"<interface-name>{short}</interface-name>"
+                f"<name>{raw}</name>"
+                "</get-media-detail>"
+            )
+        else:
+            body = "<get-media-detail></get-media-detail>"
+
+        return self._post_xml("/operations/brocade-interface-ext:get-media-detail", body)
+
+
+    def get_arp_table(self) -> Dict[str, Any]:
+        # brocade-arp:get-arp
+        # Most SLX builds accept the empty RPC body.
+        body = "<get-arp></get-arp>"
+        return self._post_xml("/operations/brocade-arp:get-arp", body)
+
     def get_lldp_neighbor_detail(self) -> Dict[str, Any]:
         # brocade-lldp-ext:get-lldp-neighbor-detail
         body = "<get-lldp-neighbor-detail></get-lldp-neighbor-detail>"
@@ -162,3 +191,9 @@ if __name__ == "__main__":
     client = make_client(ip)
     out = client.show_firmware_version()
     print(json.dumps(out, indent=2))
+
+    def get_clock(self):
+        """Call brocade-clock:show-clock RPC (best-effort)."""
+        # Many SLX builds accept empty body for show-clock.
+        # Keep this tolerant: no required inputs.
+        return self._post_xml("/operations/brocade-clock:show-clock", "<show-clock/>")

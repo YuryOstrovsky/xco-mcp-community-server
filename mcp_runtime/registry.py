@@ -35,6 +35,9 @@ from restconf.tools import (
     restconf_list_operations,
     restconf_get_lldp_neighbor_detail,
     restconf_get_port_statistics_summary,
+    restconf_get_media_detail,
+    restconf_get_arp_table,
+    restconf_get_clock,
 )
 
 
@@ -204,6 +207,21 @@ class MCPRegistry:
         self.handlers["restconf_get_port_statistics_summary"] = (
             restconf_get_port_statistics_summary
         )
+
+        self.handlers["restconf_get_media_detail"] = (
+            restconf_get_media_detail
+        )
+
+        self.handlers["restconf_get_arp_table"] = (
+            restconf_get_arp_table
+        )
+
+        self.handlers["restconf_get_clock"] = (
+            restconf_get_clock
+        )
+
+
+
 
 
 

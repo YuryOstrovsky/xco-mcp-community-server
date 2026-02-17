@@ -10886,33 +10886,127 @@
 
 {
   "name": "restconf_get_port_statistics_summary",
+  "description": "Tier-2: Summarize Ethernet port counters (octets/errors) across ports using RESTCONF RPC (get-interface-detail).",
   "category": "restconf",
-  "tier": 2,
   "method": "COMPOSITE",
-  "host": "tier2",
-  "path": "/restconf_get_port_statistics_summary",
-  "description": "RESTCONF Tier-2: Summarize Ethernet port counters (octets/errors) across ports using get-interface-detail RPC.",
-  "composite": true,
-  "read_only": true,
-  "inputs_schema": {
+  "endpoint": null,
+  "auth": "none",
+  "input_schema": {
     "type": "object",
     "properties": {
-      "switch_ip": { "type": "string", "description": "Switch management IP" },
-      "max_ports": { "type": "integer", "description": "Max ethernet ports to include (default 64)" },
-      "top_n": { "type": "integer", "description": "Top N ports by total octets (default 5)" },
-      "include_raw": { "type": "boolean", "description": "Include raw RESTCONF payload for troubleshooting" },
-      "username": { "type": "string", "description": "Optional override RESTCONF username" },
-      "password": { "type": "string", "description": "Optional override RESTCONF password" },
-      "verify_tls": { "type": "boolean", "description": "Optional override TLS verification" },
-      "timeout_seconds": { "type": "integer", "description": "Optional override request timeout" }
+      "switch_ip": { "type": "string", "description": "Switch management IP/FQDN (required)." },
+
+      "max_ports": { "type": "integer", "default": 64, "description": "Max ethernet ports to include (default 64)." },
+      "top_n": { "type": "integer", "default": 5, "description": "Top N ports by total octets (default 5)." },
+
+      "include_raw": { "type": "boolean", "default": false, "description": "Include raw RESTCONF payload for troubleshooting." },
+
+      "username": { "type": "string", "description": "Optional override RESTCONF username." },
+      "password": { "type": "string", "description": "Optional override RESTCONF password." },
+      "verify_tls": { "type": "boolean", "description": "Optional override TLS verification." },
+      "timeout_seconds": { "type": "integer", "description": "Optional override request timeout." }
     },
     "required": ["switch_ip"]
   },
-  "output_schema": {
-    "type": "object",
-    "description": "Summary + list of port counters"
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier2", "restconf", "interface", "statistics"],
+  "capabilities": {
+    "actions": ["show", "summarize"],
+    "objects": ["switch", "interface", "counters"],
+    "scopes": [["device"], ["interface"]]
   }
+},
+
+{
+  "name": "restconf_get_media_detail",
+  "description": "Tier-2: Show media/transceiver (SFP/QSFP) details via RESTCONF (vendor/serial/temp/RX/TX power when available).",
+  "category": "restconf",
+  "method": "COMPOSITE",
+  "endpoint": null,
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "switch_ip": { "type": "string", "description": "Switch management IP/FQDN (required)." },
+      "interface_name": { "type": "string", "description": "Optional port name, e.g. 'Ethernet 0/1'." },
+      "max_items": { "type": "integer", "default": 200, "description": "Max entries to return." },
+      "include_raw": { "type": "boolean", "default": false, "description": "Include raw RESTCONF payload." },
+      "username": { "type": "string", "description": "Optional override RESTCONF username." },
+      "password": { "type": "string", "description": "Optional override RESTCONF password." },
+      "verify_tls": { "type": "boolean", "description": "Optional override TLS verification." },
+      "timeout_seconds": { "type": "integer", "description": "Optional override request timeout." }
+    },
+    "required": ["switch_ip"]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier2", "restconf", "media", "optics"]
+},
+
+{
+  "name": "restconf_get_arp_table",
+  "description": "Tier-2: Show ARP table (IP→MAC→interface) via RESTCONF RPC (brocade-arp:get-arp).",
+  "category": "restconf",
+  "method": "COMPOSITE",
+  "endpoint": null,
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "switch_ip": { "type": "string", "description": "Switch management IP/FQDN (required)." },
+      "ip_filter": { "type": "string", "description": "Optional substring match on IP address." },
+      "mac_filter": { "type": "string", "description": "Optional substring match on MAC (case-insensitive)." },
+      "interface_name": { "type": "string", "description": "Optional substring match on interface/port." },
+      "max_items": { "type": "integer", "default": 200, "description": "Max entries to return (default 200)." },
+      "include_raw": { "type": "boolean", "default": false, "description": "Include raw RESTCONF payload for troubleshooting." },
+      "username": { "type": "string", "description": "Optional override RESTCONF username." },
+      "password": { "type": "string", "description": "Optional override RESTCONF password." },
+      "verify_tls": { "type": "boolean", "description": "Optional override TLS verification." },
+      "timeout_seconds": { "type": "integer", "description": "Optional override request timeout." }
+    },
+    "required": ["switch_ip"]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tier2", "restconf", "arp"]
+},
+
+{
+  "name": "restconf_get_clock",
+  "description": "Tier-2: Show device clock/time status via RESTCONF RPC (brocade-clock:show-clock).",
+  "category": "restconf",
+  "method": "COMPOSITE",
+  "endpoint": null,
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "switch_ip": { "type": "string", "description": "Switch management IP/FQDN (required)." },
+      "include_raw": { "type": "boolean", "default": false, "description": "Include raw RESTCONF payload for troubleshooting." },
+      "username": { "type": "string", "description": "Optional override RESTCONF username." },
+      "password": { "type": "string", "description": "Optional override RESTCONF password." },
+      "verify_tls": { "type": "boolean", "description": "Optional override TLS verification." },
+      "timeout_seconds": { "type": "integer", "description": "Optional override request timeout." }
+    },
+    "required": ["switch_ip"]
+  },
+  "policy": { "risk": "SAFE_READ", "allowed_in_auto_mode": true, "requires_confirmation": false },
+  "tags": ["read", "tier2", "restconf", "clock", "time"]
 }
+
+
+
+
 
 
 
