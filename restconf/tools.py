@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import re
+
 from typing import Any, Dict, List, Optional, Tuple
 
 from restconf.client import RestconfError, make_client
@@ -785,6 +787,306 @@ def restconf_get_media_detail(
 
 
 
+def restconf_get_vlan_brief(
+    *,
+    inputs: dict,
+    registry,
+    transport,
+    context: dict,
+    **kwargs,
+) -> dict:
+    """
+    Tier-2: VLAN brief summary via RESTCONF RPC:
+      POST /restconf/operations/brocade-interface-ext:get-vlan-brief
+
+    Notes:
+      - Many platforms return VLAN membership as an "interface" list under each VLAN.
+      - This tool normalizes VLANs into a table and provides a membership summary string that is also used
+        for port_filter matching (e.g., "tunnel 32769 tag=tagged class=vni=1").
+    """
+    switch_ip = _as_str(inputs.get("switch_ip"))
+    if not switch_ip:
+        return {
+            "meta": {"tool": "restconf_get_vlan_brief", "ok": False, "error": "Missing switch_ip"},
+            "summary": {"signals": {"restconf_ok": False}},
+            "items": [],
+            "warnings": [],
+        }
+
+    vlan_id_filter = inputs.get("vlan_id")
+    name_filter = _as_str(inputs.get("name_filter") or "")
+    port_filter = _as_str(inputs.get("port_filter") or "")
+    max_items = _as_int(inputs.get("max_items"), 200)
+    include_raw = bool(inputs.get("include_raw") or False)
+
+    username = inputs.get("username")
+    password = inputs.get("password")
+    verify_tls = inputs.get("verify_tls")
+    timeout_seconds = inputs.get("timeout_seconds")
+
+    warnings: list[str] = []
+
+    # --- Fetch raw via client helper ---
+    try:
+        client = make_client(
+            switch_ip,
+            username=username,
+            password=password,
+            verify_tls=verify_tls,
+            timeout_seconds=timeout_seconds,
+        )
+        raw = client.get_vlan_brief()
+    except RestconfError as e:
+        return {
+            "meta": {
+                "tool": "restconf_get_vlan_brief",
+                "switch_ip": switch_ip,
+                "ok": False,
+                "source": "direct_switch_restconf",
+                "error": str(e),
+            },
+            "summary": {"signals": {"restconf_ok": False}},
+            "items": [],
+            "warnings": [],
+        }
+
+    # --- Locate output block robustly ---
+    out = None
+    if isinstance(raw, dict):
+        out = raw.get("brocade-interface-ext:output") or raw.get("output") or raw
+    else:
+        out = raw
+
+    # --- Extract VLAN list ---
+    vlan_list: list[dict] = []
+    if isinstance(out, dict):
+        v = out.get("vlan")
+        if isinstance(v, list):
+            vlan_list = [x for x in v if isinstance(x, dict)]
+        else:
+            # heuristic: first list-valued key that looks like VLANs
+            for k, vv in out.items():
+                if isinstance(k, str) and "vlan" in k.lower() and isinstance(vv, list):
+                    vlan_list = [x for x in vv if isinstance(x, dict)]
+                    break
+
+    if not vlan_list:
+        warnings.append(f"Unexpected payload shape. output keys={list(out.keys()) if isinstance(out, dict) else type(out).__name__}")
+        payload = {
+            "meta": {"tool": "restconf_get_vlan_brief", "switch_ip": switch_ip, "ok": True, "source": "direct_switch_restconf"},
+            "summary": {"signals": {"restconf_ok": True}, "returned": 0, "filtered": bool(vlan_id_filter or name_filter or port_filter), "vlans_seen": 0, "max_items": max_items},
+            "items": [],
+            "warnings": warnings,
+        }
+        if include_raw:
+            payload["raw"] = raw
+        return payload
+
+    # Filters (normalized)
+    vlan_id_filter_int = None
+    try:
+        if vlan_id_filter is not None and str(vlan_id_filter).strip() != "":
+            vlan_id_filter_int = int(vlan_id_filter)
+    except Exception:
+        warnings.append("Invalid vlan_id; expected integer")
+        vlan_id_filter_int = None
+
+    name_filter_l = name_filter.lower().strip()
+    port_filter_l = port_filter.lower().strip()
+
+    def _norm_iface_display(interface_type: str, interface_name: str) -> str:
+        it = (interface_type or "").strip()
+        nm = (interface_name or "").strip()
+        if not it and not nm:
+            return ""
+        it_l = it.lower()
+        if it_l == "ethernet":
+            # return a consistent "Ethernet X/Y" format
+            return nm if nm.lower().startswith("ethernet ") else f"Ethernet {nm}"
+        if it_l in ("port-channel", "portchannel", "lag"):
+            return nm if nm.lower().startswith("port-channel ") else f"Port-channel {nm}"
+        # generic (tunnel, ve, vlan, etc.)
+        return f"{it} {nm}".strip()
+
+    def _extract_members(vlan_obj: dict) -> list[dict]:
+        members: list[dict] = []
+        iface_list = vlan_obj.get("interface")
+        if not isinstance(iface_list, list):
+            return members
+        for m in iface_list:
+            if not isinstance(m, dict):
+                continue
+            itype = _as_str(m.get("interface-type") or m.get("interface_type") or "")
+            iname = _as_str(m.get("interface-name") or m.get("interface_name") or m.get("if-name") or "")
+            tag = _as_str(m.get("tag") or m.get("mode") or "")
+            # classification list -> "vni=1" style
+            classes = []
+            cl = m.get("classification")
+            if isinstance(cl, list):
+                for c in cl:
+                    if not isinstance(c, dict):
+                        continue
+                    ct = _as_str(c.get("classification-type") or c.get("type") or "")
+                    cv = _as_str(c.get("classification-value") or c.get("value") or "")
+                    if ct and cv:
+                        classes.append(f"{ct}={cv}")
+            display = _norm_iface_display(itype, iname)
+            members.append(
+                {
+                    "interface_type": itype,
+                    "interface_name": iname,
+                    "display": display,
+                    "tag": tag,
+                    "classifications": classes,
+                    "details": m,
+                }
+            )
+        return members
+
+    def _members_summary(members: list[dict], limit: int = 24) -> str:
+        parts: list[str] = []
+        for mm in members[: max(limit, 0)]:
+            disp = _as_str(mm.get("display") or "")
+            if not disp:
+                continue
+            extras: list[str] = []
+            tg = _as_str(mm.get("tag") or "")
+            if tg:
+                extras.append(f"tag={tg}")
+            cls = mm.get("classifications") or []
+            if isinstance(cls, list) and cls:
+                extras.append("class=" + ",".join([_as_str(x) for x in cls if _as_str(x)]))
+            if extras:
+                disp = disp + " (" + " ".join(extras) + ")"
+            parts.append(disp)
+        if len(members) > limit and limit > 0:
+            parts.append(f"...(+{len(members)-limit})")
+        return ", ".join(parts)
+
+    items: list[dict] = []
+
+    # Stats seen (pre-filter)
+    vlans_seen = 0
+    vlans_with_members_seen = 0
+    members_total_seen = 0
+    ethernet_members_total_seen = 0
+
+    # Stats returned (post-filter)
+    vlans_with_members = 0
+    members_total = 0
+    ethernet_members_total = 0
+
+    for v in vlan_list:
+        vlans_seen += 1
+
+        # id/name
+        vid_raw = v.get("vlan-id") if isinstance(v, dict) else None
+        vname_raw = v.get("vlan-name") if isinstance(v, dict) else None
+        try:
+            vid_int = int(vid_raw) if vid_raw is not None else None
+        except Exception:
+            vid_int = None
+        vid = _as_str(vid_raw) if vid_raw is not None else ""
+        vname = _as_str(vname_raw) if vname_raw is not None else ""
+
+        members = _extract_members(v)
+        if members:
+            vlans_with_members_seen += 1
+            members_total_seen += len(members)
+            ethernet_members_total_seen += sum(1 for m in members if (m.get("interface_type") or "").lower() == "ethernet")
+
+        mem_summary = _members_summary(members, limit=24)
+
+        # Filters
+        if vlan_id_filter_int is not None and vid_int is not None and vid_int != vlan_id_filter_int:
+            continue
+        if name_filter_l and name_filter_l not in (vname or "").lower():
+            continue
+        if port_filter_l:
+            hay = " ".join(
+                [
+                    vid,
+                    vname,
+                    mem_summary,
+                    " ".join([_as_str(m.get("display") or "") for m in members]),
+                    " ".join([",".join(m.get("classifications") or []) for m in members if isinstance(m.get("classifications"), list)]),
+                ]
+            ).lower()
+            if port_filter_l not in hay:
+                continue
+
+        # Post-filter stats
+        if members:
+            vlans_with_members += 1
+            members_total += len(members)
+            ethernet_members_total += sum(1 for m in members if (m.get("interface_type") or "").lower() == "ethernet")
+
+        items.append(
+            {
+                "vlan_id": vid,
+                "vlan_name": vname,
+                # backward-compatible "ports" field (string) — on some platforms the membership is not "ethernet ports"
+                "ports": mem_summary,
+                "members_summary": mem_summary,
+                "members": [
+                    {
+                        "display": m.get("display", ""),
+                        "interface_type": m.get("interface_type", ""),
+                        "interface_name": m.get("interface_name", ""),
+                        "tag": m.get("tag", ""),
+                        "classifications": m.get("classifications", []),
+                    }
+                    for m in members
+                ],
+                "members_count": len(members),
+                "details": v,
+            }
+        )
+
+        if len(items) >= max_items:
+            break
+
+    # Add extra output-level counters if present
+    extra = {}
+    if isinstance(out, dict):
+        for k in ("configured-vlans-count", "provisioned-vlans-count", "unprovisioned-vlans-count", "last-vlan-id", "has-more"):
+            if k in out:
+                extra[k.replace("-", "_")] = out.get(k)
+
+    summary: dict = {
+        "signals": {"restconf_ok": True},
+        "returned": len(items),
+        "filtered": bool(vlan_id_filter_int is not None or name_filter_l or port_filter_l),
+        "vlans_seen": vlans_seen,
+        "max_items": max_items,
+        "vlans_with_members": vlans_with_members,
+        "members_total": members_total,
+        "ethernet_members_total": ethernet_members_total,
+        "non_ethernet_members_total": max(members_total - ethernet_members_total, 0),
+        "vlans_with_members_seen": vlans_with_members_seen,
+        "members_total_seen": members_total_seen,
+        "ethernet_members_total_seen": ethernet_members_total_seen,
+        "non_ethernet_members_total_seen": max(members_total_seen - ethernet_members_total_seen, 0),
+        **extra,
+    }
+    if vlan_id_filter_int is not None:
+        summary["vlan_id"] = vlan_id_filter_int
+    if name_filter:
+        summary["name_filter"] = name_filter
+    if port_filter:
+        summary["port_filter"] = port_filter
+
+    payload: dict = {
+        "meta": {"tool": "restconf_get_vlan_brief", "switch_ip": switch_ip, "ok": True, "source": "direct_switch_restconf"},
+        "summary": summary,
+        "items": items,
+        "warnings": warnings,
+    }
+    if include_raw:
+        payload["raw"] = raw
+
+    return payload
+
 def restconf_get_arp_table(
     *,
     inputs: dict,
@@ -1306,3 +1608,132 @@ def restconf_get_port_statistics_summary(
 
     return payload
 
+
+
+
+def restconf_get_interface_switchport(inputs: dict) -> dict:
+    """Tier-2: Show interface switchport details via RESTCONF RPC (brocade-interface-ext:get-interface-switchport).
+
+    Returns empty items (with restconf_ok=true) when the device reports no switchport/L2 interfaces.
+    """
+    switch_ip = inputs.get("switch_ip")
+    if not switch_ip:
+        raise ValueError("switch_ip is required")
+
+    include_raw = bool(inputs.get("include_raw", False))
+    interface_filter = (inputs.get("interface_name") or "").strip()
+    mode_filter = (inputs.get("mode_filter") or "").strip().lower()
+    vlan_filter = inputs.get("vlan_id")
+    max_items = int(inputs.get("max_items", 200))
+
+    client = make_client(
+        switch_ip=switch_ip,
+        username=inputs.get("username"),
+        password=inputs.get("password"),
+        verify_tls=inputs.get("verify_tls"),
+        timeout_seconds=inputs.get("timeout_seconds"),
+    )
+
+    warnings: list[str] = []
+    try:
+        raw = client.get_interface_switchport()
+    except RestconfError as e:
+        return {
+            "meta": {
+                "tool": "restconf_get_interface_switchport",
+                "switch_ip": switch_ip,
+                "ok": False,
+                "source": "direct_switch_restconf",
+                "error": str(e),
+            },
+            "summary": {"signals": {"restconf_ok": False}},
+            "items": [],
+            "warnings": [],
+        }
+
+    out = (raw or {}).get("brocade-interface-ext:output") or {}
+    has_more = out.get("has-more")
+    last_if_type = out.get("last-interface-type")
+    last_if_name = out.get("last-interface-name")
+
+    iface_list = out.get("interface")
+    if iface_list is None:
+        iface_list = []
+        if list(out.keys()) == ["has-more"] or (len(out.keys()) == 1 and "has-more" in out):
+            warnings.append("No switchport interfaces returned (device may have no L2/switchport ports).")
+        else:
+            warnings.append(f"RPC output did not include 'interface' list (keys={sorted(out.keys())}).")
+
+    if not isinstance(iface_list, list):
+        warnings.append(f"Unexpected type for output.interface: {type(iface_list).__name__}")
+        iface_list = []
+
+    items = []
+    for it in iface_list:
+        if not isinstance(it, dict):
+            continue
+        if_type = _as_str(it.get("interface-type"))
+        if_name = _as_str(it.get("interface-name"))
+        display_name = f"{if_type} {if_name}".strip()
+
+        mode = _as_str(it.get("mode") or it.get("switchport-mode") or it.get("port-mode"))
+        access_vlan = it.get("access-vlan") or it.get("access_vlan") or it.get("access-vlan-id")
+        native_vlan = it.get("native-vlan") or it.get("native_vlan")
+        trunk_vlans = it.get("trunk-vlans") or it.get("allowed-vlans") or it.get("trunk_vlans")
+
+        access_vlan_s = _as_str(access_vlan)
+        native_vlan_s = _as_str(native_vlan)
+
+        # Filters (client-side)
+        if interface_filter and interface_filter.lower() not in display_name.lower() and interface_filter.lower() not in if_name.lower():
+            continue
+        if mode_filter and mode_filter != mode.lower():
+            continue
+        if vlan_filter is not None:
+            vf = str(vlan_filter)
+            hay = " ".join([access_vlan_s, native_vlan_s, _as_str(trunk_vlans)])
+            if vf not in hay:
+                continue
+
+        items.append(
+            {
+                "interface_type": if_type,
+                "interface_name": if_name,
+                "display": display_name,
+                "mode": mode,
+                "access_vlan": access_vlan_s,
+                "native_vlan": native_vlan_s,
+                "trunk_vlans": trunk_vlans if isinstance(trunk_vlans, (list, dict)) else _as_str(trunk_vlans),
+                "details": it,
+            }
+        )
+        if len(items) >= max_items:
+            break
+
+    summary = {
+        "signals": {"restconf_ok": True},
+        "returned": len(items),
+        "interfaces_seen": len(iface_list),
+        "filtered": bool(interface_filter or mode_filter or vlan_filter is not None),
+    }
+    if has_more is not None:
+        summary["has_more"] = bool(has_more)
+    if last_if_type is not None:
+        summary["last_interface_type"] = _as_str(last_if_type)
+    if last_if_name is not None:
+        summary["last_interface_name"] = _as_str(last_if_name)
+
+    payload = {
+        "meta": {
+            "tool": "restconf_get_interface_switchport",
+            "switch_ip": switch_ip,
+            "ok": True,
+            "source": "direct_switch_restconf",
+        },
+        "summary": summary,
+        "items": items,
+        "warnings": warnings,
+    }
+    if include_raw:
+        payload["raw"] = raw
+    return payload

@@ -149,6 +149,25 @@ class RestconfClient:
         body = "<get-arp></get-arp>"
         return self._post_xml("/operations/brocade-arp:get-arp", body)
 
+    def get_vlan_brief(self) -> Dict[str, Any]:
+        """Run brocade-interface-ext:get-vlan-brief RPC and return the raw JSON output."""
+        xml = (
+            '<get-vlan-brief xmlns="urn:brocade.com:mgmt:brocade-interface-ext">'
+            "</get-vlan-brief>"
+        )
+        return self._post_xml("/operations/brocade-interface-ext:get-vlan-brief", xml)
+
+
+def get_interface_switchport(self) -> dict:
+    """Invoke brocade-interface-ext:get-interface-switchport (best-effort).
+
+    Note: Some SLX-OS builds return only pagination flags (e.g., has-more)
+    when no interfaces are in switchport (L2) mode.
+    """
+    body = "<get-interface-switchport></get-interface-switchport>"
+    return self._post_xml("/operations/brocade-interface-ext:get-interface-switchport", body)
+
+
     def get_lldp_neighbor_detail(self) -> Dict[str, Any]:
         # brocade-lldp-ext:get-lldp-neighbor-detail
         body = "<get-lldp-neighbor-detail></get-lldp-neighbor-detail>"

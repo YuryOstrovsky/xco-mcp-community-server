@@ -38,6 +38,8 @@ from restconf.tools import (
     restconf_get_media_detail,
     restconf_get_arp_table,
     restconf_get_clock,
+    restconf_get_vlan_brief,
+    restconf_get_interface_switchport,
 )
 
 
@@ -219,6 +221,16 @@ class MCPRegistry:
         self.handlers["restconf_get_clock"] = (
             restconf_get_clock
         )
+
+        self.handlers["restconf_get_vlan_brief"] = (
+            restconf_get_vlan_brief
+        )
+
+        self.handlers["restconf_get_interface_switchport"] = (
+             restconf_get_interface_switchport,
+        )
+
+
 
 
 
