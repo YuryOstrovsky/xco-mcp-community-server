@@ -41,7 +41,8 @@ from restconf.tools import (
     restconf_get_vlan_brief,
     restconf_get_vrf_summary,
     restconf_get_ip_interface,
-    restconf_get_running_config, 
+    restconf_get_running_config,
+    restconf_get_user_sessions, 
 )
 
 
@@ -238,6 +239,10 @@ class MCPRegistry:
 
         self.handlers["restconf_get_running_config"] = (
             restconf_get_running_config
+        )
+
+        self.handlers["restconf_get_user_sessions"] = (
+            restconf_get_user_sessions
         )
 
 

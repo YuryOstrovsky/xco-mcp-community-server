@@ -100,6 +100,31 @@ class RestconfClient:
             timeout=self.timeout_seconds,
         )
         return r.status_code, dict(r.headers), r.text
+    
+    def _rest_post_text(
+        self,
+        path: str,
+        *,
+        data: str,
+        accept: str = "application/vnd.base.resource+xml",
+        content_type: str = "application/vnd.base.resource+xml",
+    ) -> Tuple[int, Dict[str, str], str]:
+        """
+        POST to /rest/* endpoints and return raw text (usually vendor XML).
+        """
+        url = self.rest_base_url + path
+        headers = {
+            "Accept": accept,
+            "Content-Type": content_type,
+        }
+        r = self.session.post(
+            url,
+            headers=headers,
+            data=data,
+            timeout=self.timeout_seconds,
+        )
+        return r.status_code, dict(r.headers), r.text
+
 
     def _post_rpc(self, rpc: str, payload: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """POST /restconf/operations/<rpc> with JSON (yang-data+json)."""
@@ -233,11 +258,26 @@ class RestconfClient:
         path = "/config/running" + (f"/{config_path}" if config_path else "")
         return self._rest_get_text(path, accept="application/vnd.configuration.resource+xml")
 
+    def get_user_session_info_xml(self) -> Tuple[int, Dict[str, str], str]:
+        """
+        Invoke /rest/operations/user-session-info (XML).
+        SLX 'operations' are invoked via POST with an XML body.
+        """
+        body = "<user-session-info/>"
+        return self._rest_post_text(
+            "/operations/user-session-info",
+            data=body,
+            accept="application/vnd.base.resource+xml",
+            content_type="application/vnd.base.resource+xml",
+        )
 
 
 # ---------------------------
 # SLX /rest config datastore helpers
 # ---------------------------
+
+
+    
 
 def make_client(
     switch_ip: str,
