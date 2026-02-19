@@ -37,6 +37,32 @@ def _as_str(v: Any, default: str = "") -> str:
     return str(v).strip()
 
 
+_CRED_MAX_LEN = 256
+_CRED_CTRL_RE = re.compile(r"[\x00-\x1f\x7f]")  # null bytes + ASCII control chars
+
+
+def _sanitize_credential(v: Any) -> Optional[str]:
+    """
+    Sanitize a per-switch credential override (username or password).
+
+    Returns None when the caller didn't supply one — make_client() then falls
+    back to the env-var defaults (RESTCONF_USERNAME / RESTCONF_PASSWORD).
+
+    Raises ValueError for values that look like injection attempts:
+    control characters (including null bytes), or suspiciously long strings.
+    """
+    if v is None:
+        return None
+    s = str(v).strip()
+    if not s:
+        return None
+    if len(s) > _CRED_MAX_LEN:
+        raise ValueError(f"Credential value too long (max {_CRED_MAX_LEN} chars)")
+    if _CRED_CTRL_RE.search(s):
+        raise ValueError("Credential value contains invalid control characters")
+    return s
+
+
 def _safe_get(d: dict, *path: str, default=None):
     cur = d
     for p in path:
@@ -139,11 +165,15 @@ def restconf_show_firmware_version(
             "warnings": [],
         }
 
+    username = _sanitize_credential(inputs.get("username"))
+    password = _sanitize_credential(inputs.get("password"))
     verify_tls = inputs.get("verify_tls")  # optional override
 
     try:
         client = make_client(
             switch_ip,
+            username=username,
+            password=password,
             verify_tls=verify_tls,
         )
         raw = client.show_firmware_version()
@@ -226,11 +256,15 @@ def restconf_get_interface_detail(
             "warnings": [],
         }
 
+    username = _sanitize_credential(inputs.get("username"))
+    password = _sanitize_credential(inputs.get("password"))
     verify_tls = inputs.get("verify_tls")  # optional override
 
     try:
         client = make_client(
             switch_ip,
+            username=username,
+            password=password,
             verify_tls=verify_tls,
         )
         raw = client.get_interface_detail(interface_name if interface_name else None)
@@ -344,11 +378,15 @@ def restconf_list_operations(
     flt = _as_str(inputs.get("filter") or "")
     max_items = _as_int(inputs.get("max_items"), 200)
 
+    username = _sanitize_credential(inputs.get("username"))
+    password = _sanitize_credential(inputs.get("password"))
     verify_tls = inputs.get("verify_tls")  # optional override
 
     try:
         client = make_client(
             switch_ip,
+            username=username,
+            password=password,
             verify_tls=verify_tls,
         )
         raw = client.list_operations()
@@ -422,11 +460,15 @@ def restconf_get_lldp_neighbor_detail(
     max_items = _as_int(inputs.get("max_items"), 200)
     include_raw = bool(inputs.get("include_raw") or False)
 
+    username = _sanitize_credential(inputs.get("username"))
+    password = _sanitize_credential(inputs.get("password"))
     verify_tls = inputs.get("verify_tls")
 
     try:
         client = make_client(
             switch_ip,
+            username=username,
+            password=password,
             verify_tls=verify_tls,
         )
         raw = client.get_lldp_neighbor_detail()
@@ -580,6 +622,8 @@ def restconf_get_media_detail(
     include_raw = bool(inputs.get("include_raw") or False)
 
     # Optional overrides
+    username = _sanitize_credential(inputs.get("username"))
+    password = _sanitize_credential(inputs.get("password"))
     verify_tls = inputs.get("verify_tls")
     timeout_seconds = inputs.get("timeout_seconds")
 
@@ -614,6 +658,8 @@ def restconf_get_media_detail(
     try:
         client = make_client(
             switch_ip,
+            username=username,
+            password=password,
             verify_tls=verify_tls,
             timeout_seconds=timeout_seconds,
         )
@@ -810,6 +856,8 @@ def restconf_get_vlan_brief(
     max_items = _as_int(inputs.get("max_items"), 200)
     include_raw = bool(inputs.get("include_raw") or False)
 
+    username = _sanitize_credential(inputs.get("username"))
+    password = _sanitize_credential(inputs.get("password"))
     verify_tls = inputs.get("verify_tls")
     timeout_seconds = inputs.get("timeout_seconds")
 
@@ -819,6 +867,8 @@ def restconf_get_vlan_brief(
     try:
         client = make_client(
             switch_ip,
+            username=username,
+            password=password,
             verify_tls=verify_tls,
             timeout_seconds=timeout_seconds,
         )
@@ -1112,12 +1162,16 @@ def restconf_get_arp_table(
     max_items = _as_int(inputs.get("max_items"), 200)
     include_raw = bool(inputs.get("include_raw") or False)
 
+    username = _sanitize_credential(inputs.get("username"))
+    password = _sanitize_credential(inputs.get("password"))
     verify_tls = inputs.get("verify_tls")
     timeout_seconds = inputs.get("timeout_seconds")
 
     try:
         client = make_client(
             switch_ip,
+            username=username,
+            password=password,
             verify_tls=verify_tls,
             timeout_seconds=timeout_seconds,
         )
@@ -1327,6 +1381,8 @@ def restconf_get_clock(
 
     include_raw = bool(inputs.get("include_raw") or False)
 
+    username = _sanitize_credential(inputs.get("username"))
+    password = _sanitize_credential(inputs.get("password"))
     verify_tls = inputs.get("verify_tls")
     timeout_seconds = inputs.get("timeout_seconds")
 
@@ -1335,6 +1391,8 @@ def restconf_get_clock(
     try:
         client = make_client(
             switch_ip,
+            username=username,
+            password=password,
             verify_tls=verify_tls,
             timeout_seconds=timeout_seconds,
         )
@@ -1445,6 +1503,8 @@ def restconf_get_system_maintenance_status(
     include_raw = bool(inputs.get("include_raw") or False)
 
     # Optional overrides
+    username = _sanitize_credential(inputs.get("username"))
+    password = _sanitize_credential(inputs.get("password"))
     verify_tls = inputs.get("verify_tls")
     timeout_seconds = inputs.get("timeout_seconds")
 
@@ -1453,6 +1513,8 @@ def restconf_get_system_maintenance_status(
     try:
         client = make_client(
             switch_ip,
+            username=username,
+            password=password,
             verify_tls=verify_tls,
             timeout_seconds=timeout_seconds,
         )
@@ -1547,6 +1609,8 @@ def restconf_get_system_maintenance_rate_monitoring(
     include_raw = bool(inputs.get("include_raw") or False)
 
     # Optional overrides
+    username = _sanitize_credential(inputs.get("username"))
+    password = _sanitize_credential(inputs.get("password"))
     verify_tls = inputs.get("verify_tls")
     timeout_seconds = inputs.get("timeout_seconds")
 
@@ -1555,6 +1619,8 @@ def restconf_get_system_maintenance_rate_monitoring(
     try:
         client = make_client(
             switch_ip,
+            username=username,
+            password=password,
             verify_tls=verify_tls,
             timeout_seconds=timeout_seconds,
         )
@@ -1682,6 +1748,8 @@ def restconf_get_port_statistics_summary(
     include_raw = bool(inputs.get("include_raw", False))
 
     # Optional overrides
+    username = _sanitize_credential(inputs.get("username"))
+    password = _sanitize_credential(inputs.get("password"))
     verify_tls = inputs.get("verify_tls")
     timeout_seconds = inputs.get("timeout_seconds")
 
@@ -1690,6 +1758,8 @@ def restconf_get_port_statistics_summary(
     try:
         client = make_client(
             switch_ip,
+            username=username,
+            password=password,
             verify_tls=verify_tls,
             timeout_seconds=timeout_seconds,
         )
@@ -1846,6 +1916,8 @@ def restconf_get_vrf_summary(
     include_raw = bool(inputs.get("include_raw", False))
 
     # Optional overrides
+    username = _sanitize_credential(inputs.get("username"))
+    password = _sanitize_credential(inputs.get("password"))
     verify_tls = inputs.get("verify_tls")
     timeout_seconds = inputs.get("timeout_seconds")
 
@@ -1853,6 +1925,8 @@ def restconf_get_vrf_summary(
 
     client = make_client(
         switch_ip,
+        username=username,
+        password=password,
         verify_tls=verify_tls,
         timeout_seconds=timeout_seconds,
     )
@@ -2031,12 +2105,16 @@ def restconf_get_ip_interface(
     max_items = _as_int(inputs.get("max_items"), 200)
     include_raw = bool(inputs.get("include_raw", False))
 
+    username = _sanitize_credential(inputs.get("username"))
+    password = _sanitize_credential(inputs.get("password"))
     verify_tls = inputs.get("verify_tls")
     timeout_seconds = inputs.get("timeout_seconds")
 
     warnings: list[str] = []
     client = make_client(
         switch_ip,
+        username=username,
+        password=password,
         verify_tls=verify_tls,
         timeout_seconds=timeout_seconds,
     )
@@ -2327,12 +2405,16 @@ def restconf_get_running_config(
     if isinstance(raw_secs, list):
         requested_sections = [_as_str(s) for s in raw_secs if s]
 
+    username = _sanitize_credential(inputs.get("username"))
+    password = _sanitize_credential(inputs.get("password"))
     verify_tls = inputs.get("verify_tls")
     timeout_seconds = inputs.get("timeout_seconds")
 
     warnings_out: list[str] = []
     client = make_client(
         switch_ip,
+        username=username,
+        password=password,
         verify_tls=verify_tls,
         timeout_seconds=timeout_seconds,
     )
