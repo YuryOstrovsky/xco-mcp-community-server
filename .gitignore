@@ -44,3 +44,7 @@ venv/
 test*
 xco_get_token.py
 mcp-server.log
+
+# Runtime logs (keep folder structure, ignore actual log files)
+logs/*
+!logs/.gitkeep
