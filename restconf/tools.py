@@ -139,15 +139,11 @@ def restconf_show_firmware_version(
             "warnings": [],
         }
 
-    username = inputs.get("username")
-    password = inputs.get("password")
     verify_tls = inputs.get("verify_tls")  # optional override
 
     try:
         client = make_client(
             switch_ip,
-            username=username,
-            password=password,
             verify_tls=verify_tls,
         )
         raw = client.show_firmware_version()
@@ -230,15 +226,11 @@ def restconf_get_interface_detail(
             "warnings": [],
         }
 
-    username = inputs.get("username")
-    password = inputs.get("password")
     verify_tls = inputs.get("verify_tls")  # optional override
 
     try:
         client = make_client(
             switch_ip,
-            username=username,
-            password=password,
             verify_tls=verify_tls,
         )
         raw = client.get_interface_detail(interface_name if interface_name else None)
@@ -352,15 +344,11 @@ def restconf_list_operations(
     flt = _as_str(inputs.get("filter") or "")
     max_items = _as_int(inputs.get("max_items"), 200)
 
-    username = inputs.get("username")
-    password = inputs.get("password")
     verify_tls = inputs.get("verify_tls")  # optional override
 
     try:
         client = make_client(
             switch_ip,
-            username=username,
-            password=password,
             verify_tls=verify_tls,
         )
         raw = client.list_operations()
@@ -434,15 +422,11 @@ def restconf_get_lldp_neighbor_detail(
     max_items = _as_int(inputs.get("max_items"), 200)
     include_raw = bool(inputs.get("include_raw") or False)
 
-    username = inputs.get("username")
-    password = inputs.get("password")
     verify_tls = inputs.get("verify_tls")
 
     try:
         client = make_client(
             switch_ip,
-            username=username,
-            password=password,
             verify_tls=verify_tls,
         )
         raw = client.get_lldp_neighbor_detail()
@@ -596,8 +580,6 @@ def restconf_get_media_detail(
     include_raw = bool(inputs.get("include_raw") or False)
 
     # Optional overrides
-    username = inputs.get("username")
-    password = inputs.get("password")
     verify_tls = inputs.get("verify_tls")
     timeout_seconds = inputs.get("timeout_seconds")
 
@@ -632,8 +614,6 @@ def restconf_get_media_detail(
     try:
         client = make_client(
             switch_ip,
-            username=username,
-            password=password,
             verify_tls=verify_tls,
             timeout_seconds=timeout_seconds,
         )
@@ -830,8 +810,6 @@ def restconf_get_vlan_brief(
     max_items = _as_int(inputs.get("max_items"), 200)
     include_raw = bool(inputs.get("include_raw") or False)
 
-    username = inputs.get("username")
-    password = inputs.get("password")
     verify_tls = inputs.get("verify_tls")
     timeout_seconds = inputs.get("timeout_seconds")
 
@@ -841,8 +819,6 @@ def restconf_get_vlan_brief(
     try:
         client = make_client(
             switch_ip,
-            username=username,
-            password=password,
             verify_tls=verify_tls,
             timeout_seconds=timeout_seconds,
         )
@@ -1136,16 +1112,12 @@ def restconf_get_arp_table(
     max_items = _as_int(inputs.get("max_items"), 200)
     include_raw = bool(inputs.get("include_raw") or False)
 
-    username = inputs.get("username")
-    password = inputs.get("password")
     verify_tls = inputs.get("verify_tls")
     timeout_seconds = inputs.get("timeout_seconds")
 
     try:
         client = make_client(
             switch_ip,
-            username=username,
-            password=password,
             verify_tls=verify_tls,
             timeout_seconds=timeout_seconds,
         )
@@ -1355,8 +1327,6 @@ def restconf_get_clock(
 
     include_raw = bool(inputs.get("include_raw") or False)
 
-    username = inputs.get("username")
-    password = inputs.get("password")
     verify_tls = inputs.get("verify_tls")
     timeout_seconds = inputs.get("timeout_seconds")
 
@@ -1365,8 +1335,6 @@ def restconf_get_clock(
     try:
         client = make_client(
             switch_ip,
-            username=username,
-            password=password,
             verify_tls=verify_tls,
             timeout_seconds=timeout_seconds,
         )
@@ -1477,8 +1445,6 @@ def restconf_get_system_maintenance_status(
     include_raw = bool(inputs.get("include_raw") or False)
 
     # Optional overrides
-    username = inputs.get("username")
-    password = inputs.get("password")
     verify_tls = inputs.get("verify_tls")
     timeout_seconds = inputs.get("timeout_seconds")
 
@@ -1487,8 +1453,6 @@ def restconf_get_system_maintenance_status(
     try:
         client = make_client(
             switch_ip,
-            username=username,
-            password=password,
             verify_tls=verify_tls,
             timeout_seconds=timeout_seconds,
         )
@@ -1583,8 +1547,6 @@ def restconf_get_system_maintenance_rate_monitoring(
     include_raw = bool(inputs.get("include_raw") or False)
 
     # Optional overrides
-    username = inputs.get("username")
-    password = inputs.get("password")
     verify_tls = inputs.get("verify_tls")
     timeout_seconds = inputs.get("timeout_seconds")
 
@@ -1593,8 +1555,6 @@ def restconf_get_system_maintenance_rate_monitoring(
     try:
         client = make_client(
             switch_ip,
-            username=username,
-            password=password,
             verify_tls=verify_tls,
             timeout_seconds=timeout_seconds,
         )
@@ -1722,8 +1682,6 @@ def restconf_get_port_statistics_summary(
     include_raw = bool(inputs.get("include_raw", False))
 
     # Optional overrides
-    username = inputs.get("username")
-    password = inputs.get("password")
     verify_tls = inputs.get("verify_tls")
     timeout_seconds = inputs.get("timeout_seconds")
 
@@ -1732,8 +1690,6 @@ def restconf_get_port_statistics_summary(
     try:
         client = make_client(
             switch_ip,
-            username=username,
-            password=password,
             verify_tls=verify_tls,
             timeout_seconds=timeout_seconds,
         )
@@ -1890,8 +1846,6 @@ def restconf_get_vrf_summary(
     include_raw = bool(inputs.get("include_raw", False))
 
     # Optional overrides
-    username = inputs.get("username")
-    password = inputs.get("password")
     verify_tls = inputs.get("verify_tls")
     timeout_seconds = inputs.get("timeout_seconds")
 
@@ -1899,8 +1853,6 @@ def restconf_get_vrf_summary(
 
     client = make_client(
         switch_ip,
-        username=username,
-        password=password,
         verify_tls=verify_tls,
         timeout_seconds=timeout_seconds,
     )
@@ -2079,16 +2031,12 @@ def restconf_get_ip_interface(
     max_items = _as_int(inputs.get("max_items"), 200)
     include_raw = bool(inputs.get("include_raw", False))
 
-    username = inputs.get("username")
-    password = inputs.get("password")
     verify_tls = inputs.get("verify_tls")
     timeout_seconds = inputs.get("timeout_seconds")
 
     warnings: list[str] = []
     client = make_client(
         switch_ip,
-        username=username,
-        password=password,
         verify_tls=verify_tls,
         timeout_seconds=timeout_seconds,
     )
@@ -2379,16 +2327,12 @@ def restconf_get_running_config(
     if isinstance(raw_secs, list):
         requested_sections = [_as_str(s) for s in raw_secs if s]
 
-    username = inputs.get("username")
-    password = inputs.get("password")
     verify_tls = inputs.get("verify_tls")
     timeout_seconds = inputs.get("timeout_seconds")
 
     warnings_out: list[str] = []
     client = make_client(
         switch_ip,
-        username=username,
-        password=password,
         verify_tls=verify_tls,
         timeout_seconds=timeout_seconds,
     )
