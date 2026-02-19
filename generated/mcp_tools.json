@@ -9228,6 +9228,7 @@
   "name": "fabric_get_fabric_health_summary",
   "description": "Tier-2: fabric health summary (global + per-fabric). Combines fabrics-health, fabric-health, service health, and optional errors into an actionable summary with next steps.",
   "category": "fabric",
+  "method": "COMPOSITE",
   "policy": {
     "risk": "SAFE_READ",
     "allowed_in_auto_mode": true,

@@ -2332,14 +2332,19 @@ def restconf_get_running_config(
     SLX exposes running config under:
       GET https://<switch>/rest/config/running  (XML, vendor media type)
 
-    This is NOT a standard /restconf/data tree and NOT an RPC under /restconf/operations.
-    We normalize the response into:
-      - summary: key identity fields (hostname, chassis), section count
-      - items: top-level config sections (tag + y:self path when present)
+    The response is a deep XML tree.  We convert it to CLI-style text lines so
+    the UI widget (and operators) can read it exactly like 'show running-config'.
 
     Inputs:
-      - config_path: optional suffix under /rest/config/running (e.g. "interface")
-      - max_bytes: max raw XML bytes to include when include_raw=true
+      - switch_ip      (required)
+      - config_path    optional suffix, e.g. "snmp-server" or "router bgp"
+      - sections       optional list of top-level section names to include,
+                       e.g. ["snmp-server","router","evpn","interface"].
+                       When omitted a curated default set is used so the response
+                       stays manageable but meaningful.  Pass [] to get all sections.
+      - include_all_sections  bool (default false): override sections filter, return every section
+      - include_raw    bool (default false): attach raw XML snippet
+      - max_bytes      max raw XML bytes when include_raw=true (default 200 000)
     """
     tool_name = "restconf_get_running_config"
     switch_ip = _as_str(inputs.get("switch_ip"))
@@ -2353,14 +2358,33 @@ def restconf_get_running_config(
 
     config_path = _as_str(inputs.get("config_path")) or ""
     include_raw = bool(inputs.get("include_raw", False))
+    include_all = bool(inputs.get("include_all_sections", False))
     max_bytes = _as_int(inputs.get("max_bytes"), 200_000)
+
+    # Which top-level sections to render into CLI lines.
+    # Default set covers the most operator-relevant config blocks.
+    DEFAULT_SECTIONS = {
+        "switch-attributes", "snmp-server", "router", "evpn",
+        "vlan", "interface", "ip", "ipv6", "protocol", "cluster",
+        "overlay-gateway", "management-security", "ntp", "aaa",
+        "radius-server", "tacacs-server", "system", "hardware",
+        "banner", "ssh", "logging", "qos", "acl-policy",
+        "lacp", "sflow", "dot1x", "mac", "overlay", "vrf",
+        "storm-control", "link-fault-signaling", "class-map",
+        "control-plane", "resource-monitor", "load-balance",
+    }
+
+    requested_sections: Optional[List[str]] = None
+    raw_secs = inputs.get("sections")
+    if isinstance(raw_secs, list):
+        requested_sections = [_as_str(s) for s in raw_secs if s]
 
     username = inputs.get("username")
     password = inputs.get("password")
     verify_tls = inputs.get("verify_tls")
     timeout_seconds = inputs.get("timeout_seconds")
 
-    warnings: list[str] = []
+    warnings_out: list[str] = []
     client = make_client(
         switch_ip,
         username=username,
@@ -2369,12 +2393,12 @@ def restconf_get_running_config(
         timeout_seconds=timeout_seconds,
     )
 
-    # Fetch XML
-    raw_xml = None
+    # ── Fetch XML ────────────────────────────────────────────────────────────
+    raw_xml_meta = None
     try:
         status, headers, text = client.get_running_config_xml(config_path=config_path)
         content_type = headers.get("Content-Type", "")
-        raw_xml = {
+        raw_xml_meta = {
             "status": status,
             "content_type": content_type,
             "byte_len": len(text or ""),
@@ -2382,12 +2406,12 @@ def restconf_get_running_config(
         if include_raw:
             snippet = (text or "")
             if max_bytes and len(snippet) > max_bytes:
-                raw_xml["truncated"] = True
-                raw_xml["max_bytes"] = max_bytes
-                raw_xml["xml_snippet"] = snippet[:max_bytes]
+                raw_xml_meta["truncated"] = True
+                raw_xml_meta["max_bytes"] = max_bytes
+                raw_xml_meta["xml_snippet"] = snippet[:max_bytes]
             else:
-                raw_xml["truncated"] = False
-                raw_xml["xml_snippet"] = snippet
+                raw_xml_meta["truncated"] = False
+                raw_xml_meta["xml_snippet"] = snippet
 
         if status >= 400:
             return {
@@ -2416,7 +2440,7 @@ def restconf_get_running_config(
             "warnings": [],
         }
 
-    # Parse XML (sanitize just in case)
+    # ── Parse XML ────────────────────────────────────────────────────────────
     try:
         xml_text = _sanitize_slx_xml(text or "")
         root = ET.fromstring(xml_text)
@@ -2437,18 +2461,72 @@ def restconf_get_running_config(
     def local(tag: str) -> str:
         return tag.split("}", 1)[1] if "}" in tag else tag
 
-    def get_attr_self(el) -> str | None:
-        # Attribute is typically y:self where y maps to http://brocade.com/ns/rest
+    def get_attr_self(el) -> Optional[str]:
         for k, v in (el.attrib or {}).items():
             if k.endswith("}self") or k == "self":
                 return v
         return None
 
-    items: list[dict] = []
-    host_name = None
-    chassis_name = None
+    # ── XML → CLI text converter ─────────────────────────────────────────────
+    def _elem_to_cli(el, indent: int = 0) -> List[str]:
+        """Recursively convert an XML element tree into SLX CLI-style text lines.
 
-    # Discover host/chassis under switch-attributes (brocade-ras)
+        Rules (matching real SLX show running-config output):
+          - Leaf with text value  → "  key value"
+          - Boolean flag (empty)  → "  key"
+          - Container with children → "key" header line, children indented, "!" closer
+          - Attributes like y:self are silently dropped
+          - Namespace prefixes are stripped from tag names
+        """
+        tag = local(el.tag)
+        text_val = (el.text or "").strip()
+        children = list(el)
+        pad = "  " * indent
+        lines: List[str] = []
+
+        if not children:
+            # Leaf node
+            if text_val:
+                lines.append(f"{pad}{tag} {text_val}")
+            else:
+                lines.append(f"{pad}{tag}")
+            return lines
+
+        # Container node
+        # Build the opening line; if the element has a single child that is a
+        # simple key (like "vlan-name 1" or "instance bgp") append it inline
+        # to match real CLI style:  "vlan 1"  rather than just "vlan" + child line.
+        inline = ""
+        if len(children) == 1:
+            only = children[0]
+            only_text = (only.text or "").strip()
+            only_tag = local(only.tag)
+            if not list(only) and only_text and only_tag in (
+                "vlan-id", "name", "vlan-name", "as-number", "local-as",
+                "id", "instance", "peer-group-name", "neighbor-address",
+                "interface-name", "slot-port", "vrf-name",
+            ):
+                inline = f" {only_text}"
+                children = []   # consumed — don't recurse into it
+
+        if indent == 0:
+            lines.append(f"{tag}{inline}")
+        else:
+            lines.append(f"{pad}{tag}{inline}")
+
+        for child in children:
+            lines.extend(_elem_to_cli(child, indent + 1))
+
+        if indent == 0:
+            lines.append("!")
+
+        return lines
+
+    # ── Build items ──────────────────────────────────────────────────────────
+    host_name: Optional[str] = None
+    chassis_name: Optional[str] = None
+
+    # Discover host/chassis from switch-attributes
     for child in list(root):
         if local(child.tag) == "switch-attributes":
             for leaf in list(child):
@@ -2458,26 +2536,53 @@ def restconf_get_running_config(
                 elif lt == "chassis-name" and (leaf.text or "").strip():
                     chassis_name = (leaf.text or "").strip()
 
-    # Top-level sections
-    for child in list(root):
-        sec = {
-            "section": local(child.tag),
-            "self": get_attr_self(child),
-        }
-        items.append(sec)
+    # Decide which sections to render into CLI lines
+    def _want_section(sec_name: str) -> bool:
+        if include_all:
+            return True
+        if requested_sections is not None:
+            return sec_name in requested_sections
+        return sec_name in DEFAULT_SECTIONS
 
-    # Optional filter by config_path: if user requests a subpath, we still return the top-level view of that subtree
-    # (child tags of the returned root element).
+    items: list[dict] = []
+    all_sections: List[str] = []
+
+    for child in list(root):
+        sec = local(child.tag)
+        self_path = get_attr_self(child)
+        all_sections.append(sec)
+
+        entry: dict = {
+            "section": sec,
+            "self": self_path,
+        }
+
+        if _want_section(sec):
+            try:
+                cli_lines = _elem_to_cli(child, indent=0)
+                entry["cli_lines"] = cli_lines
+            except Exception as ex:
+                entry["cli_lines"] = [f"! (render error: {ex})"]
+                warnings_out.append(f"Could not render section {sec!r}: {ex}")
+
+        items.append(entry)
+
     if config_path:
-        warnings.append(f"Fetched subtree under /rest/config/running/{config_path.strip('/')}; items represent top-level elements of that subtree.")
+        warnings_out.append(
+            f"Fetched subtree /rest/config/running/{config_path.strip('/')}; "
+            "items represent top-level elements of that subtree."
+        )
+
+    rendered_count = sum(1 for it in items if "cli_lines" in it)
 
     summary = {
         "signals": {"restconf_ok": True},
         "config_path": config_path or None,
         "section_count": len(items),
+        "rendered_sections": rendered_count,
         "host_name": host_name,
         "chassis_name": chassis_name,
-        "example_sections": [it["section"] for it in items[:8]],
+        "example_sections": all_sections[:8],
     }
 
     resp = {
@@ -2489,10 +2594,8 @@ def restconf_get_running_config(
         },
         "summary": summary,
         "items": items,
-        "warnings": warnings,
+        "warnings": warnings_out,
     }
-    if include_raw and raw_xml is not None:
-        resp["raw_xml"] = raw_xml
+    if include_raw and raw_xml_meta is not None:
+        resp["raw_xml"] = raw_xml_meta
     return resp
-
-

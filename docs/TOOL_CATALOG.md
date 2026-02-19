@@ -21,6 +21,7 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 - **system**: 14
 - **tenant**: 30
 - **vcenter**: 9
+- **restconf**: 14
 
 ---
 
