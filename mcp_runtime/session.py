@@ -26,24 +26,19 @@ class MCPSession:
         self._context: Dict = {}
 
     # --------------------------------------------------
-    # Context handling (with debug)
+    # Context handling
     # --------------------------------------------------
 
     def get_context(self) -> Dict:
-        print(">>> SESSION.get_context CALLED")
-        print(">>> stored ctx =", self._context)
         return deepcopy(self._context)
 
     def update_context(self, ctx: Dict):
         """
         Persist only resolved, validated context.
         """
-        print(">>> SESSION.update_context CALLED")
-        print(">>> ctx =", ctx)
         self._context = deepcopy(ctx)
 
     def clear(self):
-        print(">>> SESSION.clear CALLED")
         self._context = {}
 
     # --------------------------------------------------
