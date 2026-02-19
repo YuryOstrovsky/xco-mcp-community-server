@@ -6,6 +6,9 @@ import json
 import base64
 import requests
 from threading import Lock
+from mcp_runtime.logging import get_logger
+
+logger = get_logger(__name__)
 
 
 class AuthError(Exception):
@@ -97,7 +100,7 @@ class AuthManager:
             payload += "=" * (-len(payload) % 4)
             decoded = json.loads(base64.urlsafe_b64decode(payload))
             return int(decoded.get("exp", 0))
-        except Exception:
-            # fail-safe: force refresh soon
+        except Exception as e:
+            logger.warning("JWT decode failed, forcing early refresh: %s", e)
             return int(time.time()) + 300
 
