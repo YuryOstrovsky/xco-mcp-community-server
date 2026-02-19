@@ -2,10 +2,12 @@
 
 import os
 import time
-import json
-import base64
 import requests
+import jwt  # PyJWT — Fix #7: proper JWT decode
 from threading import Lock
+from mcp_runtime.logging import get_logger
+
+logger = get_logger(__name__)
 
 
 class AuthError(Exception):
@@ -42,7 +44,15 @@ class AuthManager:
         """
         Return a valid access token.
         Automatically refreshes if expired or missing.
+
+        Fix #8: double-checked locking — fast path avoids lock overhead for
+        the common case where the token is already valid.
         """
+        # Fast path: no lock needed when token is clearly still valid
+        if self._token is not None and not self._is_expired():
+            return self._token
+        # Slow path: take lock, re-check (another thread may have refreshed
+        # between the two checks above), then refresh only if still needed
         with self._lock:
             if self._token is None or self._is_expired():
                 self._login()
@@ -90,14 +100,20 @@ class AuthManager:
 
     def _decode_exp(self, jwt_token: str) -> int:
         """
-        Decode JWT 'exp' without verifying signature.
+        Decode JWT 'exp' using PyJWT without signature verification.
+
+        Fix #7: replaces hand-rolled base64 split with PyJWT, which handles
+        padding, encoding edge-cases, and malformed tokens more robustly.
+        Signature verification is intentionally skipped — we are a consumer
+        of XCO-issued tokens and do not hold the signing secret.
         """
         try:
-            payload = jwt_token.split(".")[1]
-            payload += "=" * (-len(payload) % 4)
-            decoded = json.loads(base64.urlsafe_b64decode(payload))
+            decoded = jwt.decode(
+                jwt_token,
+                options={"verify_signature": False},
+                algorithms=["HS256", "RS256", "ES256"],
+            )
             return int(decoded.get("exp", 0))
-        except Exception:
-            # fail-safe: force refresh soon
+        except Exception as e:
+            logger.warning("JWT decode failed, forcing early refresh: %s", e)
             return int(time.time()) + 300
-

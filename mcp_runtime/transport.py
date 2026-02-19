@@ -18,6 +18,21 @@ logger = get_logger("mcp.transport")
 # --------------------------------------------------
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
+# --------------------------------------------------
+# Fix #12: HTTP method allowlist
+# --------------------------------------------------
+_ALLOWED_METHODS = {"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"}
+
+# --------------------------------------------------
+# Fix #18: sensitive-value redaction for log lines
+# --------------------------------------------------
+_REDACT_KEYS = {"password", "token", "secret", "key", "api_key", "access_token"}
+
+
+def _redact(params: dict) -> dict:
+    """Return a copy of params with sensitive values masked."""
+    return {k: "***" if k.lower() in _REDACT_KEYS else v for k, v in params.items()}
+
 
 class XCOTransport:
     """
@@ -28,7 +43,8 @@ class XCOTransport:
     - HTTPS enforcement
     - Context → query param injection
     - Retry once on 401 (token refresh)
-    - Structured logging
+    - Structured logging (with sensitive-value redaction)
+    - Fix #10/#11: persistent Session for TCP connection reuse / pooling
     """
 
     def __init__(self, host, auth: AuthManager, verify_tls=False, timeout=20):
@@ -39,6 +55,11 @@ class XCOTransport:
         self.auth = auth
         self.verify_tls = verify_tls
         self.timeout = timeout
+
+        # Fix #10/#11: one Session shared across all requests so urllib3 can
+        # pool and reuse the underlying TCP/TLS connection to XCO.
+        self._session = requests.Session()
+        self._session.verify = verify_tls
 
         logger.info(
             "XCOTransport initialized host=%s verify_tls=%s timeout=%ss",
@@ -57,7 +78,16 @@ class XCOTransport:
         params: dict | None = None,
         port: int | None = None,
         context: dict | None = None,
+        correlation_id: str | None = None,  # Fix #14
     ):
+        # Fix #12: reject methods not in the allowlist
+        method = method.upper()
+        if method not in _ALLOWED_METHODS:
+            raise ValueError(
+                f"HTTP method '{method}' is not allowed. "
+                f"Permitted: {', '.join(sorted(_ALLOWED_METHODS))}"
+            )
+
         start_ts = time.time()
 
         # ---- Base params ----
@@ -87,26 +117,29 @@ class XCOTransport:
         url = f"{scheme}://{self.host}:{effective_port}{path}"
 
         logger.debug(
-            "XCO request start method=%s url=%s params=%s",
+            "XCO request start method=%s url=%s params=%s correlation_id=%s",
             method,
             url,
-            effective_params,
+            _redact(effective_params),   # Fix #18: mask sensitive fields
+            correlation_id,
         )
 
-        # ---- Auth header ----
+        # ---- Auth + headers ----
         headers = {
             "Authorization": f"Bearer {self.auth.get_token()}",
             "Content-Type": "application/json",
         }
+        # Fix #14: forward correlation ID so XCO-side logs can be correlated
+        if correlation_id:
+            headers["X-Correlation-ID"] = correlation_id
 
-        # ---- Perform request ----
+        # ---- Perform request (Fix #10/#11: use persistent session) ----
         try:
-            resp = requests.request(
+            resp = self._session.request(
                 method=method,
                 url=url,
                 headers=headers,
                 params=effective_params,
-                verify=self.verify_tls,
                 timeout=self.timeout,
             )
         except Exception as e:
@@ -119,21 +152,22 @@ class XCOTransport:
             raise
 
         # ---- Retry once on 401 ----
+        # Fix: was calling self.auth.refresh_token() which does not exist;
+        # correct call is invalidate() + get_token().
         if resp.status_code == 401:
             logger.warning(
                 "XCO 401 received, refreshing token and retrying url=%s",
                 url,
             )
             try:
-                self.auth.refresh_token()
+                self.auth.invalidate()
                 headers["Authorization"] = f"Bearer {self.auth.get_token()}"
 
-                resp = requests.request(
+                resp = self._session.request(
                     method=method,
                     url=url,
                     headers=headers,
                     params=effective_params,
-                    verify=self.verify_tls,
                     timeout=self.timeout,
                 )
             except AuthError:
@@ -175,11 +209,12 @@ class XCOTransport:
         duration_ms = int((time.time() - start_ts) * 1000)
 
         logger.info(
-            "XCO request done method=%s status=%s duration_ms=%s url=%s",
+            "XCO request done method=%s status=%s duration_ms=%s url=%s correlation_id=%s",
             method,
             resp.status_code,
             duration_ms,
             url,
+            correlation_id,
         )
 
         return {

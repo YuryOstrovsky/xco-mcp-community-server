@@ -8,7 +8,7 @@ from mcp_runtime.metrics import (
     MCP_INVOKE_FAILURE,
     MCP_INVOKE_LATENCY,
     MCP_INVOKE_STATUS,
-    
+    safe_label,  # Fix #22
 )
 
 
@@ -110,7 +110,7 @@ class MCPServer:
 
         import time
         start_ts = time.time()
-        MCP_INVOKE_TOTAL.labels(tool=tool_name).inc()
+        MCP_INVOKE_TOTAL.labels(tool=safe_label(tool_name)).inc()
 
 
 
@@ -241,9 +241,9 @@ class MCPServer:
                     context=resolved_context,
                 )
 
-                MCP_INVOKE_SUCCESS.labels(tool=tool_name).inc()
+                MCP_INVOKE_SUCCESS.labels(tool=safe_label(tool_name)).inc()
                 duration = time.time() - start_ts
-                MCP_INVOKE_LATENCY.labels(tool=tool_name).observe(duration)
+                MCP_INVOKE_LATENCY.labels(tool=safe_label(tool_name)).observe(duration)
 
                 return {
                     "tool": tool_name,
@@ -273,11 +273,12 @@ class MCPServer:
                 path=endpoint["path"],
                 params=inputs,
                 context=resolved_context,
+                correlation_id=correlation_id,  # Fix #14
             )
 
             # ---- Per-status-code metrics ----
             MCP_INVOKE_STATUS.labels(
-                tool=tool_name,
+                tool=safe_label(tool_name),
                 status=str(response["status"]),
             ).inc()
 
@@ -300,8 +301,8 @@ class MCPServer:
             )
 
             duration = time.time() - start_ts
-            MCP_INVOKE_SUCCESS.labels(tool=tool_name).inc()
-            MCP_INVOKE_LATENCY.labels(tool=tool_name).observe(duration)
+            MCP_INVOKE_SUCCESS.labels(tool=safe_label(tool_name)).inc()
+            MCP_INVOKE_LATENCY.labels(tool=safe_label(tool_name)).observe(duration)
 
 
 
@@ -333,7 +334,7 @@ class MCPServer:
             }
 
         except Exception as e:
-            MCP_INVOKE_FAILURE.labels(tool=tool_name).inc()
+            MCP_INVOKE_FAILURE.labels(tool=safe_label(tool_name)).inc()
             invoke_logger.exception(
                 "invoke failed tool=%s request_id=%s correlation_id=%s error=%s",
                 tool_name,
@@ -343,7 +344,7 @@ class MCPServer:
             )
 
             MCP_INVOKE_STATUS.labels(
-                tool=tool_name,
+                tool=safe_label(tool_name),
                 status="exception",
             ).inc()
 
