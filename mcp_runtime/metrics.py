@@ -1,6 +1,23 @@
 # mcp_runtime/metrics.py
 
+import re
 from prometheus_client import Counter, Histogram
+
+# ----------------------------------------
+# Fix #22: label cardinality safety
+# ----------------------------------------
+# Tool names are validated against the registry (fix #3) so cardinality is
+# bounded in practice.  safe_label() is a belt-and-suspenders guard that
+# truncates and sanitizes any label value before it reaches Prometheus,
+# preventing a logic bug elsewhere from ever creating an unbounded label space.
+_LABEL_MAX = 64
+_LABEL_RE = re.compile(r"[^a-zA-Z0-9_]")
+
+
+def safe_label(value: str) -> str:
+    """Sanitize a Prometheus label: replace bad chars with _, truncate."""
+    return _LABEL_RE.sub("_", str(value))[:_LABEL_MAX]
+
 
 # ----------------------------------------
 # Global metrics registry
