@@ -78,6 +78,14 @@ class RestconfClient:
             raise RestconfError(f"RESTCONF GET {path} failed: {r.status_code} {r.text[:300]}")
         try:
             return r.json()
+        except Exception:
+            pass
+        # Some SLX builds return non-strict JSON with trailing commas before } or ].
+        # Strip them and retry before giving up.
+        try:
+            import re
+            text = re.sub(r",\s*(?=[}\]])", "", r.text)
+            return json.loads(text)
         except Exception as e:
             snippet = (r.text or "")[:300]
             ct = r.headers.get("Content-Type", "")

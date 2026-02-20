@@ -44,7 +44,8 @@ from restconf.tools import (
     restconf_get_running_config,
     restconf_get_system_maintenance_status,
     restconf_get_system_maintenance_rate_monitoring,
-    
+    restconf_get_interface_all,
+
 )
 
 
@@ -251,7 +252,9 @@ class MCPRegistry:
             restconf_get_system_maintenance_rate_monitoring
         )
 
-       
+        self.handlers["restconf_get_interface_all"] = (
+            restconf_get_interface_all
+        )
 
         return self
 

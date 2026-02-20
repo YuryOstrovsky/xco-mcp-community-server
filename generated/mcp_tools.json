@@ -11379,8 +11379,64 @@
     "monitoring",
     "status"
   ]
-}
+},
 
+{
+  "name": "restconf_get_interface_all",
+  "description": "Tier-2: Get all interfaces (management, ethernet, port-channel) via RESTCONF GET (brocade-interface:interface?depth=unbounded). Returns name, type, shutdown status, description, IP addresses, and channel-group membership for each interface.",
+  "category": "restconf",
+  "method": "COMPOSITE",
+  "endpoint": null,
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "switch_ip": {
+        "type": "string",
+        "description": "Switch management IP/FQDN (required)."
+      },
+      "include_raw": {
+        "type": "boolean",
+        "default": false,
+        "description": "Include raw RESTCONF payload for troubleshooting."
+      },
+      "username": {
+        "type": "string",
+        "description": "Optional override RESTCONF username."
+      },
+      "password": {
+        "type": "string",
+        "description": "Optional override RESTCONF password."
+      },
+      "verify_tls": {
+        "type": "boolean",
+        "description": "Optional override TLS verification."
+      },
+      "timeout_seconds": {
+        "type": "integer",
+        "description": "Optional override request timeout."
+      }
+    },
+    "required": [
+      "switch_ip"
+    ]
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": [
+    "read",
+    "tier2",
+    "restconf",
+    "interface",
+    "ethernet",
+    "management",
+    "port-channel",
+    "status"
+  ]
+}
 
 
 ]

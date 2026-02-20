@@ -2625,3 +2625,211 @@ def restconf_get_running_config(
     if include_raw and raw_xml_meta is not None:
         resp["raw_xml"] = raw_xml_meta
     return resp
+
+
+# ---------------------------------------------------------------------------
+# restconf_get_interface_all
+# ---------------------------------------------------------------------------
+
+def restconf_get_interface_all(
+    *,
+    inputs: dict,
+    registry,
+    transport,
+    context: dict,
+    **kwargs,
+) -> dict:
+    """
+    Tier-2: Get all interfaces via RESTCONF GET:
+      GET /restconf/data/brocade-interface:interface?depth=unbounded
+
+    Returns management, ethernet, and port-channel interfaces with key fields:
+    name, type, shutdown status, description, IP addresses, channel-group membership.
+    """
+    tool_name = "restconf_get_interface_all"
+
+    switch_ip = _as_str(inputs.get("switch_ip"))
+    if not switch_ip:
+        return {
+            "meta": {"tool": tool_name, "ok": False, "error": "Missing switch_ip"},
+            "summary": {"signals": {"restconf_ok": False}},
+            "items": [],
+            "warnings": [],
+        }
+
+    include_raw = bool(inputs.get("include_raw") or False)
+
+    username = _sanitize_credential(inputs.get("username"))
+    password = _sanitize_credential(inputs.get("password"))
+    verify_tls = inputs.get("verify_tls")
+    timeout_seconds = inputs.get("timeout_seconds")
+
+    warnings: List[str] = []
+
+    try:
+        client = make_client(
+            switch_ip,
+            username=username,
+            password=password,
+            verify_tls=verify_tls,
+            timeout_seconds=timeout_seconds,
+        )
+        raw = client.get_interface_tree_json()
+    except RestconfError as e:
+        return {
+            "meta": {
+                "tool": tool_name,
+                "switch_ip": switch_ip,
+                "ok": False,
+                "source": "direct_switch_restconf",
+                "error": str(e),
+            },
+            "summary": {"signals": {"restconf_ok": False}},
+            "items": [],
+            "warnings": [],
+        }
+
+    # --- Find the root interface container ---
+    root: Dict[str, Any] = {}
+    if isinstance(raw, dict):
+        for k in (
+            "urn:brocade.com:mgmt:brocade-interface:interface",
+            "brocade-interface:interface",
+            "interface",
+        ):
+            if k in raw:
+                root = raw[k]
+                break
+        if not root:
+            for v in raw.values():
+                if isinstance(v, dict):
+                    root = v
+                    break
+    if not isinstance(root, dict):
+        warnings.append(f"Unexpected response shape: {type(raw).__name__}")
+        root = {}
+
+    # Helper: extract IP addresses from a nested ip-config block
+    def _extract_ips(iface: dict) -> List[str]:
+        ips: List[str] = []
+        ip_cfg = (
+            iface.get("urn:brocade.com:mgmt:brocade-ip-config:ip-config")
+            or iface.get("ip-config")
+            or {}
+        )
+        if not isinstance(ip_cfg, dict):
+            return ips
+        address = ip_cfg.get("address") or {}
+        if isinstance(address, dict):
+            ip = _as_str(
+                address.get("primary-ip-address") or address.get("address") or ""
+            )
+            pl = _as_str(
+                address.get("primary-prefix-length")
+                or address.get("prefix-length")
+                or ""
+            )
+            if ip:
+                ips.append(f"{ip}/{pl}" if pl else ip)
+        elif isinstance(address, list):
+            for addr in address:
+                if isinstance(addr, dict):
+                    ip = _as_str(
+                        addr.get("address") or addr.get("primary-ip-address") or ""
+                    )
+                    pl = _as_str(
+                        addr.get("prefix-length")
+                        or addr.get("primary-prefix-length")
+                        or ""
+                    )
+                    if ip:
+                        ips.append(f"{ip}/{pl}" if pl else ip)
+        return ips
+
+    items: List[Dict[str, Any]] = []
+
+    # Management interfaces
+    mgmt_list = root.get("management")
+    if isinstance(mgmt_list, list):
+        for iface in mgmt_list:
+            if not isinstance(iface, dict):
+                continue
+            items.append({
+                "type": "management",
+                "name": _as_str(iface.get("name") or iface.get("interface-name") or ""),
+                "shutdown": _as_str(iface.get("shutdown") or "false"),
+                "description": _as_str(iface.get("description") or ""),
+                "ip_addresses": _extract_ips(iface),
+            })
+    elif mgmt_list is not None:
+        warnings.append("Unexpected management interface format (expected list).")
+
+    # Ethernet interfaces
+    eth_list = root.get("ethernet")
+    if isinstance(eth_list, list):
+        for iface in eth_list:
+            if not isinstance(iface, dict):
+                continue
+            cg = iface.get("channel-group") or {}
+            items.append({
+                "type": "ethernet",
+                "name": _as_str(iface.get("name") or iface.get("interface-name") or ""),
+                "shutdown": _as_str(iface.get("shutdown") or "false"),
+                "description": _as_str(iface.get("description") or ""),
+                "ip_addresses": _extract_ips(iface),
+                "channel_group": _as_str(cg.get("name") or "") if isinstance(cg, dict) else "",
+                "channel_group_mode": _as_str(cg.get("mode") or "") if isinstance(cg, dict) else "",
+            })
+    elif eth_list is not None:
+        warnings.append("Unexpected ethernet interface format (expected list).")
+
+    # Port-channel interfaces
+    pc_list = (
+        root.get("urn:brocade.com:mgmt:brocade-interface:port-channel")
+        or root.get("port-channel")
+    )
+    if isinstance(pc_list, list):
+        for iface in pc_list:
+            if not isinstance(iface, dict):
+                continue
+            items.append({
+                "type": "port-channel",
+                "name": _as_str(iface.get("name") or iface.get("interface-name") or ""),
+                "shutdown": _as_str(iface.get("shutdown") or "false"),
+                "description": _as_str(iface.get("description") or ""),
+                "ip_addresses": _extract_ips(iface),
+            })
+    elif pc_list is not None:
+        warnings.append("Unexpected port-channel interface format (expected list).")
+
+    # Build summary
+    type_counts: Dict[str, int] = {}
+    shutdown_count = 0
+    for it in items:
+        t = it.get("type", "unknown")
+        type_counts[t] = type_counts.get(t, 0) + 1
+        if _as_str(it.get("shutdown")) == "true":
+            shutdown_count += 1
+
+    summary = {
+        "signals": {"restconf_ok": True},
+        "total_interfaces": len(items),
+        "by_type": type_counts,
+        "shutdown_count": shutdown_count,
+        "active_count": len(items) - shutdown_count,
+    }
+
+    resp: Dict[str, Any] = {
+        "meta": {
+            "tool": tool_name,
+            "switch_ip": switch_ip,
+            "ok": True,
+            "source": "direct_switch_restconf",
+        },
+        "summary": summary,
+        "items": items,
+        "warnings": warnings,
+    }
+    if include_raw:
+        resp["raw_json"] = raw
+    return resp
