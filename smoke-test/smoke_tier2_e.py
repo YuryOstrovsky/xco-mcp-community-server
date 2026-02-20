@@ -167,11 +167,13 @@ class Discovery:
                         {"switch_ip": self.switch_ip})
         _, payload = _extract_payload(raw)
         if isinstance(payload, dict):
-            # Check summary.interfaces or item.interfaces
+            # Interfaces are returned in payload["items"] (list of normalised dicts).
+            # Also check legacy shapes for forward-compat.
             ifaces = (
                 payload.get("interfaces")
                 or (payload.get("summary") or {}).get("interfaces")
                 or (payload.get("item") or {}).get("interfaces")
+                or payload.get("items")
                 or []
             )
             if ifaces and isinstance(ifaces[0], dict):
@@ -407,20 +409,34 @@ def test_interface_detail(base: str, d: Discovery):
         run_case(base, tool, {}, "UC2: specific interface detail",
                  checks=[], skip_reason="no interface_name discovered")
 
-    # UC-3: Interface counters include error counters
+    # UC-3: Interface counters include error counters.
+    # Tool stores counters in iface["counters"] as IF-MIB keys (ifHCInOctets, etc.)
     run_case(base, tool, {"switch_ip": d.switch_ip}, "UC3: interface has counters",
         checks=[
             ("restconf ok", _restconf_ok),
             ("at least one interface has counter fields",
              lambda p: any(
-                 isinstance(iface, dict) and any(
-                     iface.get(k) is not None
-                     for k in ("rx_bytes", "tx_bytes", "rx_packets", "tx_packets",
-                                "in_octets", "out_octets", "errors", "rx_errors")
+                 isinstance(iface, dict) and (
+                     any(
+                         iface.get(k) is not None
+                         for k in ("rx_bytes", "tx_bytes", "rx_packets", "tx_packets",
+                                    "in_octets", "out_octets", "errors", "rx_errors")
+                     )
+                     or (
+                         isinstance(iface.get("counters"), dict) and
+                         any(
+                             iface["counters"].get(k) is not None
+                             for k in ("ifHCInOctets", "ifHCOutOctets",
+                                        "ifHCInUcastPkts", "ifHCOutUcastPkts",
+                                        "ifHCInErrors", "ifHCOutErrors")
+                         )
+                     )
                  )
                  for iface in (
-                     (p.get("item") or {}).get("interfaces", [])
-                     or p.get("interfaces", [])
+                     (p.get("item") or {}).get("interfaces")
+                     or p.get("interfaces")
+                     or p.get("items")
+                     or []
                  )
              ) if isinstance(p, dict) else False),
         ],
@@ -615,17 +631,22 @@ def test_clock(base: str, d: Discovery):
         _skip_no_switch(tool, "UC1: system clock")
         return
 
-    # UC-1: Current device time for troubleshooting
+    # UC-1: Current device time for troubleshooting.
+    # Tool returns: meta, summary, items, warnings.
+    # Clock data lives in summary.current_time / summary.timezone / summary.ntp.
     run_case(base, tool, {"switch_ip": d.switch_ip}, "UC1: system clock",
         checks=[
             ("restconf ok", _restconf_ok),
             ("has time or clock info",
-             lambda p: _has_any_key(p, "item", "clock", "time") and
-                       any(
-                           (p.get("item") or {}).get(k) is not None or p.get(k) is not None
-                           for k in ("time", "date", "datetime", "current_time",
-                                     "clock", "timestamp", "utc_time")
-                       ) if isinstance(p, dict) else False),
+             lambda p: (
+                 (_has_any_key(p, "item", "clock", "time") and any(
+                     (p.get("item") or {}).get(k) is not None or p.get(k) is not None
+                     for k in ("time", "date", "datetime", "current_time",
+                               "clock", "timestamp", "utc_time")
+                 ))
+                 or _has_summary_with(p, "current_time", "timezone", "ntp",
+                                      "time", "clock", "timestamp")
+             ) if isinstance(p, dict) else False),
         ],
         warn_on_status=[204, 503],
     )
@@ -753,29 +774,42 @@ def test_running_config(base: str, d: Discovery):
             _skip_no_switch(tool, uc)
         return
 
-    # UC-1: Fetch running configuration for backup review
+    # UC-1: Fetch running configuration for backup review.
+    # Tool returns: meta, summary, items (list of {section_name, cli_lines}), warnings.
     run_case(base, tool, {"switch_ip": d.switch_ip}, "UC1: running config",
         checks=[
             ("restconf ok", _restconf_ok),
-            ("has config content (text or item)",
+            ("has config content (text or items with cli_lines)",
              lambda p: (
                  (isinstance((p.get("item") or {}).get("config"), str) and
                   len((p.get("item") or {}).get("config", "")) > 50)
                  or (isinstance(p.get("config"), str) and len(p.get("config", "")) > 50)
                  or _has_any_key(p, "item", "config", "running_config")
+                 or (isinstance(p.get("items"), list) and bool(p["items"]))
              ) if isinstance(p, dict) else False),
         ],
         warn_on_status=[204, 503],
     )
 
-    # UC-2: Config content contains expected switch keywords
+    # UC-2: Config content contains expected switch keywords.
+    # Config text is spread across items[].cli_lines (list of CLI lines per section).
     run_case(base, tool, {"switch_ip": d.switch_ip}, "UC2: config has valid CLI content",
         checks=[
             ("restconf ok", _restconf_ok),
             ("config text has switch CLI markers",
              lambda p: any(
-                 keyword in str(p.get("config") or (p.get("item") or {}).get("config") or "").lower()
-                 for keyword in ("interface", "vlan", "ip", "hostname", "version", "router", "!")
+                 keyword in str(
+                     p.get("config")
+                     or (p.get("item") or {}).get("config")
+                     or " ".join(
+                         line
+                         for sect in (p.get("items") or [])
+                         if isinstance(sect, dict)
+                         for line in (sect.get("cli_lines") or [])
+                     )
+                 ).lower()
+                 for keyword in ("interface", "vlan", "ip", "hostname",
+                                 "version", "router", "!")
              ) if isinstance(p, dict) else False),
         ],
         warn_on_status=[204, 503],
