@@ -1,0 +1,512 @@
+[
+  {
+    "tool": "auth_get_executions",
+    "use_case": "UC1: all executions",
+    "inputs": {},
+    "status": "WARN",
+    "http_status": 200,
+    "tool_status": 404,
+    "failures": [],
+    "warnings": [
+      "tool_status=404"
+    ],
+    "payload_keys": [
+      "_raw",
+      "_content_type"
+    ]
+  },
+  {
+    "tool": "auth_get_executions",
+    "use_case": "UC2: filter status=failed",
+    "inputs": {
+      "status": "failed"
+    },
+    "status": "WARN",
+    "http_status": 200,
+    "tool_status": 404,
+    "failures": [],
+    "warnings": [
+      "tool_status=404"
+    ],
+    "payload_keys": [
+      "_raw",
+      "_content_type"
+    ]
+  },
+  {
+    "tool": "auth_get_executions",
+    "use_case": "UC3: filter status=success",
+    "inputs": {
+      "status": "success"
+    },
+    "status": "WARN",
+    "http_status": 200,
+    "tool_status": 404,
+    "failures": [],
+    "warnings": [
+      "tool_status=404"
+    ],
+    "payload_keys": [
+      "_raw",
+      "_content_type"
+    ]
+  },
+  {
+    "tool": "fabric_get_fabric_efa_command_list",
+    "use_case": "UC1: EFA commands for fabric",
+    "inputs": {
+      "name": "default"
+    },
+    "status": "FAIL",
+    "http_status": 200,
+    "tool_status": 200,
+    "failures": [
+      "has fabric identifier",
+      "has commands or config",
+      "commands is non-empty list or string"
+    ],
+    "warnings": [],
+    "payload_keys": [
+      "status",
+      "payload"
+    ]
+  },
+  {
+    "tool": "fabric_get_fabric_efa_command_list",
+    "use_case": "UC2: with include_raw=true",
+    "inputs": {
+      "name": "default",
+      "include_raw": true
+    },
+    "status": "FAIL",
+    "http_status": 200,
+    "tool_status": 200,
+    "failures": [
+      "has some content key"
+    ],
+    "warnings": [],
+    "payload_keys": [
+      "status",
+      "payload"
+    ]
+  },
+  {
+    "tool": "fabric_get_fabric_errors_summary",
+    "use_case": "UC1: errors summary for fabric",
+    "inputs": {
+      "name": "default"
+    },
+    "status": "FAIL",
+    "http_status": 200,
+    "tool_status": 200,
+    "failures": [
+      "has summary or error_count",
+      "has next_actions"
+    ],
+    "warnings": [],
+    "payload_keys": [
+      "status",
+      "payload"
+    ]
+  },
+  {
+    "tool": "fabric_get_fabric_errors_summary",
+    "use_case": "UC2: errors summary with raw evidence",
+    "inputs": {
+      "name": "default",
+      "include_raw": true
+    },
+    "status": "FAIL",
+    "http_status": 200,
+    "tool_status": 200,
+    "failures": [
+      "has summary or error fields"
+    ],
+    "warnings": [],
+    "payload_keys": [
+      "status",
+      "payload"
+    ]
+  },
+  {
+    "tool": "fabric_get_fabric_errors_summary",
+    "use_case": "UC3: missing name \u2192 expected 400",
+    "inputs": {},
+    "status": "PASS",
+    "http_status": 200,
+    "tool_status": 200,
+    "failures": [],
+    "warnings": [],
+    "payload_keys": [
+      "status",
+      "payload",
+      "error"
+    ]
+  },
+  {
+    "tool": "fabric_get_fabric_execution_last_failed",
+    "use_case": "UC1: last failed execution",
+    "inputs": {
+      "name": "default"
+    },
+    "status": "FAIL",
+    "http_status": 200,
+    "tool_status": 200,
+    "failures": [
+      "has summary or no_failure signal",
+      "has next_actions or message"
+    ],
+    "warnings": [],
+    "payload_keys": [
+      "status",
+      "payload"
+    ]
+  },
+  {
+    "tool": "fabric_get_fabric_execution_last_failed",
+    "use_case": "UC2: last failed execution with detail",
+    "inputs": {
+      "name": "default",
+      "include_detail": true
+    },
+    "status": "FAIL",
+    "http_status": 200,
+    "tool_status": 200,
+    "failures": [
+      "has summary or detail"
+    ],
+    "warnings": [],
+    "payload_keys": [
+      "status",
+      "payload"
+    ]
+  },
+  {
+    "tool": "fabric_get_fabric_execution_recent",
+    "use_case": "UC1: recent executions",
+    "inputs": {
+      "name": "default",
+      "limit": 20
+    },
+    "status": "FAIL",
+    "http_status": 200,
+    "tool_status": 200,
+    "failures": [
+      "has executions or summary",
+      "has next_actions"
+    ],
+    "warnings": [],
+    "payload_keys": [
+      "status",
+      "payload"
+    ]
+  },
+  {
+    "tool": "fabric_get_fabric_execution_recent",
+    "use_case": "UC2: filter status=FAILED",
+    "inputs": {
+      "name": "default",
+      "status": "FAILED",
+      "limit": 10
+    },
+    "status": "FAIL",
+    "http_status": 200,
+    "tool_status": 200,
+    "failures": [
+      "has executions or summary"
+    ],
+    "warnings": [],
+    "payload_keys": [
+      "status",
+      "payload"
+    ]
+  },
+  {
+    "tool": "fabric_get_fabric_execution_recent",
+    "use_case": "UC3: with execution detail",
+    "inputs": {
+      "name": "default",
+      "include_detail": true,
+      "detail_limit": 2
+    },
+    "status": "FAIL",
+    "http_status": 200,
+    "tool_status": 200,
+    "failures": [
+      "has executions or summary"
+    ],
+    "warnings": [],
+    "payload_keys": [
+      "status",
+      "payload"
+    ]
+  },
+  {
+    "tool": "fabric_get_fabric_health_summary",
+    "use_case": "UC1: global health (no name)",
+    "inputs": {},
+    "status": "FAIL",
+    "http_status": 200,
+    "tool_status": 200,
+    "failures": [
+      "has global_context",
+      "has next_actions"
+    ],
+    "warnings": [],
+    "payload_keys": [
+      "status",
+      "payload"
+    ]
+  },
+  {
+    "tool": "fabric_get_fabric_health_summary",
+    "use_case": "UC2: per-fabric health",
+    "inputs": {
+      "name": "default"
+    },
+    "status": "FAIL",
+    "http_status": 200,
+    "tool_status": 200,
+    "failures": [
+      "has headline",
+      "has device_health_counts or device counts",
+      "has next_actions"
+    ],
+    "warnings": [],
+    "payload_keys": [
+      "status",
+      "payload"
+    ]
+  },
+  {
+    "tool": "fabric_get_fabric_health_summary",
+    "use_case": "UC3: per-fabric health with errors",
+    "inputs": {
+      "name": "default",
+      "include_errors": true
+    },
+    "status": "FAIL",
+    "http_status": 200,
+    "tool_status": 200,
+    "failures": [
+      "has headline or fabric_health"
+    ],
+    "warnings": [],
+    "payload_keys": [
+      "status",
+      "payload"
+    ]
+  },
+  {
+    "tool": "fabric_get_fabric_health_timeline",
+    "use_case": "UC1: timeline last 24h",
+    "inputs": {
+      "name": "default",
+      "window_hours": 24
+    },
+    "status": "FAIL",
+    "http_status": 200,
+    "tool_status": 200,
+    "failures": [
+      "has timeline or events or executions",
+      "has next_actions"
+    ],
+    "warnings": [],
+    "payload_keys": [
+      "status",
+      "payload"
+    ]
+  },
+  {
+    "tool": "fabric_get_fabric_health_timeline",
+    "use_case": "UC2: timeline last 7 days",
+    "inputs": {
+      "name": "default",
+      "window_hours": 168
+    },
+    "status": "FAIL",
+    "http_status": 200,
+    "tool_status": 200,
+    "failures": [
+      "has timeline or events"
+    ],
+    "warnings": [],
+    "payload_keys": [
+      "status",
+      "payload"
+    ]
+  },
+  {
+    "tool": "fabric_get_fabric_health_timeline",
+    "use_case": "UC3: with execution detail",
+    "inputs": {
+      "name": "default",
+      "include_exec_details": true,
+      "max_exec_details": 3
+    },
+    "status": "FAIL",
+    "http_status": 200,
+    "tool_status": 200,
+    "failures": [
+      "has timeline or summary"
+    ],
+    "warnings": [],
+    "payload_keys": [
+      "status",
+      "payload"
+    ]
+  },
+  {
+    "tool": "fabric_get_fabric_overview",
+    "use_case": "UC1: compact overview",
+    "inputs": {
+      "name": "default"
+    },
+    "status": "FAIL",
+    "http_status": 200,
+    "tool_status": 200,
+    "failures": [
+      "has fabric identifier",
+      "has health or errors"
+    ],
+    "warnings": [],
+    "payload_keys": [
+      "filter",
+      "count",
+      "fabrics",
+      "warnings"
+    ]
+  },
+  {
+    "tool": "fabric_get_fabric_overview",
+    "use_case": "UC2: overview with raw data",
+    "inputs": {
+      "name": "default",
+      "include_raw": true
+    },
+    "status": "FAIL",
+    "http_status": 200,
+    "tool_status": 200,
+    "failures": [
+      "has fabric identifier",
+      "has raw or devices_raw"
+    ],
+    "warnings": [],
+    "payload_keys": [
+      "filter",
+      "count",
+      "fabrics",
+      "warnings"
+    ]
+  },
+  {
+    "tool": "fabric_get_fabric_overview",
+    "use_case": "UC3: overview with device details",
+    "inputs": {
+      "name": "default",
+      "include_devices": true
+    },
+    "status": "PASS",
+    "http_status": 200,
+    "tool_status": 200,
+    "failures": [],
+    "warnings": [],
+    "payload_keys": [
+      "filter",
+      "count",
+      "fabrics",
+      "warnings"
+    ]
+  },
+  {
+    "tool": "fabric_get_fabric_validation_report",
+    "use_case": "UC1: pre-change validation",
+    "inputs": {
+      "name": "default"
+    },
+    "status": "FAIL",
+    "http_status": 200,
+    "tool_status": 200,
+    "failures": [
+      "has verdict (PASS/WARN/FAIL)",
+      "has checks or summary",
+      "has next_actions"
+    ],
+    "warnings": [],
+    "payload_keys": [
+      "status",
+      "payload"
+    ]
+  },
+  {
+    "tool": "fabric_get_fabric_validation_report",
+    "use_case": "UC2: validation with lock check",
+    "inputs": {
+      "name": "default",
+      "include_locks": true
+    },
+    "status": "FAIL",
+    "http_status": 200,
+    "tool_status": 200,
+    "failures": [
+      "has verdict"
+    ],
+    "warnings": [],
+    "payload_keys": [
+      "status",
+      "payload"
+    ]
+  },
+  {
+    "tool": "fabric_get_fabric_validation_report",
+    "use_case": "UC3: validation with raw evidence",
+    "inputs": {
+      "name": "default",
+      "include_raw": true
+    },
+    "status": "FAIL",
+    "http_status": 200,
+    "tool_status": 200,
+    "failures": [
+      "has verdict"
+    ],
+    "warnings": [],
+    "payload_keys": [
+      "status",
+      "payload"
+    ]
+  },
+  {
+    "tool": "fabric_get_running_config",
+    "use_case": "UC1: running config",
+    "inputs": {
+      "name": "default"
+    },
+    "status": "FAIL",
+    "http_status": 200,
+    "tool_status": 200,
+    "failures": [
+      "payload has config content"
+    ],
+    "warnings": [],
+    "payload_keys": [
+      "items"
+    ]
+  },
+  {
+    "tool": "fabric_get_running_config",
+    "use_case": "UC2: running config with raw flag",
+    "inputs": {
+      "name": "default",
+      "include_raw": true
+    },
+    "status": "PASS",
+    "http_status": 200,
+    "tool_status": 200,
+    "failures": [],
+    "warnings": [],
+    "payload_keys": [
+      "items"
+    ]
+  }
+]

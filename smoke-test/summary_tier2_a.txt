@@ -1,0 +1,95 @@
+==========================================================================================
+XCO MCP Server — Tier-2 Smoke Test  Batch A  (auth + fabric)
+Generated: 2026-02-20T03:46:09.320442+00:00
+==========================================================================================
+
+Tool                                               Use Case                            Status
+------------------------------------------------------------------------------------------
+auth_get_executions                                UC1: all executions                 WARN    ← tool_status=404
+auth_get_executions                                UC2: filter status=failed           WARN    ← tool_status=404
+auth_get_executions                                UC3: filter status=success          WARN    ← tool_status=404
+fabric_get_fabric_efa_command_list                 UC1: EFA commands for fabric        FAIL    ← has fabric identifier; has commands or config; com
+fabric_get_fabric_efa_command_list                 UC2: with include_raw=true          FAIL    ← has some content key
+fabric_get_fabric_errors_summary                   UC1: errors summary for fabric      FAIL    ← has summary or error_count; has next_actions
+fabric_get_fabric_errors_summary                   UC2: errors summary with raw evidence FAIL    ← has summary or error fields
+fabric_get_fabric_errors_summary                   UC3: missing name → expected 400    PASS  
+fabric_get_fabric_execution_last_failed            UC1: last failed execution          FAIL    ← has summary or no_failure signal; has next_actions
+fabric_get_fabric_execution_last_failed            UC2: last failed execution with detail FAIL    ← has summary or detail
+fabric_get_fabric_execution_recent                 UC1: recent executions              FAIL    ← has executions or summary; has next_actions
+fabric_get_fabric_execution_recent                 UC2: filter status=FAILED           FAIL    ← has executions or summary
+fabric_get_fabric_execution_recent                 UC3: with execution detail          FAIL    ← has executions or summary
+fabric_get_fabric_health_summary                   UC1: global health (no name)        FAIL    ← has global_context; has next_actions
+fabric_get_fabric_health_summary                   UC2: per-fabric health              FAIL    ← has headline; has device_health_counts or device c
+fabric_get_fabric_health_summary                   UC3: per-fabric health with errors  FAIL    ← has headline or fabric_health
+fabric_get_fabric_health_timeline                  UC1: timeline last 24h              FAIL    ← has timeline or events or executions; has next_act
+fabric_get_fabric_health_timeline                  UC2: timeline last 7 days           FAIL    ← has timeline or events
+fabric_get_fabric_health_timeline                  UC3: with execution detail          FAIL    ← has timeline or summary
+fabric_get_fabric_overview                         UC1: compact overview               FAIL    ← has fabric identifier; has health or errors
+fabric_get_fabric_overview                         UC2: overview with raw data         FAIL    ← has fabric identifier; has raw or devices_raw
+fabric_get_fabric_overview                         UC3: overview with device details   PASS  
+fabric_get_fabric_validation_report                UC1: pre-change validation          FAIL    ← has verdict (PASS/WARN/FAIL); has checks or summar
+fabric_get_fabric_validation_report                UC2: validation with lock check     FAIL    ← has verdict
+fabric_get_fabric_validation_report                UC3: validation with raw evidence   FAIL    ← has verdict
+fabric_get_running_config                          UC1: running config                 FAIL    ← payload has config content
+fabric_get_running_config                          UC2: running config with raw flag   PASS  
+------------------------------------------------------------------------------------------
+PASS: 3   FAIL: 21   WARN: 3   SKIP: 0   ERROR: 0   Total: 27
+Pass rate (PASS only): 11.1%
+Pass+Warn rate       : 22.2%
+
+FAILED / ERROR details:
+  [fabric_get_fabric_efa_command_list | UC1: EFA commands for fabric]
+    ✗ has fabric identifier
+    ✗ has commands or config
+    ✗ commands is non-empty list or string
+  [fabric_get_fabric_efa_command_list | UC2: with include_raw=true]
+    ✗ has some content key
+  [fabric_get_fabric_errors_summary | UC1: errors summary for fabric]
+    ✗ has summary or error_count
+    ✗ has next_actions
+  [fabric_get_fabric_errors_summary | UC2: errors summary with raw evidence]
+    ✗ has summary or error fields
+  [fabric_get_fabric_execution_last_failed | UC1: last failed execution]
+    ✗ has summary or no_failure signal
+    ✗ has next_actions or message
+  [fabric_get_fabric_execution_last_failed | UC2: last failed execution with detail]
+    ✗ has summary or detail
+  [fabric_get_fabric_execution_recent | UC1: recent executions]
+    ✗ has executions or summary
+    ✗ has next_actions
+  [fabric_get_fabric_execution_recent | UC2: filter status=FAILED]
+    ✗ has executions or summary
+  [fabric_get_fabric_execution_recent | UC3: with execution detail]
+    ✗ has executions or summary
+  [fabric_get_fabric_health_summary | UC1: global health (no name)]
+    ✗ has global_context
+    ✗ has next_actions
+  [fabric_get_fabric_health_summary | UC2: per-fabric health]
+    ✗ has headline
+    ✗ has device_health_counts or device counts
+    ✗ has next_actions
+  [fabric_get_fabric_health_summary | UC3: per-fabric health with errors]
+    ✗ has headline or fabric_health
+  [fabric_get_fabric_health_timeline | UC1: timeline last 24h]
+    ✗ has timeline or events or executions
+    ✗ has next_actions
+  [fabric_get_fabric_health_timeline | UC2: timeline last 7 days]
+    ✗ has timeline or events
+  [fabric_get_fabric_health_timeline | UC3: with execution detail]
+    ✗ has timeline or summary
+  [fabric_get_fabric_overview | UC1: compact overview]
+    ✗ has fabric identifier
+    ✗ has health or errors
+  [fabric_get_fabric_overview | UC2: overview with raw data]
+    ✗ has fabric identifier
+    ✗ has raw or devices_raw
+  [fabric_get_fabric_validation_report | UC1: pre-change validation]
+    ✗ has verdict (PASS/WARN/FAIL)
+    ✗ has checks or summary
+    ✗ has next_actions
+  [fabric_get_fabric_validation_report | UC2: validation with lock check]
+    ✗ has verdict
+  [fabric_get_fabric_validation_report | UC3: validation with raw evidence]
+    ✗ has verdict
+  [fabric_get_running_config | UC1: running config]
+    ✗ payload has config content
