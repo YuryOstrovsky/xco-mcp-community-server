@@ -3,9 +3,9 @@
 _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 
 ## Summary
-- Total tools: **250**
-- By tier: **tier1**=213, **tier2**=37
-- By risk: **SAFE_READ**=250
+- Total tools: **251**
+- By tier: **tier1**=213, **tier2**=38
+- By risk: **SAFE_READ**=251
 
 ## Categories
 - **auth**: 19
@@ -21,7 +21,7 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 - **system**: 14
 - **tenant**: 30
 - **vcenter**: 9
-- **restconf**: 14
+- **restconf**: 15
 
 ---
 
@@ -4137,5 +4137,6 @@ This section documents the RESTCONF-focused Tier-2 tools added for SLX switches.
 | `restconf_get_running_config` | Retrieve running configuration directly from the switch via RESTCONF. | AI: 'Fetch running configuration for backup review.' |
 | `restconf_get_system_maintenance_status` | Retrieve system maintenance mode status and stage information. | AI: 'Is maintenance mode enabled on this switch?' |
 | `restconf_get_system_maintenance_rate_monitoring` | Retrieve maintenance rate monitoring configuration/status (may return 204 if disabled). | AI: 'Check if maintenance rate monitoring is configured.' |
+| `restconf_get_interface_all` | Get all interfaces (management, ethernet, port-channel) via RESTCONF brocade-interface endpoint. Returns name, type, shutdown status, description, IP addresses, and channel-group membership with per-type counts summary. | AI: 'List all interfaces on switch 10.13.9.66.' |
 
 **Common input:** `switch_ip` (management IP/FQDN). Optional: `include_raw`, and credential overrides (`username`, `password`, `verify_tls`, `timeout_seconds`).
