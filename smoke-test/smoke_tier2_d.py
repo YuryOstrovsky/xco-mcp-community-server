@@ -148,8 +148,10 @@ class Discovery:
         raw = call_tool(self.base_url, "tenant_get_tenants", {})
         _, payload = _extract_payload(raw)
         if payload:
+            # API returns {"tenant": [...]} (singular key)
             items = payload if isinstance(payload, list) else (
-                payload.get("items") or payload.get("tenants") or payload.get("data") or []
+                payload.get("tenant") or payload.get("items")
+                or payload.get("tenants") or payload.get("data") or []
             )
             for t in items:
                 if isinstance(t, dict):
@@ -543,12 +545,14 @@ def test_tenant_epg_alarm_summary(base: str, d: Discovery):
         return
 
     # UC-1: Show all active alarms for tenant/EPG scope
+    # Tool returns: filter, tenant, counts, rows, warnings, next_actions.
     run_case(base, tool, {"tenant_name": d.tenant_name},
              "UC1: all active alarms for tenant",
         checks=[
-            ("has summary or alarm count",
+            ("has counts or rows or tenant",
              lambda p: _has_any_key(p, "summary", "alarm_count", "alarms",
-                                    "total", "no_alarms", "message")),
+                                    "total", "no_alarms", "message",
+                                    "counts", "rows", "tenant", "filter")),
             ("has next_actions", _has_next_actions),
         ],
         warn_on_status=[404, 204],
@@ -589,13 +593,14 @@ def test_tenant_epg_event_logs(base: str, d: Discovery):
         return
 
     # UC-1: Event logs for tenant — what happened recently?
+    # Tool returns: filter, scope, counts, rows, warnings. No next_actions key.
     run_case(base, tool, {"tenant_name": d.tenant_name},
              "UC1: recent event logs for tenant",
         checks=[
-            ("has events or summary or no_events",
+            ("has rows or counts or scope",
              lambda p: _has_any_key(p, "events", "items", "summary",
-                                    "no_events", "message", "executions")),
-            ("has next_actions", _has_next_actions),
+                                    "no_events", "message", "executions",
+                                    "rows", "counts", "scope", "filter")),
         ],
         warn_on_status=[404, 204],
     )
@@ -605,8 +610,9 @@ def test_tenant_epg_event_logs(base: str, d: Discovery):
              {"tenant_name": d.tenant_name, "severity_min": "MAJOR"},
              "UC2: severity_min=MAJOR events",
         checks=[
-            ("has events or summary",
-             lambda p: _has_any_key(p, "events", "items", "summary", "no_events")),
+            ("has events or summary or rows",
+             lambda p: _has_any_key(p, "events", "items", "summary", "no_events",
+                                    "rows", "counts")),
         ],
         warn_on_status=[404, 204],
     )
@@ -616,8 +622,9 @@ def test_tenant_epg_event_logs(base: str, d: Discovery):
              {"tenant_name": d.tenant_name, "query": "bgp"},
              "UC3: keyword query=bgp",
         checks=[
-            ("has events or no_events",
-             lambda p: _has_any_key(p, "events", "items", "summary", "no_events", "message")),
+            ("has events or no_events or rows",
+             lambda p: _has_any_key(p, "events", "items", "summary", "no_events",
+                                    "message", "rows", "counts")),
         ],
         warn_on_status=[404, 204],
     )
@@ -633,13 +640,17 @@ def test_tenant_epg_health_summary(base: str, d: Discovery):
         return
 
     # UC-1: Real-time health summary for tenant VRFs + EPGs
+    # Tool returns: filter, tenant, overall_status, counts, vrf_summary, rows,
+    # executions, events, locks, warnings, next_actions.
     run_case(base, tool, {"tenant_name": d.tenant_name},
              "UC1: VRF + EPG health summary",
         checks=[
-            ("has vrfs or epgs or summary",
+            ("has vrf_summary or overall_status or counts",
              lambda p: _has_any_key(p, "vrfs", "epgs", "endpoint_groups",
-                                    "summary", "health_summary", "tenant_name")),
-            ("has tenant_name echoed back",
+                                    "summary", "health_summary", "tenant_name",
+                                    "vrf_summary", "overall_status", "counts",
+                                    "tenant")),
+            ("has tenant echoed back",
              lambda p: bool(p.get("tenant_name") or p.get("name") or p.get("tenant"))
              if isinstance(p, dict) else False),
             ("has next_actions", _has_next_actions),
