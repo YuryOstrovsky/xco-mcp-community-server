@@ -6196,6 +6196,40 @@ paths:
                           description: Optional override request timeout.
                       required:
                         - switch_ip
+                -
+                  type: object
+                  required:
+                    - tool
+                    - inputs
+                  properties:
+                    tool:
+                      type: string
+                      enum:
+                        - restconf_get_interface_all
+                    inputs:
+                      type: object
+                      properties:
+                        switch_ip:
+                          type: string
+                          description: Management IP/FQDN of the target switch (required).
+                        include_raw:
+                          type: boolean
+                          default: false
+                          description: Include raw RESTCONF payload for troubleshooting.
+                        username:
+                          type: string
+                          description: Optional override RESTCONF username.
+                        password:
+                          type: string
+                          description: Optional override RESTCONF password.
+                        verify_tls:
+                          type: boolean
+                          description: Optional override TLS verification.
+                        timeout_seconds:
+                          type: integer
+                          description: Optional override request timeout in seconds.
+                      required:
+                        - switch_ip
 
       responses:
         200:
