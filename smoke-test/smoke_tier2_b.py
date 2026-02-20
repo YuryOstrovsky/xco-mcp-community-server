@@ -77,13 +77,40 @@ def call_tool(base_url: str, tool_name: str, inputs: Dict[str, Any], timeout: in
 
 
 def _extract_payload(raw: Dict[str, Any]) -> Tuple[int, Any]:
+    """
+    Return (status_code, payload) from the normalised call_tool result.
+
+    The MCP server wraps tool output in one level of {status, payload}.
+    Tier-2 tools themselves also return {status, payload}.
+    Result: most responses are double-wrapped:
+        body = {"status": 200, "payload": {"status": 200, "payload": {...actual...}}}
+    We unwrap both levels automatically.
+    """
     body = raw.get("body", {})
     http_status = raw.get("http_status", 0)
+
+    # Try body.result.status / body.result.payload  (standard MCP wrapper)
     result = body.get("result")
     if isinstance(result, dict):
-        return int(result.get("status", http_status)), result.get("payload")
+        tool_status = int(result.get("status", http_status))
+        payload = result.get("payload")
+        # Handle double-wrapping
+        if isinstance(payload, dict) and "status" in payload and "payload" in payload:
+            tool_status = int(payload.get("status", tool_status))
+            payload = payload.get("payload")
+        return tool_status, payload
+
+    # Try body.status / body.payload  (most endpoints land here)
     if "status" in body:
-        return int(body["status"]), body.get("payload")
+        outer_status = int(body["status"])
+        payload = body.get("payload")
+        # Handle double-wrapping: tool returned {status, payload} inside outer wrapper
+        if isinstance(payload, dict) and "status" in payload and "payload" in payload:
+            outer_status = int(payload.get("status", outer_status))
+            payload = payload.get("payload")
+        return outer_status, payload
+
+    # Fallback: body IS the payload
     return http_status, body or None
 
 
