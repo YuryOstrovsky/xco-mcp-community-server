@@ -11438,7 +11438,36 @@
     "port-channel",
     "status"
   ]
+},
+
+{
+  "name": "tenant_get_all_endpoint_groups",
+  "description": "Tier-2: Discover all tenants and return every Endpoint Group (EPG) across the system, grouped by tenant, with aggregate counts.",
+  "category": "tenant",
+  "method": "COMPOSITE",
+  "endpoint": {
+    "host": "tier2",
+    "path": "tenant_get_all_endpoint_groups"
+  },
+  "auth": "none",
+  "input_schema": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  },
+  "policy": {
+    "risk": "SAFE_READ",
+    "allowed_in_auto_mode": true,
+    "requires_confirmation": false
+  },
+  "tags": ["read", "tenant", "tier2"],
+  "capabilities": {
+    "actions": ["show", "list"],
+    "objects": ["tenant", "epg"],
+    "scopes": [["tenant"], ["system"]]
+  }
 }
+
 
 
 ]
