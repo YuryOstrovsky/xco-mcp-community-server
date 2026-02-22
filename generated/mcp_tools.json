@@ -7895,7 +7895,7 @@
 
 {
   "name": "tenant_get_endpoint_groups",
-  "description": "getEndpointGroups",
+  "description": "List all endpoint groups (EPGs) belonging to a tenant. tenant_name is required.",
   "category": "tenant",
   "method": "GET",
   "endpoint": {
@@ -7907,7 +7907,8 @@
     "type": "object",
     "properties": {
       "tenant_name": {
-        "type": "string"
+        "type": "string",
+        "description": "Tenant name (required). Use tenant_get_tenants to list available tenant names."
       },
       "search": {
         "type": "string"
@@ -7916,7 +7917,7 @@
         "type": "string"
       }
     },
-    "required": []
+    "required": ["tenant_name"]
   },
   "policy": {
     "risk": "SAFE_READ",
@@ -7941,6 +7942,7 @@
     ]
   }
 },
+
 
 {
   "name": "tenant_get_endpoint_group",
