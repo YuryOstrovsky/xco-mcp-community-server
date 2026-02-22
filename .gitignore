@@ -48,3 +48,7 @@ mcp-server.log
 # Runtime logs (keep folder structure, ignore actual log files)
 logs/*
 !logs/.gitkeep
+
+# Smoketest results
+smoke-test/*.json
+smoke-test/*.txt
