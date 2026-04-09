@@ -8,6 +8,37 @@ POST http://<your_mcp_IP_addr>:8000/invoke
 
 ---
 
+## Running with Docker
+
+```bash
+docker run -d --name xco-mcp \
+  -p 8000:8000 \
+  -e XCO_HOST=<xco-ip-or-hostname> \
+  -e XCO_USERNAME=<username> \
+  -e XCO_PASSWORD=<password> \
+  xco-mcp-community-server
+```
+
+Or with a `.env` file:
+
+```bash
+docker run -d --name xco-mcp \
+  -p 8000:8000 \
+  -v /path/to/.env:/app/.env \
+  xco-mcp-community-server
+```
+
+Verify the server is up:
+
+```bash
+curl http://localhost:8000/health
+```
+
+When running in Docker, replace `<your_mcp_IP_addr>` with `localhost`
+(or the Docker host IP) in all examples below.
+
+---
+
 ## 0️⃣ Base Variables (Optional Helper)
 
 ```bash
@@ -270,9 +301,13 @@ RESTCONF_PASSWORD=password
 RESTCONF_VERIFY_TLS=false
 ```
 
-2) Restart the service if you changed code or `.env`:
+2) Restart the server if you changed `.env`:
 
 ```bash
+# Docker
+docker restart xco-mcp
+
+# Or if running natively
 sudo systemctl restart xco-mcp
 ```
 
