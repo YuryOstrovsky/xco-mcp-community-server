@@ -67,10 +67,12 @@ class MCPServer:
 
         # ---- Transport ----
         self.transport = XCOTransport(
-            host=os.environ["XCO_HOST"],
+            # .strip(): Docker `--env-file` keeps stray trailing whitespace that
+            # would otherwise URL-encode to %20 and break host resolution.
+            host=os.environ["XCO_HOST"].strip(),
             auth=self.auth,
-            verify_tls=os.environ.get("XCO_VERIFY_TLS", "false").lower() == "true",
-            timeout=int(os.environ.get("XCO_TIMEOUT_SECONDS", "20")),
+            verify_tls=os.environ.get("XCO_VERIFY_TLS", "false").strip().lower() == "true",
+            timeout=int(os.environ.get("XCO_TIMEOUT_SECONDS", "20").strip()),
         )
 
         # ---- Context resolver ----

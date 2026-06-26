@@ -191,6 +191,7 @@ config is environment-driven.
 | Symptom | Likely cause / fix |
 |---|---|
 | `/ready` shows `"xco":false` | Wrong `XCO_HOST`/credentials, or no network route to XCO. |
+| Error shows a host like `10.9.140.10%20%20` / `Failed to resolve …%20` | Trailing whitespace in a `.env` value (`%20` = a space). Docker `--env-file` keeps it. Run `sed -i 's/[[:space:]]*$//' .env` and recreate the container. |
 | `401` from tools | Check `XCO_USERNAME` / `XCO_PASSWORD` and that the user has API access. |
 | `restconf_*` tools error | Verify `RESTCONF_USERNAME` / `RESTCONF_PASSWORD` and switch reachability. |
 | `429 Too Many Requests` | Rate limit hit — raise `MCP_RATE_LIMIT_RPM` or back off (`Retry-After`). |

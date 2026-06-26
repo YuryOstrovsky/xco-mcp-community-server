@@ -26,10 +26,14 @@ class AuthManager:
     """
 
     def __init__(self):
-        self.host = os.environ.get("XCO_HOST")
-        self.username = os.environ.get("XCO_USERNAME")
-        self.password = os.environ.get("XCO_PASSWORD")
-        self.verify_tls = os.environ.get("XCO_VERIFY_TLS", "false").lower() == "true"
+        # .strip() these: Docker `--env-file` passes values literally (including
+        # stray trailing whitespace), unlike python-dotenv which strips unquoted
+        # values. A trailing space in XCO_HOST otherwise URL-encodes to %20 and
+        # breaks DNS resolution.
+        self.host = (os.environ.get("XCO_HOST") or "").strip()
+        self.username = (os.environ.get("XCO_USERNAME") or "").strip()
+        self.password = (os.environ.get("XCO_PASSWORD") or "").strip()
+        self.verify_tls = os.environ.get("XCO_VERIFY_TLS", "false").strip().lower() == "true"
 
         if not self.host or not self.username or not self.password:
             raise AuthError("XCO auth environment variables are not fully defined")
