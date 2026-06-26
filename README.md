@@ -1,6 +1,6 @@
 # XCO MCP Server (ExtremeCloud Orchestrator MCP Gateway)
 
-> **Community read-only MCP server for Extreme XCO/IP Fabric visibility.**
+> **Community-ready beta read-only MCP server for Extreme XCO/IP Fabric visibility.**
 
 A lightweight **FastAPI** server that exposes a **read-only, tool-based API** for **ExtremeCloud Orchestrator (XCO)**.
 It provides:
@@ -85,8 +85,9 @@ This project turns XCO REST APIs into a **tool catalog** that can be discovered 
 
 ### Tier-3 / Tier-4 (automation)
 **Not included in this community edition.** This repository ships read-only
-(`SAFE_READ`) tools only — there are no mutation/configuration tools. `/invoke`
-and `/mcp` cannot change device, switch, or fabric state.
+(`SAFE_READ`) tools only — there are no mutation/configuration tools. This
+repository does not include tools intended to change device, switch, or fabric
+state.
 
 ---
 
@@ -156,7 +157,7 @@ XCO_USERNAME=<your_XCO_username>
 XCO_PASSWORD=<your_XCO_password>
 XCO_VERIFY_TLS=false
 
-# SAFETY: enforce read-only at MCP layer (recommended)
+# SAFETY: explicit read-only safety marker (this edition ships no mutation tools)
 XCO_READ_ONLY=1
 
 # Networking

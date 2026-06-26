@@ -54,7 +54,7 @@ curl http://localhost:8000/health
 | Variable | Default | Description |
 |---|---|---|
 | `XCO_VERIFY_TLS` | `false` | Verify TLS certificate of XCO |
-| `XCO_READ_ONLY` | `1` | Enforce read-only mode (recommended) |
+| `XCO_READ_ONLY` | `1` | Read-only safety marker (this edition ships no mutation tools) |
 | `XCO_TIMEOUT_SECONDS` | `20` | HTTP timeout for XCO API calls |
 
 ### Optional (RESTCONF / SLX switches)
@@ -198,7 +198,8 @@ curl http://localhost:8000/docs/tools/html
   pre-shared secrets. Use it only when authorized to view the full configuration;
   output handling, storage, and redaction are the operator's responsibility.
 - All shipped Tier-2 tools are composite **read-only** operations.
-- Inputs are validated before execution.
+- Basic request structure and context are validated; individual tools also
+  perform tool-specific input checks where implemented.
 - Rate limiting is applied per source IP (60 requests/minute default).
 - TLS verification is disabled by default for lab environments; enable
   `XCO_VERIFY_TLS=true` when certificates are properly configured.

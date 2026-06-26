@@ -253,10 +253,10 @@ curl -sS -X POST "$MCP" \
 
 # 🛡 Safety Notes
 
-- Server enforces `XCO_READ_ONLY=1`
+- `XCO_READ_ONLY=1` is an explicit read-only safety marker; this edition ships no mutation tools
 - All Tier-2 tools are composite read-only
-- No configuration-changing endpoints are exposed
-- Inputs are validated before execution
+- No configuration-changing tools are included
+- Basic request structure and context are validated; individual tools also perform tool-specific input checks where implemented
 
 ---
 
