@@ -12,8 +12,8 @@ participating you agree to uphold it.
 ## Setup
 
 ```bash
-git clone https://github.com/YuryOstrovsky/XCO-MCP-SERVER.git
-cd XCO-MCP-SERVER
+git clone https://github.com/YuryOstrovsky/xco-mcp-community-server.git
+cd xco-mcp-community-server
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 # dev tooling (tests + lint):

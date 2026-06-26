@@ -44,9 +44,9 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/YuryOstrovsky/XCO-MCP-SERVER"
-Repository = "https://github.com/YuryOstrovsky/XCO-MCP-SERVER"
-Issues = "https://github.com/YuryOstrovsky/XCO-MCP-SERVER/issues"
+Homepage = "https://github.com/YuryOstrovsky/xco-mcp-community-server"
+Repository = "https://github.com/YuryOstrovsky/xco-mcp-community-server"
+Issues = "https://github.com/YuryOstrovsky/xco-mcp-community-server/issues"
 
 [tool.setuptools]
 # The server runs in-place via `api/run.py`; these are the importable packages.
