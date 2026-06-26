@@ -785,13 +785,14 @@ _Generated from `mcp_tools.json` on 2026-06-26_
 - Endpoint: ``  
 - Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
 
-> Tier-2 (read-only): LIVE BGP session status per SLX switch via SSH (show ip bgp summary / show bgp evpn summary). Returns per-neighbor state (ESTAB/IDLE/CONNECT/ACTIVE), uptime, prefixes-accepted, remote-AS and address-…
+> Tier-2 (read-only): LIVE BGP session status per SLX switch via SSH (show ip bgp summary / show bgp evpn summary). This is the tool to answer 'check BGP status for switch X'. Returns per-neighbor state (ESTAB/IDLE/CONNEC…
 
 **Inputs**
 
 | name | type | required | default | description |
 |---|---|---:|---|---|
-| `switch_ips` | `array` | no | `` | Switch IPs to query (a single string is also accepted). OR use fabric_name to auto-discover. |
+| `switch_ips` | `array` | no | `` | Switch IPs to query (a single string is also accepted). OR use switch_names / fabric_name. |
+| `switch_names` | `array` | no | `` | Switch name(s) / chassis_name (e.g. 'Spine-1'; a single string is also accepted) - auto-resolved to management IPs via inventory_getswitches. Use this when the user refers to a switch by name. |
 | `fabric_name` | `string` | no | `` | Fabric name — auto-discovers all member switches (via fabric_get_devices). |
 | `username` | `string` | no | `` | Optional SSH username (default: RESTCONF_USERNAME env). |
 | `password` | `string` | no | `` | Optional SSH password (default: RESTCONF_PASSWORD env). |
@@ -2557,7 +2558,7 @@ _Generated from `mcp_tools.json` on 2026-06-26_
 - Endpoint: `{XCO_HOST}/v1/inventory/switches`  
 - Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
 
-> Get switches
+> Lists all switches in inventory with chassis_name, management ip_address, fabric, firmware and health (optionally filtered by fabric-id or id). Use this to resolve a switch NAME (e.g. 'Spine-1') to its management IP bef…
 
 **Inputs**
 
@@ -4419,7 +4420,7 @@ _Generated from `mcp_tools.json` on 2026-06-26_
 - Endpoint: ``  
 - Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
 
-> Tier-2: Retrieve a running configuration snapshot via SLX /rest/config/running (vendor XML). Returns top-level config sections + key identity fields (hostname/chassis).
+> Tier-2: Retrieve a running configuration SNAPSHOT via SLX /rest/config/running (vendor XML) - the static device configuration TEXT, NOT live operational state. Returns top-level config sections + identity fields (hostna…
 
 **Inputs**
 

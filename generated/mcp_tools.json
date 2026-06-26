@@ -1,7 +1,7 @@
 [
   {
     "name": "inventory_getswitches",
-    "description": "Get switches",
+    "description": "Lists all switches in inventory with chassis_name, management ip_address, fabric, firmware and health (optionally filtered by fabric-id or id). Use this to resolve a switch NAME (e.g. 'Spine-1') to its management IP before calling per-device tools (BGP, interfaces, running-config, etc.).",
     "category": "inventory",
     "method": "GET",
     "endpoint": {
@@ -13414,7 +13414,7 @@
   },
   {
     "name": "restconf_get_running_config",
-    "description": "Tier-2: Retrieve a running configuration snapshot via SLX /rest/config/running (vendor XML). Returns top-level config sections + key identity fields (hostname/chassis).",
+    "description": "Tier-2: Retrieve a running configuration SNAPSHOT via SLX /rest/config/running (vendor XML) - the static device configuration TEXT, NOT live operational state. Returns top-level config sections + identity fields (hostname/chassis). Do NOT use this to check status: for BGP session status use restconf_get_bgp_summary or inventory_get_router_bgp; for interface status use restconf_get_interface_detail. WARNING: output may contain sensitive data (usernames, SNMP communities, AAA/TACACS/RADIUS keys, certificates) - use only when authorized to view the full configuration.",
     "category": "restconf",
     "method": "COMPOSITE",
     "endpoint": null,
@@ -13804,7 +13804,7 @@
   },
   {
     "name": "restconf_get_bgp_summary",
-    "description": "Tier-2 (read-only): LIVE BGP session status per SLX switch via SSH (show ip bgp summary / show bgp evpn summary). Returns per-neighbor state (ESTAB/IDLE/CONNECT/ACTIVE), uptime, prefixes-accepted, remote-AS and address-family (IPv4-unicast + L2VPN-EVPN), plus a fabric-wide all_healthy roll-up and an _agent_translation_note. Query one or many switches (switch_ips, string or list) OR a whole fabric (fabric_name auto-discovers members). Requires switch SSH access (RESTCONF_USERNAME/RESTCONF_PASSWORD).",
+    "description": "Tier-2 (read-only): LIVE BGP session status per SLX switch via SSH (show ip bgp summary / show bgp evpn summary). This is the tool to answer 'check BGP status for switch X'. Returns per-neighbor state (ESTAB/IDLE/CONNECT/ACTIVE), uptime, prefixes-accepted, remote-AS and address-family (IPv4-unicast + L2VPN-EVPN), plus a fabric-wide all_healthy roll-up and an _agent_translation_note. Query switches by IP (switch_ips, string or list), by NAME (switch_names, e.g. 'Spine-1' - auto-resolved to management IPs via inventory), OR a whole fabric (fabric_name auto-discovers members). Requires switch SSH access (RESTCONF_USERNAME/RESTCONF_PASSWORD).",
     "category": "fabric",
     "method": "COMPOSITE",
     "auth": "none",
@@ -13816,7 +13816,14 @@
           "items": {
             "type": "string"
           },
-          "description": "Switch IPs to query (a single string is also accepted). OR use fabric_name to auto-discover."
+          "description": "Switch IPs to query (a single string is also accepted). OR use switch_names / fabric_name."
+        },
+        "switch_names": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Switch name(s) / chassis_name (e.g. 'Spine-1'; a single string is also accepted) - auto-resolved to management IPs via inventory_getswitches. Use this when the user refers to a switch by name."
         },
         "fabric_name": {
           "type": "string",

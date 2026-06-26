@@ -153,6 +153,43 @@ def _query_bgp(switch_ip: str, username: str, password: str) -> Dict[str, Any]:
     }
 
 
+def _resolve_names_to_ips(names: List[str], transport, registry,
+                          context: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    """Resolve switch names (chassis_name) to management IPs via inventory_getswitches.
+
+    Returns {"ips": [...], "unresolved": [<original names not found>]}.
+    """
+    want = {n.strip().lower(): n.strip() for n in names
+            if isinstance(n, str) and n.strip()}
+    found: Dict[str, str] = {}
+    if want and transport and registry:
+        try:
+            tool = registry.get("inventory_getswitches")
+            ep = (tool.get("endpoint", {}) or {}) if tool else {}
+            resp = transport.request(
+                method="GET", port=ep.get("port"),
+                path=ep.get("path", "/v1/inventory/switches"),
+                params={}, context=context or {},
+            )
+            payload = resp.get("payload") if isinstance(resp, dict) else None
+            rows = payload if isinstance(payload, list) else (
+                payload.get("items", []) if isinstance(payload, dict) else [])
+            for row in rows or []:
+                if not isinstance(row, dict):
+                    continue
+                name = (row.get("chassis_name") or row.get("chassis-name")
+                        or row.get("hostname") or "").strip().lower()
+                ip = (row.get("ip_address") or row.get("ip-address")
+                      or row.get("ipAddress"))
+                if name and ip and name in want and name not in found:
+                    found[name] = ip
+        except Exception as e:  # noqa: BLE001
+            logger.warning("switch-name resolution failed: %s", e)
+    ips = [found[k] for k in want if k in found]
+    unresolved = [orig for k, orig in want.items() if k not in found]
+    return {"ips": ips, "unresolved": unresolved}
+
+
 def restconf_get_bgp_summary(
     *,
     inputs: Dict[str, Any],
@@ -165,12 +202,23 @@ def restconf_get_bgp_summary(
 
     Inputs:
       switch_ips: list of switch IPs (or a single IP string)
+      switch_names: switch name(s) / chassis_name, resolved to IPs via inventory
       fabric_name: optional — auto-discovers all switches in the fabric
       username / password: SSH creds (default: RESTCONF_USERNAME / RESTCONF_PASSWORD env)
     """
     switch_ips = inputs.get("switch_ips", [])
     if isinstance(switch_ips, str):
         switch_ips = [switch_ips]
+
+    # Resolve switch NAMES -> management IPs so agents can ask "BGP status for Spine-1".
+    names = inputs.get("switch_names", [])
+    if isinstance(names, str):
+        names = [names]
+    unresolved_names: List[str] = []
+    if names:
+        r = _resolve_names_to_ips(names, transport, registry, context)
+        switch_ips = list(switch_ips) + [ip for ip in r["ips"] if ip not in switch_ips]
+        unresolved_names = r["unresolved"]
 
     fabric_name = inputs.get("fabric_name")
     if fabric_name and not switch_ips and transport and registry:
@@ -193,7 +241,12 @@ def restconf_get_bgp_summary(
             logger.warning("Failed to discover fabric devices: %s", e)
 
     if not switch_ips:
-        return {"status": 400, "payload": {"error": "switch_ips or fabric_name required"}}
+        msg = "Provide switch_ips, switch_names, or fabric_name."
+        if unresolved_names:
+            msg = ("Could not resolve switch name(s) to a management IP: "
+                   f"{', '.join(unresolved_names)}. Verify the name (chassis_name) via "
+                   "inventory_getswitches, or pass switch_ips directly.")
+        return {"status": 400, "payload": {"error": msg, "unresolved_names": unresolved_names}}
 
     username = inputs.get("username") or os.environ.get("RESTCONF_USERNAME", "admin")
     password = inputs.get("password") or os.environ.get("RESTCONF_PASSWORD", "")
@@ -244,6 +297,10 @@ def restconf_get_bgp_summary(
         note = (f"{total_established}/{total_neighbors} BGP session(s) Established across "
                 f"{switches_ok}/{len(results)} switch(es) — some neighbors are not Established.")
 
+    if unresolved_names:
+        note += (" (Could not resolve name(s) to an IP: "
+                 f"{', '.join(unresolved_names)}.)")
+
     return {"status": 200, "payload": {
         "switches": results,
         "summary": {
@@ -254,5 +311,6 @@ def restconf_get_bgp_summary(
             "all_healthy": all_healthy,
         },
         "fabric_name": fabric_name,
+        "unresolved_names": unresolved_names,
         "_agent_translation_note": note,
     }}
