@@ -4,6 +4,7 @@ These tests must NOT require a live XCO / SLX backend. We chdir to the repo root
 (so relative paths like ``generated/mcp_tools.json`` resolve) and seed dummy
 credentials so imports never block on a real ``.env``.
 """
+
 import os
 import sys
 from pathlib import Path

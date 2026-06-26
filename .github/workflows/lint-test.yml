@@ -13,7 +13,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install flake8
+      - run: pip install flake8 black
       # Error subset only: syntax errors + undefined names. The tree is not
       # bulk-style-linted yet, so this gates real bugs without thousands of
       # legacy nits. Widen the select set as the codebase is cleaned up.
@@ -21,6 +21,10 @@ jobs:
         run: |
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics \
             --exclude=.venv,generated,logs,openapi,smoke-test,docs
+      # black enforces formatting on the test suite (new, controllable code).
+      # The legacy tree is not bulk-formatted yet; widen this as it is cleaned up.
+      - name: black (tests)
+        run: black --check tests/
 
   test:
     runs-on: ubuntu-latest

@@ -41,6 +41,7 @@ dependencies = [
 dev = [
   "pytest>=8.0",
   "flake8>=7.0",
+  "black>=24.0",
 ]
 
 [project.urls]
@@ -60,3 +61,10 @@ py-modules = []
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 addopts = "-q"
+
+[tool.black]
+line-length = 100
+target-version = ["py310", "py311"]
+# CI black-checks `tests/` only; the legacy tree is not bulk-formatted yet.
+# New code should be `black`-clean (run: black tests/ <your-new-files>).
+

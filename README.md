@@ -344,6 +344,18 @@ Contributions are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md) and the
 [Code of Conduct](CODE_OF_CONDUCT.md). This edition is **read-only**; please keep
 new tools `SAFE_READ`.
 
+## Versioning & compatibility
+
+- **API version** — every HTTP response carries an `X-API-Version` header (`v1`).
+- **Catalog version** — `GET /tools` returns an `X-Catalog-Version` header and
+  the MCP `initialize` handshake advertises the same `catalog_version`. It is a
+  stable hash of tool names + input schemas + risk, so a client can detect when
+  the tool surface changed and skip re-discovery when it hasn't.
+- **Releases** follow [Semantic Versioning](https://semver.org); changes are
+  tracked in [CHANGELOG.md](CHANGELOG.md). Tools are **additive** — existing tool
+  names and input fields are not removed or repurposed within a major version;
+  new optional fields and tools may be added.
+
 ## License
 
 Licensed under the [Apache License 2.0](LICENSE).

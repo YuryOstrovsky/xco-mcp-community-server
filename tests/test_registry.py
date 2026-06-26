@@ -1,4 +1,5 @@
 """The registry loads and its handler map is consistent with the catalog."""
+
 from mcp_runtime.registry import MCPRegistry
 
 

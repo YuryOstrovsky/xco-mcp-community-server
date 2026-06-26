@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions & Discussion
+    url: https://github.com/YuryOstrovsky/xco-mcp-community-server/discussions
+    about: Ask questions, share ideas, and get help from the community.
+  - name: Security vulnerability
+    url: https://github.com/YuryOstrovsky/xco-mcp-community-server/security/advisories/new
+    about: Report a security issue privately (do NOT open a public issue).

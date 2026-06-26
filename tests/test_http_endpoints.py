@@ -2,6 +2,7 @@
 
 None of these endpoints touch XCO, so they run without a live backend.
 """
+
 import pytest
 from fastapi.testclient import TestClient
 

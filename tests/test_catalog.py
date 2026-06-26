@@ -1,4 +1,5 @@
 """Validate the served tool catalog (generated/mcp_tools.json)."""
+
 import json
 from pathlib import Path
 
@@ -37,8 +38,7 @@ def test_input_schema_shape():
 
 def test_read_only_invariant():
     """The community edition must stay read-only: every tool is SAFE_READ."""
-    bad = [t["name"] for t in CATALOG
-           if (t.get("policy") or {}).get("risk") not in VALID_RISKS]
+    bad = [t["name"] for t in CATALOG if (t.get("policy") or {}).get("risk") not in VALID_RISKS]
     assert not bad, f"non-SAFE_READ tools in a read-only edition: {bad}"
 
 

@@ -1,0 +1,28 @@
+title: "[Question] "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for asking! Please check the README and CONTRIBUTING first, then
+        give us enough detail to help.
+  - type: textarea
+    id: question
+    attributes:
+      label: What are you trying to do?
+      description: Describe your goal and the tool(s) involved.
+    validations:
+      required: true
+  - type: textarea
+    id: tried
+    attributes:
+      label: What have you tried?
+      description: Commands/inputs you ran and what happened (redact credentials).
+    validations:
+      required: false
+  - type: input
+    id: version
+    attributes:
+      label: Server version / commit
+    validations:
+      required: false

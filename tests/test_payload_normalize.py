@@ -1,4 +1,5 @@
 """The payload normalizer adds snake_case aliases for hyphenated keys."""
+
 from mcp_runtime.payload_normalize import normalize_result
 
 
