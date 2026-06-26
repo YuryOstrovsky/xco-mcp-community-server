@@ -29,8 +29,20 @@ docker images xco-mcp-community
 
 ### 2. Create the environment file
 
-The image contains **no credentials** — supply them at runtime. Copy
-[`.env.example`](.env.example) to `.env` and fill it in:
+The image contains **no credentials** — supply them at runtime. Pick a working
+directory on the **host** (e.g. `~/xco-mcp/`) and create a `.env` file **there**.
+The `.env` is read by the Docker CLI on the host at launch time (via
+`--env-file .env`, or Compose's `env_file:`) and injected as environment
+variables into the container — it is **not** copied into the image and does
+**not** go in any path inside the container.
+
+> The path passed to `--env-file` / `env_file:` is resolved **relative to the
+> directory you run `docker run` / `docker compose` from**. Run the commands in
+> steps 3–4 from that same directory (where your `.env` lives). With Compose,
+> keep `.env` next to `docker-compose.yml`.
+
+If you cloned the repo, copy the template: `cp .env.example .env`. If you only
+have the image tarball (no repo), just create `.env` with these keys:
 
 ```bash
 # XCO controller (required)
