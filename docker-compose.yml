@@ -1,0 +1,18 @@
+# Run the XCO MCP server (community) with: docker compose up -d
+#
+# Two ways to use this:
+#   1) From the repo (developers): `build: .` builds the image locally.
+#   2) From a pre-loaded image (e.g. `docker load -i xco-mcp-community-1.0.0.tar.gz`):
+#      comment out the `build:` line below — compose will use the `image:` tag.
+#
+# Credentials come from a .env file (copy .env.example to .env first).
+services:
+  xco-mcp:
+    build: .
+    image: xco-mcp-community:1.0.0
+    container_name: xco-mcp
+    env_file: .env
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    # The image ships a Docker HEALTHCHECK hitting /health; override here if needed.

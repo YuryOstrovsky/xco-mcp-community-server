@@ -123,10 +123,13 @@ curl -sS http://localhost:8000/tools | jq '.[].name'
 
 ## Docker Compose Example
 
+A ready-to-use [`docker-compose.yml`](docker-compose.yml) ships in the repo —
+just `docker compose up -d`. The inline example below is the equivalent config:
+
 ```yaml
 services:
   xco-mcp:
-    image: xco-mcp-community-server
+    image: xco-mcp-community:1.0.0
     container_name: xco-mcp
     restart: unless-stopped
     ports:
