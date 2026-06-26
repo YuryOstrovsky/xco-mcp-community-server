@@ -8,9 +8,9 @@ It provides:
 - **Tier-2 tools**: read-only composites that orchestrate multiple Tier-1 calls and return a higher-level answer
 - Built-in **safety/policy hooks**, **structured logging**, and **Prometheus metrics** for production-style operations
 
-> This repo currently ships a **SAFE_READ-only** tool catalog (**250 tools**: tier1=213, tier2=37, generated on 2026-02-11).  
-> The runtime also contains scaffolding for future higher-level automation (planner/workflow + mutation ledger),
-> but **Tier-3/Tier-4 toolpacks are not included** in this repo.
+> This repo ships a **SAFE_READ-only** tool catalog — see
+> [`docs/TOOL_CATALOG.md`](docs/TOOL_CATALOG.md) or `GET /tools` for the current set.
+> **Tier-3/Tier-4 (mutating) toolpacks are not included** in this read-only community edition.
 
 ---
 
@@ -23,10 +23,12 @@ It provides:
 - [Configuration](#configuration)
 - [Run the server](#run-the-server)
 - [Use the server](#use-the-server)
+- [Reference client (demo)](#reference-client-demo)
 - [Documentation & Discovery](#documentation--discovery)
 - [Adding new tools](#adding-new-tools)
 - [Troubleshooting](#troubleshooting)
 - [Security notes](#security-notes)
+- [Support](#support)
 
 ---
 
@@ -196,6 +198,19 @@ curl -sS -X POST http://127.0.0.1:8000/invoke \
 
 ---
 
+## Reference client (demo)
+
+A separate **demo client** — a natural-language web console + AI agent driven by
+this server's tools — lives in a sibling repo:
+
+**[xco-mcp-community-client-demo](https://github.com/YuryOstrovsky/xco-mcp-community-client-demo)**
+
+It exists **only as a reference / example** for people who want to see the
+server driven end-to-end without building their own UI or AI agent. **You do not
+need it to use this server** — any standard MCP client (MCP Inspector, Claude
+Desktop, or your own agent) works against `POST /invoke` or the `/mcp` transport.
+Treat the demo as illustrative, not a product, and not a required component.
+
 ## Documentation & Discovery
 
 ### Human-friendly tool catalog
@@ -343,6 +358,19 @@ runs flake8 + pytest + a Docker build on every push and PR.
 Contributions are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md) and the
 [Code of Conduct](CODE_OF_CONDUCT.md). This edition is **read-only**; please keep
 new tools `SAFE_READ`.
+
+## Support
+
+This is a **community** project, provided **as-is, with no warranty and no
+official support**. It is **not** supported by **Extreme Networks GTAC**,
+Extreme professional services, or any Extreme support channel — please do **not**
+open GTAC cases or expect vendor assistance for it. The same applies to the
+[reference client demo](#reference-client-demo).
+
+Help is **best-effort and community-driven**: use the repo's
+[GitHub Issues](https://github.com/YuryOstrovsky/xco-mcp-community-server/issues)
+and [Discussions](https://github.com/YuryOstrovsky/xco-mcp-community-server/discussions).
+For vulnerabilities, see [SECURITY.md](SECURITY.md).
 
 ## Versioning & compatibility
 
