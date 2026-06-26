@@ -25,10 +25,10 @@ committed — see `.env` keys below):
 
 | Variable | Purpose |
 |---|---|
-| `XCO_HOST` / `XCO_USERNAME` / `XCO_PASS` | XCO controller endpoint + credentials |
+| `XCO_HOST` / `XCO_USERNAME` / `XCO_PASSWORD` | XCO controller endpoint + credentials |
 | `XCO_VERIFY_TLS` | Verify the XCO TLS cert (default off for lab) |
 | `XCO_READ_ONLY` | Enforce read-only at the MCP layer (keep `1`) |
-| `RESTCONF_USERNAME` / `RESTCONF_PASS` | Per-switch SLX RESTCONF credentials |
+| `RESTCONF_USERNAME` / `RESTCONF_PASSWORD` | Per-switch SLX RESTCONF credentials |
 | `MCP_TRANSPORT_ENABLED` | Mount the `/mcp` JSON-RPC transport (default on) |
 | `MCP_RATE_LIMIT_RPM` | Per-IP rate limit (default 60) |
 
