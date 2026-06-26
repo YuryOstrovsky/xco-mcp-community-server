@@ -13682,5 +13682,124 @@
         ]
       ]
     }
+  },
+  {
+    "name": "inventory_list_device_ids",
+    "description": "Tier-2 SAFE_READ composite \u2014 the PAIRED LIST for device-id-required inventory tools. Returns device_ids[] + devices[{device_id, ip, hostname}] in clean snake_case so a client can feed an id straight into device_id-required tools (e.g. inventory_switch_inventory_info) without hard-coding a cached sample. Composes over tier-1 inventory_getswitches.",
+    "category": "inventory",
+    "method": "COMPOSITE",
+    "auth": "none",
+    "input_schema": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": [
+      "read",
+      "inventory",
+      "discovery",
+      "ids",
+      "composite"
+    ],
+    "capabilities": {
+      "actions": [
+        "list",
+        "discover"
+      ],
+      "objects": [
+        "inventory"
+      ],
+      "scopes": [
+        [
+          "system"
+        ]
+      ]
+    }
+  },
+  {
+    "name": "tenant_list_ids",
+    "description": "Tier-2 SAFE_READ composite \u2014 the PAIRED LIST for tenant-required tenant tools. Returns tenant_ids[] + tenants[{tenant_id, tenant_name}] in clean snake_case so a client never hard-codes a tenant name from a cached sample. Composes over tier-1 tenant_get_tenants.",
+    "category": "tenant",
+    "method": "COMPOSITE",
+    "auth": "none",
+    "input_schema": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": [
+      "read",
+      "tenant",
+      "discovery",
+      "ids",
+      "composite"
+    ],
+    "capabilities": {
+      "actions": [
+        "list",
+        "discover"
+      ],
+      "objects": [
+        "tenant"
+      ],
+      "scopes": [
+        [
+          "system"
+        ]
+      ]
+    }
+  },
+  {
+    "name": "fabric_get_fabric_names",
+    "description": "Tier-2 SAFE_READ composite \u2014 lightweight fabric discovery: list fabric NAMES (and ids) in clean snake_case (fabric_name, fabric_id), ready to feed into ID-dependent tools like fabric_get_overlay_topology(fabric_name=...). Pairs with the heavier fabric_get_fabrics so a consumer does not have to hand-pick items[0].`fabric-name` (hyphenated). Composes over tier-1 fabric_get_fabrics.",
+    "category": "fabric",
+    "method": "COMPOSITE",
+    "auth": "none",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "include_raw": {
+          "type": "boolean",
+          "default": false,
+          "description": "Include the raw fabric_get_fabrics tier-1 response."
+        }
+      },
+      "required": []
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": [
+      "read",
+      "fabric",
+      "discovery",
+      "tier2"
+    ],
+    "capabilities": {
+      "actions": [
+        "list",
+        "discover"
+      ],
+      "objects": [
+        "fabric"
+      ],
+      "scopes": [
+        [
+          "system"
+        ]
+      ]
+    }
   }
 ]

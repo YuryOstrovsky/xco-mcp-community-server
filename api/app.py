@@ -7,6 +7,7 @@ import threading
 import time
 import uuid as _uuid
 from collections import deque
+from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 
 from fastapi import FastAPI, HTTPException, Header, Request, Response
@@ -22,6 +23,7 @@ from mcp_runtime.session_store import SessionStore
 from mcp_runtime.errors import ToolNotFound
 from mcp_runtime.policy import PolicyViolation
 from mcp_runtime.payload_normalize import normalize_result
+from mcp_runtime.catalog_version import compute_catalog_version
 from mcp_runtime.logging import get_logger
 from api.docs_routes import router as docs_router
 
@@ -39,7 +41,21 @@ def _safe_log(value, max_len: int = 128) -> str:
 # App & MCP initialization
 # -------------------------------------------------
 
-app = FastAPI(title="XCO MCP Server")
+# MCP JSON-RPC transport (set after `mcp` is created, below) — the lifespan
+# runs its streamable-HTTP session manager for the app's lifetime when mounted.
+_mcp_transport = None
+
+
+@asynccontextmanager
+async def _lifespan(app: FastAPI):
+    if _mcp_transport is not None:
+        async with _mcp_transport.lifespan():
+            yield
+    else:
+        yield
+
+
+app = FastAPI(title="XCO MCP Server", lifespan=_lifespan)
 
 # Fix #24: CORS — restrictive by default; set CORS_ORIGINS env var to allow
 # specific origins (comma-separated), or "*" for any origin.
@@ -82,6 +98,7 @@ async def http_exception_handler(request: Request, exc: HTTPException):
     return JSONResponse(
         status_code=exc.status_code,
         content={"detail": exc.detail, "error_id": error_id},
+        headers=getattr(exc, "headers", None),  # preserve e.g. Retry-After on 429
     )
 
 
@@ -137,17 +154,47 @@ mcp = MCPServer(auto_mode=False)
 session_store = SessionStore()
 
 # -------------------------------------------------
+# MCP JSON-RPC transport at /mcp (Streamable HTTP) — JSON-RPC 2.0
+# (initialize / tools/list / tools/call) ALONGSIDE POST /invoke, so standard
+# MCP clients (Inspector, Claude Desktop) connect with no shim. Routes through
+# the same mcp.invoke() path. Auth-free (community). Env-gated (default on);
+# its session manager is run by the app lifespan defined above.
+# -------------------------------------------------
+if os.environ.get("MCP_TRANSPORT_ENABLED", "true").lower() in (
+        "1", "true", "yes", "on"):
+    try:
+        from api.mcp_transport import MCPTransport
+        _mcp_transport = MCPTransport(mcp)
+        app.mount("/mcp", app=_mcp_transport.handle_asgi)
+        logger.info("MCP transport mounted at /mcp")
+    except Exception:
+        logger.exception("MCP transport failed to initialise; /mcp disabled")
+        _mcp_transport = None
+
+# -------------------------------------------------
 # Fix #13: In-memory rate limiter (sliding window per IP)
 # -------------------------------------------------
 _RATE_LIMIT_RPM = int(os.environ.get("MCP_RATE_LIMIT_RPM", "60"))  # requests/minute/IP
 _rate_store: dict[str, deque] = {}
 _rate_lock = threading.Lock()
+_RATE_GC_INTERVAL = 300.0  # garbage-collect stale keys every 5 min
+_rate_last_gc = 0.0
 
 
 def _is_rate_limited(ip: str) -> bool:
+    global _rate_last_gc
     now = time.monotonic()
     window = 60.0
     with _rate_lock:
+        # Periodic GC of stale keys so _rate_store doesn't grow unbounded with
+        # one entry per ever-seen IP.
+        if now - _rate_last_gc > _RATE_GC_INTERVAL:
+            expired = [k for k, dq in _rate_store.items()
+                       if not dq or now - dq[-1] > window]
+            for k in expired:
+                del _rate_store[k]
+            _rate_last_gc = now
+
         if ip not in _rate_store:
             _rate_store[ip] = deque()
         q = _rate_store[ip]
@@ -155,6 +202,11 @@ def _is_rate_limited(ip: str) -> bool:
         while q and now - q[0] > window:
             q.popleft()
         if len(q) >= _RATE_LIMIT_RPM:
+            try:
+                from mcp_runtime.metrics import MCP_RATE_LIMIT_HITS
+                MCP_RATE_LIMIT_HITS.labels(type="ip").inc()
+            except Exception:
+                pass
             return True
         q.append(now)
         return False
@@ -168,6 +220,22 @@ class InvokeRequest(BaseModel):
     tool: str
     inputs: Dict[str, Any] = {}
     context: Optional[Dict[str, Any]] = None
+
+
+# -------------------------------------------------
+# Catalog version (process-cached) — additive X-Catalog-Version header
+# -------------------------------------------------
+
+_catalog_version_cache: Optional[str] = None
+
+
+def _catalog_version() -> str:
+    """Stable short fingerprint of the served catalog, computed once per
+    process. Lets clients short-circuit re-discovery when unchanged."""
+    global _catalog_version_cache
+    if _catalog_version_cache is None:
+        _catalog_version_cache = compute_catalog_version(mcp.list_tools())
+    return _catalog_version_cache
 
 
 # -------------------------------------------------
@@ -192,6 +260,7 @@ def invoke_tool(
         raise HTTPException(
             status_code=429,
             detail=f"Rate limit exceeded ({_RATE_LIMIT_RPM} requests/minute)",
+            headers={"Retry-After": "60"},
         )
 
     # Fix #3: validate tool name against registry before invoking
@@ -225,7 +294,8 @@ def invoke_tool(
 
 
 @app.get("/tools")
-def list_tools():
+def list_tools(response: Response):
+    response.headers["X-Catalog-Version"] = _catalog_version()
     return mcp.list_tools()
 
 

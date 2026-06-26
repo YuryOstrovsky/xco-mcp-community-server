@@ -36,6 +36,11 @@ COPY openapi/mcp-server/ openapi/mcp-server/
 # Docker-specific README as the in-container documentation
 COPY README.docker.md README.md
 
+# Run as an unprivileged user (defence-in-depth; port 8000 needs no privilege)
+RUN useradd --create-home --uid 10001 appuser \
+    && chown -R appuser:appuser /app
+USER appuser
+
 EXPOSE 8000
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \

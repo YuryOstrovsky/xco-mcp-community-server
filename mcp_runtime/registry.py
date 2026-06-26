@@ -30,6 +30,8 @@ from tools.system.ha_and_node_health_summary import system_get_ha_and_node_healt
 from tools.system.certificates_expiring_soon import system_get_certificates_expiring_soon
 from tools.system.certificate_alarm_context import system_get_certificate_alarm_context
 from tools.inventory.switches_widget_table import inventory_get_switches_widget_table
+from tools.discovery.list_ids import inventory_list_device_ids, tenant_list_ids
+from tools.fabric.list_names import fabric_get_fabric_names
 from restconf.tools import (
     restconf_show_firmware_version,
     restconf_get_interface_detail,
@@ -260,6 +262,11 @@ class MCPRegistry:
         self.handlers["restconf_get_interface_all"] = (
             restconf_get_interface_all
         )
+
+        # ---- Discovery / paired-ID listing tools (SAFE_READ composites) ----
+        self.handlers["inventory_list_device_ids"] = inventory_list_device_ids
+        self.handlers["tenant_list_ids"] = tenant_list_ids
+        self.handlers["fabric_get_fabric_names"] = fabric_get_fabric_names
 
         return self
 

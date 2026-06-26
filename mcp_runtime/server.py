@@ -1,5 +1,6 @@
 import os
 import json
+import logging
 from dotenv import load_dotenv
 from mcp_runtime.logging import setup_logging, get_logger
 from mcp_runtime.metrics import (
@@ -122,7 +123,18 @@ class MCPServer:
 
             enforce_policy(tool, auto_mode=self.auto_mode)
 
-            invoke_logger.info(
+            # Demote allowed-path policy decisions to DEBUG for SAFE_READ —
+            # these are tautological ("allowed=True" on every SAFE_READ call)
+            # and were a major contributor to /invoke hot-path log volume.
+            # Block decisions and any higher-risk tool still log at INFO so the
+            # audit trail stays intact for anything operators care about.
+            _decision_level = (
+                logging.DEBUG
+                if tool["policy"]["risk"] == "SAFE_READ"
+                else logging.INFO
+            )
+            invoke_logger.log(
+                _decision_level,
                 "policy decision tool=%s risk=%s mode=%s allowed=%s",
                 tool_name,
                 tool["policy"]["risk"],

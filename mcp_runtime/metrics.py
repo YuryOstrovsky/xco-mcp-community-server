@@ -67,4 +67,10 @@ MCP_INVOKE_STATUS = Counter(
     ["tool", "status"],
 )
 
+MCP_RATE_LIMIT_HITS = Counter(
+    "mcp_rate_limit_hits_total",
+    "Requests rejected by the per-IP rate limiter",
+    ["type"],
+)
+
 

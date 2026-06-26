@@ -198,63 +198,45 @@ timeout=self.timeout_seconds,
 
 
 
+    # NOTE (2026-06-26): this SLX firmware rejects XML RPC bodies with
+    # HTTP 400 "malformed-message: Bad JSON character: <" (it parses the body
+    # as JSON regardless of Content-Type). It also rejects JSON *input args* for
+    # the interface/media RPCs. So every RPC below sends an empty JSON body
+    # ({}) — fetching the full result — and the corresponding tool in
+    # restconf/tools.py filters by interface client-side (it already does this;
+    # see restconf_get_interface_detail / restconf_get_media_detail). This
+    # matches the JSON-body pattern the maintenance RPCs above already use.
+
     def show_firmware_version(self) -> Dict[str, Any]:
         """RPC: show-firmware-version"""
-        body = "<show-firmware-version></show-firmware-version>"
-        return self._post_xml("/operations/show-firmware-version", body)
+        return self._post_rpc("show-firmware-version", {})
 
-    def get_interface_detail(self, interface_name: Optional[str]) -> Dict[str, Any]:
-        """RPC: get-interface-detail"""
-        if interface_name:
-            body = (
-                "<get-interface-detail>"
-                f"<interface-name>{interface_name}</interface-name>"
-                f"<name>{interface_name}</name>"
-                "</get-interface-detail>"
-            )
-        else:
-            body = "<get-interface-detail></get-interface-detail>"
-        return self._post_xml("/operations/get-interface-detail", body)
+    def get_interface_detail(self, interface_name: Optional[str] = None) -> Dict[str, Any]:
+        """RPC: get-interface-detail. interface_name is accepted for caller
+        compatibility but filtered client-side (firmware rejects JSON args)."""
+        return self._post_rpc("get-interface-detail", {})
 
     def get_lldp_neighbor_detail(self) -> Dict[str, Any]:
         """RPC: brocade-lldp-ext:get-lldp-neighbor-detail"""
-        body = "<get-lldp-neighbor-detail></get-lldp-neighbor-detail>"
-        return self._post_xml("/operations/brocade-lldp-ext:get-lldp-neighbor-detail", body)
+        return self._post_rpc("brocade-lldp-ext:get-lldp-neighbor-detail", {})
 
     def get_media_detail(self, interface_name: Optional[str] = None) -> Dict[str, Any]:
-        """RPC: brocade-interface-ext:get-media-detail"""
-        if interface_name:
-            raw = str(interface_name).strip()
-            short = raw
-            for prefix in ("Ethernet", "Eth", "eth", "ethernet"):
-                short = short.replace(prefix, "")
-            short = short.strip()
-
-            body = (
-                "<get-media-detail>"
-                f"<if-name>{raw}</if-name>"
-                f"<interface-name>{short}</interface-name>"
-                f"<name>{raw}</name>"
-                "</get-media-detail>"
-            )
-        else:
-            body = "<get-media-detail></get-media-detail>"
-
-        return self._post_xml("/operations/brocade-interface-ext:get-media-detail", body)
+        """RPC: brocade-interface-ext:get-media-detail. interface_name is
+        accepted for caller compatibility but filtered client-side (firmware
+        rejects JSON args)."""
+        return self._post_rpc("brocade-interface-ext:get-media-detail", {})
 
     def get_arp_table(self) -> Dict[str, Any]:
         """RPC: brocade-arp:get-arp"""
-        body = "<get-arp></get-arp>"
-        return self._post_xml("/operations/brocade-arp:get-arp", body)
+        return self._post_rpc("brocade-arp:get-arp", {})
 
     def get_clock(self) -> Dict[str, Any]:
         """RPC: brocade-clock:show-clock"""
-        return self._post_xml("/operations/brocade-clock:show-clock", "<show-clock/>")
+        return self._post_rpc("brocade-clock:show-clock", {})
 
     def get_vlan_brief(self) -> Dict[str, Any]:
         """RPC: brocade-interface-ext:get-vlan-brief"""
-        xml = '<get-vlan-brief xmlns="urn:brocade.com:mgmt:brocade-interface-ext"></get-vlan-brief>'
-        return self._post_xml("/operations/brocade-interface-ext:get-vlan-brief", xml)
+        return self._post_rpc("brocade-interface-ext:get-vlan-brief", {})
 
     # ---- Data tree wrappers ----
 
