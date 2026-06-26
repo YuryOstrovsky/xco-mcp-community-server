@@ -3,9 +3,9 @@
 _Generated from `mcp_tools.json` on 2026-06-26_
 
 ## Summary
-- Total tools: **269**
-- By tier: **tier1**=216, **tier2**=53
-- By risk: **SAFE_READ**=269
+- Total tools: **270**
+- By tier: **tier1**=216, **tier2**=54
+- By risk: **SAFE_READ**=270
 
 ## Categories
 - **auth**: 19
@@ -21,7 +21,7 @@ _Generated from `mcp_tools.json` on 2026-06-26_
 - **system**: 14
 - **tenant**: 32
 - **vcenter**: 9
-- **restconf**: 15
+- **restconf**: 16
 
 ---
 
@@ -4176,6 +4176,27 @@ _Generated from `mcp_tools.json` on 2026-06-26_
 | `timeout_seconds` | `integer` | no | `` | Optional override request timeout. |
 
 - Tags: `read`, `tier2`, `restconf`, `arp`
+
+### `restconf_get_bgp_summary`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: ``  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Tier-2 (read-only): BGP summary per SLX switch via RESTCONF. Reads the CONFIGURED BGP from the running-config — local AS, neighbors (with remote-AS), and peer-groups — for one or more switches (switch_ips) OR a whole fa…
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `switch_ips` | `array` | no | `` | Switch management IP(s) to query. A single string is also accepted. OR use fabric_name to auto-discover. |
+| `fabric_name` | `string` | no | `` | Fabric name — auto-discovers all member switches (via fabric_get_devices). |
+| `username` | `string` | no | `` | Optional RESTCONF username (default: RESTCONF_USERNAME env). |
+| `password` | `string` | no | `` | Optional RESTCONF password (default: RESTCONF_PASSWORD env). |
+| `verify_tls` | `boolean` | no | `` | Optional override TLS verification. |
+| `include_raw` | `boolean` | no | `False` | Include the raw RESTCONF XML per switch. |
+
+- Tags: `read`, `restconf`, `bgp`, `fabric`, `tier2`, `composite`
 
 ### `restconf_get_clock`
 - Tier: **tier2**  

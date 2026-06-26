@@ -13801,5 +13801,76 @@
         ]
       ]
     }
+  },
+  {
+    "name": "restconf_get_bgp_summary",
+    "description": "Tier-2 (read-only): BGP summary per SLX switch via RESTCONF. Reads the CONFIGURED BGP from the running-config \u2014 local AS, neighbors (with remote-AS), and peer-groups \u2014 for one or more switches (switch_ips) OR a whole fabric (fabric_name auto-discovers member switches). NOTE: this reflects configured BGP, not live session state \u2014 these SLX builds do not expose the operational BGP tree via RESTCONF, so per-neighbor Established/prefixes/uptime are not available. Use it to verify BGP neighbor/peer-group configuration across a switch or fabric.",
+    "category": "restconf",
+    "method": "COMPOSITE",
+    "auth": "none",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "switch_ips": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Switch management IP(s) to query. A single string is also accepted. OR use fabric_name to auto-discover."
+        },
+        "fabric_name": {
+          "type": "string",
+          "description": "Fabric name \u2014 auto-discovers all member switches (via fabric_get_devices)."
+        },
+        "username": {
+          "type": "string",
+          "description": "Optional RESTCONF username (default: RESTCONF_USERNAME env)."
+        },
+        "password": {
+          "type": "string",
+          "description": "Optional RESTCONF password (default: RESTCONF_PASSWORD env)."
+        },
+        "verify_tls": {
+          "type": "boolean",
+          "description": "Optional override TLS verification."
+        },
+        "include_raw": {
+          "type": "boolean",
+          "default": false,
+          "description": "Include the raw RESTCONF XML per switch."
+        }
+      },
+      "required": []
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": [
+      "read",
+      "restconf",
+      "bgp",
+      "fabric",
+      "tier2",
+      "composite"
+    ],
+    "capabilities": {
+      "actions": [
+        "show",
+        "summarize"
+      ],
+      "objects": [
+        "bgp"
+      ],
+      "scopes": [
+        [
+          "device"
+        ],
+        [
+          "fabric"
+        ]
+      ]
+    }
   }
 ]

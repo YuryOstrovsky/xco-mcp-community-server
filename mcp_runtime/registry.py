@@ -32,6 +32,7 @@ from tools.system.certificate_alarm_context import system_get_certificate_alarm_
 from tools.inventory.switches_widget_table import inventory_get_switches_widget_table
 from tools.discovery.list_ids import inventory_list_device_ids, tenant_list_ids
 from tools.fabric.list_names import fabric_get_fabric_names
+from tools.fabric.bgp_summary import restconf_get_bgp_summary
 from restconf.tools import (
     restconf_show_firmware_version,
     restconf_get_interface_detail,
@@ -267,6 +268,7 @@ class MCPRegistry:
         self.handlers["inventory_list_device_ids"] = inventory_list_device_ids
         self.handlers["tenant_list_ids"] = tenant_list_ids
         self.handlers["fabric_get_fabric_names"] = fabric_get_fabric_names
+        self.handlers["restconf_get_bgp_summary"] = restconf_get_bgp_summary
 
         return self
 

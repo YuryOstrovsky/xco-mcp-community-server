@@ -443,3 +443,22 @@ curl -sS -X POST "$MCP/invoke" -H "Content-Type: application/json" \
 | jq '.result.payload.meta.multi_switch, .result.payload.switch_level_data_by_ip, .result.payload.errors_by_ip'
 ```
 
+
+### 7) BGP summary — per switch or whole fabric
+
+Reads **configured** BGP from the running-config (local AS, neighbors, peer
+groups). `switch_ips` accepts a string or list; or pass `fabric_name` to
+auto-discover member switches. (Operational session state isn't exposed via
+RESTCONF on these SLX builds — this is the configured view.)
+
+```bash
+# One switch
+curl -sS -X POST "$MCP/invoke" -H "Content-Type: application/json" \
+  -d '{"tool":"restconf_get_bgp_summary","inputs":{"switch_ips":"'$SW'"}}' \
+| jq '.result.payload.switches[0] | {local_as, neighbor_count, neighbors}'
+
+# A whole fabric (auto-discovers member switches)
+curl -sS -X POST "$MCP/invoke" -H "Content-Type: application/json" \
+  -d '{"tool":"restconf_get_bgp_summary","inputs":{"fabric_name":"DC"}}' \
+| jq '.result.payload.summary'
+```
