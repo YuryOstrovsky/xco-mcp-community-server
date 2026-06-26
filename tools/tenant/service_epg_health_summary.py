@@ -261,8 +261,9 @@ def tenant_get_service_epg_health_summary(
 
     if tenant_res.get("status") not in (200, 204):
         # Special handling: tenant not found -> suggest valid tenant names (best-effort)
+        not_found = _is_tenant_not_found(tenant_res)
         suggested: List[str] = []
-        if _is_tenant_not_found(tenant_res):
+        if not_found:
             tenants_res = call_tier1("tenant_get_tenants", {})
             if include_raw:
                 raw["tenant_get_tenants"] = tenants_res
@@ -280,7 +281,7 @@ def tenant_get_service_epg_health_summary(
             )
 
         error_msg = "Failed to fetch tenant details (tenant_get_tenant)"
-        if _is_tenant_not_found(tenant_res):
+        if not_found:
             error_msg = f"Tenant not found: {tenant_name}"
 
         out_payload: Dict[str, Any] = {
@@ -295,7 +296,8 @@ def tenant_get_service_epg_health_summary(
         if include_raw:
             out_payload["tier1_raw"] = raw
 
-        return {"status": 502, "payload": out_payload}
+        # tenant-not-found is a client error (404); other failures are upstream (502)
+        return {"status": 404 if not_found else 502, "payload": out_payload}
 
     tenant_payload = tenant_res.get("payload")
     tenant_obj = tenant_payload if isinstance(tenant_payload, dict) else {}
