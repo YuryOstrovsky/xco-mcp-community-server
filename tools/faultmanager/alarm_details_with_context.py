@@ -199,7 +199,7 @@ def _slim_alert(rec: dict) -> dict:
 
 
 # -----------------------------
-# Tool #18
+#
 # -----------------------------
 
 def fault_get_alarm_details_with_context(

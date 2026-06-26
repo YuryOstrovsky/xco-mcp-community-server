@@ -40,12 +40,12 @@ _CAMEL_RE = re.compile(r"(?<=[a-z0-9])([A-Z])")
 _ID_KEY_RE = re.compile(r"(?:^|[_-])(?:id|uuid)$", re.IGNORECASE)
 # Subtrees left VERBATIM (no aliasing, no null-id drop):
 #   raw                 — the documented XCO escape hatch
-#   inputs / body /     — REQUEST bodies, esp. plan-builder step bodies, which
-#   rollback / arguments  round-trip straight back to XCO. XCO does strict field
-#                         validation, so an added snake_case alias (e.g.
-#                         `int_type` beside XCO's `int-type`) makes it reject the
-#                         whole call with HTTP 400 "unknown field". These must
-#                         keep XCO's exact (hyphenated) field names.
+#   inputs / body /     — request-shaped bodies that may round-trip back to XCO.
+#   rollback / arguments  XCO does strict field validation, so an added
+#                         snake_case alias (e.g. `int_type` beside XCO's
+#                         `int-type`) would make it reject the call with HTTP 400
+#                         "unknown field". These keep XCO's exact (hyphenated)
+#                         field names.
 _OPAQUE_KEYS = {"raw", "inputs", "body", "rollback", "arguments"}
 
 
@@ -100,69 +100,3 @@ def normalize_result(result: Any) -> Any:
             and isinstance(result.get("payload"), (dict, list))):
         return {**result, "payload": normalize_payload(result["payload"])}
     return result
-
-
-# ---------------------------------------------------------------------------
-# Inverse of rule 1, applied to XCO-bound REQUEST bodies (defence in depth).
-#
-# The boundary normaliser ADDS a snake_case sibling to every hyphenated/camel
-# read key (e.g. `int-type` → also `int_type`).  That is correct for data a
-# client *displays*.  But XCO config objects (tenants, endpoint-groups, …) are
-# simultaneously read OUTPUT and valid write INPUT, and XCO does strict field
-# validation — it rejects the extra alias with HTTP 400 code 1728
-# ("unknown field 'int_type'").  So if a client (or a plan persisted by a
-# pre-fix write path) round-trips a normalised object straight back into a
-# write tool, the call 400s.
-#
-# `heal_redundant_snake_aliases` is the single choke-point cure: applied to the
-# body of every XCO request in `transport.request`, it drops a snake_case key
-# *only* when a distinct sibling maps to the same snake form (i.e. it is one of
-# our added aliases), keeping XCO's native (hyphenated/camel) key.  It NEVER
-# touches a lone snake_case field — that may be a legitimate XCO field, not our
-# alias.  Pure + identity-stable: a body with no doubled keys is returned
-# unchanged (same object), so the normal write path is byte-for-byte unaffected.
-# Deliberately NOT gated on NORMALIZE_ENABLED — a doubled body baked into a
-# stored plan must heal even if the live normaliser is later switched off.
-# ---------------------------------------------------------------------------
-def _redundant_snake_keys(d: dict) -> set:
-    """Snake_case keys in ``d`` that are a redundant alias of a differently
-    spelled sibling (hyphenated/camel) mapping to the same snake form."""
-    groups: dict = {}
-    for k in d:
-        if isinstance(k, str):
-            groups.setdefault(to_snake(k), []).append(k)
-    drop = set()
-    for snake, origs in groups.items():
-        # the literal snake key is present AND a non-snake sibling produced it
-        if snake in d and any(o != snake for o in origs):
-            drop.add(snake)
-    return drop
-
-
-def _heal(obj: Any) -> Any:
-    if isinstance(obj, dict):
-        drop = _redundant_snake_keys(obj)
-        changed = bool(drop)
-        out = {}
-        for k, v in obj.items():
-            if k in drop:
-                continue
-            hv = _heal(v)
-            if hv is not v:
-                changed = True
-            out[k] = hv
-        return out if changed else obj
-    if isinstance(obj, list):
-        new = [_heal(x) for x in obj]
-        if len(new) == len(obj) and all(n is o for n, o in zip(new, obj)):
-            return obj
-        return new
-    return obj
-
-
-def heal_redundant_snake_aliases(obj: Any) -> Any:
-    """Drop normaliser-added snake_case alias keys from an XCO-bound request
-    body so a round-tripped (read→write) object is accepted by XCO's strict
-    field validation.  Pure + identity-stable (same object when nothing to
-    heal)."""
-    return _heal(obj)

@@ -470,7 +470,7 @@ def tenant_get_service_epg_historical_report_stub(
     top_unscoped_alarm_resources: Counter = Counter()
 
     if include_alarms:
-        alarm_params = {"unacked616": True, "acked": False, "cleared": False, "closed": False}
+        alarm_params = {"unacked": True, "acked": False, "cleared": False, "closed": False}
 
         alarm_params_res = dict(alarm_params)
         alarm_params_res["resource"] = tenant_name

@@ -83,7 +83,7 @@ def firmware_check_storage(
     if isinstance(device_ips, str):
         device_ips = [device_ips]
     username = inputs.get("username") or os.environ.get("RESTCONF_USERNAME", "admin")
-    password = inputs.get("password") or os.environ.get("RESTCONF_PASSWORD", "password")
+    password = inputs.get("password") or os.environ.get("RESTCONF_PASSWORD", "")
 
     if not device_ips:
         return {"status": 400, "payload": {"error": "device_ips required (string or list)"}}

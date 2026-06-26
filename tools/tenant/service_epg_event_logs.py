@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Optional
 
 MAX_EVENTS_DEFAULT = 200
 MAX_EXECUTIONS_SCAN_DEFAULT = 20
-MAX_FAULTMANAGER_SCAN_DEFAULT = 300  # alerts default in your lab
+MAX_FAULTMANAGER_SCAN_DEFAULT = 300  # alerts default
 
 
 # -------------------------
@@ -500,7 +500,7 @@ def tenant_get_service_epg_event_logs(
                 scope = "tenant_scoped" if any(t in text for t in scope_terms) else "unscoped"
                 consider_event(ev, scope=scope, source="tenant_event")
 
-    # Global fallback (your lab returns empty object -> no events)
+    # Global fallback (some builds return an empty object -> no events)
     if matched_total == 0:
         params = {}
         if device_ip:
@@ -589,7 +589,7 @@ def tenant_get_service_epg_event_logs(
     rows.sort(key=lambda r: str(r.get("timestamp") or ""), reverse=True)
 
     # -------------------------
-    # Diagnostics: top unscoped resources/names (like Tool #14)
+    # Diagnostics: top unscoped resources/names
     # -------------------------
     unscoped_top_resources = [
         {"resource": k, "count": v}

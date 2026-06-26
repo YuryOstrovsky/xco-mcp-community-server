@@ -196,7 +196,7 @@ def restconf_get_bgp_summary(
         return {"status": 400, "payload": {"error": "switch_ips or fabric_name required"}}
 
     username = inputs.get("username") or os.environ.get("RESTCONF_USERNAME", "admin")
-    password = inputs.get("password") or os.environ.get("RESTCONF_PASSWORD", "password")
+    password = inputs.get("password") or os.environ.get("RESTCONF_PASSWORD", "")
 
     results: List[Dict[str, Any]] = []
     total_established = 0

@@ -1,6 +1,6 @@
 # mcp_runtime/session.py
 
-from typing import Dict, Optional
+from typing import Dict
 from copy import deepcopy
 from mcp_runtime.tracing import new_correlation_id
 
@@ -10,7 +10,7 @@ class MCPSession:
     Session object carrying:
     - resolved context (Phase 2.x)
     - correlation id (Phase 2.8)
-    - agent identity (Phase 5.6)
+    - optional agent/caller identity
     """
 
     def __init__(self, session_id: str, agent=None):
@@ -19,8 +19,8 @@ class MCPSession:
         # ---- Phase 2.8 tracing ----
         self.correlation_id = new_correlation_id()
 
-        # ---- Phase 5.6 agent identity ----
-        self.agent = agent  # may be None (defaults handled by executor)
+        # ---- optional agent/caller identity ----
+        self.agent = agent  # optional caller/agent label; may be None
 
         # ---- Persisted resolved context ----
         self._context: Dict = {}

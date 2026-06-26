@@ -1,5 +1,4 @@
 import os
-import json
 import logging
 from dotenv import load_dotenv
 from mcp_runtime.logging import setup_logging, get_logger
@@ -40,7 +39,6 @@ from mcp_runtime.context_injection import ContextInjector
 from mcp_runtime.context_validator import ContextValidator
 
 from mcp_runtime.session import MCPSession
-from mcp_runtime.context_merge import merge_context
 from mcp_runtime.tracing import new_request_id, new_correlation_id
 
 

@@ -64,7 +64,7 @@ _DEFAULT_MAX_ITEMS   = 200
 _MAX_PARALLEL_SSH    = 16
 
 _DEFAULT_USERNAME = os.environ.get("RESTCONF_USERNAME", "admin")
-_DEFAULT_PASSWORD = os.environ.get("RESTCONF_PASSWORD", "password")
+_DEFAULT_PASSWORD = os.environ.get("RESTCONF_PASSWORD", "")
 
 
 # ---------------------------------------------------------------------------
@@ -138,10 +138,10 @@ def _canonical_interface(raw: str) -> Tuple[str, str]:
 # ---------------------------------------------------------------------------
 # Parser — `show mac-address-table`
 #
-# SLX 20.8.1 EVPN-VXLAN format (ground-truth captured from Lab-B Leaf-3
-# 10.9.140.43, 2026-06-17 — the format that the original \d+\s+<mac>
-# pattern silently parsed as ZERO entries, which is why Compass couldn't
-# see a learned rNIC even though the switch had it):
+# SLX 20.8.1 EVPN-VXLAN format (ground-truth captured from an SLX leaf
+# — the format that the original \d+\s+<mac>
+# pattern silently parsed as ZERO entries, so learned EVPN MACs were
+# missed):
 #
 #   Type Code - CCL:Cluster Client Local MAC          <- legend (no leading
 #               CCR:Cluster Client Remote MAC            digit → skipped)

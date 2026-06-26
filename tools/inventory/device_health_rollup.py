@@ -516,7 +516,7 @@ def inventory_get_device_health_rollup(
     if devices_unassigned > 0:
         recommendations.append(
             f"{devices_unassigned} device(s) are not assigned to any fabric. "
-            f"Use fabric_add_device to assign them."
+            f"Assign them to a fabric in XCO to resolve."
         )
     else:
         if reds > 0:

@@ -203,7 +203,7 @@ def fault_get_active_alarms_top(
 
     include_inventory = _as_bool(inputs.get("include_inventory"), False)
     include_samples = _as_bool(inputs.get("include_samples"), True)
-    # 2026-06-18 (Nova/CTO-office review): default was 3, which silently hid
+    # 2026-06-18: default was 3, which silently hid
     # ~80% of fired instances even at top_n=10.  Raise the default and the cap
     # so consumers see real coverage; 0 still means "no samples, counts only".
     sample_per_group = _as_int(inputs.get("sample_per_group"), 25)
@@ -431,7 +431,7 @@ def fault_get_active_alarms_top(
             "count": g["count"],
             # Explicit: each top[] entry is a GROUP of N alarm instances, not a
             # single alarm.  `instance_count` aliases `count` so consumers can't
-            # mistake "8 groups" for "8 alarms" (Nova/CTO-office review).
+            # mistake "8 groups" for "8 alarms".
             "instance_count": g["count"],
             "top_resources": top_resources,  # legacy tuple shape [[resource, count], ...]
             # Path-friendly object shape for JSONata/path consumers.
@@ -461,7 +461,7 @@ def fault_get_active_alarms_top(
         "summary": {
             "active_total_fetched": len(alarms_all),
             "active_after_filters": len(active_filtered),
-            # Unambiguous instance vs group counts (Nova/CTO-office review):
+            # Unambiguous instance vs group counts:
             # consumers iterating top[] must not read len(top) as "alarm count".
             "total_alarm_instances": len(active_filtered),
             "filtered_out": filtered_out,

@@ -3,7 +3,6 @@ import json
 import time
 import requests
 import os
-from urllib.parse import urlencode
 
 INPUT = "generated/mcp_tools.json"
 OUTPUT = "generated/read_probe_results.json"

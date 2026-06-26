@@ -2,7 +2,7 @@
 
 class ContextValidator:
     """
-    Phase 2.6:
+    Validation:
     - Merge context deterministically (supports dict contexts from previous calls)
     - Validate consistency across context objects (fabric/device alignment)
     """
@@ -43,10 +43,10 @@ class ContextValidator:
         """
         Validates cross-context integrity.
 
-        Enforced in Phase 2.6:
+        Enforced:
         - If both fabric and device exist, device.fabric_id must match fabric.id
         - If device exists without fabric, it's OK (device includes fabric_id/name)
-        - If tenant exists, no hard cross-check yet (future phase can enforce tenant membership)
+        - If tenant exists, no hard cross-check (tenant membership is not enforced here)
         """
         if not ctx:
             return

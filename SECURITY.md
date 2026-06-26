@@ -16,7 +16,7 @@ applied to `main`; there is no separate long-term-support branch.
 
 Report privately using **GitHub's "Report a vulnerability"** button under the
 repository's **Security** tab (Private Vulnerability Reporting), or email the
-maintainers at **[INSERT SECURITY CONTACT EMAIL]**.
+maintainers at **yostrovs@extremenetworks.com**.
 
 Please include:
 

@@ -366,7 +366,7 @@ def _normalize_expiry_records(payload: Any, *, source: str, now: datetime) -> Li
 
 
 # ------------------------------------------------------------
-# Tool #26: system_get_certificate_alarm_context
+# system_get_certificate_alarm_context
 # ------------------------------------------------------------
 
 def system_get_certificate_alarm_context(

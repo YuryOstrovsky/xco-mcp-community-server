@@ -8,7 +8,7 @@ from pathlib import Path
 BASE = Path(__file__).resolve().parents[1]
 OUT = BASE / "generated/context_validation_report.json"
 
-XCO_HOST = os.environ.get("XCO_HOST", "10.13.85.20")
+XCO_HOST = os.environ.get("XCO_HOST", "")
 TOKEN = os.environ.get("TOKEN")
 
 if not TOKEN:
