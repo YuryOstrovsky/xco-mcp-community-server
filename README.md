@@ -1,6 +1,6 @@
 # XCO MCP Server (ExtremeCloud Orchestrator MCP Gateway)
 
-> **Community-ready beta read-only MCP server for Extreme XCO/IP Fabric visibility.**
+> **Community-ready read-only MCP server for Extreme XCO/IP Fabric visibility.**
 
 A lightweight **FastAPI** server that exposes a **read-only, tool-based API** for **ExtremeCloud Orchestrator (XCO)**.
 It provides:
