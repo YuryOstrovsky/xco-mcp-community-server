@@ -72,7 +72,9 @@ The registry (`mcp_runtime/registry.py`) is the single source of truth. To add a
    `capabilities`). Keep the file **2-space indent, `ensure_ascii=True`,
    trailing newline**.
 3. Register it in `registry.py` (import + `self.handlers["my_tool"] = my_tool`).
-4. Run `pytest` (catalog/registry validation) and add or extend a smoke case.
+4. Regenerate the catalog doc: `python3 scripts/gen_tool_catalog.py`
+   (keeps `docs/TOOL_CATALOG.md` in sync — the server serves it as-is).
+5. Run `pytest` (catalog/registry validation) and add or extend a smoke case.
 
 ## Safety model
 
