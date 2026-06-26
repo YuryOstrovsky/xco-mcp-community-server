@@ -122,6 +122,7 @@ class Discovery:
         self.base_url = base_url
         self.fabric_name: Optional[str] = None
         self.switch_ips: List[str] = []
+        self.device_id: Optional[str] = None       # first switch id (for per-device tools)
         self.alarm_name: Optional[str] = None      # discovered from active alarms
         self.alarm_resource: Optional[str] = None  # resource from first active alarm
 
@@ -132,6 +133,7 @@ class Discovery:
         self._discover_alarm()
         print(f"   fabric_name    : {self.fabric_name or '(none)'}")
         print(f"   switch_ips     : {self.switch_ips[:3] or '(none)'}")
+        print(f"   device_id      : {self.device_id or '(none)'}")
         print(f"   alarm_name     : {self.alarm_name or '(none)'}")
         print(f"   alarm_resource : {self.alarm_resource or '(none)'}")
         return self
@@ -157,6 +159,8 @@ class Discovery:
                     ip = sw.get("ip") or sw.get("ip_address") or sw.get("mgmtIp")
                     if ip:
                         self.switch_ips.append(str(ip))
+                    if self.device_id is None and sw.get("id") is not None:
+                        self.device_id = str(sw.get("id"))
 
     def _discover_alarm(self):
         """Try to discover a real alarm name/resource from faultmanager."""
@@ -507,52 +511,29 @@ def test_inventory_device_inventory_export(base: str, d: Discovery):
     print("\n── 5. inventory_get_device_inventory_export ──")
     tool = "inventory_get_device_inventory_export"
 
-    # UC-1: Export device inventory (reviewing current state)
-    # Note: returns binary Excel — expect 200 with some content or a URL
-    raw = call_tool(base, tool, {})
-    http_status = raw.get("http_status", 0)
-    tool_status, payload = _extract_payload(raw)
-    conn_error = raw.get("error")
+    # This endpoint is PER-DEVICE: it requires a device_id (XCO returns 422 without one).
+    if not d.device_id:
+        for uc in ["UC1: export device inventory", "UC2: export is a downloadable file"]:
+            run_case(base, tool, {}, uc, checks=[], skip_reason="no device_id discovered")
+        return
 
-    entry: Dict[str, Any] = {
-        "tool": tool, "use_case": "UC1: export inventory",
-        "inputs": {}, "http_status": http_status, "tool_status": tool_status,
-        "failures": [], "warnings": [], "payload_keys": [],
-    }
+    # UC-1: Export a device's inventory (returns a binary Excel/ZIP file)
+    run_case(base, tool, {"device_id": d.device_id}, "UC1: export device inventory",
+        checks=[
+            ("export returned content", lambda p: p is not None and p != {} and p != ""),
+        ],
+        warn_on_status=[202, 204],
+    )
 
-    if conn_error or http_status == 0:
-        entry["status"] = "ERROR"
-        entry["failures"].append(conn_error or "no response")
-    elif tool_status == 200:
-        # Accept: binary content, URL pointer, or dict with download link
-        if payload is None or payload == {} or payload == "":
-            entry["status"] = "FAIL"
-            entry["failures"].append("payload is empty/None — export returned nothing")
-        else:
-            entry["status"] = "PASS"
-    elif tool_status in (204, 202):
-        entry["status"] = "WARN"
-        entry["warnings"].append(f"tool_status={tool_status} (async export or no devices)")
-    else:
-        entry["status"] = "FAIL"
-        entry["failures"].append(f"tool_status={tool_status}")
-
-    RESULTS.append(entry)
-    detail = "; ".join(entry.get("failures") or entry.get("warnings") or [])
-    _print_row(tool, "UC1: export inventory", entry["status"], detail)
-
-    # UC-2: Export for specific fabric
-    if d.fabric_name:
-        run_case(base, tool, {"fabric_name": d.fabric_name},
-                 "UC2: export for specific fabric",
-            checks=[
-                ("payload has content", lambda p: p is not None and p != {}),
-            ],
-            warn_on_status=[202, 204, 404],
-        )
-    else:
-        run_case(base, tool, {}, "UC2: export for specific fabric",
-                 checks=[], skip_reason="no fabric_name discovered")
+    # UC-2: Verify the export is a downloadable file (binary / content-type present)
+    run_case(base, tool, {"device_id": d.device_id}, "UC2: export is a downloadable file",
+        checks=[
+            ("payload is a file export (binary or content-type)",
+             lambda p: isinstance(p, dict) and _has_any_key(
+                 p, "_raw_bytes", "_raw", "_content_type", "url", "download_url")),
+        ],
+        warn_on_status=[202, 204],
+    )
 
 
 def test_inventory_fabric_switches_summary(base: str, d: Discovery):
