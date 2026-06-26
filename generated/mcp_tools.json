@@ -5215,7 +5215,7 @@
   },
   {
     "name": "inventory_get_router_bgp",
-    "description": "getRouterBgp",
+    "description": "Get the BGP configuration and operational summary for a device \u2014 local AS, router-id, peer groups, neighbors (remote-AS, BFD), and per-VRF address-family state. Target the device by management IP (device_ip) or device_id. Use this to answer \"show BGP summary\" / BGP status for a switch.",
     "category": "inventory",
     "method": "GET",
     "endpoint": {

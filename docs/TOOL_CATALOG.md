@@ -2075,7 +2075,7 @@ _Generated from `mcp_tools.json` on 2026-06-26_
 - Endpoint: `{XCO_HOST}/v1/inventory/bgp`  
 - Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
 
-> getRouterBgp
+> Get the BGP configuration and operational summary for a device — local AS, router-id, peer groups, neighbors (remote-AS, BFD), and per-VRF address-family state. Target the device by management IP (device_ip) or device_i…
 
 **Inputs**
 
