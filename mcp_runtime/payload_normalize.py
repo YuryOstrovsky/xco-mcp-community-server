@@ -2,24 +2,24 @@
 # SPDX-License-Identifier: Apache-2.0
 # mcp_runtime/payload_normalize.py
 """
-Global response-payload normaliser (Nova contract, 02-nova-target-spec §3.1/§5).
+Global response-payload normaliser.
 
 Applied at the HTTP response boundary (the `/invoke` route and the MCP
 `tools/call` result) so the data a *client* consumes is snake_case-clean —
-without touching the payloads internal callers (plan executor, composites) see
-from `mcp.invoke()`.
+without touching the payloads internal callers (composites) see from
+`mcp.invoke()`.
 
 Three rules, all additive / non-breaking:
 
   1. **snake_case aliases.** For every dict key that is hyphenated or camelCase,
-     ADD a snake_case sibling with the same value (the original is KEPT, so the
-     legacy demo client is unaffected).  `fabric-name` → also `fabric_name`;
+     ADD a snake_case sibling with the same value (the original is KEPT, so
+     existing clients are unaffected).  `fabric-name` → also `fabric_name`;
      `switchId` → also `switch_id`.
   2. **No null identifiers.** A key that denotes an id (`*_id` / `*-id` / `id` /
-     `*_uuid`) whose value is exactly `null` is dropped — "either populate it or
-     omit it, never null for an identifier" (Brendan, Q2).
+     `*_uuid`) whose value is exactly `null` is dropped — either populate it or
+     omit it, never null for an identifier.
   3. **`raw` is the escape hatch.** Anything under a key named `raw` is left
-     verbatim (it is the unchanged XCO passthrough by contract, §5).
+     verbatim (it is the unchanged XCO passthrough).
 
 Tuple-record fields (`top_resources: [[s,n]…]`) are intentionally NOT rewritten
 here — the alarms tool already ships an object-form companion

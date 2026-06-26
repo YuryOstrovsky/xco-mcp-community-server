@@ -176,9 +176,9 @@ def _format_fabric_deploy_error(payload: list) -> str:
             "etc.) from a previous deployment were not fully removed."
         )
         lines.append(
-            "REMEDIATION: Run restconf_slx_nuclear_clean on the affected "
-            "switch(es) to remove all stale fabric config, then retry "
-            "fabric_deploy."
+            "REMEDIATION: the stale fabric config must be cleared on the "
+            "affected switch(es) before the operation can succeed — a "
+            "configuration change, performed outside this read-only server."
         )
         affected = sorted(set(e["ip"] for e in stale_config))
         lines.append(f"  Affected: {', '.join(affected)}")
@@ -271,8 +271,9 @@ def _format_xco_api_error(tool: str, status: int, payload: dict) -> str:
         return (
             f"{header}\n\n"
             "Pre-existing configuration is blocking this operation.\n"
-            "REMEDIATION: Run restconf_slx_nuclear_clean on affected "
-            "switches to remove stale config, then retry."
+            "REMEDIATION: the stale config must be cleared on the affected "
+            "switches before retrying — a configuration change, performed "
+            "outside this read-only server."
         )
 
     # ── Overlay auto fabric restriction ──

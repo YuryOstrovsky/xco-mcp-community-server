@@ -13,15 +13,13 @@ SLX 20.x's RESTCONF surface for the MAC-address-table is config-only:
        → returns config (static MACs, aging-time, mac-move) NOT learned entries
 
 The DYNAMIC learned MAC table is exposed only via the CLI command
-`show mac-address-table`.  Same operational-state gap we hit with
-QoS (see roce_qos_status.py).  When SLX adds a YANG model for the
-learned MAC table, this tool can grow a RESTCONF code path without
-renaming.
+`show mac-address-table`, so this tool uses SSH.  When SLX adds a YANG
+model for the learned MAC table, this tool can grow a RESTCONF code
+path without renaming.
 
-The tool name keeps the `restconf_` prefix (switch-direct, not via
-XCO) matching this server's convention, and the `slx` family marker
-disambiguates from future OS One support (which will land as
-`restconf_osone_get_mac_address_table` with a shared response shape).
+The tool name keeps the `restconf_` prefix (switch-direct, not via XCO)
+matching this server's convention, and the `slx` family marker scopes
+it to SLX.
 
 What it does
 ------------
@@ -40,10 +38,8 @@ Optional substring filters: `mac_filter`, `vlan_filter` (exact int),
 
 switch_ip may be a string (single-switch, original shape) OR an array
 of strings (parallel multi-switch fan-out via ThreadPoolExecutor;
-cap 16 concurrent SSH sessions, polite-neighbour limit).  Same v3
-fan-out semantics as restconf_slx_get_roce_qos_status:
-non-fatal per-switch failures land in errors_by_ip; meta.ok stays
-true if at least one switch returned data.
+cap 16 concurrent SSH sessions).  Non-fatal per-switch failures land in
+errors_by_ip; meta.ok stays true if at least one switch returned data.
 
 Side effects: NONE.  Pure show command.
 """
@@ -276,7 +272,7 @@ def _parse_mac_address_table(text: str) -> Dict[str, Any]:
 
 
 # ---------------------------------------------------------------------------
-# SSH primitives — same shape as restconf_slx_get_roce_qos_status,
+# SSH primitives for the switch-direct CLI query,
 # kept locally to avoid an artificial cross-file dependency for two
 # tiny tools.  If a third tool needs them they can be extracted into
 # a shared module.
@@ -473,7 +469,7 @@ def _probe_single_switch(
     )
     # Tag each entry with switch_ip — important for the multi-switch
     # rollup, useful for single-switch consumers too (consistent with
-    # how the RoCE tools tag per-interface rows).
+    # tag per-interface rows).
     for e in filtered:
         e["switch_ip"] = switch_ip
 
@@ -514,7 +510,7 @@ def _probe_single_switch(
 
 
 # ---------------------------------------------------------------------------
-# Multi-switch fan-out — same Option A pattern as restconf_slx_get_roce_qos_status v3
+# Multi-switch fan-out (switch_ip string OR list; single-element list also
 # ---------------------------------------------------------------------------
 
 def _multi_switch_fanout(
@@ -700,7 +696,7 @@ def restconf_slx_get_mac_address_table(
     tool resolves MAC → access port when ARP gave you the SVI.
 
     Underlying transport is SSH+CLI (SLX 20.x's RESTCONF surface for
-    the MAC table is config-only — same pattern as the RoCE tools).
+    the learned MAC table is config-only over RESTCONF).
     Side-effect free.
     """
     inputs = inputs or {}
