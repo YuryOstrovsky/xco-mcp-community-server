@@ -10,6 +10,7 @@ from mcp_runtime.metrics import (
     MCP_INVOKE_STATUS,
     safe_label,  # Fix #22
 )
+from mcp_runtime.error_classify import format_step_error
 
 
 # --------------------------------------------------
@@ -213,6 +214,14 @@ class MCPServer:
             capabilities = tool.get("capabilities", {})
             fabric_param = capabilities.get("fabric_param")
 
+            # Normalize a caller-supplied alias (fabric_name / fabric) to the
+            # canonical hyphenated param so GET passthroughs don't 404.
+            if fabric_param and fabric_param not in inputs:
+                for _alias in (fabric_param.replace("-", "_"), "fabric"):
+                    if inputs.get(_alias) is not None:
+                        inputs[fabric_param] = inputs[_alias]
+                        break
+
             if fabric_param and "fabric" in resolved_context:
                 fabric_ctx = resolved_context["fabric"]
 
@@ -245,10 +254,16 @@ class MCPServer:
                 duration = time.time() - start_ts
                 MCP_INVOKE_LATENCY.labels(tool=safe_label(tool_name)).observe(duration)
 
-                return {
+                # Let a Tier-2 composite surface its OWN status/payload instead
+                # of forcing 200; add a human_hint on non-2xx.
+                t2_status, t2_payload = 200, result
+                if isinstance(result, dict) and "status" in result and "payload" in result:
+                    t2_status, t2_payload = result["status"], result["payload"]
+
+                t2_resp = {
                     "tool": tool_name,
-                    "status": 200,
-                    "payload": result,
+                    "status": t2_status,
+                    "payload": t2_payload,
                     "context": resolved_context,
                     "meta": {
                         "request_id": request_id,
@@ -263,6 +278,13 @@ class MCPServer:
                         },
                     },
                 }
+                try:
+                    if not (200 <= int(t2_status) < 300):
+                        t2_resp["human_hint"] = format_step_error(
+                            tool_name, int(t2_status), t2_payload)
+                except (TypeError, ValueError):
+                    pass
+                return t2_resp
 
 
             endpoint = tool["endpoint"]
@@ -306,7 +328,7 @@ class MCPServer:
 
 
 
-            return {
+            http_resp = {
                 "tool": tool_name,
                 "status": response["status"],
                 "payload": response["payload"],
@@ -332,6 +354,13 @@ class MCPServer:
                     },
                 },
             }
+            try:
+                if not (200 <= int(response["status"]) < 300):
+                    http_resp["human_hint"] = format_step_error(
+                        tool_name, int(response["status"]), response["payload"])
+            except (TypeError, ValueError):
+                pass
+            return http_resp
 
         except Exception as e:
             MCP_INVOKE_FAILURE.labels(tool=safe_label(tool_name)).inc()

@@ -1,3 +1,5 @@
+# Copyright 2025 Extreme Networks, Inc.
+# SPDX-License-Identifier: Apache-2.0
 # tools/notification/recent_events_filtered.py
 
 from __future__ import annotations
@@ -354,8 +356,8 @@ def notification_get_recent_events_filtered(
     status_req = (_norm_str(inputs.get("status")) or "all").lower()
     status_req = _norm_status(status_req) if status_req != "all" else "all"
 
-    last_n = max(1, min(_as_int(inputs.get("last_n"), 50), 500))
-    limit_per_source = max(1, min(_as_int(inputs.get("limit_per_source"), 10), 100))
+    last_n = max(1, min(_as_int(inputs.get("last_n"), 20), 500))
+    limit_per_source = max(1, min(_as_int(inputs.get("limit_per_source"), 5), 100))
 
     severity_min = _norm_str(inputs.get("severity_min"))
     event_type = _norm_str(inputs.get("event_type"))
@@ -406,17 +408,19 @@ def notification_get_recent_events_filtered(
             per_source[src] = {"executions_fetched": 0, "events_extracted": 0, "events_after_filters": 0, "skipped": True}
             continue
 
-        list_params = {"limit": limit_per_source}
-        if status_req != "all":
-            list_params["status"] = status_req
+        # Always send 'status' — XCO requires it explicitly even though
+        # the OpenAPI spec claims it defaults to "all".  Omitting it causes
+        # a 404 from the XCO Go HTTP mux.
+        list_params = {"limit": limit_per_source, "status": status_req}
 
         lr = call_tier1(list_tool, list_params)
         if include_raw:
             tier1_raw[list_tool] = lr
 
         if lr.get("status") == 404:
-            warnings.append(f"Source '{src}' not supported in this lab (Tier-1 list returned 404): {list_tool}")
-            per_source[src] = {"executions_fetched": 0, "events_extracted": 0, "events_after_filters": 0, "unsupported": True}
+            # XCO returns 404 when the execution list is empty (no executions
+            # found), NOT when the endpoint is missing.  Treat as zero results.
+            per_source[src] = {"executions_fetched": 0, "events_extracted": 0, "events_after_filters": 0}
             continue
 
         if lr.get("status") != 200:

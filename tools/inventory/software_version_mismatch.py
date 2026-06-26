@@ -1,3 +1,5 @@
+# Copyright 2025 Extreme Networks, Inc.
+# SPDX-License-Identifier: Apache-2.0
 # tools/inventory/software_version_mismatch.py
 
 from typing import Any, Dict, List, Optional, Tuple
@@ -188,24 +190,66 @@ def inventory_get_software_version_mismatch(
         fabrics = match
 
     # -------------------------
-    # 2) Pull switches per fabric-id via inventory_getswitches
+    # 2) Fetch ALL switches ONCE to avoid cross-join double-counting
     # -------------------------
+    # BUG FIX: Previously called inventory_getswitches per fabric with fabric-id,
+    # but XCO returns ALL switches regardless when switches are unassigned,
+    # causing N_fabrics × N_switches double-counting.
     all_switches: List[Dict[str, Any]] = []
     warnings: List[str] = []
 
-    for (fname, fid) in fabrics:
-        inv_res = call_tier1("inventory_getswitches", {"fabric-id": fid})
-        if inv_res.get("status") != 200:
-            warnings.append(f"Failed to fetch switches for fabric '{fname}' (id={fid}): {inv_res.get('error')}")
-            continue
+    # Build fabric-id -> name lookup
+    fid_to_fname: Dict[str, str] = {fid: fname for (fname, fid) in fabrics}
+    fname_lower_to_entry: Dict[str, Tuple[str, str]] = {
+        fname.lower(): (fname, fid) for (fname, fid) in fabrics
+    }
 
+    def _resolve_switch_fabric(sw: dict) -> Optional[Tuple[str, str]]:
+        """Return (fabric_name, fabric_id) from switch record, or None."""
+        fab = sw.get("fabric")
+        if isinstance(fab, dict):
+            sw_fid = _pick_first(fab, ["fabric-id", "fabric_id", "id"])
+            if sw_fid is not None and str(sw_fid) in fid_to_fname:
+                fid_s = str(sw_fid)
+                return (fid_to_fname[fid_s], fid_s)
+            sw_fn = _norm_str(_pick_first(fab, ["fabric-name", "fabric_name", "name", "fabric"]))
+            if sw_fn and sw_fn.lower() in fname_lower_to_entry:
+                return fname_lower_to_entry[sw_fn.lower()]
+        sw_fid = _pick_first(sw, ["fabric-id", "fabric_id", "fabricId"])
+        if sw_fid is not None and str(sw_fid) in fid_to_fname:
+            fid_s = str(sw_fid)
+            return (fid_to_fname[fid_s], fid_s)
+        sw_fn = _norm_str(_pick_first(sw, ["fabric", "fabric_name", "fabric-name", "fabricName"]))
+        if sw_fn and sw_fn.lower() in fname_lower_to_entry:
+            return fname_lower_to_entry[sw_fn.lower()]
+        return None
+
+    inv_res = call_tier1("inventory_getswitches", {})
+    if inv_res.get("status") != 200:
+        warnings.append(f"Failed to fetch switches: {inv_res.get('error')}")
+    else:
         sw_items = _as_list(inv_res.get("payload"))
+        seen_ids: set = set()
+        unassigned_count = 0
         for sw in sw_items:
             if not isinstance(sw, dict):
                 continue
 
-            sw_firmware = _norm_str(_pick_first(sw, ["firmware", "software_version", "sw_version", "version"]))
             sw_id = _pick_first(sw, ["id", "device_id"])
+            sid_key = str(sw_id) if sw_id is not None else id(sw)
+            if sid_key in seen_ids:
+                continue
+            seen_ids.add(sid_key)
+
+            membership = _resolve_switch_fabric(sw)
+            if membership is None:
+                fname_resolved = "unassigned"
+                fid_resolved = None
+                unassigned_count += 1
+            else:
+                fname_resolved, fid_resolved = membership
+
+            sw_firmware = _norm_str(_pick_first(sw, ["firmware", "software_version", "sw_version", "version"]))
             sw_name = _norm_str(_pick_first(sw, ["name", "hostname"]))
             sw_role = _norm_str(_pick_first(sw, ["role"]))
             sw_model = _norm_str(_pick_first(sw, ["model"]))
@@ -213,8 +257,8 @@ def inventory_get_software_version_mismatch(
 
             all_switches.append(
                 {
-                    "fabric_name": fname,
-                    "fabric_id": fid,
+                    "fabric_name": fname_resolved,
+                    "fabric_id": fid_resolved,
                     "id": str(sw_id) if sw_id is not None else None,
                     "name": sw_name,
                     "role": sw_role,
@@ -223,6 +267,11 @@ def inventory_get_software_version_mismatch(
                     "firmware": sw_firmware,
                     "_raw": sw if include_raw else None,
                 }
+            )
+        if unassigned_count:
+            warnings.append(
+                f"{unassigned_count} switch(es) not assigned to any fabric "
+                f"(shown in 'unassigned' group)."
             )
 
     switches_scanned = len(all_switches)

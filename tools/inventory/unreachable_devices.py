@@ -1,3 +1,5 @@
+# Copyright 2025 Extreme Networks, Inc.
+# SPDX-License-Identifier: Apache-2.0
 # tools/inventory/unreachable_devices.py
 
 from __future__ import annotations
@@ -254,27 +256,80 @@ def inventory_get_unreachable_devices(
             }
         fabrics = match
 
-    # 2) devices per fabric
+    # 2) Fetch ALL devices ONCE to avoid cross-join double-counting
+    # BUG FIX: Previously called inventory_getswitches per fabric with fabric-id,
+    # but XCO returns ALL switches regardless when switches are unassigned,
+    # causing N_fabrics × N_switches double-counting.
     devices: List[Dict[str, Any]] = []
     per_fabric_errors = 0
 
-    for (fname, fid) in fabrics:
-        inv_res = call_tier1("inventory_getswitches", {"fabric-id": fid})
-        if include_raw:
-            raw.setdefault("inventory_getswitches", {})[fname] = inv_res
-        if inv_res.get("status") != 200:
-            per_fabric_errors += 1
-            warnings.append(f"Failed to fetch switches for fabric '{fname}' (id={fid}).")
-            continue
+    # Build fabric-id -> name lookup
+    fid_to_fname: Dict[str, str] = {fid: fname for (fname, fid) in fabrics}
+    fname_lower_to_entry: Dict[str, Tuple[str, str]] = {
+        fname.lower(): (fname, fid) for (fname, fid) in fabrics
+    }
 
+    def _resolve_switch_fabric(sw: dict) -> Optional[Tuple[str, str]]:
+        """Return (fabric_name, fabric_id) from switch record, or None."""
+        fab = sw.get("fabric")
+        if isinstance(fab, dict):
+            sw_fid = _pick_first(fab, ["fabric-id", "fabric_id", "id"])
+            if sw_fid is not None and str(sw_fid) in fid_to_fname:
+                fid_s = str(sw_fid)
+                return (fid_to_fname[fid_s], fid_s)
+            sw_fn = _norm_str(_pick_first(fab, ["fabric-name", "fabric_name", "name", "fabric"]))
+            if sw_fn and sw_fn.lower() in fname_lower_to_entry:
+                return fname_lower_to_entry[sw_fn.lower()]
+        sw_fid = _pick_first(sw, ["fabric-id", "fabric_id", "fabricId"])
+        if sw_fid is not None and str(sw_fid) in fid_to_fname:
+            fid_s = str(sw_fid)
+            return (fid_to_fname[fid_s], fid_s)
+        sw_fn = _norm_str(_pick_first(sw, ["fabric", "fabric_name", "fabric-name", "fabricName"]))
+        if sw_fn and sw_fn.lower() in fname_lower_to_entry:
+            return fname_lower_to_entry[sw_fn.lower()]
+        return None
+
+    inv_res = call_tier1("inventory_getswitches", {})
+    if include_raw:
+        raw["inventory_getswitches"] = inv_res
+    if inv_res.get("status") != 200:
+        per_fabric_errors += 1
+        warnings.append(f"Failed to fetch switches: {inv_res.get('error')}")
+    else:
         sw_items = _as_list(inv_res.get("payload"))
+        seen_ids: set = set()
+        unassigned_count = 0
         for sw in sw_items:
             if not isinstance(sw, dict):
                 continue
+            sid = _pick_first(sw, ["id", "device_id"])
+            sid_key = str(sid) if sid is not None else id(sw)
+            if sid_key in seen_ids:
+                continue
+            seen_ids.add(sid_key)
+
+            membership = _resolve_switch_fabric(sw)
+            if membership is None:
+                # Include unassigned devices so they're visible
+                row = _compact_device(sw)
+                row["fabric_name"] = "unassigned"
+                row["fabric_id"] = None
+                devices.append(row)
+                unassigned_count += 1
+                continue
+            fname_resolved, fid_resolved = membership
+            # If filtering to specific fabrics, skip non-matching
+            if fname_resolved not in fid_to_fname.values():
+                continue
             row = _compact_device(sw)
-            row["fabric_name"] = fname
-            row["fabric_id"] = fid
+            row["fabric_name"] = fname_resolved
+            row["fabric_id"] = fid_resolved
             devices.append(row)
+        if unassigned_count:
+            warnings.append(
+                f"{unassigned_count} switch(es) not assigned to any fabric "
+                f"(shown in 'unassigned' group)."
+            )
 
     devices_scanned = len(devices)
     fabrics_scanned = len(fabrics)

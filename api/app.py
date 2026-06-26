@@ -2,12 +2,15 @@
 
 import concurrent.futures
 import os
+import re
 import threading
 import time
+import uuid as _uuid
 from collections import deque
 from datetime import datetime, timezone
 
 from fastapi import FastAPI, HTTPException, Header, Request, Response
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
 from pydantic import BaseModel
@@ -18,10 +21,19 @@ from mcp_runtime.server import MCPServer
 from mcp_runtime.session_store import SessionStore
 from mcp_runtime.errors import ToolNotFound
 from mcp_runtime.policy import PolicyViolation
+from mcp_runtime.payload_normalize import normalize_result
 from mcp_runtime.logging import get_logger
 from api.docs_routes import router as docs_router
 
 logger = get_logger("mcp.api")
+
+# Security: strip control characters from user-controlled values before logging
+# (prevents log-injection / forged log lines).
+_CONTROL_CHAR_RE = re.compile(r'[\n\r\t\x00-\x1f\x7f]')
+
+
+def _safe_log(value, max_len: int = 128) -> str:
+    return _CONTROL_CHAR_RE.sub('_', str(value)[:max_len])
 
 # -------------------------------------------------
 # App & MCP initialization
@@ -42,6 +54,47 @@ app.add_middleware(
 )
 
 # -------------------------------------------------
+# Security headers + API version on every response
+# -------------------------------------------------
+
+class SecurityHeadersMiddleware(BaseHTTPMiddleware):
+    """Add security headers and API version to every response."""
+    async def dispatch(self, request: Request, call_next):
+        response = await call_next(request)
+        response.headers["X-API-Version"] = "v1"
+        response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["X-XSS-Protection"] = "1; mode=block"
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        response.headers["Permissions-Policy"] = "geolocation=(), camera=(), microphone=()"
+        return response
+
+app.add_middleware(SecurityHeadersMiddleware)
+
+# -------------------------------------------------
+# Global exception handlers — consistent error envelope + error_id
+# -------------------------------------------------
+
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request: Request, exc: HTTPException):
+    error_id = f"err-{_uuid.uuid4().hex[:8]}"
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"detail": exc.detail, "error_id": error_id},
+    )
+
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    error_id = f"err-{_uuid.uuid4().hex[:8]}"
+    logger.exception("unhandled error error_id=%s path=%s", error_id, request.url.path)
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Internal server error", "error_id": error_id},
+    )
+
+# -------------------------------------------------
 # Fix #21: Request / response logging middleware
 # -------------------------------------------------
 
@@ -53,7 +106,7 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
         logger.info(
             "http method=%s path=%s status=%s duration_ms=%d",
             request.method,
-            request.url.path,
+            _safe_log(request.url.path),
             response.status_code,
             duration_ms,
         )
@@ -157,7 +210,7 @@ def invoke_tool(
 
         return {
             "session_id": session.session_id,
-            "result": result,
+            "result": normalize_result(result),
         }
 
     # Fix #4: map specific exceptions to correct HTTP codes

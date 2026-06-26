@@ -1,3 +1,5 @@
+# Copyright 2025 Extreme Networks, Inc.
+# SPDX-License-Identifier: Apache-2.0
 # tools/faultmanager/active_alarms_top.py
 
 from __future__ import annotations
@@ -203,8 +205,11 @@ def fault_get_active_alarms_top(
 
     include_inventory = _as_bool(inputs.get("include_inventory"), False)
     include_samples = _as_bool(inputs.get("include_samples"), True)
-    sample_per_group = _as_int(inputs.get("sample_per_group"), 3)
-    sample_per_group = min(max(sample_per_group, 0), 10)
+    # 2026-06-18 (Nova/CTO-office review): default was 3, which silently hid
+    # ~80% of fired instances even at top_n=10.  Raise the default and the cap
+    # so consumers see real coverage; 0 still means "no samples, counts only".
+    sample_per_group = _as_int(inputs.get("sample_per_group"), 25)
+    sample_per_group = min(max(sample_per_group, 0), 200)
 
     include_raw = _as_bool(inputs.get("include_raw"), False)
 
@@ -426,7 +431,15 @@ def fault_get_active_alarms_top(
             "name": g.get("name"),
             "severity": best_sev,
             "count": g["count"],
-            "top_resources": top_resources,
+            # Explicit: each top[] entry is a GROUP of N alarm instances, not a
+            # single alarm.  `instance_count` aliases `count` so consumers can't
+            # mistake "8 groups" for "8 alarms" (Nova/CTO-office review).
+            "instance_count": g["count"],
+            "top_resources": top_resources,  # legacy tuple shape [[resource, count], ...]
+            # Path-friendly object shape for JSONata/path consumers.
+            "top_resources_objects": [
+                {"resource": r, "count": c} for r, c in top_resources
+            ],
             "samples": g["samples"] if include_samples else [],
         }
         if inv_detail is not None:
@@ -450,9 +463,20 @@ def fault_get_active_alarms_top(
         "summary": {
             "active_total_fetched": len(alarms_all),
             "active_after_filters": len(active_filtered),
+            # Unambiguous instance vs group counts (Nova/CTO-office review):
+            # consumers iterating top[] must not read len(top) as "alarm count".
+            "total_alarm_instances": len(active_filtered),
             "filtered_out": filtered_out,
             "by_severity": dict(by_sev_all),
             "returned_groups": len(top_out),
+            "group_count": len(top_out),
+            "result_is_grouped": True,
+            "grouping_note": (
+                "top[] entries are alarm GROUPS (by name/class), not individual "
+                "alarms. Each entry.instance_count is how many alarms fired in "
+                "that group; sum(instance_count) == total_alarm_instances. "
+                "len(top) is the number of GROUPS, not the number of alarms."
+            ),
             "inventory_join_mode": (
                 "alarm_id_then_name" if include_inventory else "none"
             ),
