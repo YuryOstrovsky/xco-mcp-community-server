@@ -5,6 +5,19 @@ ExtremeCloud Orchestrator (XCO) and RESTCONF tooling as a structured API.
 AI agents, scripts, and dashboards can invoke 250+ network tools through a
 single `POST /invoke` endpoint.
 
+> ### ⚠️ WARNING: Network exposure
+>
+> This community edition exposes `/invoke` and `/mcp` **without built-in caller
+> authentication or per-user authorization**.
+>
+> Run it only on **localhost or a trusted management network**. If exposing it
+> beyond localhost, place it behind an authenticated reverse proxy, VPN, or other
+> access-control layer.
+>
+> The server uses the XCO and/or RESTCONF credentials provided through environment
+> variables, so **anyone who can reach the MCP server can invoke the exposed
+> read-only tools**.
+
 ---
 
 ## Quick Start
@@ -49,7 +62,7 @@ curl http://localhost:8000/health
 | Variable | Default | Description |
 |---|---|---|
 | `RESTCONF_USERNAME` | `admin` | RESTCONF credentials for SLX switches |
-| `RESTCONF_PASSWORD` | `password` | RESTCONF password |
+| `RESTCONF_PASSWORD` | `changeme` | RESTCONF password (set to your switch password) |
 | `RESTCONF_VERIFY_TLS` | `false` | Verify TLS on switch connections |
 
 > You can also mount a `.env` file instead:
@@ -135,9 +148,9 @@ services:
     ports:
       - "8000:8000"
     environment:
-      XCO_HOST: "10.13.85.20"
-      XCO_USERNAME: "ubuntu"
-      XCO_PASSWORD: "ubuntu"
+      XCO_HOST: "<xco-ip-or-hostname>"
+      XCO_USERNAME: "<xco-username>"
+      XCO_PASSWORD: "<xco-password>"
       XCO_VERIFY_TLS: "false"
       XCO_READ_ONLY: "1"
     healthcheck:
@@ -172,13 +185,23 @@ curl http://localhost:8000/docs/tools/html
 
 ## Security Notes
 
-- The server enforces `XCO_READ_ONLY=1` by default -- no configuration-changing
-  endpoints are exposed.
+- **No caller authentication.** `/invoke` and `/mcp` have no built-in
+  authentication or per-user authorization (see the warning at the top). Run on
+  localhost or a trusted network, or place it behind an authenticated reverse
+  proxy/VPN.
+- **Read-only by construction.** This edition ships only read-only tools — there
+  are no mutation/configuration tools. `XCO_READ_ONLY=1` is an explicit safety
+  marker, **not** an authorization boundary.
+- **Sensitive output — `restconf_get_running_config`.** This tool returns the
+  real switch running configuration (unredacted), which may contain usernames,
+  SNMP communities, AAA/TACACS/RADIUS settings, keys, certificates, or
+  pre-shared secrets. Use it only when authorized to view the full configuration;
+  output handling, storage, and redaction are the operator's responsibility.
 - All shipped Tier-2 tools are composite **read-only** operations.
 - Inputs are validated before execution.
 - Rate limiting is applied per source IP (60 requests/minute default).
 - TLS verification is disabled by default for lab environments; enable
-  `XCO_VERIFY_TLS=true` in production if certificates are properly configured.
+  `XCO_VERIFY_TLS=true` when certificates are properly configured.
 
 ---
 

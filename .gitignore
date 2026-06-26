@@ -64,3 +64,8 @@ smoke-test/*.txt
 
 # Internal dev plan — kept locally, never published
 COMMUNITY_BACKPORT_PLAN.md
+
+# Python build artifacts
+dist/
+build/
+*.egg-info/

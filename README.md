@@ -1,16 +1,32 @@
 # XCO MCP Server (ExtremeCloud Orchestrator MCP Gateway)
 
+> **Community read-only MCP server for Extreme XCO/IP Fabric visibility.**
+
 A lightweight **FastAPI** server that exposes a **read-only, tool-based API** for **ExtremeCloud Orchestrator (XCO)**.
 It provides:
 
 - A **machine-readable tool registry** (`/tools`) and a single **invoke** endpoint (`/invoke`)
 - **Tier-1 tools**: thin wrappers around individual XCO REST endpoints
 - **Tier-2 tools**: read-only composites that orchestrate multiple Tier-1 calls and return a higher-level answer
-- Built-in **safety/policy hooks**, **structured logging**, and **Prometheus metrics** for production-style operations
+- Built-in **safety/policy hooks**, **structured logging**, and **Prometheus metrics** for operational visibility
 
 > This repo ships a **SAFE_READ-only** tool catalog — see
 > [`docs/TOOL_CATALOG.md`](docs/TOOL_CATALOG.md) or `GET /tools` for the current set.
 > **Tier-3/Tier-4 (mutating) toolpacks are not included** in this read-only community edition.
+
+> ### ⚠️ WARNING: Network exposure
+>
+> This community edition exposes `/invoke` and `/mcp` **without built-in caller
+> authentication or per-user authorization**.
+>
+> Run it only on **localhost or a trusted management network**. If exposing it
+> beyond localhost, place it behind an authenticated reverse proxy, VPN, or other
+> access-control layer.
+>
+> The server uses the XCO and/or RESTCONF credentials provided through environment
+> variables, so **anyone who can reach the MCP server can invoke the exposed
+> read-only tools** (including `restconf_get_running_config` — see the warning in
+> the [RESTCONF toolpack](#restconf-toolpack-slx-switches) section).
 
 ---
 
@@ -68,9 +84,9 @@ This project turns XCO REST APIs into a **tool catalog** that can be discovered 
   - `context` (resolved context, if available)
 
 ### Tier-3 / Tier-4 (automation)
-Not shipped as tools in this repo today.  
-However, the runtime includes **scaffolding** for future automation (workflow/planner modules and mutation ledger/registry),
-so the project can grow into higher tiers if/when you add mutation tools and policy rules.
+**Not included in this community edition.** This repository ships read-only
+(`SAFE_READ`) tools only — there are no mutation/configuration tools. `/invoke`
+and `/mcp` cannot change device, switch, or fabric state.
 
 ---
 
@@ -112,8 +128,8 @@ Python libraries (minimum):
 
 ```bash
 # 1) Clone
-git clone <your_repo_url>
-cd xco-mcp-server
+git clone https://github.com/YuryOstrovsky/xco-mcp-community-server.git
+cd xco-mcp-community-server
 
 # 2) Create venv
 python3 -m venv .venv
@@ -153,7 +169,7 @@ XCO_TIMEOUT_SECONDS=20
 - `XCO_USERNAME` / `XCO_PASSWORD` (**required**) — credentials used to obtain a bearer token
 - `XCO_VERIFY_TLS` (default: `false`) — set `true` if you want certificate verification
 - `XCO_TIMEOUT_SECONDS` (default: `20`) — HTTP request timeout
-- `XCO_READ_ONLY` (recommended: `1`) — **guardrail flag**; this repo ships only `SAFE_READ` tools by default
+- `XCO_READ_ONLY` (recommended: `1`) — explicit **read-only safety marker**. The real protection is that this edition ships **no mutation tools**; do not treat this flag (or the server) as an authentication/authorization boundary.
 
 
 ---
@@ -283,10 +299,19 @@ Tier-2 handlers are invoked with:
 
 ## Security notes
 
-- This repo currently ships only `SAFE_READ` tools. If you introduce write tools:
-  - tighten policy checks (`mcp_runtime/policy.py`)
-  - use the mutation registry/ledger for rollbacks/auditing
-  - consider running behind a reverse proxy and restricting access by network/IP
+- **No caller authentication.** `/invoke` and `/mcp` have no built-in
+  authentication or per-user authorization (see the network-exposure warning near
+  the top). Run on localhost or a trusted network, or front it with an
+  authenticated reverse proxy/VPN.
+- **Read-only by construction.** This edition ships only `SAFE_READ` tools; there
+  are no mutation/configuration tools. `XCO_READ_ONLY=1` is an explicit safety
+  marker, **not** an authorization boundary.
+- **Sensitive output.** `restconf_get_running_config` returns real switch
+  configuration that may contain secrets (usernames, SNMP communities, AAA keys,
+  certificates) — see its warning in the [RESTCONF toolpack](#restconf-toolpack-slx-switches)
+  section. Output handling is the operator's responsibility.
+- The server uses the XCO/RESTCONF credentials from your environment, so anyone
+  who can reach it can invoke every exposed read-only tool.
 
 ---
 ## RESTCONF toolpack (SLX switches)
@@ -295,11 +320,11 @@ The server includes a set of **Tier-2 RESTCONF** tools for interrogating SLX swi
 
 ### RESTCONF configuration (.env)
 
-Add the following to your `.env` (values shown are the lab defaults):
+Add the following to your `.env` (use your own switch credentials):
 
 ```bash
-RESTCONF_USERNAME=admin
-RESTCONF_PASSWORD=password
+RESTCONF_USERNAME=<restconf-username>
+RESTCONF_PASSWORD=<restconf-password>
 RESTCONF_VERIFY_TLS=false
 ```
 
@@ -327,6 +352,20 @@ sudo systemctl restart xco-mcp
 | `restconf_get_running_config` | Retrieve running configuration directly from the switch via RESTCONF. |
 | `restconf_get_system_maintenance_status` | Retrieve system maintenance mode status and stage information. |
 | `restconf_get_system_maintenance_rate_monitoring` | Retrieve maintenance rate monitoring configuration/status (may return 204 if disabled). |
+
+> ### ⚠️ WARNING: `restconf_get_running_config`
+>
+> `restconf_get_running_config` returns the switch **running configuration as
+> reported by the device** — the real output, unredacted.
+>
+> Although this is a read-only operation, running configuration may contain
+> **sensitive information** such as usernames, SNMP communities,
+> AAA/TACACS/RADIUS settings, keys, certificates, pre-shared secrets, or other
+> operational details.
+>
+> Use this tool only when you are **authorized to view the full switch
+> configuration**. Output handling, storage, sharing, and redaction are the
+> responsibility of the operator/community user.
 
 ### Example invoke
 

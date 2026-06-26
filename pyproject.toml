@@ -12,7 +12,7 @@ license = { text = "Apache-2.0" }
 authors = [{ name = "Extreme Networks, Inc." }]
 keywords = ["mcp", "xco", "extreme-networks", "restconf", "slx", "fastapi", "network-automation"]
 classifiers = [
-  "Development Status :: 5 - Production/Stable",
+  "Development Status :: 4 - Beta",
   "Intended Audience :: System Administrators",
   "License :: OSI Approved :: Apache Software License",
   "Programming Language :: Python :: 3 :: Only",
@@ -51,10 +51,20 @@ Repository = "https://github.com/YuryOstrovsky/xco-mcp-community-server"
 Issues = "https://github.com/YuryOstrovsky/xco-mcp-community-server/issues"
 
 [tool.setuptools]
-# The server runs in-place via `api/run.py`; these are the importable packages.
-packages = ["api", "mcp_runtime", "restconf", "xco"]
+# The server runs in-place via `api/run.py` (or in Docker). The runtime loads its
+# catalog from `./generated/mcp_tools.json` relative to the working directory, so
+# deploy by running from the project root or via the provided Docker image.
 py-modules = []
 
+# Discover every importable package, including the Tier-2 handler tree (`tools.*`)
+# that the runtime imports dynamically. `namespaces = true` picks up the PEP 420
+# package dirs that have no __init__.py.
+[tool.setuptools.packages.find]
+include = ["api*", "mcp_runtime*", "restconf*", "xco*", "tools*"]
+namespaces = true
+
+# Ship the generated runtime catalog/data with source installs (sdist via
+# MANIFEST.in; the Docker image copies generated/ explicitly).
 [tool.setuptools.package-data]
 "*" = ["generated/*.json"]
 

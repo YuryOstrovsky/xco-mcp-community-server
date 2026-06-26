@@ -351,8 +351,8 @@ These examples use the **RESTCONF** toolpack against an SLX switch (tested with 
 1) Ensure your `.env` includes RESTCONF credentials:
 
 ```bash
-RESTCONF_USERNAME=admin
-RESTCONF_PASSWORD=password
+RESTCONF_USERNAME=<restconf-username>
+RESTCONF_PASSWORD=<restconf-password>
 RESTCONF_VERIFY_TLS=false
 ```
 
@@ -418,6 +418,12 @@ curl -sS -X POST "$MCP/invoke" -H "Content-Type: application/json" \
 ```
 
 ### 5) Running config snapshot (vendor REST endpoint on SLX)
+
+> ⚠️ **Sensitive output.** `restconf_get_running_config` returns the real switch
+> running configuration (unredacted). It may contain usernames, SNMP communities,
+> AAA/TACACS/RADIUS settings, keys, certificates, or pre-shared secrets. Use it
+> only when authorized to view the full configuration; handling and redaction of
+> the output are your responsibility.
 
 ```bash
 curl -sS -X POST "$MCP/invoke" -H "Content-Type: application/json" \

@@ -1,0 +1,14 @@
+# Files that must travel with a source install (sdist) but live outside the
+# importable packages. The Docker image copies these explicitly; this keeps
+# `pip install .` / sdist consumers complete as well.
+include requirements.txt
+include README.md README.docker.md LICENSE CHANGELOG.md
+
+# Generated runtime artifacts the server loads at startup.
+include generated/mcp_tools.json
+include generated/mcp_capabilities.json
+include generated/services.json
+
+# Portable OpenAPI spec and human-facing docs served by the app.
+recursive-include openapi/mcp-server *.yaml *.json
+recursive-include docs *.md
