@@ -61,3 +61,6 @@ logs/*
 # Smoketest results
 smoke-test/*.json
 smoke-test/*.txt
+
+# Internal dev plan — kept locally, never published
+COMMUNITY_BACKPORT_PLAN.md
