@@ -88,44 +88,6 @@
     }
   },
   {
-    "name": "inventory_switch_inventory_info",
-    "description": "Get hardware inventory information for a single switch",
-    "category": "inventory",
-    "method": "GET",
-    "endpoint": {
-      "host": "{XCO_HOST}",
-      "path": "/v1/inventory/switches/inventory-info"
-    },
-    "auth": "none",
-    "input_schema": {
-      "type": "object",
-      "properties": {},
-      "required": []
-    },
-    "policy": {
-      "risk": "SAFE_READ",
-      "allowed_in_auto_mode": true,
-      "requires_confirmation": false
-    },
-    "tags": [
-      "read",
-      "tier1"
-    ],
-    "capabilities": {
-      "actions": [
-        "show"
-      ],
-      "objects": [
-        "inventory"
-      ],
-      "scopes": [
-        [
-          "device"
-        ]
-      ]
-    }
-  },
-  {
     "name": "fabric_get_fabrics",
     "description": "Get all fabrics with configuration, status, and device summary",
     "category": "fabric",
@@ -562,12 +524,17 @@
     "input_schema": {
       "type": "object",
       "properties": {
-        "fabric-name": {
-          "type": "string"
+        "fabric_name": {
+          "type": "string",
+          "description": "Fabric whose PHYSICAL topology (real per-port switch\u2194switch links) to fetch. Snake `fabric_name` or hyphenated `fabric-name` both accepted."
+        },
+        "site": {
+          "type": "string",
+          "description": "Site id when a fabric name exists on multiple sites (e.g. lab-a vs lab-b)."
         }
       },
       "required": [
-        "fabric-name"
+        "fabric_name"
       ]
     },
     "policy": {
@@ -609,12 +576,17 @@
     "input_schema": {
       "type": "object",
       "properties": {
-        "fabric-name": {
-          "type": "string"
+        "fabric_name": {
+          "type": "string",
+          "description": "Fabric whose UNDERLAY topology to fetch. Snake `fabric_name` or hyphenated `fabric-name` both accepted."
+        },
+        "site": {
+          "type": "string",
+          "description": "Site id when a fabric name exists on multiple sites (e.g. lab-a vs lab-b)."
         }
       },
       "required": [
-        "fabric-name"
+        "fabric_name"
       ]
     },
     "policy": {
@@ -657,12 +629,17 @@
     "input_schema": {
       "type": "object",
       "properties": {
-        "fabric-name": {
-          "type": "string"
+        "fabric_name": {
+          "type": "string",
+          "description": "Fabric whose OVERLAY topology to fetch. Snake `fabric_name` or hyphenated `fabric-name` both accepted."
+        },
+        "site": {
+          "type": "string",
+          "description": "Site id when a fabric name exists on multiple sites (e.g. lab-a vs lab-b)."
         }
       },
       "required": [
-        "fabric-name"
+        "fabric_name"
       ]
     },
     "policy": {
@@ -4513,7 +4490,8 @@
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "description": "REQUIRED. List of switch management IP addresses to query interfaces for. XCO returns 404 if omitted."
         },
         "device_ids": {
           "type": "array",
@@ -4565,6 +4543,7 @@
         }
       },
       "required": [
+        "device_ips",
         "type",
         "admin_state",
         "oper_state"
@@ -6390,10 +6369,13 @@
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "description": "REQUIRED. List of firmware host IPs to look up. XCO returns 400 if omitted."
         }
       },
-      "required": []
+      "required": [
+        "host_ips"
+      ]
     },
     "policy": {
       "risk": "SAFE_READ",
@@ -11803,8 +11785,8 @@
         },
         "sample_per_group": {
           "type": "integer",
-          "default": 3,
-          "description": "How many sample instances to return per group (0..10)."
+          "default": 25,
+          "description": "How many sample instances to return per group (0..200). 0 = counts only."
         },
         "include_raw": {
           "type": "boolean",
@@ -12063,13 +12045,13 @@
         },
         "last_n": {
           "type": "integer",
-          "default": 50,
+          "default": 20,
           "description": "Return the last N events after filtering."
         },
         "limit_per_source": {
           "type": "integer",
-          "default": 10,
-          "description": "How many executions to pull per source before extracting events."
+          "default": 5,
+          "description": "How many executions to pull per source before extracting events. Each unit makes one HTTP call to XCO, so keep low (3-5) for fast responses."
         },
         "severity_min": {
           "type": "string",
@@ -13077,7 +13059,7 @@
   },
   {
     "name": "restconf_get_arp_table",
-    "description": "Tier-2: Show ARP table (IP→MAC→interface) via RESTCONF RPC (brocade-arp:get-arp).",
+    "description": "Tier-2: Show ARP table (IP\u2192MAC\u2192interface) via RESTCONF RPC (brocade-arp:get-arp).",
     "category": "restconf",
     "method": "COMPOSITE",
     "endpoint": null,
@@ -13086,8 +13068,19 @@
       "type": "object",
       "properties": {
         "switch_ip": {
-          "type": "string",
-          "description": "Switch management IP/FQDN (required)."
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1
+            }
+          ],
+          "description": "Switch management IP/FQDN.  Pass a single string for single-switch probe (original response shape) OR an array of strings for parallel multi-switch fan-out (v2 response shape: meta.multi_switch=true, switch_level_data_by_ip, errors_by_ip; per-switch failures non-fatal).  Single-element list also returns the multi-switch shape so widgets can render consistently."
         },
         "ip_filter": {
           "type": "string",

@@ -622,6 +622,23 @@ def test_arp_table(base: str, d: Discovery):
         warn_on_status=[204, 503],
     )
 
+    # UC-3: multi-switch fan-out — switch_ip as a list returns the v2 shape
+    # (meta.multi_switch=true, switch_level_data_by_ip, errors_by_ip).  A
+    # single-element list also returns the v2 shape so widgets can pass arrays
+    # unconditionally.  Per-switch failures are non-fatal.
+    multi_ips = d.switch_ips[:2] if len(d.switch_ips) >= 2 else [d.switch_ip]
+    run_case(base, tool, {"switch_ip": multi_ips}, "UC3: multi-switch fan-out (v2 shape)",
+        checks=[
+            ("restconf ok", _restconf_ok),
+            ("meta.multi_switch is true",
+             lambda p: isinstance(p, dict) and (p.get("meta") or {}).get("multi_switch") is True),
+            ("has v2 fan-out keys",
+             lambda p: _has_any_key(p, "switch_level_data_by_ip") and
+                       _has_any_key(p, "errors_by_ip")),
+        ],
+        warn_on_status=[204, 503],
+    )
+
 
 def test_clock(base: str, d: Discovery):
     print("\n── 8. restconf_get_clock ──")

@@ -526,6 +526,28 @@ def restconf_get_lldp_neighbor_detail(
         remote_port_id = _pick(r, "remote-interface-name")
         remote_port_desc = _pick(r, "remote-port-description")
 
+        # Remote management address — TLV from the neighbor (when advertised).
+        # Per bug report 2026-04-30: this was hardcoded to None which silently
+        # dropped data the wire was carrying.  _pick() correctly returns None
+        # for empty/missing values so the field stays null when the TLV
+        # genuinely isn't advertised.
+        remote_mgmt = _pick(r, "remote-management-address")
+
+        # Remote system capabilities — try the IETF LLDP MIB names SLX
+        # exposes via RESTCONF.  Returned as a space-separated string in
+        # most builds; we split into a list for the consumer.  If absent,
+        # stays an empty list (same behaviour as before).
+        caps_raw = (
+            _pick(r, "remote-system-capabilities-enabled")
+            or _pick(r, "remote-system-capabilities-supported")
+        )
+        if caps_raw is None:
+            caps_list: list = []
+        elif isinstance(caps_raw, list):
+            caps_list = [str(c) for c in caps_raw if c]
+        else:
+            caps_list = [c for c in str(caps_raw).split() if c]
+
         item = {
             "local_interface": _as_str(local),
             "remote_system_name": _as_str(remote_sys),
@@ -533,8 +555,8 @@ def restconf_get_lldp_neighbor_detail(
             "remote_chassis_id": _as_str(remote_chassis),
             "remote_port_id": _as_str(remote_port_id),
             "remote_port_description": _as_str(remote_port_desc),
-            "remote_management": None,
-            "remote_capabilities": [],
+            "remote_management": _as_str(remote_mgmt) if remote_mgmt else None,
+            "remote_capabilities": caps_list,
         }
         items.append(item)
 
@@ -1124,7 +1146,7 @@ def restconf_get_vlan_brief(
 
     return payload
 
-def restconf_get_arp_table(
+def _arp_single_switch_impl(
     *,
     inputs: dict,
     registry,
@@ -1132,20 +1154,11 @@ def restconf_get_arp_table(
     context: dict,
     **kwargs,
 ) -> dict:
-    """
-    Tier-2: ARP table via RESTCONF RPC:
-      POST /restconf/operations/brocade-arp:get-arp
+    """Single-switch ARP probe — original handler body, refactored
+    so the multi-switch dispatcher (restconf_get_arp_table) can call
+    it per-IP in parallel for the v2 fan-out path.
 
-    This tool normalizes entries into a clean table and supports light client-side filtering.
-
-    Inputs:
-      - switch_ip (required)
-      - ip_filter (optional): substring match on IP
-      - mac_filter (optional): substring match on MAC (case-insensitive)
-      - interface_name (optional): substring match on interface (supports "Ethernet 0/1" or "0/1")
-      - max_items (optional, default 200)
-      - include_raw (optional, default false)
-      - username/password/verify_tls/timeout_seconds (optional overrides)
+    Single-switch contract (inputs/outputs) unchanged from v1.
     """
     switch_ip = _as_str(inputs.get("switch_ip"))
     if not switch_ip:
@@ -1355,6 +1368,190 @@ def restconf_get_arp_table(
         payload["raw"] = raw
 
     return payload
+
+
+# ---------------------------------------------------------------------------
+# Multi-switch fan-out for the ARP tool — v2 (2026-06-05).
+# switch_ip accepts a string (back-compat, single-switch shape) OR a
+# list of strings (parallel multi-switch, new shape).  Single-element
+# list returns the multi-switch shape so widgets can pass arrays
+# unconditionally.  Per-switch failures non-fatal — they land in
+# errors_by_ip; one wedged node does NOT fail the whole call.
+# ---------------------------------------------------------------------------
+
+_ARP_MAX_PARALLEL = 16
+
+
+def _arp_multi_switch_fanout(
+    switch_ips,
+    inputs: dict,
+    registry,
+    transport,
+    context: dict,
+    **kwargs,
+) -> dict:
+    """Parallel per-switch ARP probe via ThreadPoolExecutor.  Returns
+    the multi-switch response shape."""
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+    import time as _time
+
+    start = _time.time()
+    valid_ips = []
+    bad_ips = []
+    for ip in switch_ips:
+        if isinstance(ip, str) and ip.strip():
+            valid_ips.append(ip.strip())
+        else:
+            bad_ips.append(ip)
+
+    if not valid_ips:
+        return {
+            "meta": {
+                "tool": "restconf_get_arp_table", "ok": False,
+                "switches": [],
+                "error": (
+                    f"switch_ip[] is empty or contained only non-string "
+                    f"entries.  Got: {switch_ips!r}"
+                ),
+            },
+            "summary": {"switches_probed": 0, "switches_errored": 0,
+                        "returned": 0, "entries_seen": 0, "filtered": False},
+            "items":                  [],
+            "switch_level_data_by_ip": {},
+            "errors_by_ip":            {},
+            "warnings":                [],
+        }
+
+    per_switch_inputs = {ip: {**inputs, "switch_ip": ip} for ip in valid_ips}
+    n_workers = min(_ARP_MAX_PARALLEL, len(valid_ips))
+    per_switch_results = {}
+    with ThreadPoolExecutor(
+        max_workers=n_workers,
+        thread_name_prefix="arp_table",
+    ) as pool:
+        fut_to_ip = {
+            pool.submit(
+                _arp_single_switch_impl,
+                inputs=per_switch_inputs[ip],
+                registry=registry, transport=transport,
+                context=context, **kwargs,
+            ): ip
+            for ip in valid_ips
+        }
+        for fut in as_completed(fut_to_ip):
+            ip = fut_to_ip[fut]
+            try:
+                per_switch_results[ip] = fut.result()
+            except Exception as e:
+                per_switch_results[ip] = {
+                    "meta": {"switch_ip": ip, "ok": False,
+                             "error": f"unexpected error: {str(e)[:200]}"},
+                    "items": [], "warnings": [],
+                }
+
+    items_out = []
+    switch_level_data_by_ip = {}
+    errors_by_ip = {}
+    aggregated_warnings = []
+    n_errored = 0
+    entries_seen_total = 0
+
+    for i, bad in enumerate(bad_ips):
+        errors_by_ip[f"<invalid#{i}>"] = (
+            f"switch_ip entry was not a non-empty string: {bad!r}"
+        )
+        n_errored += 1
+
+    for ip in valid_ips:
+        per_sw = per_switch_results.get(ip, {})
+        meta = per_sw.get("meta", {})
+        if not meta.get("ok", False):
+            errors_by_ip[ip] = meta.get("error", "unknown error")
+            n_errored += 1
+            continue
+        for it in per_sw.get("items", []) or []:
+            entry = dict(it)
+            entry["switch_ip"] = ip  # tag per row for the rollup
+            items_out.append(entry)
+        summ = per_sw.get("summary", {}) or {}
+        entries_seen_total += int(summ.get("entries_seen") or 0)
+        switch_level_data_by_ip[ip] = {
+            "returned_this_switch": summ.get("returned", 0),
+            "entries_seen":         summ.get("entries_seen", 0),
+            "filtered":             bool(summ.get("filtered")),
+        }
+        for w in per_sw.get("warnings", []) or []:
+            aggregated_warnings.append(f"[{ip}] {w}")
+
+    elapsed = _time.time() - start
+    ok = (n_errored < len(valid_ips) + len(bad_ips))
+
+    return {
+        "meta": {
+            "tool":              "restconf_get_arp_table",
+            "ok":                ok,
+            "switches":          valid_ips,
+            "source":            "direct_switch_restconf",
+            "elapsed_s":         round(elapsed, 2),
+            "multi_switch":      True,
+            "max_parallel":      n_workers,
+        },
+        "summary": {
+            "switches_probed":  len(valid_ips) + len(bad_ips),
+            "switches_errored": n_errored,
+            "returned":         len(items_out),
+            "entries_seen":     entries_seen_total,
+            "filtered":         bool(
+                inputs.get("ip_filter")
+                or inputs.get("mac_filter")
+                or inputs.get("interface_name")
+            ),
+        },
+        "items":                  items_out,
+        "switch_level_data_by_ip": switch_level_data_by_ip,
+        "errors_by_ip":            errors_by_ip,
+        "warnings":                aggregated_warnings,
+    }
+
+
+def restconf_get_arp_table(
+    *,
+    inputs: dict,
+    registry,
+    transport,
+    context: dict,
+    **kwargs,
+) -> dict:
+    """Tier-2: ARP table via RESTCONF RPC (`brocade-arp:get-arp`).
+
+    switch_ip may be:
+      - a string  → single-switch probe (original v1 response shape)
+      - a list of strings → multi-switch parallel fan-out (v2 shape):
+        meta.multi_switch=true, switch_level_data_by_ip, errors_by_ip;
+        per-switch failures non-fatal (one wedged node does NOT fail
+        the whole call).
+
+    Single-element list also returns the multi-switch shape so
+    clients can pass arrays unconditionally.
+
+    Inputs (in addition to switch_ip):
+      - ip_filter (optional): substring match on IP
+      - mac_filter (optional): substring match on MAC (case-insensitive)
+      - interface_name (optional): substring match on interface
+      - max_items (optional, default 200)
+      - include_raw (optional, default false)
+      - username/password/verify_tls/timeout_seconds (optional overrides)
+    """
+    sw = inputs.get("switch_ip")
+    if isinstance(sw, list):
+        return _arp_multi_switch_fanout(
+            sw, inputs, registry, transport, context, **kwargs,
+        )
+    return _arp_single_switch_impl(
+        inputs=inputs, registry=registry, transport=transport,
+        context=context, **kwargs,
+    )
+
 
 def restconf_get_clock(
     *,

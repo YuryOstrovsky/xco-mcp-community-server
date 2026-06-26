@@ -12,10 +12,18 @@ into this community edition, **without** any enterprise feature.
 - **P2 catalog:** ✅ 3 policy fixes (firmware_download_* `requires_confirmation` true→false).
 - New files: `mcp_runtime/payload_normalize.py`, `mcp_runtime/error_classify.py`, this plan.
 
-**NEXT (needs the community server RUNNING vs XCO + the smoke harness):**
-1. **LLDP fix** — surgical edit in `restconf/tools.py` (`restconf_get_lldp_neighbor_detail`: `remote_management`/`remote_capabilities` hardcoded `None`/`[]`). The one P2 tool fix not yet done (it's inside the big multi-tool file).
-2. **The 9 input_schema catalog fixes** — esp. the ones making `device_ips`/`host_ips`/`device_id` **required** + arp `switch_ip` `oneOf` → **update `smoke-test/smoke_tier2_b.py`+`_e.py` call sites in the SAME change** + dedupe `inventory_switch_inventory_info` (appears twice).
-3. **P3** catalog_version → **P4** `/mcp` transport (auth-stripped) → **P5** deps.
+**DONE + LIVE-SMOKE-VERIFIED (2026-06-26, vs XCO 10.13.85.20, community on :8001):**
+- **P2 tool-code:** ✅ **LLDP fix** (`restconf_get_lldp_neighbor_detail`: `remote_management`←`_pick(remote-management-address)`, `remote_capabilities`←split of `remote-system-capabilities-{enabled,supported}`). ✅ **arp multi-switch fan-out** ported (`_arp_single_switch_impl` rename + `_ARP_MAX_PARALLEL=16` + `_arp_multi_switch_fanout` + dispatcher) — coupled to the schema widening; verified live: `meta.multi_switch=true`, `switch_level_data_by_ip`/`errors_by_ip` present, per-switch failures non-fatal.
+- **P2 catalog (9 input_schema fixes):** ✅ fabric_get_{overlay,physical,underlay}_topology (`fabric-name`→`fabric_name` + `site`) · ✅ inventory_get_interfaces (`device_ips` required) · ✅ inventory_get_firmware_hosts (`host_ips` required) · ✅ inventory_switch_inventory_info (kept the `device_id`-required entry) · ✅ restconf_get_arp_table (`switch_ip` `oneOf` string|array) · ✅ fault_get_active_alarms_top (`sample_per_group` 3→25, 0..200) · ✅ notification_get_recent_events_filtered (`last_n` 50→20, `limit_per_source` 10→5).
+- **P2 catalog cleanups:** ✅ deduped `inventory_switch_inventory_info` (267→266 entries; registry already deduped → 263 live tools, unchanged) · ✅ normalized to `ensure_ascii=True` (the 2 arp `→` now `→`).
+- **Smoke:** ✅ added arp multi-switch **UC3** to `smoke_tier2_e.py`. The 4 "required-input" tools are **not** called by any smoke batch (only arp is, batch e) → no other call-site edits needed; arp string path is back-compat. Re-baselined `results_*.json`/`summary_*.txt`.
+- **Smoke gate result (no FAIL attributable to these changes):** A 23P/0F/4W · B 27P/**3F**/1W · C 22P/0F/3W/2S · D 0P/0F/24S · E 11P/**13F**/3S. **All FAILs are environmental:** B = XCO **502** (fabric_health_related_alerts) + **403** (device_inventory_export endpoint); E = **fleet-wide switch RESTCONF 400 "malformed-message: Bad JSON character: <"** on arp/clock/vlan_brief/lldp/port_statistics_summary (reproduced on ALL 8 fabric switches; hits untouched tools too → not our regression); D = no tenant/EPG configured → all SKIP. Batch A improved (committed baseline had FAIL→ now PASS) confirming P1 normalizer/inner-status-unwrap is live.
+
+**NEXT — Phase 3 onward:**
+1. **P3** `catalog_version` + `X-Catalog-Version` header (standalone `mcp_runtime/catalog_version.py`, sha256 over `name|input_schema|risk`).
+2. **P4** `/mcp` JSON-RPC transport (auth-stripped) — biggest; depends on P1.1 normalizer (already in).
+3. **P5** deps/build/optional discovery tools/rate-limit polish.
+> ⚠ **Known env caveat for the gate:** the lab switches currently 400 a whole class of RESTCONF RPCs (arp/clock/vlan/lldp/port-stats) — likely a `restconf/client.py` request-body quirk (`Bad JSON character: <`), **out of scope** for this back-port (untouched, pre-existing). LLDP/arp code is correct-by-inspection + structurally verified but can't be exercised end-to-end until that's resolved.
 > After each phase: `python3 smoke-test/smoke_tier2_{a..e}.py --url <community-server>` and re-baseline `results_*.json`.
 
 ## Ground rules (scope)
