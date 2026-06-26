@@ -30,6 +30,13 @@ xco-mcp-archive/
 
 # Generated artifacts
 *.zip
+# Intermediate catalog-build outputs (regenerable; only mcp_tools.json,
+# mcp_capabilities.json, services.json are tracked + needed at runtime).
+generated/endpoints.json
+generated/final_endpoints.json
+generated/resolved_endpoints.json
+generated/validated_endpoints.json
+generated/*.bak
 
 # Python noise
 __pycache__/

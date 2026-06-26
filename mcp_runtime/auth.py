@@ -3,7 +3,7 @@
 import os
 import time
 import requests
-import jwt  # PyJWT — Fix #7: proper JWT decode
+import jwt  # PyJWT — proper JWT decode
 from threading import Lock
 from mcp_runtime.logging import get_logger
 
@@ -49,7 +49,7 @@ class AuthManager:
         Return a valid access token.
         Automatically refreshes if expired or missing.
 
-        Fix #8: double-checked locking — fast path avoids lock overhead for
+        double-checked locking — fast path avoids lock overhead for
         the common case where the token is already valid.
         """
         # Fast path: no lock needed when token is clearly still valid
@@ -106,7 +106,7 @@ class AuthManager:
         """
         Decode JWT 'exp' using PyJWT without signature verification.
 
-        Fix #7: replaces hand-rolled base64 split with PyJWT, which handles
+        replaces hand-rolled base64 split with PyJWT, which handles
         padding, encoding edge-cases, and malformed tokens more robustly.
         Signature verification is intentionally skipped — we are a consumer
         of XCO-issued tokens and do not hold the signing secret.

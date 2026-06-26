@@ -57,7 +57,7 @@ async def _lifespan(app: FastAPI):
 
 app = FastAPI(title="XCO MCP Server", lifespan=_lifespan)
 
-# Fix #24: CORS — restrictive by default; set CORS_ORIGINS env var to allow
+# CORS — restrictive by default; set CORS_ORIGINS env var to allow
 # specific origins (comma-separated), or "*" for any origin.
 _cors_origins_raw = os.environ.get("CORS_ORIGINS", "")
 _cors_origins = [o.strip() for o in _cors_origins_raw.split(",") if o.strip()]
@@ -112,7 +112,7 @@ async def global_exception_handler(request: Request, exc: Exception):
     )
 
 # -------------------------------------------------
-# Fix #21: Request / response logging middleware
+# Request / response logging middleware
 # -------------------------------------------------
 
 class RequestLoggingMiddleware(BaseHTTPMiddleware):
@@ -132,7 +132,7 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
 app.add_middleware(RequestLoggingMiddleware)
 
 # -------------------------------------------------
-# Fix #16: Request body size limit
+# Request body size limit
 # -------------------------------------------------
 _MAX_BODY_BYTES = int(os.environ.get("MCP_MAX_BODY_SIZE", str(1 * 1024 * 1024)))  # default 1 MB
 
@@ -172,7 +172,7 @@ if os.environ.get("MCP_TRANSPORT_ENABLED", "true").lower() in (
         _mcp_transport = None
 
 # -------------------------------------------------
-# Fix #13: In-memory rate limiter (sliding window per IP)
+# In-memory rate limiter (sliding window per IP)
 # -------------------------------------------------
 _RATE_LIMIT_RPM = int(os.environ.get("MCP_RATE_LIMIT_RPM", "60"))  # requests/minute/IP
 _rate_store: dict[str, deque] = {}
@@ -254,7 +254,7 @@ def invoke_tool(
     - Session is carried via X-MCP-Session header
     - If missing, a new session is created
     """
-    # Fix #13: rate limit per client IP
+    # rate limit per client IP
     client_ip = request.client.host if request.client else "unknown"
     if _is_rate_limited(client_ip):
         raise HTTPException(
@@ -263,7 +263,7 @@ def invoke_tool(
             headers={"Retry-After": "60"},
         )
 
-    # Fix #3: validate tool name against registry before invoking
+    # validate tool name against registry before invoking
     if req.tool not in mcp.registry.tools:
         raise HTTPException(status_code=404, detail=f"Tool '{req.tool}' not found")
 
@@ -282,7 +282,7 @@ def invoke_tool(
             "result": normalize_result(result),
         }
 
-    # Fix #4: map specific exceptions to correct HTTP codes
+    # map specific exceptions to correct HTTP codes
     except ToolNotFound as e:
         raise HTTPException(status_code=404, detail=str(e))
     except PolicyViolation as e:
@@ -315,7 +315,7 @@ def metrics():
         media_type=CONTENT_TYPE_LATEST,
     )
 
-# Fix #9: per-check timeout so /ready cannot hang indefinitely
+# per-check timeout so /ready cannot hang indefinitely
 _READY_TIMEOUT = 10  # seconds
 
 @app.get("/ready")
@@ -361,7 +361,7 @@ def readiness_check(response: Response):
 
     # ----------------------------------
     # 3) XCO connectivity check
-    # Fix #9: wrap in a thread with timeout so it cannot hang indefinitely
+    # wrap in a thread with timeout so it cannot hang indefinitely
     # ----------------------------------
     def _xco_probe():
         return mcp.transport.request(

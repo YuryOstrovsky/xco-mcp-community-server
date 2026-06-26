@@ -1,16 +1,10 @@
-# Copyright 2025 Extreme Networks, Inc.
-# SPDX-License-Identifier: Apache-2.0
 # mcp_runtime/error_classify.py
 """
 Human-readable error classification for XCO API responses.
 
 Parses raw XCO error payloads and produces actionable operator guidance.
-Used by:
-  - MCPWorkflowRunner (plan execution — step failures)
-  - MCPServer.invoke() (Tier-1 direct calls — human_hint field)
-
-This module was extracted from workflow.py so the same classification
-logic is available to both plan execution and direct /invoke calls.
+Used by `MCPServer.invoke()` to populate the `human_hint` field on non-2xx
+responses with clear remediation guidance.
 """
 
 from typing import Dict, List

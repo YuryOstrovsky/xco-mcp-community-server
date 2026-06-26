@@ -1,5 +1,3 @@
-# Copyright 2025 Extreme Networks, Inc.
-# SPDX-License-Identifier: Apache-2.0
 # tools/inventory/device_health_rollup.py
 
 from typing import Any, Dict, List, Optional

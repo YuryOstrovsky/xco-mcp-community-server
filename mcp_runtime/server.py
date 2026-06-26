@@ -9,7 +9,7 @@ from mcp_runtime.metrics import (
     MCP_INVOKE_FAILURE,
     MCP_INVOKE_LATENCY,
     MCP_INVOKE_STATUS,
-    safe_label,  # Fix #22
+    safe_label,
 )
 from mcp_runtime.error_classify import format_step_error
 
@@ -305,7 +305,7 @@ class MCPServer:
                 path=endpoint["path"],
                 params=inputs,
                 context=resolved_context,
-                correlation_id=correlation_id,  # Fix #14
+                correlation_id=correlation_id,
             )
 
             # ---- Per-status-code metrics ----

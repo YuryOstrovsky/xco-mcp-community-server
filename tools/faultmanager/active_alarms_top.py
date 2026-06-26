@@ -1,5 +1,3 @@
-# Copyright 2025 Extreme Networks, Inc.
-# SPDX-License-Identifier: Apache-2.0
 # tools/faultmanager/active_alarms_top.py
 
 from __future__ import annotations

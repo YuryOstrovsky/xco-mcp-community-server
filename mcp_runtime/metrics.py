@@ -4,7 +4,7 @@ import re
 from prometheus_client import Counter, Histogram
 
 # ----------------------------------------
-# Fix #22: label cardinality safety
+# label cardinality safety
 # ----------------------------------------
 # Tool names are validated against the registry (fix #3) so cardinality is
 # bounded in practice.  safe_label() is a belt-and-suspenders guard that

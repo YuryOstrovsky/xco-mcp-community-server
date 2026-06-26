@@ -19,12 +19,12 @@ logger = get_logger("mcp.transport")
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # --------------------------------------------------
-# Fix #12: HTTP method allowlist
+# HTTP method allowlist
 # --------------------------------------------------
 _ALLOWED_METHODS = {"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"}
 
 # --------------------------------------------------
-# Fix #18: sensitive-value redaction for log lines
+# sensitive-value redaction for log lines
 # --------------------------------------------------
 _REDACT_KEYS = {"password", "token", "secret", "key", "api_key", "access_token"}
 
@@ -44,7 +44,7 @@ class XCOTransport:
     - Context → query param injection
     - Retry once on 401 (token refresh)
     - Structured logging (with sensitive-value redaction)
-    - Fix #10/#11: persistent Session for TCP connection reuse / pooling
+    - persistent Session for TCP connection reuse / pooling
     """
 
     def __init__(self, host, auth: AuthManager, verify_tls=False, timeout=20):
@@ -56,7 +56,7 @@ class XCOTransport:
         self.verify_tls = verify_tls
         self.timeout = timeout
 
-        # Fix #10/#11: one Session shared across all requests so urllib3 can
+        # one Session shared across all requests so urllib3 can
         # pool and reuse the underlying TCP/TLS connection to XCO.
         self._session = requests.Session()
         self._session.verify = verify_tls
@@ -78,11 +78,11 @@ class XCOTransport:
         params: dict | None = None,
         port: int | None = None,
         context: dict | None = None,
-        correlation_id: str | None = None,  # Fix #14
+        correlation_id: str | None = None,
         body: dict | None = None,           # JSON request body (POST/PUT/PATCH)
         timeout: int | None = None,         # optional per-call timeout override
     ):
-        # Fix #12: reject methods not in the allowlist
+        # reject methods not in the allowlist
         method = method.upper()
         if method not in _ALLOWED_METHODS:
             raise ValueError(
@@ -97,9 +97,9 @@ class XCOTransport:
 
         # ---- Context → API param injection (SAFE DEFAULTS)
         # IMPORTANT:
-        #   - transport NEVER guesses param names
-        #   - it only injects *IDs*
-        #   - name-based params are handled at invoke() layer
+        # - transport NEVER guesses param names
+        # - it only injects *IDs*
+        # - name-based params are handled at invoke() layer
         if context:
             if "fabric" in context and "id" in context["fabric"]:
                 if "fabric-id" not in effective_params:
@@ -122,7 +122,7 @@ class XCOTransport:
             "XCO request start method=%s url=%s params=%s correlation_id=%s",
             method,
             url,
-            _redact(effective_params),   # Fix #18: mask sensitive fields
+            _redact(effective_params),   # mask sensitive fields
             correlation_id,
         )
 
@@ -131,11 +131,11 @@ class XCOTransport:
             "Authorization": f"Bearer {self.auth.get_token()}",
             "Content-Type": "application/json",
         }
-        # Fix #14: forward correlation ID so XCO-side logs can be correlated
+        # forward correlation ID so XCO-side logs can be correlated
         if correlation_id:
             headers["X-Correlation-ID"] = correlation_id
 
-        # ---- Perform request (Fix #10/#11: use persistent session) ----
+        # ---- Perform request (use persistent session) ----
         _timeout = timeout or self.timeout
         try:
             resp = self._session.request(

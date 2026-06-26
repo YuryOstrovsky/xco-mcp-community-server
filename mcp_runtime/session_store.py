@@ -16,7 +16,7 @@ class SessionStore:
         self._ttl = ttl
 
     def get_or_create(self, session_id: str | None) -> MCPSession:
-        # Fix #6: evict stale sessions on every access (cheap O(n) scan)
+        # evict stale sessions on every access (cheap O(n) scan)
         self._evict_expired()
 
         if session_id and session_id in self._sessions:

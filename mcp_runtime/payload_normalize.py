@@ -1,5 +1,3 @@
-# Copyright 2025 Extreme Networks, Inc.
-# SPDX-License-Identifier: Apache-2.0
 # mcp_runtime/payload_normalize.py
 """
 Global response-payload normaliser.
