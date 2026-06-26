@@ -16,7 +16,7 @@ docker run -d --name xco-mcp \
   -e XCO_HOST=<xco-ip-or-hostname> \
   -e XCO_USERNAME=<username> \
   -e XCO_PASSWORD=<password> \
-  xco-mcp-community-server
+  xco-mcp-community:1.0.0
 ```
 
 Or with a `.env` file:
@@ -25,7 +25,7 @@ Or with a `.env` file:
 docker run -d --name xco-mcp \
   -p 8000:8000 \
   -v /path/to/.env:/app/.env \
-  xco-mcp-community-server
+  xco-mcp-community:1.0.0
 ```
 
 Verify the server is up:
@@ -43,6 +43,41 @@ When running in Docker, replace `<your_mcp_IP_addr>` with `localhost`
 
 ```bash
 export MCP="http://<your_mcp_IP_addr>:8000/invoke"
+```
+
+---
+
+# 🧩 Discovery Tools (paired-ID lookups)
+
+SAFE_READ tools that return IDs in clean snake_case, so you can feed them
+straight into ID-required tools without hard-coding a value from a cached
+sample.
+
+## fabric_get_fabric_names
+
+```bash
+curl -sS -X POST "$MCP" -H "Content-Type: application/json" \
+  -d '{"tool":"fabric_get_fabric_names","inputs":{}}' \
+| jq '.result.payload | {fabric_names, fabrics, count}'
+# → fabric_names:[...], fabrics:[{fabric_name, fabric_id, fabric_type}], count
+```
+
+## inventory_list_device_ids
+
+```bash
+curl -sS -X POST "$MCP" -H "Content-Type: application/json" \
+  -d '{"tool":"inventory_list_device_ids","inputs":{}}' \
+| jq '.result.payload | {device_ids, count}'
+# → device_ids:[...], devices:[{device_id, ip, hostname}], count
+```
+
+## tenant_list_ids
+
+```bash
+curl -sS -X POST "$MCP" -H "Content-Type: application/json" \
+  -d '{"tool":"tenant_list_ids","inputs":{}}' \
+| jq '.result.payload | {tenant_ids, tenants, count}'
+# → tenant_ids:[...], tenants:[{tenant_id, tenant_name}], count
 ```
 
 ---
@@ -225,6 +260,26 @@ curl -sS -X POST "$MCP" \
 
 ---
 
+# 🔌 MCP JSON-RPC Transport (`/mcp`)
+
+Standard MCP clients (MCP Inspector, Claude Desktop, any JSON-RPC 2.0 MCP
+client) connect directly to `POST /mcp` — `initialize` → `tools/list` →
+`tools/call` — alongside the REST `/invoke` front door. Both route through the
+same tool registry. Disable with `MCP_TRANSPORT_ENABLED=false`.
+
+The `GET /tools` response carries an `X-Catalog-Version` header (the same value
+is advertised in the MCP `initialize` handshake); cache it and skip
+re-discovery while it is unchanged:
+
+```bash
+curl -sI http://<your_mcp_IP_addr>:8000/tools | grep -i x-catalog-version
+# x-catalog-version: 53ca2727b2113ded
+```
+
+Point an MCP client (e.g. MCP Inspector) at `http://<your_mcp_IP_addr>:8000/mcp`.
+
+---
+
 # 🧠 AI Client Example
 
 An AI MCP client should construct requests in this format:
@@ -368,5 +423,23 @@ curl -sS -X POST "$MCP/invoke" -H "Content-Type: application/json" \
 curl -sS -X POST "$MCP/invoke" -H "Content-Type: application/json" \
   -d '{"tool":"restconf_get_running_config","inputs":{"switch_ip":"'$SW'"}}' \
 | jq '.result.status, .result.payload.summary, (.result.payload.items|length), .result.payload.warnings'
+```
+
+### 6) ARP table — single switch or multi-switch fan-out
+
+`switch_ip` accepts a single string (original response shape) or a list of
+strings (parallel fan-out: `meta.multi_switch=true`, `switch_level_data_by_ip`,
+`errors_by_ip`; a per-switch failure is non-fatal).
+
+```bash
+# Single switch
+curl -sS -X POST "$MCP/invoke" -H "Content-Type: application/json" \
+  -d '{"tool":"restconf_get_arp_table","inputs":{"switch_ip":"'$SW'"}}' \
+| jq '.result.payload.meta, (.result.payload.items|length)'
+
+# Multiple switches in parallel
+curl -sS -X POST "$MCP/invoke" -H "Content-Type: application/json" \
+  -d '{"tool":"restconf_get_arp_table","inputs":{"switch_ip":["10.13.9.62","10.13.9.63"]}}' \
+| jq '.result.payload.meta.multi_switch, .result.payload.switch_level_data_by_ip, .result.payload.errors_by_ip'
 ```
 

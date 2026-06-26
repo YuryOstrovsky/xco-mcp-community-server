@@ -1,25 +1,25 @@
 # MCP Tool Catalog
 
-_Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
+_Generated from `mcp_tools.json` on 2026-06-26_
 
 ## Summary
-- Total tools: **251**
-- By tier: **tier1**=213, **tier2**=38
-- By risk: **SAFE_READ**=251
+- Total tools: **269**
+- By tier: **tier1**=216, **tier2**=53
+- By risk: **SAFE_READ**=269
 
 ## Categories
 - **auth**: 19
-- **fabric**: 28
+- **fabric**: 29
 - **faultmanager**: 9
 - **hyperv**: 5
-- **inventory**: 91
+- **inventory**: 92
 - **licensing**: 2
 - **monitor**: 26
 - **notification**: 5
 - **rbac**: 8
 - **snmp**: 4
 - **system**: 14
-- **tenant**: 30
+- **tenant**: 32
 - **vcenter**: 9
 - **restconf**: 15
 
@@ -157,6 +157,23 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 
 - Tags: `read`, `auth`, `execution`, `tier1`
 
+### `auth_get_executions`
+- Tier: **tier2**  
+- Method: **GET**  
+- Endpoint: `{XCO_HOST}/v1/auth/executions`  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Get the list of all previous executions, optionally filtered by status
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `limit` | `integer` | yes | `10` | Limit the number of executions returned |
+| `status` | `string` | no | `all` | Filter executions by status (failed \| succeeded \| all) |
+
+- Tags: `read`, `auth`, `execution`, `tier2`
+
 ### `auth_get_host_users`
 - Tier: **tier1**  
 - Method: **GET**  
@@ -216,7 +233,7 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 - Endpoint: `{XCO_HOST}/v1/auth/authenticator/tacacs`  
 - Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
 
-> Fetch TACACS server details of a sepcific host or all hosts
+> Fetch TACACS  server details of a sepcific host or all hosts
 
 **Inputs**
 
@@ -267,25 +284,6 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 > Validate if the current authentication token is valid
 
 - Tags: `read`, `auth`, `tier0`
-
-### `auth_get_executions`
-- Tier: **tier2**  
-- Method: **GET**  
-- Endpoint: `{XCO_HOST}/v1/auth/executions`  
-- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
-
-> Get the list of all previous executions, optionally filtered by status
-
-**Inputs**
-
-| name | type | required | default | description |
-|---|---|---:|---|---|
-| `limit` | `integer` | yes | `10` | Limit the number of executions returned |
-| `status` | `string` | no | `all` | Filter executions by status (failed | succeeded | all) |
-
-- Tags: `read`, `auth`, `execution`, `tier2`
-
----
 
 ## fabric
 
@@ -369,7 +367,7 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 | name | type | required | default | description |
 |---|---|---:|---|---|
 | `limit` | `integer` | yes | `10` | Limit the number of executions returned |
-| `status` | `string` | no | `all` | Filter executions by status (failed | succeeded | all) |
+| `status` | `string` | no | `all` | Filter executions by status (failed \| succeeded \| all) |
 
 - Tags: `read`, `tier1`
 
@@ -390,6 +388,25 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 
 - Tags: `read`, `tier1`
 
+### `fabric_get_fabric_efa_command_list`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: ``  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Return the EFA command/script lines (from XCO runningConfig) correlated to a specific fabric name
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `name` | `string` | yes | `` | Fabric name (e.g. DC) |
+| `max_items` | `integer` | no | `200` | Max matched command lines to return (default 200) |
+| `include_full_text` | `boolean` | no | `False` | Include full extracted script text (default false) |
+| `include_raw` | `boolean` | no | `False` | Include raw Tier-1 outputs (default false) |
+
+- Tags: `read`, `tier2`, `fabric`, `efa`
+
 ### `fabric_get_fabric_errors`
 - Tier: **tier1**  
 - Method: **GET**  
@@ -405,6 +422,67 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 | `fabric-name` | `string` | yes | `` |  |
 
 - Tags: `read`, `tier1`
+
+### `fabric_get_fabric_errors_summary`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: ``  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Tier-2: Fabric errors summary. Calls Tier-1 fabric_get_fabric_errors (and optionally fabric_get_fabrics_errors + fabric_get_fabric_health) and returns an actionable summary (counts, top error types, affected devices whe…
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `name` | `string` | yes | `` | Fabric name (required). |
+| `include_health` | `boolean` | no | `True` | If true, also fetch fabric health (fabric_get_fabric_health) to include device health counts for context. |
+| `include_global` | `boolean` | no | `False` | If true, also fetch global fabrics errors (fabric_get_fabrics_errors) for context. |
+| `max_error_items` | `integer` | no | `50` | Maximum number of error items to return if the endpoint provides a list. |
+| `include_raw` | `boolean` | no | `False` | If true, include raw Tier-1 payloads under raw.{...}. Output becomes large. |
+
+- Tags: `read`, `tier2`, `fabric`, `errors`, `summary`
+
+### `fabric_get_fabric_execution_last_failed`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: ``  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Tier-2: Find the most recent FAILED fabric execution for a given fabric name (best-effort match), and return a compact actionable summary. Uses Tier-1 fabric_get_execution_list and optionally fabric_get_execution_get.
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `name` | `string` | yes | `` | Fabric name (e.g., DC). |
+| `limit` | `integer` | no | `50` | How many failed executions to request from Tier-1 list before local filtering. |
+| `include_detail` | `boolean` | no | `True` | If true, fetch execution detail for the matched execution (Tier-1 fabric_get_execution_get). |
+| `include_raw` | `boolean` | no | `False` | If true, include raw Tier-1 payloads (can be large). |
+
+- Tags: `read`, `fabric`, `execution`, `tier2`
+
+### `fabric_get_fabric_execution_recent`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: ``  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Tier-2: recent fabric executions (per-fabric). Fetches execution list, correlates executions to a fabric name/id using best-effort heuristics, optionally fetches execution detail for the most recent matched executions, …
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `name` | `string` | yes | `` | Fabric name. Required. |
+| `limit` | `integer` | no | `50` | How many executions to request from Tier-1 execution list. |
+| `status` | `string` | no | `all` | Status filter passed to execution list: failed \| succeeded \| all. |
+| `max_items` | `integer` | no | `10` | Maximum matched executions returned in the output list. |
+| `include_detail` | `boolean` | no | `False` | If true, fetch execution detail for up to detail_limit matched executions. |
+| `detail_limit` | `integer` | no | `3` | Max number of matched executions to fetch detail for when include_detail=true. |
+| `include_raw` | `boolean` | no | `False` | Include raw Tier-1 payloads under raw. |
+
+- Tags: `read`, `tier2`, `fabric`, `executions`, `recent`
 
 ### `fabric_get_fabric_health`
 - Tier: **tier1**  
@@ -422,6 +500,99 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 
 - Tags: `read`, `tier1`
 
+### `fabric_get_fabric_health_summary`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: ``  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Tier-2: fabric health summary (global + per-fabric). Combines fabrics-health, fabric-health, service health, and optional errors into an actionable summary with next steps.
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `name` | `string` | no | `` | Fabric name. If omitted, runs in global mode. |
+| `include_global` | `boolean` | no | `True` | Include global fabrics list (fabrics-health). |
+| `include_service_health` | `boolean` | no | `True` | Include fabric service health (fabric_get_health / service health). |
+| `include_errors` | `boolean` | no | `False` | Include errors sections using fabrics-errors and fabric-errors (with fallback). |
+| `expand_unhealthy` | `boolean` | no | `False` | In global mode, expand first unhealthy fabrics into partial summaries. |
+| `max_expand` | `integer` | no | `3` |  |
+| `max_fabrics` | `integer` | no | `200` |  |
+| `max_unhealthy_devices` | `integer` | no | `50` |  |
+| `max_error_items` | `integer` | no | `50` |  |
+| `include_raw` | `boolean` | no | `False` | Include raw Tier-1 per-fabric health payload as health_raw. |
+
+- Tags: `read`, `tier2`, `fabric`, `health`, `summary`
+
+### `fabric_get_fabric_health_timeline`
+- Tier: **tier2**  
+- Method: ****  
+- Endpoint: ``  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Tier-2: fabric health timeline (per-fabric). Builds a chronological view by combining current fabric health, event history, and execution history. Correlation between eventhistories.execution_uuid and executions is BEST…
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `name` | `string` | yes | `` | Fabric name. Required. |
+| `device_ip` | `string` | no | `` | Optional device IP filter for event history (if supported by backend; backend may return empty payload). |
+| `include_global` | `boolean` | no | `True` | Include global fabrics list (fabrics-health) and validate the fabric name exists. |
+| `include_service_health` | `boolean` | no | `True` | Include fabric service health (fabric_get_health / service health). |
+| `include_health_headline` | `boolean` | no | `True` | Include current fabric health headline (fabric-health), with fallback to global list. |
+| `include_executions` | `boolean` | no | `True` | Include execution list. Note: executions endpoint may not support name filtering; tool fetches system-wide executions and filters locally when possible. |
+| `include_exec_details` | `boolean` | no | `False` | Optionally fetch execution detail per execution id/uuid (best-effort, only if endpoint exists). Limited by max_exec_details. |
+| `since` | `string` | no | `` | Optional ISO timestamp (UTC). Locally filter events/executions with time >= since. |
+| `until` | `string` | no | `` | Optional ISO timestamp (UTC). Locally filter events/executions with time <= until. |
+| `window_hours` | `integer` | no | `168` | Convenience time window (hours). Used only if since/until are not provided (now - window_hours .. now). |
+| `limit_events` | `integer` | no | `200` | Backend limit for event history fetch (global fetch, then local filter to this fabric). |
+| `max_events` | `integer` | no | `200` | Maximum number of filtered events returned for this fabric after local filtering/sorting. |
+| `max_timeline_items` | `integer` | no | `50` | Maximum number of grouped execution timeline entries returned. |
+| `exec_limit` | `integer` | no | `100` | Backend limit for execution list fetch. |
+| `exec_status` | `string` | no | `all` | Execution status selector. Use 'all' for broad history (matches your working call). |
+| `max_exec_details` | `integer` | no | `10` | Maximum execution detail records to fetch when include_exec_details=true. |
+| `include_raw` | `boolean` | no | `False` | Include raw Tier-1 payloads as events_raw / executions_raw / health_raw when available. |
+
+- Tags: `read`, `tier2`, `fabric`, `health`, `timeline`, `events`, `executions`
+
+### `fabric_get_fabric_names`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: ``  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Tier-2 SAFE_READ composite — lightweight fabric discovery: list fabric NAMES (and ids) in clean snake_case (fabric_name, fabric_id), ready to feed into ID-dependent tools like fabric_get_overlay_topology(fabric_name=...…
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `include_raw` | `boolean` | no | `False` | Include the raw fabric_get_fabrics tier-1 response. |
+
+- Tags: `read`, `fabric`, `discovery`, `tier2`
+
+### `fabric_get_fabric_overview`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: ``  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Tier-2: Compact fabric overview (headline + optional errors/devices summary). Set include_raw=true to include raw Tier-1 payloads (large).
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `fabric_name` | `string` | no | `` | Optional: filter to a single fabric by name |
+| `include_health` | `boolean` | no | `True` | If true, enrich output with fabric health data (via Tier-1). |
+| `include_errors` | `boolean` | no | `True` | If true, include fabric errors data when available (via Tier-1). |
+| `include_devices` | `boolean` | no | `False` | If true, include per-fabric devices_summary (counts by role/firmware/config state). |
+| `include_raw` | `boolean` | no | `False` | If true, include raw Tier-1 payloads (summary_raw/health_raw/devices_raw). Output becomes large. |
+
+- Tags: `read`, `fabric`, `overview`, `tier2`
+
 ### `fabric_get_fabric_setting`
 - Tier: **tier1**  
 - Method: **GET**  
@@ -437,6 +608,32 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 | `name` | `string` | yes | `` |  |
 
 - Tags: `read`, `tier1`
+
+### `fabric_get_fabric_validation_report`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: ``  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Tier-2: Pre-change readiness / audit report for a fabric. Correlates health, errors, locks, and validation endpoints into a PASS/WARN/FAIL verdict with next actions.
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `name` | `string` | no | `` | Fabric name (preferred). |
+| `fabric_name` | `string` | no | `` | Alias for name. |
+| `include_health` | `boolean` | no | `True` | If true, include fabric health headline + device health counts. |
+| `include_errors` | `boolean` | no | `True` | If true, include fabric errors (and fail verdict if any errors exist). |
+| `include_locks` | `boolean` | no | `True` | If true, include service locks (warn verdict if any locks exist). |
+| `include_validate_fabric` | `boolean` | no | `True` | If true, call fabric_validate_fabric and include its findings. |
+| `include_topology_validation` | `boolean` | no | `False` | If true, call fabric_validate_physical_topology and include its findings. |
+| `max_error_items` | `integer` | no | `50` |  |
+| `max_lock_items` | `integer` | no | `50` |  |
+| `max_validation_items` | `integer` | no | `50` |  |
+| `include_raw` | `boolean` | no | `False` | If true, include raw Tier-1 responses under payload.raw (large). |
+
+- Tags: `read`, `fabric`, `validation`, `diagnostic`, `tier2`
 
 ### `fabric_get_fabrics`
 - Tier: **tier1**  
@@ -490,7 +687,8 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 
 | name | type | required | default | description |
 |---|---|---:|---|---|
-| `fabric-name` | `string` | yes | `` |  |
+| `fabric_name` | `string` | yes | `` | Fabric whose OVERLAY topology to fetch. Snake `fabric_name` or hyphenated `fabric-name` both accepted. |
+| `site` | `string` | no | `` | Site id when a fabric name exists on multiple sites (e.g. lab-a vs lab-b). |
 
 - Tags: `read`, `fabric`, `topology`, `overlay`, `tier1`
 
@@ -506,9 +704,20 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 
 | name | type | required | default | description |
 |---|---|---:|---|---|
-| `fabric-name` | `string` | yes | `` |  |
+| `fabric_name` | `string` | yes | `` | Fabric whose PHYSICAL topology (real per-port switch↔switch links) to fetch. Snake `fabric_name` or hyphenated `fabric-name` both accepted. |
+| `site` | `string` | no | `` | Site id when a fabric name exists on multiple sites (e.g. lab-a vs lab-b). |
 
 - Tags: `read`, `fabric`, `topology`, `tier1`
+
+### `fabric_get_running_config`
+- Tier: **tier1**  
+- Method: **GET**  
+- Endpoint: `/v1/fabric/runningConfig`  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Get the running configuration CLI commands for the fabric
+
+- Tags: `read`, `fabric`, `running-config`, `tier1`
 
 ### `fabric_get_service_locks`
 - Tier: **tier1**  
@@ -532,7 +741,8 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 
 | name | type | required | default | description |
 |---|---|---:|---|---|
-| `fabric-name` | `string` | yes | `` |  |
+| `fabric_name` | `string` | yes | `` | Fabric whose UNDERLAY topology to fetch. Snake `fabric_name` or hyphenated `fabric-name` both accepted. |
+| `site` | `string` | no | `` | Site id when a fabric name exists on multiple sites (e.g. lab-a vs lab-b). |
 
 - Tags: `read`, `fabric`, `topology`, `underlay`, `tier1`
 
@@ -568,202 +778,84 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 
 - Tags: `read`, `fabric`, `topology`, `validate`, `physical`, `tier1`
 
-### `fabric_get_fabric_efa_command_list`
-- Tier: **tier2**  
-- Method: **COMPOSITE**  
-- Endpoint: ``  
-- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
-
-> Return the EFA command/script lines (from XCO runningConfig) correlated to a specific fabric name
-
-**Inputs**
-
-| name | type | required | default | description |
-|---|---|---:|---|---|
-| `name` | `string` | yes | `` | Fabric name (e.g. DC) |
-| `max_items` | `integer` | no | `200` | Max matched command lines to return (default 200) |
-| `include_full_text` | `boolean` | no | `False` | Include full extracted script text (default false) |
-| `include_raw` | `boolean` | no | `False` | Include raw Tier-1 outputs (default false) |
-
-- Tags: `read`, `tier2`, `fabric`, `efa`
-
-### `fabric_get_fabric_errors_summary`
-- Tier: **tier2**  
-- Method: **COMPOSITE**  
-- Endpoint: ``  
-- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
-
-> Tier-2: Fabric errors summary. Calls Tier-1 fabric_get_fabric_errors (and optionally fabric_get_fabrics_errors + fabric_get_fabric_health) and returns an actionable summary (counts, top error types, affected devices whe…
-
-**Inputs**
-
-| name | type | required | default | description |
-|---|---|---:|---|---|
-| `name` | `string` | yes | `` | Fabric name (required). |
-| `include_health` | `boolean` | no | `True` | If true, also fetch fabric health (fabric_get_fabric_health) to include device health counts for context. |
-| `include_global` | `boolean` | no | `False` | If true, also fetch global fabrics errors (fabric_get_fabrics_errors) for context. |
-| `max_error_items` | `integer` | no | `50` | Maximum number of error items to return if the endpoint provides a list. |
-| `include_raw` | `boolean` | no | `False` | If true, include raw Tier-1 payloads under raw.{...}. Output becomes large. |
-
-- Tags: `read`, `tier2`, `fabric`, `errors`, `summary`
-
-### `fabric_get_fabric_execution_last_failed`
-- Tier: **tier2**  
-- Method: **COMPOSITE**  
-- Endpoint: ``  
-- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
-
-> Tier-2: Find the most recent FAILED fabric execution for a given fabric name (best-effort match), and return a compact actionable summary. Uses Tier-1 fabric_get_execution_list and optionally fabric_get_execution_get.
-
-**Inputs**
-
-| name | type | required | default | description |
-|---|---|---:|---|---|
-| `name` | `string` | yes | `` | Fabric name (e.g., DC). |
-| `limit` | `integer` | no | `50` | How many failed executions to request from Tier-1 list before local filtering. |
-| `include_detail` | `boolean` | no | `True` | If true, fetch execution detail for the matched execution (Tier-1 fabric_get_execution_get). |
-| `include_raw` | `boolean` | no | `False` | If true, include raw Tier-1 payloads (can be large). |
-
-- Tags: `read`, `fabric`, `execution`, `tier2`
-
-### `fabric_get_fabric_execution_recent`
-- Tier: **tier2**  
-- Method: ****  
-- Endpoint: ``  
-- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
-
-> Tier-2: recent fabric executions (per-fabric). Fetches execution list, correlates executions to a fabric name/id using best-effort heuristics, optionally fetches execution detail for the most recent matched executions, …
-
-**Inputs**
-
-| name | type | required | default | description |
-|---|---|---:|---|---|
-| `name` | `string` | yes | `` | Fabric name. Required. |
-| `limit` | `integer` | no | `50` | How many executions to request from Tier-1 execution list. |
-| `status` | `string` | no | `all` | Status filter passed to execution list: failed | succeeded | all. |
-| `max_items` | `integer` | no | `10` | Maximum matched executions returned in the output list. |
-| `include_detail` | `boolean` | no | `False` | If true, fetch execution detail for up to detail_limit matched executions. |
-| `detail_limit` | `integer` | no | `3` | Max number of matched executions to fetch detail for when include_detail=true. |
-| `include_raw` | `boolean` | no | `False` | Include raw Tier-1 payloads under raw. |
-
-- Tags: `read`, `tier2`, `fabric`, `executions`, `recent`
-
-### `fabric_get_fabric_health_summary`
-- Tier: **tier2**  
-- Method: ****  
-- Endpoint: ``  
-- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
-
-> Tier-2: fabric health summary (global + per-fabric). Combines fabrics-health, fabric-health, service health, and optional errors into an actionable summary with next steps.
-
-**Inputs**
-
-| name | type | required | default | description |
-|---|---|---:|---|---|
-| `name` | `string` | no | `` | Fabric name. If omitted, runs in global mode. |
-| `include_global` | `boolean` | no | `True` | Include global fabrics list (fabrics-health). |
-| `include_service_health` | `boolean` | no | `True` | Include fabric service health (fabric_get_health / service health). |
-| `include_errors` | `boolean` | no | `False` | Include errors sections using fabrics-errors and fabric-errors (with fallback). |
-| `expand_unhealthy` | `boolean` | no | `False` | In global mode, expand first unhealthy fabrics into partial summaries. |
-| `max_expand` | `integer` | no | `3` |  |
-| `max_fabrics` | `integer` | no | `200` |  |
-| `max_unhealthy_devices` | `integer` | no | `50` |  |
-| `max_error_items` | `integer` | no | `50` |  |
-| `include_raw` | `boolean` | no | `False` | Include raw Tier-1 per-fabric health payload as health_raw. |
-
-- Tags: `read`, `tier2`, `fabric`, `health`, `summary`
-
-### `fabric_get_fabric_health_timeline`
-- Tier: **tier2**  
-- Method: ****  
-- Endpoint: ``  
-- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
-
-> Tier-2: fabric health timeline (per-fabric). Builds a chronological view by combining current fabric health, event history, and execution history. Correlation between eventhistories.execution_uuid and executions is BEST…
-
-**Inputs**
-
-| name | type | required | default | description |
-|---|---|---:|---|---|
-| `name` | `string` | yes | `` | Fabric name. Required. |
-| `device_ip` | `string` | no | `` | Optional device IP filter for event history (if supported by backend; backend may return empty payload). |
-| `include_global` | `boolean` | no | `True` | Include global fabrics list (fabrics-health) and validate the fabric name exists. |
-| `include_service_health` | `boolean` | no | `True` | Include fabric service health (fabric_get_health / service health). |
-| `include_health_headline` | `boolean` | no | `True` | Include current fabric health headline (fabric-health), with fallback to global list. |
-| `include_executions` | `boolean` | no | `True` | Include execution list. Note: executions endpoint may not support name filtering; tool fetches system-wide executions a… |
-| `include_exec_details` | `boolean` | no | `False` | Optionally fetch execution detail per execution id/uuid (best-effort, only if endpoint exists). Limited by max_exec_det… |
-| `since` | `string` | no | `` | Optional ISO timestamp (UTC). Locally filter events/executions with time >= since. |
-| `until` | `string` | no | `` | Optional ISO timestamp (UTC). Locally filter events/executions with time <= until. |
-| `window_hours` | `integer` | no | `168` | Convenience time window (hours). Used only if since/until are not provided (now - window_hours .. now). |
-| `limit_events` | `integer` | no | `200` | Backend limit for event history fetch (global fetch, then local filter to this fabric). |
-| `max_events` | `integer` | no | `200` | Maximum number of filtered events returned for this fabric after local filtering/sorting. |
-| `max_timeline_items` | `integer` | no | `50` | Maximum number of grouped execution timeline entries returned. |
-| `exec_limit` | `integer` | no | `100` | Backend limit for execution list fetch. |
-| `exec_status` | `string` | no | `all` | Execution status selector. Use 'all' for broad history (matches your working call). |
-| `max_exec_details` | `integer` | no | `10` | Maximum execution detail records to fetch when include_exec_details=true. |
-| `include_raw` | `boolean` | no | `False` | Include raw Tier-1 payloads as events_raw / executions_raw / health_raw when available. |
-
-- Tags: `read`, `tier2`, `fabric`, `health`, `timeline`, `events`, `executions`
-
-### `fabric_get_fabric_overview`
-- Tier: **tier2**  
-- Method: **COMPOSITE**  
-- Endpoint: ``  
-- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
-
-> Tier-2: Compact fabric overview (headline + optional errors/devices summary). Set include_raw=true to include raw Tier-1 payloads (large).
-
-**Inputs**
-
-| name | type | required | default | description |
-|---|---|---:|---|---|
-| `fabric_name` | `string` | no | `` | Optional: filter to a single fabric by name |
-| `include_health` | `boolean` | no | `True` | If true, enrich output with fabric health data (via Tier-1). |
-| `include_errors` | `boolean` | no | `True` | If true, include fabric errors data when available (via Tier-1). |
-| `include_devices` | `boolean` | no | `False` | If true, include per-fabric devices_summary (counts by role/firmware/config state). |
-| `include_raw` | `boolean` | no | `False` | If true, include raw Tier-1 payloads (summary_raw/health_raw/devices_raw). Output becomes large. |
-
-- Tags: `read`, `fabric`, `overview`, `tier2`
-
-### `fabric_get_fabric_validation_report`
-- Tier: **tier2**  
-- Method: **COMPOSITE**  
-- Endpoint: ``  
-- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
-
-> Tier-2: Pre-change readiness / audit report for a fabric. Correlates health, errors, locks, and validation endpoints into a PASS/WARN/FAIL verdict with next actions.
-
-**Inputs**
-
-| name | type | required | default | description |
-|---|---|---:|---|---|
-| `name` | `string` | no | `` | Fabric name (preferred). |
-| `fabric_name` | `string` | no | `` | Alias for name. |
-| `include_health` | `boolean` | no | `True` | If true, include fabric health headline + device health counts. |
-| `include_errors` | `boolean` | no | `True` | If true, include fabric errors (and fail verdict if any errors exist). |
-| `include_locks` | `boolean` | no | `True` | If true, include service locks (warn verdict if any locks exist). |
-| `include_validate_fabric` | `boolean` | no | `True` | If true, call fabric_validate_fabric and include its findings. |
-| `include_topology_validation` | `boolean` | no | `False` | If true, call fabric_validate_physical_topology and include its findings. |
-| `max_error_items` | `integer` | no | `50` |  |
-| `max_lock_items` | `integer` | no | `50` |  |
-| `max_validation_items` | `integer` | no | `50` |  |
-| `include_raw` | `boolean` | no | `False` | If true, include raw Tier-1 responses under payload.raw (large). |
-
-- Tags: `read`, `fabric`, `validation`, `diagnostic`, `tier2`
-
-### `fabric_get_running_config`
-- Tier: **tier2**  
-- Method: **GET**  
-- Endpoint: `/v1/fabric/runningConfig`  
-- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
-
-> Get the running configuration CLI commands for the fabric
-
-- Tags: `read`, `fabric`, `running-config`, `tier2`
-
----
-
 ## faultmanager
+
+### `fault_get_active_alarms_top`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: `tier2fault_get_active_alarms_top`  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Tier-2 (read-only, v1): Show top ACTIVE alarms by severity and the resources they attach to. Composite uses ONLY existing tier-1 tools: faultmanager_get_alarm_history (active/unacked/uncleared/closed filters) and option…
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `top_n` | `integer` | no | `10` | How many alarm groups to return (1..100). |
+| `max_records` | `integer` | no | `500` | Max active alarm records to process from tier-1 (1..5000). |
+| `severity_min` | `string` | no | `` | Optional minimum severity (Critical>Major>Minor>Warning>Info). |
+| `query` | `string` | no | `` | Optional substring search across alarm text fields (e.g., 'certificate', 'bgp'). |
+| `alarm_type` | `string` | no | `` | Optional alarm_type filter passed to faultmanager_get_alarm_history (and inventory enrichment). |
+| `resource` | `string` | no | `` | Optional exact resource filter passed to faultmanager_get_alarm_history. |
+| `resource_query` | `string` | no | `` | Optional substring filter applied locally to resource (useful when resource needs partial match). |
+| `include_inventory` | `boolean` | no | `False` | If true, calls faultmanager_get_alarm_inventory(detail=true) to enrich alarms with catalog details. |
+| `include_samples` | `boolean` | no | `True` | If true, include up to sample_per_group alarm instances per top group. |
+| `sample_per_group` | `integer` | no | `25` | How many sample instances to return per group (0..200). 0 = counts only. |
+| `include_raw` | `boolean` | no | `False` | If true, include tier-1 raw responses (debug). |
+
+- Tags: `read`, `tier2`
+
+### `fault_get_alarm_details_with_context`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: `tier2fault_get_alarm_details_with_context`  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Tier-2 (read-only): Explain an alarm (what it is, what it impacts, and related recent context). Composite uses ONLY existing tier-1 tools: faultmanager_get_alarm_history (instances + resource/severity), faultmanager_get…
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `name` | `string` | no | `` | Alarm name (preferred). Example: CertificateExpiration |
+| `alarm_id` | `integer` | no | `` | Alarm id (if known). |
+| `resource` | `string` | no | `` | Exact resource string to scope to (optional). |
+| `active_only` | `boolean` | no | `True` | If true, fetches active alarms (unacked=true, acked=false, cleared=false, closed=false). |
+| `window_hours` | `integer` | no | `24` | How far back to look for related alerts (and optional tenant events). |
+| `max_instances` | `integer` | no | `20` | Max alarm instances to return. |
+| `alert_limit` | `integer` | no | `100` | Max related alerts to fetch per selected resource. |
+| `top_resources` | `integer` | no | `3` | How many top resources to include context for. |
+| `include_inventory` | `boolean` | no | `True` | If true, includes faultmanager_get_alarm_inventory(detail=true) explanation. |
+| `include_alerts` | `boolean` | no | `True` | If true, includes related alerts from faultmanager_get_alert_history. |
+| `include_health` | `boolean` | no | `True` | If true, includes monitor_get_health_detail for selected resources. |
+| `include_tenant_events` | `boolean` | no | `True` | If true, and device_ip can be derived from resource, includes tenant_get_event_history_list(device_ip). |
+| `include_raw` | `boolean` | no | `False` | If true, includes tier-1 raw outputs for debugging. |
+
+- Tags: `read`, `tier2`
+
+### `fault_get_fabric_health_related_alerts`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: `tier2fault_get_fabric_health_related_alerts`  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Tier-2 (read-only): Find alerts that indicate fabric health restored/degraded recently. Composite uses ONLY existing tier-1 tools: faultmanager_get_alert_history (filter by fabric resource + time window), fabric_get_fab…
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `fabric_name` | `string` | yes | `` | Fabric name (e.g. DC). Required. |
+| `window_hours` | `integer` | no | `24` | Lookback window for alert history. |
+| `max_records` | `integer` | no | `200` | Max alerts returned after filtering. |
+| `alert_limit` | `integer` | no | `300` | Tier-1 fetch limit sent to faultmanager_get_alert_history. |
+| `severity` | `string` | no | `` | Optional severity filter passed to Tier-1 (e.g. Critical, Major, Warning, Info). |
+| `signal` | `string` | no | `` | Optional signal filter: 'restored' or 'degraded' (post-filter classification). |
+| `include_other` | `boolean` | no | `False` | If true, include alerts that are fabric-scoped but not classified as restored/degraded. |
+| `include_raw` | `boolean` | no | `False` | If true, include tier-1 raw outputs for debugging. |
+
+- Tags: `read`, `tier2`
 
 ### `faultmanager_get_alarm_history`
 - Tier: **tier1**  
@@ -866,85 +958,6 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 
 - Tags: `read`, `tier1`
 
-### `fault_get_active_alarms_top`
-- Tier: **tier2**  
-- Method: **COMPOSITE**  
-- Endpoint: `tier2fault_get_active_alarms_top`  
-- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
-
-> Tier-2 (read-only, v1): Show top ACTIVE alarms by severity and the resources they attach to. Composite uses ONLY existing tier-1 tools: faultmanager_get_alarm_history (active/unacked/uncleared/closed filters) and option…
-
-**Inputs**
-
-| name | type | required | default | description |
-|---|---|---:|---|---|
-| `top_n` | `integer` | no | `10` | How many alarm groups to return (1..100). |
-| `max_records` | `integer` | no | `500` | Max active alarm records to process from tier-1 (1..5000). |
-| `severity_min` | `string` | no | `` | Optional minimum severity (Critical>Major>Minor>Warning>Info). |
-| `query` | `string` | no | `` | Optional substring search across alarm text fields (e.g., 'certificate', 'bgp'). |
-| `alarm_type` | `string` | no | `` | Optional alarm_type filter passed to faultmanager_get_alarm_history (and inventory enrichment). |
-| `resource` | `string` | no | `` | Optional exact resource filter passed to faultmanager_get_alarm_history. |
-| `resource_query` | `string` | no | `` | Optional substring filter applied locally to resource (useful when resource needs partial match). |
-| `include_inventory` | `boolean` | no | `False` | If true, calls faultmanager_get_alarm_inventory(detail=true) to enrich alarms with catalog details. |
-| `include_samples` | `boolean` | no | `True` | If true, include up to sample_per_group alarm instances per top group. |
-| `sample_per_group` | `integer` | no | `3` | How many sample instances to return per group (0..10). |
-| `include_raw` | `boolean` | no | `False` | If true, include tier-1 raw responses (debug). |
-
-- Tags: `read`, `tier2`
-
-### `fault_get_alarm_details_with_context`
-- Tier: **tier2**  
-- Method: **COMPOSITE**  
-- Endpoint: `tier2fault_get_alarm_details_with_context`  
-- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
-
-> Tier-2 (read-only): Explain an alarm (what it is, what it impacts, and related recent context). Composite uses ONLY existing tier-1 tools: faultmanager_get_alarm_history (instances + resource/severity), faultmanager_get…
-
-**Inputs**
-
-| name | type | required | default | description |
-|---|---|---:|---|---|
-| `name` | `string` | no | `` | Alarm name (preferred). Example: CertificateExpiration |
-| `alarm_id` | `integer` | no | `` | Alarm id (if known). |
-| `resource` | `string` | no | `` | Exact resource string to scope to (optional). |
-| `active_only` | `boolean` | no | `True` | If true, fetches active alarms (unacked=true, acked=false, cleared=false, closed=false). |
-| `window_hours` | `integer` | no | `24` | How far back to look for related alerts (and optional tenant events). |
-| `max_instances` | `integer` | no | `20` | Max alarm instances to return. |
-| `alert_limit` | `integer` | no | `100` | Max related alerts to fetch per selected resource. |
-| `top_resources` | `integer` | no | `3` | How many top resources to include context for. |
-| `include_inventory` | `boolean` | no | `True` | If true, includes faultmanager_get_alarm_inventory(detail=true) explanation. |
-| `include_alerts` | `boolean` | no | `True` | If true, includes related alerts from faultmanager_get_alert_history. |
-| `include_health` | `boolean` | no | `True` | If true, includes monitor_get_health_detail for selected resources. |
-| `include_tenant_events` | `boolean` | no | `True` | If true, and device_ip can be derived from resource, includes tenant_get_event_history_list(device_ip). |
-| `include_raw` | `boolean` | no | `False` | If true, includes tier-1 raw outputs for debugging. |
-
-- Tags: `read`, `tier2`
-
-### `fault_get_fabric_health_related_alerts`
-- Tier: **tier2**  
-- Method: **COMPOSITE**  
-- Endpoint: `tier2fault_get_fabric_health_related_alerts`  
-- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
-
-> Tier-2 (read-only): Find alerts that indicate fabric health restored/degraded recently. Composite uses ONLY existing tier-1 tools: faultmanager_get_alert_history (filter by fabric resource + time window), fabric_get_fab…
-
-**Inputs**
-
-| name | type | required | default | description |
-|---|---|---:|---|---|
-| `fabric_name` | `string` | yes | `` | Fabric name (e.g. DC). Required. |
-| `window_hours` | `integer` | no | `24` | Lookback window for alert history. |
-| `max_records` | `integer` | no | `200` | Max alerts returned after filtering. |
-| `alert_limit` | `integer` | no | `300` | Tier-1 fetch limit sent to faultmanager_get_alert_history. |
-| `severity` | `string` | no | `` | Optional severity filter passed to Tier-1 (e.g. Critical, Major, Warning, Info). |
-| `signal` | `string` | no | `` | Optional signal filter: 'restored' or 'degraded' (post-filter classification). |
-| `include_other` | `boolean` | no | `False` | If true, include alerts that are fabric-scoped but not classified as restored/degraded. |
-| `include_raw` | `boolean` | no | `False` | If true, include tier-1 raw outputs for debugging. |
-
-- Tags: `read`, `tier2`
-
----
-
 ## hyperv
 
 ### `hyperv_get_executions`
@@ -1022,8 +1035,6 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 | `hyperv_host` | `string` | no | `` |  |
 
 - Tags: `read`, `tier1`
-
----
 
 ## inventory
 
@@ -1231,6 +1242,44 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 | `device_ips` | `string` | no | `` |  |
 
 - Tags: `read`, `tier1`
+
+### `inventory_get_device_health_rollup`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: `tier2inventory_get_device_health_rollup`  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Tier-2: Roll up device health to explain which devices are driving fabric health (e.g., Red). Composite of monitor_get_health_inventory + fabric_get_fabrics_health + fabric_get_fabrics + inventory_getswitches.
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `fabric_name` | `string` | no | `` | Optional fabric name filter (e.g., DC). If omitted, scans all fabrics. |
+| `group_by` | `string` | no | `fabric` |  |
+| `min_severity` | `string` | no | `yellow` |  |
+| `driver_limit` | `integer` | no | `10` | Max drivers (unhealthy devices) per group. |
+| `include_healthy` | `boolean` | no | `False` | If true, includes green devices in lists (otherwise only unhealthy per min_severity). |
+| `health_resource` | `string` | no | `inventory` | Resource string passed to monitor_get_health_inventory. If it returns empty/invalid, tool will try safe fallbacks. |
+| `include_raw` | `boolean` | no | `False` |  |
+
+- Tags: `read`, `tier2`, `inventory`, `health`, `rollup`
+
+### `inventory_get_device_inventory_export`
+- Tier: **tier2**  
+- Method: **GET**  
+- Endpoint: `{XCO_HOST}/v1/inventory/switches/inventory-info-export`  
+- Risk: **SAFE_READ**, auto_mode: **False**, confirm: **True**
+
+> This API will export the device inventory information as a binary Excel file
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `device_id` | `integer` | yes | `` |  |
+
+- Tags: `read`, `export`, `binary`, `tier2`
 
 ### `inventory_get_device_inventory_ports`
 - Tier: **tier1**  
@@ -1482,11 +1531,31 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 
 - Tags: `read`, `tier1`
 
+### `inventory_get_fabric_switches_summary`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: `{MCP_HOST}/invoke`  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Tier-2: Summarize switches that belong to a specific fabric. Composite tool: validates fabric exists (fabric_get_fabrics), fetches switches from Inventory (inventory_getswitches) using fabric-id, and optionally enriches…
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `name` | `string` | yes | `` | Fabric name (e.g. DC). Required. |
+| `max_items` | `integer` | no | `200` | Max switches returned in signals.switches.items (after local truncation). |
+| `include_per_switch_summary` | `boolean` | no | `False` | If true, fetch inventory summary-info for a limited number of switches (best-effort, requires device_id). |
+| `per_switch_limit` | `integer` | no | `5` | How many switches to enrich with inventory_switch_inventory_summary_info when include_per_switch_summary=true. |
+| `include_raw` | `boolean` | no | `False` | Include raw Tier-1 responses under raw (debug). |
+
+- Tags: `read`, `tier2`, `composite`, `inventory`, `switches`, `fabric`
+
 ### `inventory_get_firmware_download_history_status`
 - Tier: **tier1**  
 - Method: **GET**  
 - Endpoint: `{XCO_HOST}/v1/inventory/switches/firmware-download/history`  
-- Risk: **SAFE_READ**, auto_mode: **False**, confirm: **True**
+- Risk: **SAFE_READ**, auto_mode: **False**, confirm: **False**
 
 > getFirmwareDownloadHistoryStatus
 
@@ -1508,7 +1577,7 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 - Tier: **tier1**  
 - Method: **GET**  
 - Endpoint: `{XCO_HOST}/v1/inventory/switches/firmware-download/operational/history`  
-- Risk: **SAFE_READ**, auto_mode: **False**, confirm: **True**
+- Risk: **SAFE_READ**, auto_mode: **False**, confirm: **False**
 
 > getFirmwareDownloadOperationHistory
 
@@ -1532,7 +1601,7 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 - Tier: **tier1**  
 - Method: **GET**  
 - Endpoint: `{XCO_HOST}/v1/inventory/switches/firmware-download`  
-- Risk: **SAFE_READ**, auto_mode: **False**, confirm: **True**
+- Risk: **SAFE_READ**, auto_mode: **False**, confirm: **False**
 
 > getFirmwareDownloadStatus
 
@@ -1586,7 +1655,7 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 
 | name | type | required | default | description |
 |---|---|---:|---|---|
-| `host_ips` | `array` | no | `` |  |
+| `host_ips` | `array` | yes | `` | REQUIRED. List of firmware host IPs to look up. XCO returns 400 if omitted. |
 
 - Tags: `read`, `tier1`
 
@@ -1632,7 +1701,7 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 
 | name | type | required | default | description |
 |---|---|---:|---|---|
-| `device_ips` | `array` | no | `` |  |
+| `device_ips` | `array` | yes | `` | REQUIRED. List of switch management IP addresses to query interfaces for. XCO returns 404 if omitted. |
 | `device_ids` | `array` | no | `` |  |
 | `type` | `string` | yes | `` |  |
 | `admin_state` | `string` | yes | `` |  |
@@ -2166,6 +2235,27 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 
 - Tags: `read`, `tier1`
 
+### `inventory_get_software_version_mismatch`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: `tier2inventory_get_software_version_mismatch`  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Tier-2: Scan switches per fabric and detect firmware/software version mismatches grouped by fabric/role/model/global. Uses fabric_get_fabrics + inventory_getswitches.
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `fabric_name` | `string` | no | `` | Optional fabric name filter (e.g., DC) |
+| `group_by` | `string` | no | `fabric` |  |
+| `include_outliers` | `boolean` | no | `True` |  |
+| `outlier_limit` | `integer` | no | `20` |  |
+| `min_group_size` | `integer` | no | `2` |  |
+| `include_raw` | `boolean` | no | `False` |  |
+
+- Tags: `read`, `tier2`, `inventory`, `switches`, `versions`
+
 ### `inventory_get_supported_device_timezones`
 - Tier: **tier1**  
 - Method: **GET**  
@@ -2207,6 +2297,29 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 | `ip_address` | `string` | yes | `` |  |
 
 - Tags: `read`, `tier1`
+
+### `inventory_get_switches_widget_table`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: ``  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> UI-ready switch inventory table (for MCP client widget). Composite: inventory_getswitches + optional per-switch health/status enrichment tool. Returns flat rows with fields matching widget columns (IP, Status, Name, Mod…
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `fabric_name` | `string` | no | `` | If provided, filters the resulting table to this fabric (when supported by underlying inventory tool). |
+| `fabric_all` | `boolean` | no | `False` | If true, attempts to include devices across all fabrics (if supported by underlying tools). |
+| `device_ips` | `array` | no | `` | Optional: restrict to specific device management IPs. |
+| `device_ids` | `array` | no | `` | Optional: restrict to specific device IDs (preferred join key if available). |
+| `include_status` | `boolean` | no | `True` | If true, enriches each row with Status via a secondary tool call (status_tool). |
+| `status_tool` | `string` | no | `monitor_get_inventory_health_summary` | Name of an existing tool that can return per-device health/status keyed by device_id or ip. |
+| `max_items` | `integer` | no | `200` | Maximum number of rows to return. |
+| `include_raw` | `boolean` | no | `False` | If true, includes the raw inventory record per row (for debugging). |
+
+- Tags: `read`, `inventory`, `switches`, `widget`, `tier2`, `table`
 
 ### `inventory_get_threshold_monitors`
 - Tier: **tier1**  
@@ -2270,6 +2383,27 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 | `tunnel_numbers` | `array` | no | `` |  |
 
 - Tags: `read`, `tier1`
+
+### `inventory_get_unreachable_devices`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: `tier2inventory_get_unreachable_devices`  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Tier-2: Show devices currently unreachable/down (best-effort last_seen/last_error) using inventory + faultmanager alarms.
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `fabric_name` | `string` | no | `` | Optional fabric name filter (e.g., DC). If omitted, scans all fabrics. |
+| `include_alarms` | `boolean` | no | `False` | If true, include top alarm snippets per unreachable device. |
+| `alarm_limit` | `integer` | no | `3` | Max alarm snippets per device when include_alarms=true (1..20). |
+| `group_by` | `string` | no | `fabric` | Grouping for unreachable device rollups. |
+| `unreachable_only` | `boolean` | no | `True` | If true, return only unreachable devices (default). If false, return all devices with reachability classification. |
+| `include_raw` | `boolean` | no | `False` | If true, include tier-1 raw responses (debug). |
+
+- Tags: `read`, `tier2`
 
 ### `inventory_get_v_es`
 - Tier: **tier1**  
@@ -2396,15 +2530,15 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 
 - Tags: `read`, `tier1`
 
-### `inventory_switch_inventory_info`
+### `inventory_list_device_ids`
 - Tier: **tier1**  
-- Method: **GET**  
-- Endpoint: `{XCO_HOST}/v1/inventory/switches/inventory-info`  
+- Method: **COMPOSITE**  
+- Endpoint: ``  
 - Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
 
-> Get hardware inventory information for a single switch
+> Tier-2 SAFE_READ composite — the PAIRED LIST for device-id-required inventory tools. Returns device_ids[] + devices[{device_id, ip, hostname}] in clean snake_case so a client can feed an id straight into device_id-requi…
 
-- Tags: `read`, `tier1`
+- Tags: `read`, `inventory`, `discovery`, `ids`, `composite`
 
 ### `inventory_switch_inventory_info`
 - Tier: **tier1**  
@@ -2432,108 +2566,6 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 
 - Tags: `read`, `inventory`, `switch`, `tier1`
 
-### `inventory_get_device_health_rollup`
-- Tier: **tier2**  
-- Method: **COMPOSITE**  
-- Endpoint: `tier2inventory_get_device_health_rollup`  
-- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
-
-> Tier-2: Roll up device health to explain which devices are driving fabric health (e.g., Red). Composite of monitor_get_health_inventory + fabric_get_fabrics_health + fabric_get_fabrics + inventory_getswitches.
-
-**Inputs**
-
-| name | type | required | default | description |
-|---|---|---:|---|---|
-| `fabric_name` | `string` | no | `` | Optional fabric name filter (e.g., DC). If omitted, scans all fabrics. |
-| `group_by` | `string` | no | `fabric` |  |
-| `min_severity` | `string` | no | `yellow` |  |
-| `driver_limit` | `integer` | no | `10` | Max drivers (unhealthy devices) per group. |
-| `include_healthy` | `boolean` | no | `False` | If true, includes green devices in lists (otherwise only unhealthy per min_severity). |
-| `health_resource` | `string` | no | `inventory` | Resource string passed to monitor_get_health_inventory. If it returns empty/invalid, tool will try safe fallbacks. |
-| `include_raw` | `boolean` | no | `False` |  |
-
-- Tags: `read`, `tier2`, `inventory`, `health`, `rollup`
-
-### `inventory_get_device_inventory_export`
-- Tier: **tier2**  
-- Method: **GET**  
-- Endpoint: `{XCO_HOST}/v1/inventory/switches/inventory-info-export`  
-- Risk: **SAFE_READ**, auto_mode: **False**, confirm: **True**
-
-> This API will export the device inventory information as a binary Excel file
-
-**Inputs**
-
-| name | type | required | default | description |
-|---|---|---:|---|---|
-| `device_id` | `integer` | yes | `` |  |
-
-- Tags: `read`, `export`, `binary`, `tier2`
-
-### `inventory_get_fabric_switches_summary`
-- Tier: **tier2**  
-- Method: **POST**  
-- Endpoint: `{MCP_HOST}/invoke`  
-- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
-
-> Tier-2: Summarize switches that belong to a specific fabric. Composite tool: validates fabric exists (fabric_get_fabrics), fetches switches from Inventory (inventory_getswitches) using fabric-id, and optionally enriches…
-
-**Inputs**
-
-| name | type | required | default | description |
-|---|---|---:|---|---|
-| `name` | `string` | yes | `` | Fabric name (e.g. DC). Required. |
-| `max_items` | `integer` | no | `200` | Max switches returned in signals.switches.items (after local truncation). |
-| `include_per_switch_summary` | `boolean` | no | `False` | If true, fetch inventory summary-info for a limited number of switches (best-effort, requires device_id). |
-| `per_switch_limit` | `integer` | no | `5` | How many switches to enrich with inventory_switch_inventory_summary_info when include_per_switch_summary=true. |
-| `include_raw` | `boolean` | no | `False` | Include raw Tier-1 responses under raw (debug). |
-
-- Tags: `read`, `tier2`, `composite`, `inventory`, `switches`, `fabric`
-
-### `inventory_get_software_version_mismatch`
-- Tier: **tier2**  
-- Method: **COMPOSITE**  
-- Endpoint: `tier2inventory_get_software_version_mismatch`  
-- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
-
-> Tier-2: Scan switches per fabric and detect firmware/software version mismatches grouped by fabric/role/model/global. Uses fabric_get_fabrics + inventory_getswitches.
-
-**Inputs**
-
-| name | type | required | default | description |
-|---|---|---:|---|---|
-| `fabric_name` | `string` | no | `` | Optional fabric name filter (e.g., DC) |
-| `group_by` | `string` | no | `fabric` |  |
-| `include_outliers` | `boolean` | no | `True` |  |
-| `outlier_limit` | `integer` | no | `20` |  |
-| `min_group_size` | `integer` | no | `2` |  |
-| `include_raw` | `boolean` | no | `False` |  |
-
-- Tags: `read`, `tier2`, `inventory`, `switches`, `versions`
-
-### `inventory_get_unreachable_devices`
-- Tier: **tier2**  
-- Method: **COMPOSITE**  
-- Endpoint: `tier2inventory_get_unreachable_devices`  
-- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
-
-> Tier-2: Show devices currently unreachable/down (best-effort last_seen/last_error) using inventory + faultmanager alarms.
-
-**Inputs**
-
-| name | type | required | default | description |
-|---|---|---:|---|---|
-| `fabric_name` | `string` | no | `` | Optional fabric name filter (e.g., DC). If omitted, scans all fabrics. |
-| `include_alarms` | `boolean` | no | `False` | If true, include top alarm snippets per unreachable device. |
-| `alarm_limit` | `integer` | no | `3` | Max alarm snippets per device when include_alarms=true (1..20). |
-| `group_by` | `string` | no | `fabric` | Grouping for unreachable device rollups. |
-| `unreachable_only` | `boolean` | no | `True` | If true, return only unreachable devices (default). If false, return all devices with reachability classification. |
-| `include_raw` | `boolean` | no | `False` | If true, include tier-1 raw responses (debug). |
-
-- Tags: `read`, `tier2`
-
----
-
 ## licensing
 
 ### `licensing_get_health`
@@ -2556,14 +2588,12 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 
 - Tags: `read`, `tier1`
 
----
-
 ## monitor
 
 ### `monitor_get_all_status`
 - Tier: **tier1**  
 - Method: **GET**  
-- Endpoint: `{XCO_HOST}:8078/v1/monitor/all`  
+- Endpoint: `{XCO_HOST}/v1/monitor/all`  
 - Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
 
 > Get complete monitoring status (services, nodes, pods, resources)
@@ -2573,7 +2603,7 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 ### `monitor_get_backup_list`
 - Tier: **tier1**  
 - Method: **GET**  
-- Endpoint: `{XCO_HOST}:8078/v1/system/backup`  
+- Endpoint: `{XCO_HOST}/v1/system/backup`  
 - Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
 
 > Get backup files list.
@@ -2583,7 +2613,7 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 ### `monitor_get_certificate_expiry`
 - Tier: **tier1**  
 - Method: **GET**  
-- Endpoint: `{XCO_HOST}:8078/v1/monitor/certificate/expiry`  
+- Endpoint: `{XCO_HOST}/v1/monitor/certificate/expiry`  
 - Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
 
 > Get expiry date of EFA certificates
@@ -2593,7 +2623,7 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 ### `monitor_get_deployment_config`
 - Tier: **tier1**  
 - Method: **GET**  
-- Endpoint: `{XCO_HOST}:8078/v1/monitor/deployment`  
+- Endpoint: `{XCO_HOST}/v1/monitor/deployment`  
 - Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
 
 > Get EFA deployment configuration
@@ -2603,7 +2633,7 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 ### `monitor_get_efa_status`
 - Tier: **tier1**  
 - Method: **GET**  
-- Endpoint: `{XCO_HOST}:8078/v1/monitor/status/efa`  
+- Endpoint: `{XCO_HOST}/v1/monitor/status/efa`  
 - Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
 
 > Get EFA status.
@@ -2613,7 +2643,7 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 ### `monitor_get_gluster_fs_info`
 - Tier: **tier1**  
 - Method: **GET**  
-- Endpoint: `{XCO_HOST}:8078/v1/monitor/status/glusterfs`  
+- Endpoint: `{XCO_HOST}/v1/monitor/status/glusterfs`  
 - Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
 
 > Get GlusterFS information.
@@ -2623,7 +2653,7 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 ### `monitor_get_health`
 - Tier: **tier1**  
 - Method: **GET**  
-- Endpoint: `{XCO_HOST}:8078/v1/healthmanager/health`  
+- Endpoint: `{XCO_HOST}/v1/healthmanager/health`  
 - Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
 
 > getHealth
@@ -2640,7 +2670,7 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 ### `monitor_get_health_detail`
 - Tier: **tier1**  
 - Method: **GET**  
-- Endpoint: `{XCO_HOST}:8078/v1/healthmanager/health/detail`  
+- Endpoint: `{XCO_HOST}/v1/healthmanager/health/detail`  
 - Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
 
 > getHealthDetail
@@ -2656,7 +2686,7 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 ### `monitor_get_health_inventory`
 - Tier: **tier1**  
 - Method: **GET**  
-- Endpoint: `{XCO_HOST}:8078/v1/healthmanager/health/inventory`  
+- Endpoint: `{XCO_HOST}/v1/healthmanager/health/inventory`  
 - Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
 
 > getHealthInventory
@@ -2672,7 +2702,7 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 ### `monitor_get_host_users`
 - Tier: **tier1**  
 - Method: **GET**  
-- Endpoint: `{XCO_HOST}:8078/v1/monitor/users/host`  
+- Endpoint: `{XCO_HOST}/v1/monitor/users/host`  
 - Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
 
 > Get host users.
@@ -2682,7 +2712,7 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 ### `monitor_get_k3s_nodes`
 - Tier: **tier1**  
 - Method: **GET**  
-- Endpoint: `{XCO_HOST}:8078/v1/monitor/k3s/nodes`  
+- Endpoint: `{XCO_HOST}/v1/monitor/k3s/nodes`  
 - Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
 
 > Get K3s node information
@@ -2692,7 +2722,7 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 ### `monitor_get_k3s_pods`
 - Tier: **tier1**  
 - Method: **GET**  
-- Endpoint: `{XCO_HOST}:8078/v1/monitor/k3s/pod`  
+- Endpoint: `{XCO_HOST}/v1/monitor/k3s/pod`  
 - Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
 
 > Get K3s pod monitoring information
@@ -2708,7 +2738,7 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 ### `monitor_get_k3s_resources`
 - Tier: **tier1**  
 - Method: **GET**  
-- Endpoint: `{XCO_HOST}:8078/v1/monitor/k3s/resources`  
+- Endpoint: `{XCO_HOST}/v1/monitor/k3s/resources`  
 - Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
 
 > Get K3s cluster resource usage
@@ -2724,7 +2754,7 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 ### `monitor_get_k3s_status`
 - Tier: **tier1**  
 - Method: **GET**  
-- Endpoint: `{XCO_HOST}:8078/v1/monitor/status/k3s`  
+- Endpoint: `{XCO_HOST}/v1/monitor/status/k3s`  
 - Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
 
 > Get K3s monitoring status
@@ -2734,7 +2764,7 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 ### `monitor_get_keep_alived_info`
 - Tier: **tier1**  
 - Method: **GET**  
-- Endpoint: `{XCO_HOST}:8078/v1/monitor/status/keepalived`  
+- Endpoint: `{XCO_HOST}/v1/monitor/status/keepalived`  
 - Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
 
 > Get Keepalived information.
@@ -2744,118 +2774,10 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 ### `monitor_get_maria_db_info`
 - Tier: **tier1**  
 - Method: **GET**  
-- Endpoint: `{XCO_HOST}:8078/v1/monitor/status/mariadb`  
+- Endpoint: `{XCO_HOST}/v1/monitor/status/mariadb`  
 - Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
 
 > Get MariaDB information.
-
-- Tags: `read`, `tier1`
-
-### `monitor_get_redeploy_status`
-- Tier: **tier1**  
-- Method: **GET**  
-- Endpoint: `{XCO_HOST}:8078/v1/monitor/redeploy/{redeployId}`  
-- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
-
-> Redeploy status.
-
-**Inputs**
-
-| name | type | required | default | description |
-|---|---|---:|---|---|
-| `redeployId` | `string` | yes | `` |  |
-
-- Tags: `read`, `tier1`
-
-### `monitor_get_restore_history`
-- Tier: **tier1**  
-- Method: **GET**  
-- Endpoint: `{XCO_HOST}:8078/v1/system/restore-history`  
-- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
-
-> Restore history.
-
-- Tags: `read`, `tier1`
-
-### `monitor_get_restore_status`
-- Tier: **tier1**  
-- Method: **GET**  
-- Endpoint: `{XCO_HOST}:8078/v1/system/restore/{restoreId}`  
-- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
-
-> Restore status.
-
-**Inputs**
-
-| name | type | required | default | description |
-|---|---|---:|---|---|
-| `restoreId` | `string` | yes | `` |  |
-
-- Tags: `read`, `tier1`
-
-### `monitor_get_service_status`
-- Tier: **tier1**  
-- Method: **GET**  
-- Endpoint: `{XCO_HOST}:8078/v1/monitor/status`  
-- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
-
-> Get monitoring status of all services
-
-- Tags: `read`, `monitor`, `tier1`
-
-### `monitor_get_static_i_ps`
-- Tier: **tier1**  
-- Method: **GET**  
-- Endpoint: `{XCO_HOST}:8078/v1/mgmt/subinterface/staticips`  
-- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
-
-> Get static IPs.
-
-- Tags: `read`, `tier1`
-
-### `monitor_get_sub_interface`
-- Tier: **tier1**  
-- Method: **GET**  
-- Endpoint: `{XCO_HOST}:8078/v1/mgmt/subinterface`  
-- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
-
-> Get subinterface.
-
-**Inputs**
-
-| name | type | required | default | description |
-|---|---|---:|---|---|
-| `name` | `string` | no | `` |  |
-
-- Tags: `read`, `tier1`
-
-### `monitor_get_support_save`
-- Tier: **tier1**  
-- Method: **GET**  
-- Endpoint: `{XCO_HOST}:8078/v1/system/supportsave`  
-- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
-
-> Get support.
-
-- Tags: `read`, `tier1`
-
-### `monitor_get_support_save_list`
-- Tier: **tier1**  
-- Method: **GET**  
-- Endpoint: `{XCO_HOST}:8078/v1/system/supportsavelist`  
-- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
-
-> Get support.
-
-- Tags: `read`, `tier1`
-
-### `monitor_get_virtual_route`
-- Tier: **tier1**  
-- Method: **GET**  
-- Endpoint: `{XCO_HOST}:8078/v1/mgmt/virtualroute`  
-- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
-
-> Get virtual route.
 
 - Tags: `read`, `tier1`
 
@@ -2881,7 +2803,113 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 
 - Tags: `read`, `monitor`, `platform`, `status`, `tier2`
 
----
+### `monitor_get_redeploy_status`
+- Tier: **tier1**  
+- Method: **GET**  
+- Endpoint: `{XCO_HOST}/v1/monitor/redeploy/{redeployId}`  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Redeploy status.
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `redeployId` | `string` | yes | `` |  |
+
+- Tags: `read`, `tier1`
+
+### `monitor_get_restore_history`
+- Tier: **tier1**  
+- Method: **GET**  
+- Endpoint: `{XCO_HOST}/v1/system/restore-history`  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Restore history.
+
+- Tags: `read`, `tier1`
+
+### `monitor_get_restore_status`
+- Tier: **tier1**  
+- Method: **GET**  
+- Endpoint: `{XCO_HOST}/v1/system/restore/{restoreId}`  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Restore status.
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `restoreId` | `string` | yes | `` |  |
+
+- Tags: `read`, `tier1`
+
+### `monitor_get_service_status`
+- Tier: **tier1**  
+- Method: **GET**  
+- Endpoint: `{XCO_HOST}/v1/monitor/status`  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Get monitoring status of all services
+
+- Tags: `read`, `monitor`, `tier1`
+
+### `monitor_get_static_i_ps`
+- Tier: **tier1**  
+- Method: **GET**  
+- Endpoint: `{XCO_HOST}/v1/mgmt/subinterface/staticips`  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Get static IPs.
+
+- Tags: `read`, `tier1`
+
+### `monitor_get_sub_interface`
+- Tier: **tier1**  
+- Method: **GET**  
+- Endpoint: `{XCO_HOST}/v1/mgmt/subinterface`  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Get subinterface.
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `name` | `string` | no | `` |  |
+
+- Tags: `read`, `tier1`
+
+### `monitor_get_support_save`
+- Tier: **tier1**  
+- Method: **GET**  
+- Endpoint: `{XCO_HOST}/v1/system/supportsave`  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Get support.
+
+- Tags: `read`, `tier1`
+
+### `monitor_get_support_save_list`
+- Tier: **tier1**  
+- Method: **GET**  
+- Endpoint: `{XCO_HOST}/v1/system/supportsavelist`  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Get support.
+
+- Tags: `read`, `tier1`
+
+### `monitor_get_virtual_route`
+- Tier: **tier1**  
+- Method: **GET**  
+- Endpoint: `{XCO_HOST}/v1/mgmt/virtualroute`  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Get virtual route.
+
+- Tags: `read`, `tier1`
 
 ## notification
 
@@ -2898,9 +2926,55 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 | name | type | required | default | description |
 |---|---|---:|---|---|
 | `limit` | `integer` | yes | `10` | Limit the number of executions returned |
-| `status` | `string` | no | `all` | Filter executions by status (failed | succeeded | all) |
+| `status` | `string` | no | `all` | Filter executions by status (failed \| succeeded \| all) |
 
 - Tags: `read`, `notification`, `execution`, `disabled`, `tier1`
+
+### `notification_get_last_failed_delivery_or_errors`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: ``  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Tier-2: Find the most recent FAILED notification execution (notification pipeline issues). Uses Tier-1 notification_get_executions. If backend returns no failures, can optionally fallback to status=all and detect non-su…
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `window_hours` | `integer` | no | `168` | Local time filter over execution start/end time (best-effort). 168h=7d. |
+| `limit` | `integer` | no | `200` | How many executions to request from Tier-1 notification_get_executions before local filtering. |
+| `status` | `string` | no | `failed` | Tier-1 status filter: failed \| succeeded \| all. |
+| `query` | `string` | no | `` | Optional keyword search over command/parameters/status/user_name. |
+| `max_items` | `integer` | no | `10` | Maximum number of recent failed executions returned under recent_failed. |
+| `fallback_detect_non_success` | `boolean` | no | `True` | If Tier-1 status=failed returns none, optionally re-query status=all and detect non-success statuses locally. |
+| `include_raw` | `boolean` | no | `False` | If true, include raw Tier-1 responses under tier1_raw (can be large). |
+
+- Tags: `read`, `tier2`, `notification`, `executions`, `diagnostic`, `errors`
+
+### `notification_get_recent_events_filtered`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: ``  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Get recent execution-derived events across services and filter by severity/type/resource/query (Tier-2 composite).
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `sources` | `array` | no | `['system', 'fabric', 'tenant', 'inventory', 'snmp', 'auth', 'rbac']` | Which execution sources to query (uses existing Tier-1 execution tools). |
+| `status` | `string` | no | `all` | Filter executions by status when supported (failed \| succeeded \| all). |
+| `last_n` | `integer` | no | `20` | Return the last N events after filtering. |
+| `limit_per_source` | `integer` | no | `5` | How many executions to pull per source before extracting events. Each unit makes one HTTP call to XCO, so keep low (3-5) for fast responses. |
+| `severity_min` | `string` | no | `` | Minimum normalized severity (Info\|Warning\|Major\|Critical). |
+| `event_type` | `string` | no | `` | Substring match against normalized event type. |
+| `resource` | `string` | no | `` | Substring match against normalized resource. |
+| `query` | `string` | no | `` | Substring match across type/resource/message. |
+| `include_raw` | `boolean` | no | `False` | Include tier1_raw payloads for troubleshooting. |
+
+- Tags: `read`, `tier2`, `notification`, `events`, `composite`
 
 ### `notification_get_subscriber`
 - Tier: **tier1**  
@@ -2927,54 +3001,6 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 > Get all notification subscribers
 
 - Tags: `read`, `notification`, `subscriber`, `tier1`
-
-### `notification_get_last_failed_delivery_or_errors`
-- Tier: **tier2**  
-- Method: **COMPOSITE**  
-- Endpoint: ``  
-- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
-
-> Tier-2: Find the most recent FAILED notification execution (notification pipeline issues). Uses Tier-1 notification_get_executions. If backend returns no failures, can optionally fallback to status=all and detect non-su…
-
-**Inputs**
-
-| name | type | required | default | description |
-|---|---|---:|---|---|
-| `window_hours` | `integer` | no | `168` | Local time filter over execution start/end time (best-effort). 168h=7d. |
-| `limit` | `integer` | no | `200` | How many executions to request from Tier-1 notification_get_executions before local filtering. |
-| `status` | `string` | no | `failed` | Tier-1 status filter: failed | succeeded | all. |
-| `query` | `string` | no | `` | Optional keyword search over command/parameters/status/user_name. |
-| `max_items` | `integer` | no | `10` | Maximum number of recent failed executions returned under recent_failed. |
-| `fallback_detect_non_success` | `boolean` | no | `True` | If Tier-1 status=failed returns none, optionally re-query status=all and detect non-success statuses locally. |
-| `include_raw` | `boolean` | no | `False` | If true, include raw Tier-1 responses under tier1_raw (can be large). |
-
-- Tags: `read`, `tier2`, `notification`, `executions`, `diagnostic`, `errors`
-
-### `notification_get_recent_events_filtered`
-- Tier: **tier2**  
-- Method: **COMPOSITE**  
-- Endpoint: ``  
-- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
-
-> Get recent execution-derived events across services and filter by severity/type/resource/query (Tier-2 composite).
-
-**Inputs**
-
-| name | type | required | default | description |
-|---|---|---:|---|---|
-| `sources` | `array` | no | `['system', 'fabric', 'tenant', 'inventory', 'snmp', 'auth', 'rbac']` | Which execution sources to query (uses existing Tier-1 execution tools). |
-| `status` | `string` | no | `all` | Filter executions by status when supported (failed | succeeded | all). |
-| `last_n` | `integer` | no | `50` | Return the last N events after filtering. |
-| `limit_per_source` | `integer` | no | `10` | How many executions to pull per source before extracting events. |
-| `severity_min` | `string` | no | `` | Minimum normalized severity (Info|Warning|Major|Critical). |
-| `event_type` | `string` | no | `` | Substring match against normalized event type. |
-| `resource` | `string` | no | `` | Substring match against normalized resource. |
-| `query` | `string` | no | `` | Substring match across type/resource/message. |
-| `include_raw` | `boolean` | no | `False` | Include tier1_raw payloads for troubleshooting. |
-
-- Tags: `read`, `tier2`, `notification`, `events`, `composite`
-
----
 
 ## rbac
 
@@ -3106,8 +3132,6 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 
 - Tags: `read`, `tier1`
 
----
-
 ## snmp
 
 ### `snmp_get_execution`
@@ -3139,7 +3163,7 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 | name | type | required | default | description |
 |---|---|---:|---|---|
 | `limit` | `integer` | yes | `10` | Limit the number of executions returned |
-| `status` | `string` | no | `all` | Filter executions by status (failed | succeeded | all) |
+| `status` | `string` | no | `all` | Filter executions by status (failed \| succeeded \| all) |
 
 - Tags: `read`, `snmp`, `execution`, `disabled`, `tier1`
 
@@ -3163,105 +3187,7 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 
 - Tags: `read`, `snmp`, `subscriber`, `tier1`
 
----
-
 ## system
-
-### `system_get_feature_settings`
-- Tier: **tier1**  
-- Method: **GET**  
-- Endpoint: `{XCO_HOST}/v1/system/feature`  
-- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
-
-> Get system feature settings list
-
-- Tags: `read`, `system`, `feature`, `tier1`
-
-### `system_get_file_download`
-- Tier: **tier1**  
-- Method: **GET**  
-- Endpoint: `{XCO_HOST}/v1/system/file/download`  
-- Risk: **SAFE_READ**, auto_mode: **False**, confirm: **True**
-
-> Get any file from XCO system.
-
-**Inputs**
-
-| name | type | required | default | description |
-|---|---|---:|---|---|
-| `name` | `string` | yes | `` |  |
-| `file_type` | `string` | yes | `` |  |
-
-- Tags: `read`, `tier1`, `sensitive`
-
-### `system_get_health_status`
-- Tier: **tier1**  
-- Method: **GET**  
-- Endpoint: `{XCO_HOST}/v1/system/proxy/status`  
-- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
-
-> Get overall system health and node status
-
-- Tags: `read`, `system`, `health`, `tier1`
-
-### `system_get_logging_customization`
-- Tier: **tier1**  
-- Method: **GET**  
-- Endpoint: `{XCO_HOST}/v1/system/logging`  
-- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
-
-> Get Logging Customization configuration.
-
-**Inputs**
-
-| name | type | required | default | description |
-|---|---|---:|---|---|
-| `services` | `string` | no | `` |  |
-| `logging_types` | `string` | no | `` |  |
-
-- Tags: `read`, `tier1`
-
-### `system_get_settings`
-- Tier: **tier1**  
-- Method: **GET**  
-- Endpoint: `{XCO_HOST}/v1/system/settings`  
-- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
-
-> Get system configuration settings
-
-**Inputs**
-
-| name | type | required | default | description |
-|---|---|---:|---|---|
-| `decrypt` | `boolean` | no | `False` | Decrypt sensitive values |
-
-- Tags: `read`, `system`, `settings`, `tier1`
-
-### `system_get_supportsave_list`
-- Tier: **tier1**  
-- Method: **GET**  
-- Endpoint: `{XCO_HOST}/v1/system/proxy/supportsave`  
-- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
-
-> Get list of available SupportSave files
-
-- Tags: `read`, `system`, `supportsave`, `tier1`
-
-### `system_get_supportsave_status`
-- Tier: **tier1**  
-- Method: **GET**  
-- Endpoint: `{XCO_HOST}/v1/system/proxy/supportsavestatus`  
-- Risk: **SAFE_READ**, auto_mode: **False**, confirm: **False**
-
-> Get the execution status of a SupportSave request using its request ID
-
-**Inputs**
-
-| name | type | required | default | description |
-|---|---|---:|---|---|
-| `id` | `string` | yes | `` | Request ID returned when a SupportSave operation is initiated |
-
-- Tags: `read`, `system`, `supportsave`, `execution`, `tier3`
 
 ### `system_get_certificate_alarm_context`
 - Tier: **tier2**  
@@ -3346,9 +3272,36 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 | name | type | required | default | description |
 |---|---|---:|---|---|
 | `limit` | `integer` | yes | `10` | Limit the number of executions returned |
-| `status` | `string` | no | `all` | Filter executions by status (failed | succeeded | all) |
+| `status` | `string` | no | `all` | Filter executions by status (failed \| succeeded \| all) |
 
 - Tags: `read`, `system`, `execution`, `tier2`
+
+### `system_get_feature_settings`
+- Tier: **tier1**  
+- Method: **GET**  
+- Endpoint: `{XCO_HOST}/v1/system/feature`  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Get system feature settings list
+
+- Tags: `read`, `system`, `feature`, `tier1`
+
+### `system_get_file_download`
+- Tier: **tier1**  
+- Method: **GET**  
+- Endpoint: `{XCO_HOST}/v1/system/file/download`  
+- Risk: **SAFE_READ**, auto_mode: **False**, confirm: **True**
+
+> Get any file from XCO system.
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `name` | `string` | yes | `` |  |
+| `file_type` | `string` | yes | `` |  |
+
+- Tags: `read`, `tier1`, `sensitive`
 
 ### `system_get_ha_and_node_health_summary`
 - Tier: **tier2**  
@@ -3376,6 +3329,16 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 
 - Tags: `read`, `system`, `ha`, `health`, `tier2`
 
+### `system_get_health_status`
+- Tier: **tier1**  
+- Method: **GET**  
+- Endpoint: `{XCO_HOST}/v1/system/proxy/status`  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Get overall system health and node status
+
+- Tags: `read`, `system`, `health`, `tier1`
+
 ### `system_get_last_execution_diagnostic`
 - Tier: **tier2**  
 - Method: **COMPOSITE**  
@@ -3393,6 +3356,23 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 
 - Tags: `read`, `system`, `diagnostic`, `tier2`
 
+### `system_get_logging_customization`
+- Tier: **tier1**  
+- Method: **GET**  
+- Endpoint: `{XCO_HOST}/v1/system/logging`  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Get Logging Customization configuration.
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `services` | `string` | no | `` |  |
+| `logging_types` | `string` | no | `` |  |
+
+- Tags: `read`, `tier1`
+
 ### `system_get_running_config`
 - Tier: **tier2**  
 - Method: **GET**  
@@ -3403,9 +3383,110 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 
 - Tags: `read`, `system`, `config`, `tier2`
 
----
+### `system_get_settings`
+- Tier: **tier1**  
+- Method: **GET**  
+- Endpoint: `{XCO_HOST}/v1/system/settings`  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Get system configuration settings
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `decrypt` | `boolean` | no | `False` | Decrypt sensitive values |
+
+- Tags: `read`, `system`, `settings`, `tier1`
+
+### `system_get_supportsave_list`
+- Tier: **tier1**  
+- Method: **GET**  
+- Endpoint: `{XCO_HOST}/v1/system/proxy/supportsave`  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Get list of available SupportSave files
+
+- Tags: `read`, `system`, `supportsave`, `tier1`
+
+### `system_get_supportsave_status`
+- Tier: **tier1**  
+- Method: **GET**  
+- Endpoint: `{XCO_HOST}/v1/system/proxy/supportsavestatus`  
+- Risk: **SAFE_READ**, auto_mode: **False**, confirm: **False**
+
+> Get the execution status of a SupportSave request using its request ID
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `id` | `string` | yes | `` | Request ID returned when a SupportSave operation is initiated |
+
+- Tags: `read`, `system`, `supportsave`, `execution`, `tier3`
 
 ## tenant
+
+### `tenant_get_all_endpoint_groups`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: `tier2tenant_get_all_endpoint_groups`  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Tier-2: Discover all tenants and return every Endpoint Group (EPG) across the system, grouped by tenant, with aggregate counts.
+
+- Tags: `read`, `tenant`, `tier2`
+
+### `tenant_get_bgp_peer`
+- Tier: **tier2**  
+- Method: **GET**  
+- Endpoint: `{XCO_HOST}/v1/tenant/bgp/service/peer`  
+- Risk: **SAFE_READ**, auto_mode: **False**, confirm: **False**
+
+> Get BGP peer configuration for a tenant
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `tenant_name` | `string` | yes | `` |  |
+| `vrf_name` | `string` | no | `` |  |
+
+- Tags: `read`, `tenant`, `bgp`, `tier2`
+
+### `tenant_get_bgp_peer_operational`
+- Tier: **tier2**  
+- Method: **GET**  
+- Endpoint: `{XCO_HOST}/v1/tenant/bgp/service/peer/operational`  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Get operational state of BGP peers for a tenant
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `tenant_name` | `string` | yes | `` | Tenant to which this BGP peer belongs |
+| `vrf_name` | `string` | no | `` | Optional VRF name to filter BGP peers |
+
+- Tags: `read`, `tenant`, `bgp`, `operational`, `tier2`
+
+### `tenant_get_bgp_peers`
+- Tier: **tier2**  
+- Method: **GET**  
+- Endpoint: `{XCO_HOST}/v1/tenant/bgp/service/peers`  
+- Risk: **SAFE_READ**, auto_mode: **False**, confirm: **False**
+
+> Get list of BGP peer configurations for a tenant
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `tenant_name` | `string` | yes | `` | Tenant to which the BGP peers belong |
+| `vrf_name` | `string` | no | `` | Optional VRF name |
+
+- Tags: `read`, `tenant`, `bgp`, `tier2`
 
 ### `tenant_get_bgp_service_peer_group`
 - Tier: **tier1**  
@@ -3482,13 +3563,13 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 - Endpoint: `{XCO_HOST}/v1/tenant/endpointgroups`  
 - Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
 
-> getEndpointGroups
+> List all endpoint groups (EPGs) belonging to a tenant. tenant_name is required.
 
 **Inputs**
 
 | name | type | required | default | description |
 |---|---|---:|---|---|
-| `tenant_name` | `string` | no | `` |  |
+| `tenant_name` | `string` | yes | `` | Tenant name (required). Use tenant_get_tenants to list available tenant names. |
 | `search` | `string` | no | `` |  |
 | `pagination` | `string` | no | `` |  |
 
@@ -3587,6 +3668,41 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 
 - Tags: `read`, `tier1`
 
+### `tenant_get_mirror_sessions`
+- Tier: **tier2**  
+- Method: **GET**  
+- Endpoint: `{XCO_HOST}/v1/tenant/mirror/service/sessions`  
+- Risk: **SAFE_READ**, auto_mode: **False**, confirm: **False**
+
+> Get mirror service sessions for a tenant
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `tenant_name` | `string` | yes | `` |  |
+
+- Tags: `read`, `tenant`, `mirror`, `tier2`
+
+### `tenant_get_portchannel`
+- Tier: **tier2**  
+- Method: **GET**  
+- Endpoint: `{XCO_HOST}/v1/tenant/portchannel`  
+- Risk: **SAFE_READ**, auto_mode: **False**, confirm: **False**
+
+> Get detailed Portchannel configuration for a tenant
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `name` | `string` | no | `` |  |
+| `tenant_name` | `string` | yes | `` |  |
+| `po_id` | `string` | no | `` |  |
+| `device_ip` | `string` | no | `` |  |
+
+- Tags: `read`, `tenant`, `portchannel`, `tier2`
+
 ### `tenant_get_portchannels`
 - Tier: **tier1**  
 - Method: **GET**  
@@ -3614,6 +3730,119 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 > GetRunningConfig
 
 - Tags: `read`, `tier1`
+
+### `tenant_get_service_epg_alarm_summary`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: `tier2tenant_get_service_epg_alarm_summary`  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Tier-2: Show tenant-scoped Service/EPG alarms/alerts with filters (severity/type/state) using faultmanager history + tenant EPG scoping.
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `tenant_name` | `string` | yes | `` | Tenant name (required). If not found, tool returns suggested_tenants via tenant_get_tenants. |
+| `include_alarms` | `boolean` | no | `True` | Include FaultManager alarms (faultmanager_get_alarm_history). |
+| `include_alerts` | `boolean` | no | `True` | Include FaultManager alerts (faultmanager_get_alert_history). |
+| `severity` | `string` | no | `` | Optional exact severity filter (alerts, and best-effort for alarms). Example: Critical. |
+| `severity_min` | `string` | no | `` | Optional minimum severity (Critical>Major>Minor>Warning>Info). Applies to alerts and best-effort alarms. |
+| `alarm_type` | `string` | no | `` | Optional alarm_type filter for alarms (passed to faultmanager_get_alarm_history). |
+| `resource_contains` | `string` | no | `` | Optional substring filter applied to resource/name/message (post-filter). |
+| `message_contains` | `string` | no | `` | Optional substring filter applied to message/description fields (post-filter). |
+| `epg_name_contains` | `string` | no | `` | Optional substring filter applied to EPG matching (limits to alarms that match this EPG). |
+| `unacked` | `boolean` | no | `True` | Alarm state filter (alarms only). |
+| `acked` | `boolean` | no | `False` | Alarm state filter (alarms only). |
+| `cleared` | `boolean` | no | `False` | Alarm state filter (alarms only). |
+| `closed` | `boolean` | no | `False` | Alarm state filter (alarms only). |
+| `alert_limit` | `integer` | no | `300` | Limit parameter for alert history (1..500). |
+| `max_records` | `integer` | no | `200` | Max matched records returned (1..2000). |
+| `include_raw` | `boolean` | no | `False` | If true, include tier-1 raw responses (debug). |
+
+- Tags: `read`, `tier2`
+
+### `tenant_get_service_epg_event_logs`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: `tier2tenant_get_service_epg_event_logs`  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Event logs for a tenant/service scope (filters: date range, severity, fuzzy query). Tier-2 composite over tenant executions + event histories.
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `tenant_name` | `string` | yes | `` |  |
+| `service_name_contains` | `string` | no | `` |  |
+| `epg_name_contains` | `string` | no | `` |  |
+| `start_time` | `string` | no | `` |  |
+| `end_time` | `string` | no | `` |  |
+| `severity_min` | `string` | no | `` |  |
+| `query` | `string` | no | `` |  |
+| `execution_status` | `string` | no | `` |  |
+| `execution_limit` | `integer` | no | `` |  |
+| `execution_uuid` | `string` | no | `` |  |
+| `device_ip` | `string` | no | `` |  |
+| `max_events` | `integer` | no | `` |  |
+| `allow_unscoped` | `boolean` | no | `` |  |
+| `include_raw` | `boolean` | no | `` |  |
+
+- Tags: `read`, `tier2`, `tenant`, `events`, `logs`
+
+### `tenant_get_service_epg_health_summary`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: `tier2tenant_get_service_epg_health_summary`  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Tier-2: Real-time, table-friendly health summary for a tenant's VRFs + Endpoint Groups (EPGs), enriched via per-object error endpoints and optional recent execution signals.
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `tenant_name` | `string` | yes | `` | Tenant name to summarize (required). |
+| `include_rows` | `boolean` | no | `True` | If true, include per-EPG table rows. |
+| `include_vrf_summary` | `boolean` | no | `True` | If true, include per-VRF summary rows. |
+| `max_epgs` | `integer` | no | `300` | Max EPGs to scan (cap 300). |
+| `max_vrfs` | `integer` | no | `200` | Max VRFs to scan (cap 200). |
+| `max_rows` | `integer` | no | `2000` | Max rows to return in 'rows' (cap 2000). |
+| `include_recent_executions` | `boolean` | no | `True` | If true, include recent tenant execution rollup (tenant_get_execution_list). |
+| `execution_limit` | `integer` | no | `20` | How many executions to fetch (1..200). |
+| `execution_status` | `string` | no | `` | Optional execution status filter (e.g., FAILED). |
+| `include_events` | `boolean` | no | `False` | If true, fetch event history for the most recent FAILED execution (best-effort). |
+| `include_locks` | `boolean` | no | `False` | If true, include lock counts for service/vrf/epg. |
+| `include_raw` | `boolean` | no | `False` | If true, include tier-1 raw responses (debug). |
+
+- Tags: `read`, `tier2`
+
+### `tenant_get_service_epg_historical_report_stub`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: `tier2tenant_get_service_epg_historical_report_stub`  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Tier-2 (read-only, v1): Generate a simple historical health/alarm summary for a tenant's Service/EPG scope for the last 7/30 days. Use-cases: (1) Weekly tenant health pulse (7d) summary + top impacted resources. (2) Mon…
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `tenant_name` | `string` | yes | `` | Tenant name (required). If not found, tool returns suggested_tenants via tenant_get_tenants. |
+| `window_days` | `integer` | no | `7` | How many days back to summarize (commonly 7 or 30). |
+| `include_alerts` | `boolean` | no | `True` | Include FaultManager alerts (faultmanager_get_alert_history). |
+| `include_alarms` | `boolean` | no | `True` | Include FaultManager alarms (faultmanager_get_alarm_history, time-bounded locally). |
+| `severity` | `string` | no | `` | Optional exact severity filter (alerts, and best-effort for alarms). Example: Critical. |
+| `severity_min` | `string` | no | `` | Optional minimum severity (Critical>Major>Minor>Warning>Info). Applies to alerts and best-effort alarms. |
+| `query` | `string` | no | `` | Optional fuzzy substring filter across alert/alarm text (e.g., 'BGP', 'VXLAN'). |
+| `alert_limit` | `integer` | no | `300` | Limit parameter for alert history (1..500). |
+| `max_records` | `integer` | no | `200` | Max records returned per section (alerts/alarms) (1..2000). |
+| `allow_unscoped` | `boolean` | no | `False` | If true, include system/global (unscoped) alerts/alarms when tenant-scoped matches are sparse. |
+| `include_raw` | `boolean` | no | `False` | If true, include tier-1 raw responses (debug). |
+
+- Tags: `read`, `tier2`
 
 ### `tenant_get_tenant`
 - Tier: **tier1**  
@@ -3759,206 +3988,15 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 
 - Tags: `read`, `tier1`
 
-### `tenant_get_bgp_peer`
-- Tier: **tier2**  
-- Method: **GET**  
-- Endpoint: `{XCO_HOST}/v1/tenant/bgp/service/peer`  
-- Risk: **SAFE_READ**, auto_mode: **False**, confirm: **False**
-
-> Get BGP peer configuration for a tenant
-
-**Inputs**
-
-| name | type | required | default | description |
-|---|---|---:|---|---|
-| `tenant_name` | `string` | yes | `` |  |
-| `vrf_name` | `string` | no | `` |  |
-
-- Tags: `read`, `tenant`, `bgp`, `tier2`
-
-### `tenant_get_bgp_peer_operational`
-- Tier: **tier2**  
-- Method: **GET**  
-- Endpoint: `{XCO_HOST}/v1/tenant/bgp/service/peer/operational`  
-- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
-
-> Get operational state of BGP peers for a tenant
-
-**Inputs**
-
-| name | type | required | default | description |
-|---|---|---:|---|---|
-| `tenant_name` | `string` | yes | `` | Tenant to which this BGP peer belongs |
-| `vrf_name` | `string` | no | `` | Optional VRF name to filter BGP peers |
-
-- Tags: `read`, `tenant`, `bgp`, `operational`, `tier2`
-
-### `tenant_get_bgp_peers`
-- Tier: **tier2**  
-- Method: **GET**  
-- Endpoint: `{XCO_HOST}/v1/tenant/bgp/service/peers`  
-- Risk: **SAFE_READ**, auto_mode: **False**, confirm: **False**
-
-> Get list of BGP peer configurations for a tenant
-
-**Inputs**
-
-| name | type | required | default | description |
-|---|---|---:|---|---|
-| `tenant_name` | `string` | yes | `` | Tenant to which the BGP peers belong |
-| `vrf_name` | `string` | no | `` | Optional VRF name |
-
-- Tags: `read`, `tenant`, `bgp`, `tier2`
-
-### `tenant_get_mirror_sessions`
-- Tier: **tier2**  
-- Method: **GET**  
-- Endpoint: `{XCO_HOST}/v1/tenant/mirror/service/sessions`  
-- Risk: **SAFE_READ**, auto_mode: **False**, confirm: **False**
-
-> Get mirror service sessions for a tenant
-
-**Inputs**
-
-| name | type | required | default | description |
-|---|---|---:|---|---|
-| `tenant_name` | `string` | yes | `` |  |
-
-- Tags: `read`, `tenant`, `mirror`, `tier2`
-
-### `tenant_get_portchannel`
-- Tier: **tier2**  
-- Method: **GET**  
-- Endpoint: `{XCO_HOST}/v1/tenant/portchannel`  
-- Risk: **SAFE_READ**, auto_mode: **False**, confirm: **False**
-
-> Get detailed Portchannel configuration for a tenant
-
-**Inputs**
-
-| name | type | required | default | description |
-|---|---|---:|---|---|
-| `name` | `string` | no | `` |  |
-| `tenant_name` | `string` | yes | `` |  |
-| `po_id` | `string` | no | `` |  |
-| `device_ip` | `string` | no | `` |  |
-
-- Tags: `read`, `tenant`, `portchannel`, `tier2`
-
-### `tenant_get_service_epg_alarm_summary`
-- Tier: **tier2**  
+### `tenant_list_ids`
+- Tier: **tier1**  
 - Method: **COMPOSITE**  
-- Endpoint: `tier2tenant_get_service_epg_alarm_summary`  
+- Endpoint: ``  
 - Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
 
-> Tier-2: Show tenant-scoped Service/EPG alarms/alerts with filters (severity/type/state) using faultmanager history + tenant EPG scoping.
+> Tier-2 SAFE_READ composite — the PAIRED LIST for tenant-required tenant tools. Returns tenant_ids[] + tenants[{tenant_id, tenant_name}] in clean snake_case so a client never hard-codes a tenant name from a cached sample…
 
-**Inputs**
-
-| name | type | required | default | description |
-|---|---|---:|---|---|
-| `tenant_name` | `string` | yes | `` | Tenant name (required). If not found, tool returns suggested_tenants via tenant_get_tenants. |
-| `include_alarms` | `boolean` | no | `True` | Include FaultManager alarms (faultmanager_get_alarm_history). |
-| `include_alerts` | `boolean` | no | `True` | Include FaultManager alerts (faultmanager_get_alert_history). |
-| `severity` | `string` | no | `` | Optional exact severity filter (alerts, and best-effort for alarms). Example: Critical. |
-| `severity_min` | `string` | no | `` | Optional minimum severity (Critical>Major>Minor>Warning>Info). Applies to alerts and best-effort alarms. |
-| `alarm_type` | `string` | no | `` | Optional alarm_type filter for alarms (passed to faultmanager_get_alarm_history). |
-| `resource_contains` | `string` | no | `` | Optional substring filter applied to resource/name/message (post-filter). |
-| `message_contains` | `string` | no | `` | Optional substring filter applied to message/description fields (post-filter). |
-| `epg_name_contains` | `string` | no | `` | Optional substring filter applied to EPG matching (limits to alarms that match this EPG). |
-| `unacked` | `boolean` | no | `True` | Alarm state filter (alarms only). |
-| `acked` | `boolean` | no | `False` | Alarm state filter (alarms only). |
-| `cleared` | `boolean` | no | `False` | Alarm state filter (alarms only). |
-| `closed` | `boolean` | no | `False` | Alarm state filter (alarms only). |
-| `alert_limit` | `integer` | no | `300` | Limit parameter for alert history (1..500). |
-| `max_records` | `integer` | no | `200` | Max matched records returned (1..2000). |
-| `include_raw` | `boolean` | no | `False` | If true, include tier-1 raw responses (debug). |
-
-- Tags: `read`, `tier2`
-
-### `tenant_get_service_epg_event_logs`
-- Tier: **tier2**  
-- Method: **COMPOSITE**  
-- Endpoint: `tier2tenant_get_service_epg_event_logs`  
-- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
-
-> Event logs for a tenant/service scope (filters: date range, severity, fuzzy query). Tier-2 composite over tenant executions + event histories.
-
-**Inputs**
-
-| name | type | required | default | description |
-|---|---|---:|---|---|
-| `tenant_name` | `string` | yes | `` |  |
-| `service_name_contains` | `string` | no | `` |  |
-| `epg_name_contains` | `string` | no | `` |  |
-| `start_time` | `string` | no | `` |  |
-| `end_time` | `string` | no | `` |  |
-| `severity_min` | `string` | no | `` |  |
-| `query` | `string` | no | `` |  |
-| `execution_status` | `string` | no | `` |  |
-| `execution_limit` | `integer` | no | `` |  |
-| `execution_uuid` | `string` | no | `` |  |
-| `device_ip` | `string` | no | `` |  |
-| `max_events` | `integer` | no | `` |  |
-| `allow_unscoped` | `boolean` | no | `` |  |
-| `include_raw` | `boolean` | no | `` |  |
-
-- Tags: `read`, `tier2`, `tenant`, `events`, `logs`
-
-### `tenant_get_service_epg_health_summary`
-- Tier: **tier2**  
-- Method: **COMPOSITE**  
-- Endpoint: `tier2tenant_get_service_epg_health_summary`  
-- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
-
-> Tier-2: Real-time, table-friendly health summary for a tenant's VRFs + Endpoint Groups (EPGs), enriched via per-object error endpoints and optional recent execution signals.
-
-**Inputs**
-
-| name | type | required | default | description |
-|---|---|---:|---|---|
-| `tenant_name` | `string` | yes | `` | Tenant name to summarize (required). |
-| `include_rows` | `boolean` | no | `True` | If true, include per-EPG table rows. |
-| `include_vrf_summary` | `boolean` | no | `True` | If true, include per-VRF summary rows. |
-| `max_epgs` | `integer` | no | `300` | Max EPGs to scan (cap 300). |
-| `max_vrfs` | `integer` | no | `200` | Max VRFs to scan (cap 200). |
-| `max_rows` | `integer` | no | `2000` | Max rows to return in 'rows' (cap 2000). |
-| `include_recent_executions` | `boolean` | no | `True` | If true, include recent tenant execution rollup (tenant_get_execution_list). |
-| `execution_limit` | `integer` | no | `20` | How many executions to fetch (1..200). |
-| `execution_status` | `string` | no | `` | Optional execution status filter (e.g., FAILED). |
-| `include_events` | `boolean` | no | `False` | If true, fetch event history for the most recent FAILED execution (best-effort). |
-| `include_locks` | `boolean` | no | `False` | If true, include lock counts for service/vrf/epg. |
-| `include_raw` | `boolean` | no | `False` | If true, include tier-1 raw responses (debug). |
-
-- Tags: `read`, `tier2`
-
-### `tenant_get_service_epg_historical_report_stub`
-- Tier: **tier2**  
-- Method: **COMPOSITE**  
-- Endpoint: `tier2tenant_get_service_epg_historical_report_stub`  
-- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
-
-> Tier-2 (read-only, v1): Generate a simple historical health/alarm summary for a tenant's Service/EPG scope for the last 7/30 days. Use-cases: (1) Weekly tenant health pulse (7d) summary + top impacted resources. (2) Mon…
-
-**Inputs**
-
-| name | type | required | default | description |
-|---|---|---:|---|---|
-| `tenant_name` | `string` | yes | `` | Tenant name (required). If not found, tool returns suggested_tenants via tenant_get_tenants. |
-| `window_days` | `integer` | no | `7` | How many days back to summarize (commonly 7 or 30). |
-| `include_alerts` | `boolean` | no | `True` | Include FaultManager alerts (faultmanager_get_alert_history). |
-| `include_alarms` | `boolean` | no | `True` | Include FaultManager alarms (faultmanager_get_alarm_history, time-bounded locally). |
-| `severity` | `string` | no | `` | Optional exact severity filter (alerts, and best-effort for alarms). Example: Critical. |
-| `severity_min` | `string` | no | `` | Optional minimum severity (Critical>Major>Minor>Warning>Info). Applies to alerts and best-effort alarms. |
-| `query` | `string` | no | `` | Optional fuzzy substring filter across alert/alarm text (e.g., 'BGP', 'VXLAN'). |
-| `alert_limit` | `integer` | no | `300` | Limit parameter for alert history (1..500). |
-| `max_records` | `integer` | no | `200` | Max records returned per section (alerts/alarms) (1..2000). |
-| `allow_unscoped` | `boolean` | no | `False` | If true, include system/global (unscoped) alerts/alarms when tenant-scoped matches are sparse. |
-| `include_raw` | `boolean` | no | `False` | If true, include tier-1 raw responses (debug). |
-
-- Tags: `read`, `tier2`
-
----
+- Tags: `read`, `tenant`, `discovery`, `ids`, `composite`
 
 ## vcenter
 
@@ -4112,31 +4150,338 @@ _Generated from `mcp_tools.json` on 2026-02-11 04:28 UTC_
 
 - Tags: `read`, `tier1`
 
----
+## restconf
 
----
-# RESTCONF Toolpack
+### `restconf_get_arp_table`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: ``  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
 
-This section documents the RESTCONF-focused Tier-2 tools added for SLX switches.
+> Tier-2: Show ARP table (IP→MAC→interface) via RESTCONF RPC (brocade-arp:get-arp).
 
-## Tier-2 RESTCONF tools
+**Inputs**
 
-| Tool | Description | Example use case |
-|---|---|---|
-| `restconf_show_firmware_version` | Query SLX switch via RESTCONF to retrieve OS version, firmware build, uptime, CPU and memory info. | AI: 'What firmware version is running on switch 10.13.9.66?' |
-| `restconf_get_interface_detail` | Retrieve detailed interface information including status and counters from the switch. | UI: Drill into a specific interface to view operational state and statistics. |
-| `restconf_list_operations` | List all RESTCONF RPC operations supported by the switch. | AI: 'What RESTCONF operations does this switch support?' |
-| `restconf_get_lldp_neighbor_detail` | Retrieve LLDP neighbor details to understand connected devices. | AI: 'Show LLDP neighbors for switch 10.13.9.66.' |
-| `restconf_get_port_statistics_summary` | Summarize port traffic statistics and errors across interfaces. | UI: Display top ports by traffic or error counters. |
-| `restconf_get_media_detail` | Retrieve physical media/transceiver details for switch ports. | AI: 'Show optics details for Ethernet 0/1.' |
-| `restconf_get_arp_table` | Retrieve the ARP table entries from the switch. | AI: 'List ARP entries on the switch.' |
-| `restconf_get_clock` | Retrieve system clock/time information from the switch. | UI: Display current device time for troubleshooting. |
-| `restconf_get_vlan_brief` | Retrieve VLAN summary information configured on the switch. | AI: 'Show VLAN summary on this switch.' |
-| `restconf_get_vrf_summary` | Retrieve VRF configuration and summary information. | AI: 'List all VRFs configured on the switch.' |
-| `restconf_get_ip_interface` | Retrieve IP interface configuration and status details. | UI: Show all IP interfaces with their state and addresses. |
-| `restconf_get_running_config` | Retrieve running configuration directly from the switch via RESTCONF. | AI: 'Fetch running configuration for backup review.' |
-| `restconf_get_system_maintenance_status` | Retrieve system maintenance mode status and stage information. | AI: 'Is maintenance mode enabled on this switch?' |
-| `restconf_get_system_maintenance_rate_monitoring` | Retrieve maintenance rate monitoring configuration/status (may return 204 if disabled). | AI: 'Check if maintenance rate monitoring is configured.' |
-| `restconf_get_interface_all` | Get all interfaces (management, ethernet, port-channel) via RESTCONF brocade-interface endpoint. Returns name, type, shutdown status, description, IP addresses, and channel-group membership with per-type counts summary. | AI: 'List all interfaces on switch 10.13.9.66.' |
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `switch_ip` | `string\|array` | yes | `` | Switch management IP/FQDN.  Pass a single string for single-switch probe (original response shape) OR an array of strings for parallel multi-switch fan-out (v2 response shape: meta.multi_switch=true, switch_level_data_by_ip, errors_by_ip; per-switch failures non-fatal).  Single-element list also returns the multi-switch shape so widgets can render consistently. |
+| `ip_filter` | `string` | no | `` | Optional substring match on IP address. |
+| `mac_filter` | `string` | no | `` | Optional substring match on MAC (case-insensitive). |
+| `interface_name` | `string` | no | `` | Optional substring match on interface/port. |
+| `max_items` | `integer` | no | `200` | Max entries to return (default 200). |
+| `include_raw` | `boolean` | no | `False` | Include raw RESTCONF payload for troubleshooting. |
+| `username` | `string` | no | `` | Optional override RESTCONF username. |
+| `password` | `string` | no | `` | Optional override RESTCONF password. |
+| `verify_tls` | `boolean` | no | `` | Optional override TLS verification. |
+| `timeout_seconds` | `integer` | no | `` | Optional override request timeout. |
 
-**Common input:** `switch_ip` (management IP/FQDN). Optional: `include_raw`, and credential overrides (`username`, `password`, `verify_tls`, `timeout_seconds`).
+- Tags: `read`, `tier2`, `restconf`, `arp`
+
+### `restconf_get_clock`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: ``  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Tier-2: Show device clock/time status via RESTCONF RPC (brocade-clock:show-clock).
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `switch_ip` | `string` | yes | `` | Switch management IP/FQDN (required). |
+| `include_raw` | `boolean` | no | `False` | Include raw RESTCONF payload for troubleshooting. |
+| `username` | `string` | no | `` | Optional override RESTCONF username. |
+| `password` | `string` | no | `` | Optional override RESTCONF password. |
+| `verify_tls` | `boolean` | no | `` | Optional override TLS verification. |
+| `timeout_seconds` | `integer` | no | `` | Optional override request timeout. |
+
+- Tags: `read`, `tier2`, `restconf`, `clock`, `time`
+
+### `restconf_get_interface_all`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: ``  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Tier-2: Get all interfaces (management, ethernet, port-channel) via RESTCONF GET (brocade-interface:interface?depth=unbounded). Returns name, type, shutdown status, description, IP addresses, and channel-group membershi…
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `switch_ip` | `string` | yes | `` | Switch management IP/FQDN (required). |
+| `include_raw` | `boolean` | no | `False` | Include raw RESTCONF payload for troubleshooting. |
+| `username` | `string` | no | `` | Optional override RESTCONF username. |
+| `password` | `string` | no | `` | Optional override RESTCONF password. |
+| `verify_tls` | `boolean` | no | `` | Optional override TLS verification. |
+| `timeout_seconds` | `integer` | no | `` | Optional override request timeout. |
+
+- Tags: `read`, `tier2`, `restconf`, `interface`, `ethernet`, `management`, `port-channel`, `status`
+
+### `restconf_get_interface_detail`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: `tier2restconf_get_interface_detail`  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Read-only: Query an SLX switch directly via RESTCONF RPC (get-interface-detail) to return rich port/interface statistics (RX/TX octets/packets/errors) and state. Optional interface_name filter.
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `switch_ip` | `string` | yes | `` | Management IP/FQDN of the target switch (required). |
+| `interface_name` | `string` | no | `` | Optional. Example: 'Ethernet 0/1' or '0/1' or 'Port-channel 64' or '64'. |
+| `username` | `string` | no | `` | Optional override RESTCONF username (falls back to RESTCONF_USERNAME/RESTCONF_USER env). |
+| `password` | `string` | no | `` | Optional override RESTCONF password (falls back to RESTCONF_PASSWORD/RESTCONF_PASS env). |
+| `verify_tls` | `boolean` | no | `False` | If true, verify TLS cert (else insecure). Defaults to RESTCONF_VERIFY_TLS env if set. |
+| `max_items` | `integer` | no | `200` | Limit number of returned interfaces in items[]. |
+| `include_raw` | `boolean` | no | `False` | If true, include raw RESTCONF RPC response for debugging. |
+
+- Tags: `read`, `restconf`, `switch`, `interface`, `statistics`, `tier2`
+
+### `restconf_get_ip_interface`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: ``  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Tier-2: Show L3 IP addressing per interface (IPv4/IPv6) via RESTCONF data tree (brocade-interface:interface). Uses XML parsing fallback for SLX builds that return non-strict JSON.
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `switch_ip` | `string` | yes | `` | Switch management IP/FQDN (required). |
+| `interface_name` | `string` | no | `` | Optional filter: match interface (e.g. 'Ethernet 0/1', '0/1', 've 10', '10'). |
+| `include_ipv6` | `boolean` | no | `True` | If true, attempt to include IPv6 addresses when present. |
+| `max_items` | `integer` | no | `200` | Max interfaces to return (default 200). |
+| `include_raw` | `boolean` | no | `False` | Include raw RESTCONF payload for troubleshooting. |
+| `username` | `string` | no | `` | Optional override RESTCONF username. |
+| `password` | `string` | no | `` | Optional override RESTCONF password. |
+| `verify_tls` | `boolean` | no | `` | Optional override TLS verification. |
+| `timeout_seconds` | `integer` | no | `` | Optional override request timeout. |
+
+- Tags: `read`, `tier2`, `restconf`, `interface`, `ip`, `ipv4`, `ipv6`, `l3`
+
+### `restconf_get_lldp_neighbor_detail`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: ``  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Tier-2: Get LLDP neighbor details directly from a switch via RESTCONF RPC (brocade-lldp-ext:get-lldp-neighbor-detail).
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `switch_ip` | `string` | yes | `` | Switch management IP. |
+| `interface_name` | `string` | no | `` | Optional: filter to a specific local interface (e.g. Ethernet 0/1). |
+| `max_items` | `integer` | no | `200` | Max neighbors returned (default 200). |
+| `username` | `string` | no | `` | Optional override (otherwise uses env/defaults). |
+| `password` | `string` | no | `` | Optional override (otherwise uses env/defaults). |
+| `verify_tls` | `boolean` | no | `` | Optional override for TLS verification. |
+
+- Tags: `read`, `tier2`, `restconf`, `lldp`, `neighbors`
+
+### `restconf_get_media_detail`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: ``  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Tier-2: Show media/transceiver (SFP/QSFP) details via RESTCONF (vendor/serial/temp/RX/TX power when available).
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `switch_ip` | `string` | yes | `` | Switch management IP/FQDN (required). |
+| `interface_name` | `string` | no | `` | Optional port name, e.g. 'Ethernet 0/1'. |
+| `max_items` | `integer` | no | `200` | Max entries to return. |
+| `include_raw` | `boolean` | no | `False` | Include raw RESTCONF payload. |
+| `username` | `string` | no | `` | Optional override RESTCONF username. |
+| `password` | `string` | no | `` | Optional override RESTCONF password. |
+| `verify_tls` | `boolean` | no | `` | Optional override TLS verification. |
+| `timeout_seconds` | `integer` | no | `` | Optional override request timeout. |
+
+- Tags: `read`, `tier2`, `restconf`, `media`, `optics`
+
+### `restconf_get_port_statistics_summary`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: ``  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Tier-2: Summarize Ethernet port counters (octets/errors) across ports using RESTCONF RPC (get-interface-detail).
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `switch_ip` | `string` | yes | `` | Switch management IP/FQDN (required). |
+| `max_ports` | `integer` | no | `64` | Max ethernet ports to include (default 64). |
+| `top_n` | `integer` | no | `5` | Top N ports by total octets (default 5). |
+| `include_raw` | `boolean` | no | `False` | Include raw RESTCONF payload for troubleshooting. |
+| `username` | `string` | no | `` | Optional override RESTCONF username. |
+| `password` | `string` | no | `` | Optional override RESTCONF password. |
+| `verify_tls` | `boolean` | no | `` | Optional override TLS verification. |
+| `timeout_seconds` | `integer` | no | `` | Optional override request timeout. |
+
+- Tags: `read`, `tier2`, `restconf`, `interface`, `statistics`
+
+### `restconf_get_running_config`
+- Tier: **tier1**  
+- Method: **COMPOSITE**  
+- Endpoint: ``  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Tier-2: Retrieve a running configuration snapshot via SLX /rest/config/running (vendor XML). Returns top-level config sections + key identity fields (hostname/chassis).
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `switch_ip` | `string` | yes | `` | Switch management IP/FQDN (required). |
+| `config_path` | `string` | no | `` | Optional subpath under /rest/config/running (example: 'interface', 'threshold-monitor'). If omitted, fetches the full running config root. |
+| `max_bytes` | `integer` | no | `200000` | Max bytes of raw XML snippet to include when include_raw=true. |
+| `include_raw` | `boolean` | no | `False` | Include raw XML snippet for troubleshooting. |
+| `username` | `string` | no | `` | Optional override RESTCONF username. |
+| `password` | `string` | no | `` | Optional override RESTCONF password. |
+| `verify_tls` | `boolean` | no | `` | Optional override TLS verification. |
+| `timeout_seconds` | `integer` | no | `` | Optional override request timeout. |
+
+- Tags: `restconf`, `config`, `running`
+
+### `restconf_get_system_maintenance_rate_monitoring`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: ``  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Tier-2: Get system maintenance rate monitoring status via RESTCONF RPC (brocade-system-maintenance:get-system-maintenance-rate-monitoring). Some builds return HTTP 204 when not configured.
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `switch_ip` | `string` | yes | `` | Switch management IP/FQDN (required). |
+| `include_raw` | `boolean` | no | `False` | Include raw RESTCONF payload for troubleshooting. |
+| `username` | `string` | no | `` | Optional override RESTCONF username. |
+| `password` | `string` | no | `` | Optional override RESTCONF password. |
+| `verify_tls` | `boolean` | no | `` | Optional override TLS verification. |
+| `timeout_seconds` | `integer` | no | `` | Optional override request timeout. |
+
+- Tags: `read`, `tier2`, `restconf`, `system`, `maintenance`, `rate`, `monitoring`, `status`
+
+### `restconf_get_system_maintenance_status`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: ``  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Tier-2: Get system maintenance / maintenance-mode status via RESTCONF RPC (brocade-system-maintenance:get-maint-mode-status).
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `switch_ip` | `string` | yes | `` | Switch management IP/FQDN (required). |
+| `include_raw` | `boolean` | no | `False` | Include raw RESTCONF payload for troubleshooting. |
+| `username` | `string` | no | `` | Optional override RESTCONF username. |
+| `password` | `string` | no | `` | Optional override RESTCONF password. |
+| `verify_tls` | `boolean` | no | `` | Optional override TLS verification. |
+| `timeout_seconds` | `integer` | no | `` | Optional override request timeout. |
+
+- Tags: `read`, `tier2`, `restconf`, `system`, `maintenance`, `mode`, `status`
+
+### `restconf_get_vlan_brief`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: ``  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Tier-2: Show VLAN brief summary via RESTCONF RPC (brocade-interface-ext:get-vlan-brief).
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `switch_ip` | `string` | yes | `` | Switch management IP/FQDN (required). |
+| `vlan_id` | `integer` | no | `` | Optional exact match VLAN ID. |
+| `name_filter` | `string` | no | `` | Optional substring match on VLAN name (case-insensitive). |
+| `port_filter` | `string` | no | `` | Optional substring match inside VLAN ports/membership text. |
+| `max_items` | `integer` | no | `200` | Max VLANs to return (default 200). |
+| `include_raw` | `boolean` | no | `False` | Include raw RESTCONF payload for troubleshooting. |
+| `username` | `string` | no | `` | Optional override RESTCONF username. |
+| `password` | `string` | no | `` | Optional override RESTCONF password. |
+| `verify_tls` | `boolean` | no | `` | Optional override TLS verification. |
+| `timeout_seconds` | `integer` | no | `` | Optional override request timeout. |
+
+- Tags: `read`, `tier2`, `restconf`, `vlan`
+
+### `restconf_get_vrf_summary`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: `tier2restconf_get_vrf_summary`  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Read-only: Query an SLX switch directly via RESTCONF data tree to list configured VRFs (bypasses XCO).
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `switch_ip` | `string` | yes | `` | Management IP/FQDN of the target switch (required). |
+| `name_filter` | `string` | no | `` | Optional substring filter on VRF name. |
+| `max_items` | `integer` | no | `200` | Maximum number of VRF items to return. |
+| `username` | `string` | no | `` | Optional override RESTCONF username (falls back to RESTCONF_USERNAME env). |
+| `password` | `string` | no | `` | Optional override RESTCONF password (falls back to RESTCONF_PASSWORD env). |
+| `verify_tls` | `boolean` | no | `False` | If true, verify TLS cert (else -k / insecure). Defaults to RESTCONF_VERIFY_TLS env if set. |
+| `timeout_seconds` | `integer` | no | `20` | RESTCONF request timeout seconds (defaults to RESTCONF_TIMEOUT_SECONDS env). |
+| `include_raw` | `boolean` | no | `False` | If true, include raw RESTCONF response for debugging. |
+
+- Tags: `read`, `restconf`, `switch`, `vrf`, `l3`, `tier2`
+
+### `restconf_list_operations`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: ``  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Tier-2: List RESTCONF RPC operations exposed by a switch (useful for discovery; filterable).
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `switch_ip` | `string` | yes | `` | Switch management IP. |
+| `filter` | `string` | no | `` | Optional substring filter (case-insensitive). Example: lldp |
+| `max_items` | `integer` | no | `200` | Max operations returned (default 200). |
+| `username` | `string` | no | `` | Optional override (otherwise uses env/defaults). |
+| `password` | `string` | no | `` | Optional override (otherwise uses env/defaults). |
+| `verify_tls` | `boolean` | no | `` | Optional override for TLS verification. |
+
+- Tags: `read`, `tier2`, `restconf`, `discovery`
+
+### `restconf_show_firmware_version`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: `tier2restconf_show_firmware_version`  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Read-only: Query an SLX switch directly via RESTCONF RPC to return OS/firmware version + uptime (bypasses XCO).
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `switch_ip` | `string` | yes | `` | Management IP/FQDN of the target switch (required). |
+| `username` | `string` | no | `` | Optional override RESTCONF username (falls back to RESTCONF_USER env). |
+| `password` | `string` | no | `` | Optional override RESTCONF password (falls back to RESTCONF_PASS env). |
+| `verify_tls` | `boolean` | no | `False` | If true, verify TLS cert (else -k / insecure). Defaults to RESTCONF_VERIFY_TLS env if set. |
+| `include_raw` | `boolean` | no | `False` | If true, include raw RESTCONF RPC response for debugging. |
+
+- Tags: `read`, `restconf`, `switch`, `firmware`, `tier2`
