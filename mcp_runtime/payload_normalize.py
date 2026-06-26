@@ -26,6 +26,7 @@ mangling legitimate data.
 
 Gate: `MCP_NORMALIZE_PAYLOADS` (default on); set false to return raw payloads.
 """
+import base64
 import os
 import re
 from typing import Any
@@ -61,6 +62,10 @@ def _is_null_id(key: str, val: Any) -> bool:
 
 
 def _norm(obj: Any, opaque: bool) -> Any:
+    if isinstance(obj, (bytes, bytearray)):
+        # Binary payloads (e.g. XLSX/ZIP exports) are not JSON-serializable and
+        # would crash the HTTP encoder (UnicodeDecodeError); expose as base64.
+        return base64.b64encode(bytes(obj)).decode("ascii")
     if isinstance(obj, dict):
         out = {}
         for k, v in obj.items():

@@ -206,13 +206,27 @@ class XCOTransport:
                         resp.status_code,
                     )
             else:
-                # Non-JSON (e.g. octet-stream ZIP/XLSX from inventory exports).
-                # Expose raw bytes too — text decoding mangles binary with U+FFFD.
-                payload = {
-                    "_raw": resp.text,
-                    "_raw_bytes": resp.content,
-                    "_content_type": content_type,
-                }
+                # Non-JSON response. For known-binary types (ZIP/XLSX/PDF/images),
+                # skip the text decode (it mangles binary and bloats the payload);
+                # keep raw bytes for internal Tier-2 parsers — the HTTP boundary
+                # base64-encodes them. Text-ish responses keep the decoded _raw.
+                ct = content_type.lower()
+                is_binary = any(tok in ct for tok in (
+                    "octet-stream", "zip", "excel", "spreadsheet",
+                    "pdf", "image/", "vnd.openxmlformats",
+                ))
+                if is_binary:
+                    payload = {
+                        "_raw_bytes": resp.content,
+                        "_content_type": content_type,
+                        "_size_bytes": len(resp.content),
+                    }
+                else:
+                    payload = {
+                        "_raw": resp.text,
+                        "_raw_bytes": resp.content,
+                        "_content_type": content_type,
+                    }
 
         duration_ms = int((time.time() - start_ts) * 1000)
 
