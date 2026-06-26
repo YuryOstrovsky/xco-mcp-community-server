@@ -79,6 +79,8 @@ class XCOTransport:
         port: int | None = None,
         context: dict | None = None,
         correlation_id: str | None = None,  # Fix #14
+        body: dict | None = None,           # JSON request body (POST/PUT/PATCH)
+        timeout: int | None = None,         # optional per-call timeout override
     ):
         # Fix #12: reject methods not in the allowlist
         method = method.upper()
@@ -134,13 +136,15 @@ class XCOTransport:
             headers["X-Correlation-ID"] = correlation_id
 
         # ---- Perform request (Fix #10/#11: use persistent session) ----
+        _timeout = timeout or self.timeout
         try:
             resp = self._session.request(
                 method=method,
                 url=url,
                 headers=headers,
                 params=effective_params,
-                timeout=self.timeout,
+                json=body if body is not None else None,
+                timeout=_timeout,
             )
         except Exception as e:
             logger.exception(
@@ -168,7 +172,8 @@ class XCOTransport:
                     url=url,
                     headers=headers,
                     params=effective_params,
-                    timeout=self.timeout,
+                    json=body if body is not None else None,
+                    timeout=_timeout,
                 )
             except AuthError:
                 logger.exception("XCO auth refresh failed")
@@ -201,8 +206,11 @@ class XCOTransport:
                         resp.status_code,
                     )
             else:
+                # Non-JSON (e.g. octet-stream ZIP/XLSX from inventory exports).
+                # Expose raw bytes too — text decoding mangles binary with U+FFFD.
                 payload = {
                     "_raw": resp.text,
+                    "_raw_bytes": resp.content,
                     "_content_type": content_type,
                 }
 

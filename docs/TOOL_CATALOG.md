@@ -3,25 +3,26 @@
 _Generated from `mcp_tools.json` on 2026-06-26_
 
 ## Summary
-- Total tools: **270**
-- By tier: **tier1**=216, **tier2**=54
-- By risk: **SAFE_READ**=270
+- Total tools: **273**
+- By tier: **tier1**=216, **tier2**=57
+- By risk: **SAFE_READ**=273
 
 ## Categories
 - **auth**: 19
-- **fabric**: 29
+- **fabric**: 30
 - **faultmanager**: 9
 - **hyperv**: 5
-- **inventory**: 92
+- **inventory**: 94
 - **licensing**: 2
 - **monitor**: 26
 - **notification**: 5
 - **rbac**: 8
+- **restconf_slx**: 1
 - **snmp**: 4
 - **system**: 14
 - **tenant**: 32
 - **vcenter**: 9
-- **restconf**: 16
+- **restconf**: 15
 
 ---
 
@@ -778,6 +779,25 @@ _Generated from `mcp_tools.json` on 2026-06-26_
 
 - Tags: `read`, `fabric`, `topology`, `validate`, `physical`, `tier1`
 
+### `restconf_get_bgp_summary`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: ``  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Tier-2 (read-only): LIVE BGP session status per SLX switch via SSH (show ip bgp summary / show bgp evpn summary). Returns per-neighbor state (ESTAB/IDLE/CONNECT/ACTIVE), uptime, prefixes-accepted, remote-AS and address-…
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `switch_ips` | `array` | no | `` | Switch IPs to query (a single string is also accepted). OR use fabric_name to auto-discover. |
+| `fabric_name` | `string` | no | `` | Fabric name — auto-discovers all member switches (via fabric_get_devices). |
+| `username` | `string` | no | `` | Optional SSH username (default: RESTCONF_USERNAME env). |
+| `password` | `string` | no | `` | Optional SSH password (default: RESTCONF_PASSWORD env). |
+
+- Tags: `read`, `tier2`, `fabric`, `bgp`, `ssh`, `health`
+
 ## faultmanager
 
 ### `fault_get_active_alarms_top`
@@ -1038,6 +1058,24 @@ _Generated from `mcp_tools.json` on 2026-06-26_
 
 ## inventory
 
+### `firmware_check_storage`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: ``  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Tier-2 (read-only): firmware pre-flight storage check. SSHs to each switch and runs `dir` + `show support` to report total/free flash (MB), whether free space is sufficient for a firmware download (>= 2000 MB), and whet…
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `device_ips` | `array` | yes | `` | Switch IPs to check (a single string is also accepted). |
+| `username` | `string` | no | `` | Optional SSH username (default: RESTCONF_USERNAME env). |
+| `password` | `string` | no | `` | Optional SSH password (default: RESTCONF_PASSWORD env). |
+
+- Tags: `read`, `tier2`, `inventory`, `firmware`, `storage`, `preflight`, `ssh`
+
 ### `inventory_get_aaa_config`
 - Tier: **tier1**  
 - Method: **GET**  
@@ -1106,6 +1144,23 @@ _Generated from `mcp_tools.json` on 2026-06-26_
 | `bridge_domains` | `array` | no | `` |  |
 
 - Tags: `read`, `tier1`
+
+### `inventory_get_chassis_info_bulk`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: ``  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Tier-2 (read-only): fleet-wide chassis identity export from XCO — one row per switch with hostname, IP, site, OS version, SERIAL NUMBER and part number (the same data XCO's 'Download Inventory' button produces, via inve…
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `device_ids` | `array` | no | `` | Optional integer device IDs (from inventory_getswitches.id / inventory_list_device_ids). Omit to auto-expand to all switches. |
+| `max_devices` | `integer` | no | `500` | Safety cap on auto-expansion; if the site has more switches than this, returns 400 — pass an explicit device_ids list. |
+
+- Tags: `read`, `tier2`, `inventory`, `chassis`, `serial`, `fleet`, `composite`
 
 ### `inventory_get_community_list`
 - Tier: **tier1**  
@@ -3132,6 +3187,32 @@ _Generated from `mcp_tools.json` on 2026-06-26_
 
 - Tags: `read`, `tier1`
 
+## restconf_slx
+
+### `restconf_slx_get_mac_address_table`
+- Tier: **tier2**  
+- Method: **COMPOSITE**  
+- Endpoint: ``  
+- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
+
+> Tier-2 (read-only): MAC-address-table per SLX switch via the `show mac-address-table` CLI (SLX RESTCONF exposes only config, not learned MACs). Returns per entry: vlan, mac (normalized), type, state, interface. Optional…
+
+**Inputs**
+
+| name | type | required | default | description |
+|---|---|---:|---|---|
+| `switch_ip` | `string\|array` | yes | `` | Management IP of the SLX switch. A single string (single-switch shape) OR a list (multi-switch fan-out shape: meta.multi_switch=true, switch_level_data_by_ip, errors_by_ip). |
+| `mac_filter` | `string` | no | `` | Optional MAC filter: full MAC in any form (0011.2233.4455, 00:11:.., 00-11-.., bare hex) for exact match, or a substring (case-insensitive). |
+| `vlan_filter` | `integer` | no | `` | Optional exact VLAN ID filter (pushes down to `show mac-address-table vlan N`). |
+| `interface_filter` | `string` | no | `` | Optional interface substring filter (e.g. '0/51', 'ethernet 0/51', 'Eth 0/51'). Case-insensitive. |
+| `max_items` | `integer` | no | `200` | Max items after filtering. summary.truncated reflects whether the cap was hit. |
+| `include_raw` | `boolean` | no | `False` | If true, include raw `show mac-address-table` output under raw.show_mac_address_table. |
+| `ssh_timeout` | `integer` | no | `20` | Per-command SSH idle timeout (seconds). |
+| `username` | `string` | no | `` | Optional SSH username (default: RESTCONF_USERNAME env). |
+| `password` | `string` | no | `` | Optional SSH password (default: RESTCONF_PASSWORD env). |
+
+- Tags: `read`, `tier2`, `restconf_slx`, `mac`, `mac-address-table`, `switch-direct`, `ssh`
+
 ## snmp
 
 ### `snmp_get_execution`
@@ -4176,27 +4257,6 @@ _Generated from `mcp_tools.json` on 2026-06-26_
 | `timeout_seconds` | `integer` | no | `` | Optional override request timeout. |
 
 - Tags: `read`, `tier2`, `restconf`, `arp`
-
-### `restconf_get_bgp_summary`
-- Tier: **tier2**  
-- Method: **COMPOSITE**  
-- Endpoint: ``  
-- Risk: **SAFE_READ**, auto_mode: **True**, confirm: **False**
-
-> Tier-2 (read-only): BGP summary per SLX switch via RESTCONF. Reads the CONFIGURED BGP from the running-config — local AS, neighbors (with remote-AS), and peer-groups — for one or more switches (switch_ips) OR a whole fa…
-
-**Inputs**
-
-| name | type | required | default | description |
-|---|---|---:|---|---|
-| `switch_ips` | `array` | no | `` | Switch management IP(s) to query. A single string is also accepted. OR use fabric_name to auto-discover. |
-| `fabric_name` | `string` | no | `` | Fabric name — auto-discovers all member switches (via fabric_get_devices). |
-| `username` | `string` | no | `` | Optional RESTCONF username (default: RESTCONF_USERNAME env). |
-| `password` | `string` | no | `` | Optional RESTCONF password (default: RESTCONF_PASSWORD env). |
-| `verify_tls` | `boolean` | no | `` | Optional override TLS verification. |
-| `include_raw` | `boolean` | no | `False` | Include the raw RESTCONF XML per switch. |
-
-- Tags: `read`, `restconf`, `bgp`, `fabric`, `tier2`, `composite`
 
 ### `restconf_get_clock`
 - Tier: **tier2**  

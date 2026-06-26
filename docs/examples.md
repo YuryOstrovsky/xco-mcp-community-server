@@ -444,21 +444,30 @@ curl -sS -X POST "$MCP/invoke" -H "Content-Type: application/json" \
 ```
 
 
-### 7) BGP summary — per switch or whole fabric
+### 7) BGP summary — LIVE session state (per switch or whole fabric)
 
-Reads **configured** BGP from the running-config (local AS, neighbors, peer
-groups). `switch_ips` accepts a string or list; or pass `fabric_name` to
-auto-discover member switches. (Operational session state isn't exposed via
-RESTCONF on these SLX builds — this is the configured view.)
+Returns **live** BGP session state via SSH (`show ip bgp summary` /
+`show bgp evpn summary`): per-neighbor `state` (ESTAB/IDLE/…), uptime, prefixes,
+remote-AS, address-family, plus a fabric-wide `all_healthy` roll-up.
+`switch_ips` accepts a string or list; or pass `fabric_name` to auto-discover
+member switches. (Requires switch SSH access via `RESTCONF_USERNAME/PASSWORD`.)
 
 ```bash
-# One switch
+# One switch — live neighbor state
 curl -sS -X POST "$MCP/invoke" -H "Content-Type: application/json" \
   -d '{"tool":"restconf_get_bgp_summary","inputs":{"switch_ips":"'$SW'"}}' \
-| jq '.result.payload.switches[0] | {local_as, neighbor_count, neighbors}'
+| jq '.result.payload.switches[0] | {local_as, established_count, neighbor_count, neighbors}'
 
 # A whole fabric (auto-discovers member switches)
 curl -sS -X POST "$MCP/invoke" -H "Content-Type: application/json" \
   -d '{"tool":"restconf_get_bgp_summary","inputs":{"fabric_name":"DC"}}' \
-| jq '.result.payload.summary'
+| jq '.result.payload.summary, .result.payload._agent_translation_note'
+```
+
+### 8) MAC-address-table — IP/MAC/port lookup
+
+```bash
+curl -sS -X POST "$MCP/invoke" -H "Content-Type: application/json" \
+  -d '{"tool":"restconf_slx_get_mac_address_table","inputs":{"switch_ip":"'$SW'","vlan_filter":100}}' \
+| jq '.result.payload.summary, (.result.payload.items|length)'
 ```

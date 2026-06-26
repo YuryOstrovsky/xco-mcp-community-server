@@ -13,8 +13,16 @@ A **read-only** Model Context Protocol server for ExtremeCloud Orchestrator
 - Docker 20.10+ (or Python 3.10/3.11 for the from-source path) on an **x86-64**
   host.
 - Network reachability from the host to your **XCO controller** and, for the
-  `restconf_*` tools, to the **SLX switches**.
-- XCO API credentials and (for RESTCONF tools) per-switch RESTCONF credentials.
+  switch-direct tools, to the **SLX switches** (RESTCONF on TCP/443 and, for the
+  SSH-based read-only tools below, SSH on TCP/22).
+- XCO API credentials and per-switch credentials (`RESTCONF_USERNAME` /
+  `RESTCONF_PASSWORD`, reused for both RESTCONF and SSH).
+
+> **A few read-only tools use SSH** (not RESTCONF) because SLX exposes the data
+> only via the CLI: `restconf_get_bgp_summary` (live BGP session state),
+> `restconf_slx_get_mac_address_table` (learned MACs), and
+> `firmware_check_storage` (flash free space). They run **only** `show`/`dir`
+> commands — no configuration changes — and reuse the RESTCONF credentials.
 
 ## Quick start (Docker)
 

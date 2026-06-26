@@ -1,130 +1,156 @@
 # tools/fabric/bgp_summary.py
-"""restconf_get_bgp_summary — configured BGP per SLX switch (read-only).
+"""restconf_get_bgp_summary — LIVE BGP session status from SLX switches.
 
-Reads the BGP section of the switch running-config via RESTCONF
-(GET /rest/config/running/router/bgp, XML) and returns, per switch:
-  - local AS
-  - configured neighbors (IP, remote-AS, peer-group)
-  - peer-group definitions (remote-AS, description)
+Reads OPERATIONAL state (not config) via SSH `show ip bgp summary` and
+`show bgp evpn summary`, returning per-neighbor:
+  - State (ESTAB / IDLE / CONNECT / ACTIVE …)
+  - Uptime (Time)
+  - Prefixes accepted (Rt:Accepted)
+  - Remote ASN, address-family
 
-NOTE: this reflects **configured** BGP, not live session state. These SLX builds
-do not expose the operational BGP tree via RESTCONF (the get-bgp-summary RPC
-returns 400/404), so per-neighbor Established/prefixes/uptime are not available
-here — use the running-config view this tool provides.
+Why SSH and not RESTCONF: the SLX RESTCONF *operational* BGP tree returns
+HTTP 406/404 on these platforms; only `/rest/config/running/router/bgp`
+(config, no live state) responds. So the only honest source of live session
+state is the CLI `show ... summary` operational commands.
 
-Query individual switches (switch_ips) or a whole fabric (fabric_name
-auto-discovers member switches via the tier-1 fabric_get_devices tool).
+Also provides a fabric-wide health roll-up (all sessions Established) and an
+`_agent_translation_note` one-liner for natural-language clients.
 """
 from __future__ import annotations
 
-import xml.etree.ElementTree as ET
+import os
+import re
+import time as _time
 from typing import Any, Dict, List, Optional
 
-from restconf.client import make_client, RestconfError
 from mcp_runtime.logging import get_logger
 
 logger = get_logger("mcp.bgp")
 
-_BGP_NS = {"bgp": "urn:brocade.com:mgmt:brocade-bgp"}
+_IP_RE = re.compile(r"^[0-9]{1,3}(?:\.[0-9]{1,3}){3}$|^[0-9a-fA-F:]+:[0-9a-fA-F:]+$")
+_ROUTER_RE = re.compile(r"Router ID:\s*(\S+)\s+Local AS Number:\s*(\S+)")
+_COUNT_RE = re.compile(r"Number of Neighbors Configured:\s*(\d+),\s*UP:\s*(\d+)")
 
 
-def _query_bgp(switch_ip: str, username, password, verify_tls,
-               include_raw: bool = False) -> Dict[str, Any]:
-    """Read configured BGP from one switch's running-config (XML) via RESTCONF."""
+def _to_int(s: str) -> Optional[int]:
     try:
-        client = make_client(switch_ip, username=username, password=password,
-                             verify_tls=verify_tls)
-        status, _headers, text = client.get_running_config_xml(config_path="/router/bgp")
-    except RestconfError as e:
-        return {"ok": False, "error": str(e)}
-    except Exception as e:  # noqa: BLE001
-        return {"ok": False, "error": str(e)}
+        return int(s)
+    except (TypeError, ValueError):
+        return None
 
-    if status != 200:
-        return {"ok": False, "error": f"BGP running-config query failed: HTTP {status}"}
 
+def _ssh_show(host: str, username: str, password: str,
+              commands: List[str], timeout: int = 20) -> Dict[str, str]:
+    """Run `show` commands over SSH on an SLX switch; return {cmd: output}."""
+    import paramiko  # lazy import — only the SSH-based tools pull this in
+    out: Dict[str, str] = {}
+    cli = paramiko.SSHClient()
+    cli.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    cli.connect(host, username=username, password=password, timeout=timeout,
+                look_for_keys=False, allow_agent=False)
     try:
-        root = ET.fromstring(text)
-    except ET.ParseError as e:
-        return {"ok": False, "error": f"XML parse error: {e}"}
+        sh = cli.invoke_shell(width=240, height=4000)
+        _time.sleep(1.2)
+        if sh.recv_ready():
+            sh.recv(65535)
 
-    local_as_elem = root.find("bgp:local-as", _BGP_NS)
-    local_as = local_as_elem.text if local_as_elem is not None else None
+        def run(cmd: str, wait: float = 2.5) -> str:
+            sh.send(cmd + "\n")
+            _time.sleep(wait)
+            buf = b""
+            t0 = _time.time()
+            while _time.time() - t0 < wait + 6:
+                if sh.recv_ready():
+                    buf += sh.recv(65535)
+                    t0 = _time.time() - wait + 0.5
+                else:
+                    _time.sleep(0.3)
+                if buf.rstrip().endswith(b"#"):
+                    break
+            return buf.decode(errors="replace")
 
-    # Peer-group definitions (remote-as / description live here, not on the neighbor).
-    peer_groups: Dict[str, Dict[str, Any]] = {}
-    for pg in root.findall(".//bgp:neighbor-peer-grp", _BGP_NS):
-        pg_addr = pg.find("bgp:address", _BGP_NS)
-        pg_as = pg.find("bgp:remote-as", _BGP_NS)
-        pg_desc = pg.find("bgp:description", _BGP_NS)
-        if pg_addr is not None and pg_addr.text:
-            peer_groups[pg_addr.text] = {
-                "remote_as": pg_as.text if pg_as is not None else None,
-                "description": pg_desc.text if pg_desc is not None else None,
-            }
-
-    # Configured neighbors.
-    neighbors: List[Dict[str, Any]] = []
-    for nbr in root.findall(".//bgp:neighbor-addr", _BGP_NS):
-        addr = nbr.find("bgp:address", _BGP_NS)
-        peer_group = nbr.find("bgp:peer-group", _BGP_NS)
-        remote_as = nbr.find("bgp:remote-as", _BGP_NS)
-        n: Dict[str, Any] = {
-            "neighbor_ip": addr.text if addr is not None else None,
-            "peer_group": peer_group.text if peer_group is not None else None,
-            "remote_as": remote_as.text if remote_as is not None else None,
-        }
-        # Inherit remote-as / description from the peer-group when not set directly.
-        if not n["remote_as"] and n["peer_group"]:
-            pg_info = peer_groups.get(n["peer_group"], {})
-            n["remote_as"] = pg_info.get("remote_as")
-            n["peer_group_description"] = pg_info.get("description")
-        neighbors.append(n)
-
-    out: Dict[str, Any] = {
-        "ok": True,
-        "source": "running-config",
-        "data": {
-            "local_as": local_as,
-            "neighbor_count": len(neighbors),
-            "peer_groups": peer_groups,
-            "neighbors": neighbors,
-        },
-    }
-    if include_raw:
-        out["raw"] = text
+        run("terminal length 0", 1.0)  # disable paging
+        for c in commands:
+            out[c] = run(c)
+    finally:
+        cli.close()
     return out
 
 
-def _discover_fabric_switches(fabric_name: str, registry, transport, context) -> List[str]:
-    """Best-effort: resolve a fabric's member switch IPs via tier-1 fabric_get_devices."""
+def _parse_bgp_summary_text(text: str, address_family: str) -> Dict[str, Any]:
+    """Parse `show ip bgp summary` / `show bgp evpn summary` operational output."""
+    res: Dict[str, Any] = {
+        "address_family": address_family,
+        "router_id": None,
+        "local_as": None,
+        "configured": None,
+        "up": None,
+        "neighbors": [],
+    }
+    m = _ROUTER_RE.search(text)
+    if m:
+        res["router_id"], res["local_as"] = m.group(1), m.group(2)
+    m = _COUNT_RE.search(text)
+    if m:
+        res["configured"], res["up"] = int(m.group(1)), int(m.group(2))
+
+    in_table = False
+    for line in text.splitlines():
+        if "Neighbor Address" in line and "State" in line:
+            in_table = True
+            continue
+        if not in_table:
+            continue
+        toks = line.split()
+        if len(toks) < 4 or not _IP_RE.match(toks[0]):
+            continue
+        state = toks[2].upper()
+        res["neighbors"].append({
+            "neighbor_ip": toks[0],
+            "remote_as": toks[1],
+            "state": state,
+            "uptime": toks[3],
+            "prefixes_accepted": _to_int(toks[4]) if len(toks) > 4 else None,
+            "address_family": address_family,
+            "established": "ESTAB" in state,
+        })
+    return res
+
+
+def _query_bgp(switch_ip: str, username: str, password: str) -> Dict[str, Any]:
+    """SSH a switch and return its live BGP summary across IPv4-unicast + L2VPN-EVPN."""
     try:
-        tool = registry.get("fabric_get_devices") if registry else None
-        if not tool or not transport:
-            return []
-        ep = tool.get("endpoint") or {}
-        resp = transport.request(
-            method=tool.get("method", "GET"), port=ep.get("port"),
-            path=ep.get("path", "/v1/fabric/devices"),
-            params={"fabric-name": fabric_name}, context=context or {},
-        )
-        payload = resp.get("payload", {}) if isinstance(resp, dict) else {}
-        if isinstance(payload, dict):
-            devices = payload.get("items") or payload.get("device") or []
-        elif isinstance(payload, list):
-            devices = payload
-        else:
-            devices = []
-        ips = []
-        for d in devices:
-            if isinstance(d, dict):
-                ip = d.get("ip-address") or d.get("ip_address") or d.get("ip")
-                if ip:
-                    ips.append(ip)
-        return ips
-    except Exception as e:  # noqa: BLE001
-        logger.warning("bgp_summary: fabric device discovery failed: %s", e)
-        return []
+        outputs = _ssh_show(switch_ip, username, password, [
+            "show ip bgp summary",
+            "show bgp evpn summary",
+        ])
+    except Exception as e:  # noqa: BLE001 — connection / auth / timeout
+        return {"ok": False, "error": str(e)}
+
+    afs = {
+        "ipv4_unicast": _parse_bgp_summary_text(outputs.get("show ip bgp summary", ""), "ipv4-unicast"),
+        "l2vpn_evpn": _parse_bgp_summary_text(outputs.get("show bgp evpn summary", ""), "l2vpn-evpn"),
+    }
+    local_as = afs["ipv4_unicast"]["local_as"] or afs["l2vpn_evpn"]["local_as"]
+    router_id = afs["ipv4_unicast"]["router_id"] or afs["l2vpn_evpn"]["router_id"]
+
+    all_neighbors: List[Dict] = []
+    for af in afs.values():
+        all_neighbors.extend(af["neighbors"])
+    established = sum(1 for n in all_neighbors if n["established"])
+
+    return {
+        "ok": True,
+        "source": "operational (show ip bgp summary / show bgp evpn summary)",
+        "data": {
+            "local_as": local_as,
+            "router_id": router_id,
+            "address_families": afs,
+            "neighbors": all_neighbors,
+            "neighbor_count": len(all_neighbors),
+            "established_count": established,
+        },
+    }
 
 
 def restconf_get_bgp_summary(
@@ -135,58 +161,98 @@ def restconf_get_bgp_summary(
     context: Optional[Dict[str, Any]] = None,
     **kwargs,
 ) -> Dict[str, Any]:
-    """Query configured BGP from one or more SLX switches (or a whole fabric)."""
-    switch_ips = inputs.get("switch_ips") or []
+    """LIVE BGP session status from one or more SLX switches (via SSH operational CLI).
+
+    Inputs:
+      switch_ips: list of switch IPs (or a single IP string)
+      fabric_name: optional — auto-discovers all switches in the fabric
+      username / password: SSH creds (default: RESTCONF_USERNAME / RESTCONF_PASSWORD env)
+    """
+    switch_ips = inputs.get("switch_ips", [])
     if isinstance(switch_ips, str):
         switch_ips = [switch_ips]
 
     fabric_name = inputs.get("fabric_name")
-    if fabric_name and not switch_ips:
-        switch_ips = _discover_fabric_switches(fabric_name, registry, transport, context)
+    if fabric_name and not switch_ips and transport and registry:
+        try:
+            tool = registry.get("fabric_get_devices")
+            if tool:
+                ep = tool.get("endpoint", {}) or {}
+                resp = transport.request(
+                    method="GET", port=ep.get("port"),
+                    path=ep.get("path", "/v1/fabric/devices"),
+                    params={"fabric-name": fabric_name},
+                    context=context or {},
+                )
+                payload = resp.get("payload", {}) if isinstance(resp, dict) else {}
+                devices = payload.get("items", payload.get("device", [])) if isinstance(payload, dict) else []
+                if isinstance(devices, list):
+                    switch_ips = [d.get("ip-address") for d in devices
+                                  if isinstance(d, dict) and d.get("ip-address")]
+        except Exception as e:  # noqa: BLE001
+            logger.warning("Failed to discover fabric devices: %s", e)
 
     if not switch_ips:
-        return {"status": 400, "payload": {
-            "error": "Provide switch_ips (a string or list) or fabric_name.",
-        }}
+        return {"status": 400, "payload": {"error": "switch_ips or fabric_name required"}}
 
-    username = inputs.get("username")
-    password = inputs.get("password")
-    verify_tls = inputs.get("verify_tls")
-    include_raw = bool(inputs.get("include_raw") or False)
+    username = inputs.get("username") or os.environ.get("RESTCONF_USERNAME", "admin")
+    password = inputs.get("password") or os.environ.get("RESTCONF_PASSWORD", "password")
 
     results: List[Dict[str, Any]] = []
+    total_established = 0
     total_neighbors = 0
+
     for ip in switch_ips:
-        logger.info("bgp_summary: querying %s", ip)
-        r = _query_bgp(ip, username, password, verify_tls, include_raw)
-        if r.get("ok"):
-            data = r["data"]
-            total_neighbors += data["neighbor_count"]
-            entry = {
-                "switch_ip": ip, "ok": True, "source": r.get("source"),
-                "local_as": data["local_as"], "neighbor_count": data["neighbor_count"],
-                "peer_groups": data["peer_groups"], "neighbors": data["neighbors"],
-            }
-            if include_raw and "raw" in r:
-                entry["raw"] = r["raw"]
-            results.append(entry)
+        logger.info("bgp_summary: querying %s (live)", ip)
+        r = _query_bgp(ip, username, password)
+        if r["ok"]:
+            d = r["data"]
+            total_neighbors += d["neighbor_count"]
+            total_established += d["established_count"]
+            results.append({
+                "switch_ip": ip,
+                "ok": True,
+                "source": r["source"],
+                "local_as": d["local_as"],
+                "router_id": d["router_id"],
+                "neighbor_count": d["neighbor_count"],
+                "established_count": d["established_count"],
+                "all_established": d["established_count"] == d["neighbor_count"] and d["neighbor_count"] > 0,
+                "address_families": d["address_families"],
+                "neighbors": d["neighbors"],
+            })
         else:
             results.append({
-                "switch_ip": ip, "ok": False, "error": r.get("error"),
-                "neighbor_count": 0, "neighbors": [],
+                "switch_ip": ip,
+                "ok": False,
+                "error": r.get("error"),
+                "neighbor_count": 0,
+                "established_count": 0,
+                "neighbors": [],
             })
 
+    all_ok = all(r["ok"] for r in results)
     switches_ok = sum(1 for r in results if r["ok"])
+    all_healthy = all_ok and total_neighbors > 0 and total_established == total_neighbors
+
+    if switches_ok == 0:
+        note = f"BGP query failed on all {len(results)} switch(es) — check SSH reachability/credentials."
+    elif all_healthy:
+        note = (f"All {total_established} BGP session(s) Established across "
+                f"{switches_ok}/{len(results)} switch(es).")
+    else:
+        note = (f"{total_established}/{total_neighbors} BGP session(s) Established across "
+                f"{switches_ok}/{len(results)} switch(es) — some neighbors are not Established.")
+
     return {"status": 200, "payload": {
         "switches": results,
         "summary": {
             "total_switches": len(results),
             "switches_ok": switches_ok,
-            "switches_errored": len(results) - switches_ok,
-            "total_configured_neighbors": total_neighbors,
-            "note": ("Configured BGP from running-config; operational session state "
-                     "(Established/prefixes/uptime) is not exposed via RESTCONF on these "
-                     "SLX builds."),
+            "total_neighbors": total_neighbors,
+            "total_established": total_established,
+            "all_healthy": all_healthy,
         },
         "fabric_name": fabric_name,
+        "_agent_translation_note": note,
     }}

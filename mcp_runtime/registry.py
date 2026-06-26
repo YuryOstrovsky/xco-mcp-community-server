@@ -33,6 +33,9 @@ from tools.inventory.switches_widget_table import inventory_get_switches_widget_
 from tools.discovery.list_ids import inventory_list_device_ids, tenant_list_ids
 from tools.fabric.list_names import fabric_get_fabric_names
 from tools.fabric.bgp_summary import restconf_get_bgp_summary
+from tools.firmware.storage import firmware_check_storage
+from tools.inventory.chassis_info_bulk import inventory_get_chassis_info_bulk
+from tools.restconf_slx.mac_address_table import restconf_slx_get_mac_address_table
 from restconf.tools import (
     restconf_show_firmware_version,
     restconf_get_interface_detail,
@@ -269,6 +272,9 @@ class MCPRegistry:
         self.handlers["tenant_list_ids"] = tenant_list_ids
         self.handlers["fabric_get_fabric_names"] = fabric_get_fabric_names
         self.handlers["restconf_get_bgp_summary"] = restconf_get_bgp_summary
+        self.handlers["firmware_check_storage"] = firmware_check_storage
+        self.handlers["inventory_get_chassis_info_bulk"] = inventory_get_chassis_info_bulk
+        self.handlers["restconf_slx_get_mac_address_table"] = restconf_slx_get_mac_address_table
 
         return self
 

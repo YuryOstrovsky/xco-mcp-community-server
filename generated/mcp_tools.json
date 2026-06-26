@@ -13804,8 +13804,8 @@
   },
   {
     "name": "restconf_get_bgp_summary",
-    "description": "Tier-2 (read-only): BGP summary per SLX switch via RESTCONF. Reads the CONFIGURED BGP from the running-config \u2014 local AS, neighbors (with remote-AS), and peer-groups \u2014 for one or more switches (switch_ips) OR a whole fabric (fabric_name auto-discovers member switches). NOTE: this reflects configured BGP, not live session state \u2014 these SLX builds do not expose the operational BGP tree via RESTCONF, so per-neighbor Established/prefixes/uptime are not available. Use it to verify BGP neighbor/peer-group configuration across a switch or fabric.",
-    "category": "restconf",
+    "description": "Tier-2 (read-only): LIVE BGP session status per SLX switch via SSH (show ip bgp summary / show bgp evpn summary). Returns per-neighbor state (ESTAB/IDLE/CONNECT/ACTIVE), uptime, prefixes-accepted, remote-AS and address-family (IPv4-unicast + L2VPN-EVPN), plus a fabric-wide all_healthy roll-up and an _agent_translation_note. Query one or many switches (switch_ips, string or list) OR a whole fabric (fabric_name auto-discovers members). Requires switch SSH access (RESTCONF_USERNAME/RESTCONF_PASSWORD).",
+    "category": "fabric",
     "method": "COMPOSITE",
     "auth": "none",
     "input_schema": {
@@ -13816,7 +13816,7 @@
           "items": {
             "type": "string"
           },
-          "description": "Switch management IP(s) to query. A single string is also accepted. OR use fabric_name to auto-discover."
+          "description": "Switch IPs to query (a single string is also accepted). OR use fabric_name to auto-discover."
         },
         "fabric_name": {
           "type": "string",
@@ -13824,20 +13824,11 @@
         },
         "username": {
           "type": "string",
-          "description": "Optional RESTCONF username (default: RESTCONF_USERNAME env)."
+          "description": "Optional SSH username (default: RESTCONF_USERNAME env)."
         },
         "password": {
           "type": "string",
-          "description": "Optional RESTCONF password (default: RESTCONF_PASSWORD env)."
-        },
-        "verify_tls": {
-          "type": "boolean",
-          "description": "Optional override TLS verification."
-        },
-        "include_raw": {
-          "type": "boolean",
-          "default": false,
-          "description": "Include the raw RESTCONF XML per switch."
+          "description": "Optional SSH password (default: RESTCONF_PASSWORD env)."
         }
       },
       "required": []
@@ -13849,11 +13840,11 @@
     },
     "tags": [
       "read",
-      "restconf",
-      "bgp",
-      "fabric",
       "tier2",
-      "composite"
+      "fabric",
+      "bgp",
+      "ssh",
+      "health"
     ],
     "capabilities": {
       "actions": [
@@ -13869,6 +13860,216 @@
         ],
         [
           "fabric"
+        ]
+      ]
+    }
+  },
+  {
+    "name": "firmware_check_storage",
+    "category": "inventory",
+    "method": "COMPOSITE",
+    "auth": "none",
+    "description": "Tier-2 (read-only): firmware pre-flight storage check. SSHs to each switch and runs `dir` + `show support` to report total/free flash (MB), whether free space is sufficient for a firmware download (>= 2000 MB), and whether core/FFDC files are present. Read-only \u2014 makes no changes. Requires switch SSH access.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "device_ips": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Switch IPs to check (a single string is also accepted)."
+        },
+        "username": {
+          "type": "string",
+          "description": "Optional SSH username (default: RESTCONF_USERNAME env)."
+        },
+        "password": {
+          "type": "string",
+          "description": "Optional SSH password (default: RESTCONF_PASSWORD env)."
+        }
+      },
+      "required": [
+        "device_ips"
+      ]
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": [
+      "read",
+      "tier2",
+      "inventory",
+      "firmware",
+      "storage",
+      "preflight",
+      "ssh"
+    ],
+    "capabilities": {
+      "actions": [
+        "show",
+        "check"
+      ],
+      "objects": [
+        "firmware"
+      ],
+      "scopes": [
+        [
+          "device"
+        ]
+      ]
+    }
+  },
+  {
+    "name": "inventory_get_chassis_info_bulk",
+    "category": "inventory",
+    "method": "COMPOSITE",
+    "auth": "none",
+    "description": "Tier-2 (read-only): fleet-wide chassis identity export from XCO \u2014 one row per switch with hostname, IP, site, OS version, SERIAL NUMBER and part number (the same data XCO's 'Download Inventory' button produces, via inventory-bulk-export). One XCO call covers the whole fleet. Optional device_ids to scope; auto-expands to all switches in the bound XCO site otherwise.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "device_ids": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "Optional integer device IDs (from inventory_getswitches.id / inventory_list_device_ids). Omit to auto-expand to all switches."
+        },
+        "max_devices": {
+          "type": "integer",
+          "default": 500,
+          "minimum": 1,
+          "description": "Safety cap on auto-expansion; if the site has more switches than this, returns 400 \u2014 pass an explicit device_ids list."
+        }
+      },
+      "required": []
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": [
+      "read",
+      "tier2",
+      "inventory",
+      "chassis",
+      "serial",
+      "fleet",
+      "composite"
+    ],
+    "capabilities": {
+      "actions": [
+        "list",
+        "export"
+      ],
+      "objects": [
+        "inventory"
+      ],
+      "scopes": [
+        [
+          "system"
+        ]
+      ]
+    }
+  },
+  {
+    "name": "restconf_slx_get_mac_address_table",
+    "category": "restconf_slx",
+    "method": "COMPOSITE",
+    "auth": "none",
+    "description": "Tier-2 (read-only): MAC-address-table per SLX switch via the `show mac-address-table` CLI (SLX RESTCONF exposes only config, not learned MACs). Returns per entry: vlan, mac (normalized), type, state, interface. Optional filters: mac_filter, vlan_filter (exact int), interface_filter. switch_ip accepts a string (single-switch) OR a list (parallel fan-out; per-switch failures non-fatal: meta.multi_switch, switch_level_data_by_ip, errors_by_ip). Requires switch SSH access.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "switch_ip": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1
+            }
+          ],
+          "description": "Management IP of the SLX switch. A single string (single-switch shape) OR a list (multi-switch fan-out shape: meta.multi_switch=true, switch_level_data_by_ip, errors_by_ip)."
+        },
+        "mac_filter": {
+          "type": "string",
+          "description": "Optional MAC filter: full MAC in any form (0011.2233.4455, 00:11:.., 00-11-.., bare hex) for exact match, or a substring (case-insensitive)."
+        },
+        "vlan_filter": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4094,
+          "description": "Optional exact VLAN ID filter (pushes down to `show mac-address-table vlan N`)."
+        },
+        "interface_filter": {
+          "type": "string",
+          "description": "Optional interface substring filter (e.g. '0/51', 'ethernet 0/51', 'Eth 0/51'). Case-insensitive."
+        },
+        "max_items": {
+          "type": "integer",
+          "default": 200,
+          "minimum": 1,
+          "description": "Max items after filtering. summary.truncated reflects whether the cap was hit."
+        },
+        "include_raw": {
+          "type": "boolean",
+          "default": false,
+          "description": "If true, include raw `show mac-address-table` output under raw.show_mac_address_table."
+        },
+        "ssh_timeout": {
+          "type": "integer",
+          "default": 20,
+          "minimum": 5,
+          "maximum": 120,
+          "description": "Per-command SSH idle timeout (seconds)."
+        },
+        "username": {
+          "type": "string",
+          "description": "Optional SSH username (default: RESTCONF_USERNAME env)."
+        },
+        "password": {
+          "type": "string",
+          "description": "Optional SSH password (default: RESTCONF_PASSWORD env)."
+        }
+      },
+      "required": [
+        "switch_ip"
+      ]
+    },
+    "policy": {
+      "risk": "SAFE_READ",
+      "allowed_in_auto_mode": true,
+      "requires_confirmation": false
+    },
+    "tags": [
+      "read",
+      "tier2",
+      "restconf_slx",
+      "mac",
+      "mac-address-table",
+      "switch-direct",
+      "ssh"
+    ],
+    "capabilities": {
+      "actions": [
+        "show",
+        "search"
+      ],
+      "objects": [
+        "mac"
+      ],
+      "scopes": [
+        [
+          "device"
         ]
       ]
     }
