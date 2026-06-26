@@ -321,3 +321,29 @@ curl -sS -X POST "$MCP/invoke" -H "Content-Type: application/json" \
   -d '{"tool":"restconf_get_system_maintenance_status","inputs":{"switch_ip":"10.13.9.66"}}' \
 | jq '.result.status, .result.payload.summary'
 ```
+
+## Testing
+
+Two layers (see [CONTRIBUTING.md](CONTRIBUTING.md)):
+
+- **Unit tests (offline, run in CI):** validate the catalog, registry,
+  catalog-version hash, payload normalizer, and HTTP surface — no XCO needed.
+  ```bash
+  pip install pytest
+  pytest -q
+  ```
+- **Smoke tests (live release gate):** `smoke-test/smoke_tier2_{a..e}.py` exercise
+  real tools against a running server + reachable XCO. Not run in CI.
+
+GitHub Actions ([.github/workflows/lint-test.yml](.github/workflows/lint-test.yml))
+runs flake8 + pytest + a Docker build on every push and PR.
+
+## Contributing
+
+Contributions are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md) and the
+[Code of Conduct](CODE_OF_CONDUCT.md). This edition is **read-only**; please keep
+new tools `SAFE_READ`.
+
+## License
+
+Licensed under the [Apache License 2.0](LICENSE).

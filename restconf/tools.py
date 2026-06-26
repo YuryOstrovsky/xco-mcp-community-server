@@ -72,6 +72,29 @@ def _safe_get(d: dict, *path: str, default=None):
     return cur
 
 
+def _deep_find_any(obj: Any, keys) -> Any:
+    """Recursively search a nested dict/list for the first non-empty value
+    under any of ``keys``. Used as a tolerant fallback when a vendor nests a
+    field deeper than the well-known shapes (e.g. clock fields). Returns None
+    if nothing matches."""
+    wanted = tuple(keys)
+    if isinstance(obj, dict):
+        for k in wanted:
+            v = obj.get(k)
+            if v not in (None, "", "nil"):
+                return v
+        for v in obj.values():
+            found = _deep_find_any(v, wanted)
+            if found not in (None, "", "nil"):
+                return found
+    elif isinstance(obj, list):
+        for item in obj:
+            found = _deep_find_any(item, wanted)
+            if found not in (None, "", "nil"):
+                return found
+    return None
+
+
 def _norm_iface(s: str) -> str:
     """
     Normalize interface identifiers to help matching.

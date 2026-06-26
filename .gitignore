@@ -40,8 +40,9 @@ __pycache__/
 .venv/
 venv/
 
-# Test tools
-test*
+# Local scratch / helper scripts (NOT the pytest suite — `tests/` is tracked).
+# NOTE: do not use a bare `test*` here; it silently ignores `tests/` and
+# `test_*.py`, hiding the unit-test suite from the repo and CI.
 xco_get_token.py
 mcp-server.log
 
