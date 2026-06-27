@@ -221,6 +221,7 @@ A separate **demo client** — a natural-language web console + AI agent driven 
 this server's tools — lives in a sibling repo:
 
 **[xco-mcp-community-client-demo](https://github.com/YuryOstrovsky/xco-mcp-community-client-demo)**
+— latest release: **[v1.0.0](https://github.com/YuryOstrovsky/xco-mcp-community-client-demo/releases/tag/v1.0.0)**
 
 It exists **only as a reference / example** for people who want to see the
 server driven end-to-end without building their own UI or AI agent. **You do not
